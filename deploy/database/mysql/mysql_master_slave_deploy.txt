@@ -1,0 +1,26 @@
+# master machine
+# login master mysql
+
+1/ create sync user
+create user repl;
+
+2/ authorization
+GRANT REPLICATION SLAVE ON *.* TO 'repl'@'172.21.0.%' IDENTIFIED BY 'repl';
+
+3/ lock table
+FLUSH TABLES WITH READ LOCK;
+
+4/ check master status, note: please remember position filed.
+show master status;
+
+5/ logout mysql
+
+---------------------------------------------------------------
+
+# slave machine
+# login slave mysql
+1/ execute commond to update config
+change master to master_host='172.27.0.2',master_port=3306,master_user='repl',master_password='repl',master_log_file='master-bin.000003',master_log_pos=644;
+
+2/ start slave config;
+start slave;

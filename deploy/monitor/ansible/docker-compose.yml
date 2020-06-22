@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+
+  ansible:
+    restart: always
+    build: ./
+    container_name: ansible-monitor
+    hostname: ansible
+    ports:
+      - 80:80
+      - 22:22
+    networks:
+      - app_net
+
+networks:
+  app_net:
+   external:
+      name: oc_net

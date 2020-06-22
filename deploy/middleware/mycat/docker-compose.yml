@@ -1,0 +1,27 @@
+version: '2.1'
+
+services:
+
+  mycat:
+    build: ./
+    container_name: mycat
+    volumes:
+      - /tmp/data/middleware/mycat/logs/:/mycat/logs/:rw
+    ports:
+      - "8066:8066" # 暴露mycat服务端口
+      - "9066:9066" # 暴露mycat管理端口
+    external_links:
+      - m1
+      - s1
+    networks:
+      - app_net
+    ulimits:
+      nproc: 65535
+    hostname: mycat
+    mem_limit: 1024m
+    restart: always
+
+networks:
+  app_net:
+   external:
+      name: oc_net

@@ -1,3 +1,1 @@
-# scaffold
-
-研发python的脚手架项目
+# python-background-frame-v2.0

@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+
+  rabbitmq:
+    restart: always
+    image: rabbitmq:management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=roy
+      - RABBITMQ_DEFAULT_PASS=123456
+    ports:
+      - 5671:5671
+      - 5672:5672
+      - 4369:4369
+      - 25672:25672
+      - 15671:15671
+      - 15672:15672
+    networks:
+      - app_net
+
+networks:
+  app_net:
+   external:
+      name: oc_net

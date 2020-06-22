@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+
+  m1:
+    build: ./mysql-master
+    container_name: m1
+    volumes:
+      - /tmp/data/database/mysql-master/db:/var/lib/mysql:z
+      - /tmp/data/database/mysql-master/logs:/var/log/mysql:z
+      - /tmp/data/database/mysql-master/backup:/var/lib/backup:Z
+    ports:
+      - "3309:3306" #暴露mysql的端口
+    hostname: m1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    networks:
+      - app_net
+
+networks:
+  app_net:
+   external:
+      name: oc_net

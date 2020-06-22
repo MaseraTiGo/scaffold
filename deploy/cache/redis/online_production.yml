@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+
+  redis:
+    restart: always
+    build: ./
+    container_name: redis
+    hostname: redis
+    command:
+      - --loglevel warning
+    volumes:
+      - /data/cache/redis:/var/lib/redis:Z
+    ports:
+      - 6379:6379
+    networks:
+      - app_net
+
+  redis-stat:
+    restart: always
+    image: insready/redis-stat
+    container_name: redis-stat
+    command: --server redis
+    links:
+      - redis
+    ports:
+      - 9999:63790
+    networks:
+      - app_net
+
+networks:
+  app_net:
+   external:
+      name: oc_net

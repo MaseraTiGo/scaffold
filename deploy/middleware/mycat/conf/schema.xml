@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE mycat:schema SYSTEM "schema.dtd">
+<mycat:schema xmlns:mycat="http://io.mycat/">
+
+	<schema name="oc" checkSQLschema="false">
+		<table name="product_info" primaryKey="id" dataNode="defaultNode" />
+		<table name="product_model" primaryKey="id" dataNode="defaultNode" />
+
+		<table name="staff_info" primaryKey="id" dataNode="defaultNode" />
+		<table name="staff_account" primaryKey="id" dataNode="defaultNode" />
+		<table name="staff_role" primaryKey="id" dataNode="defaultNode" />
+		<table name="staff_department" primaryKey="id" dataNode="defaultNode" />
+		<table name="staff_permise" primaryKey="id" dataNode="defaultNode" />
+
+		<table name="merchant_info" primaryKey="id" dataNode="defaultNode" />
+		<table name="merchant_relation" primaryKey="id" dataNode="defaultNode" />
+		<table name="merchant_order" primaryKey="id" dataNode="defaultNode" />
+		<table name="merchant_trading" primaryKey="id" dataNode="defaultNode" />
+
+		<table name="partner_info" primaryKey="id" dataNode="defaultNode" />
+
+		<table name="task_container" primaryKey="id" dataNode="defaultNode" />
+		<table name="task_group" primaryKey="id" dataNode="defaultNode" />
+		<table name="task_info" primaryKey="id" dataNode="defaultNode" />
+
+		<table name="config_communication" primaryKey="id" dataNode="defaultNode" />
+		<table name="config_wechat_apps" primaryKey="id" dataNode="defaultNode" />
+		<table name="config_wechat_auto_reply" primaryKey="id" dataNode="defaultNode" />
+		<table name="config_wechat_menu" primaryKey="id" dataNode="defaultNode" />
+		<table name="config_wechat_material_text" primaryKey="id" dataNode="defaultNode" />
+		<table name="config_wechat_material_img" primaryKey="id" dataNode="defaultNode" />
+		<table name="config_wechat_msg_template" primaryKey="id" dataNode="defaultNode" />
+		<table name="config_wechat_bund_user" primaryKey="id" dataNode="defaultNode" />
+		<table name="config_wechat_subscribe_user" primaryKey="id" dataNode="defaultNode" />
+		<table name="config_wechat_push_history" primaryKey="id" dataNode="defaultNode" />
+		<table name="config_wechat_app_img" primaryKey="id" dataNode="defaultNode" />
+		<table name="config_wechat_app_news" primaryKey="id" dataNode="defaultNode" />
+		<table name="config_wechat_marterial_news" primaryKey="id" dataNode="defaultNode" />
+
+		<table name="user_accid" primaryKey="id" dataNode="defaultNode" />
+
+		<table name="faq_type" primaryKey="id" dataNode="defaultNode" />
+		<table name="faq_info" primaryKey="id" dataNode="defaultNode" />
+
+		<table name="event_online_service" primaryKey="id" dataNode="defaultNode" />
+		<table name="event_online_service_score" primaryKey="id" dataNode="defaultNode" />
+
+		<table name="sys_journal" primaryKey="id" dataNode="defaultNode" />
+		<table name="record_messages" primaryKey="id" dataNode="defaultNode" />
+
+		<table name="django_content_type" primaryKey="id" dataNode="defaultNode" />
+		<table name="django_migrations" primaryKey="id" dataNode="defaultNode" />
+		<table name="django_session" primaryKey="id" dataNode="defaultNode" />
+	</schema>
+
+	<dataNode name="defaultNode" dataHost="defaultHost" database="oc" />
+
+	<dataHost name="defaultHost" maxCon="1000" minCon="10" balance="3" writeType="0" dbType="mysql" dbDriver="native" switchType="1"  slaveThreshold="100">
+		<heartbeat>select user()</heartbeat>
+		<!-- can have multi write hosts -->
+		<writeHost host="m1" url="m1:3306" user="root" password="123456">
+			<!-- can have multi read hosts -->
+			<!--
+			<readHost host="s1" url="s1:3306" user="root" password="123456" />
+			-->
+		</writeHost>
+		<writeHost host="s1" url="s1:3306" user="root" password="123456" />
+	</dataHost>
+
+</mycat:schema>

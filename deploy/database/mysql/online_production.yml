@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+
+  m1:
+    build: ./mysql-master
+    container_name: m1
+    volumes:
+      - /data/database/mysql-master/db:/var/lib/mysql:z
+      - /data/database/mysql-master/logs:/var/log/mysql:z
+      - /data/database/mysql-master/backup:/var/lib/backup:Z
+      - /etc/localtime:/etc/localtime 
+    ports:
+      - "3309:3306" #暴露mysql的端口
+    ulimits:
+      nproc: 65535
+    hostname: m1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    networks:
+      - app_net
+
+  s1:
+    build: ./mysql-s1
+    container_name: s1
+    volumes:
+      - /data/database/mysql-s1/db:/var/lib/mysql:z
+      - /data/database/mysql-s1/logs:/var/log/mysql:z
+      - /data/database/mysql-s1/backup:/var/lib/backup:Z
+      - /etc/localtime:/etc/localtime 
+    ports:
+      - "3307:3306"
+    ulimits:
+      nproc: 65535
+    hostname: s1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    links:
+      - m1
+    networks:
+      - app_net
+
+networks:
+  app_net:
+   external:
+      name: oc_net

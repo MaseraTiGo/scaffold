@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+
+  tmpserver:
+    restart: always
+    build: ./
+    container_name: tmpserver
+    ports:
+      - 9000:9000
+    networks:
+      - app_net
+    command: /usr/local/bin/python support/mock/youmi/server.py > test.log &
+
+  web:
+    restart: always
+    build: ./
+    container_name: web
+    ports:
+      - 8000:8000
+    environment:
+      - SECRET_KEY=5(15ds+i2+%ik6z&!yer+ga9m=e%jcqiz_5wszg)r-z!2--b2d
+      - DB_NAME=oc
+      - DB_USER=root
+      - DB_PASS=123456
+      - DB_HOST=mycat
+      - DB_PORT=8066
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_POOL_SIZE=500
+    volumes:
+      - /tmp/data/application/web/log:/var/log/app:Z
+    external_links:
+      - redis
+      - rabbitmq
+      - mycat
+    networks:
+      - app_net
+    command: /usr/local/bin/gunicorn wsgi:application -w 2 -b :8000
+
+networks:
+  app_net:
+   external:
+      name: oc_net

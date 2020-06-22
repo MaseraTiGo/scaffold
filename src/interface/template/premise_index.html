@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>premise  ducument</title>    
+        <style type="text/css">
+            table { border-collapse: collapse; }
+            th,td { border: 1px solid #888; padding:4px;}
+	    .red {color:red}
+	    .blue {color:blue}
+            .ml40 {margin-left: 60px}
+            .ml80 {margin-left: 120px}
+            .ml120 {margin-left: 120px}
+            .pl60 {padding-left: 60px}
+            .pl120 {padding-left: 120px}
+            
+            tr td:first-child{ text-align : center;}
+        </style>
+    </head>
+    
+    <body>
+        <div>
+	    {% for root in root_list %}
+		<h4 class=""> 
+		    标示: &nbsp;
+		    <span class="red"> {{root.key}} </span>
+		    权限描述:&nbsp;
+		    <span class="blue"> {{root.desc}}</span>
+		</h4>
+		{% for sub_entity in root.get_children %}
+			<h4 class="pl60"> 
+			    标示: &nbsp;
+			    <span class="red"> {{sub_entity.key}} </span>
+			    权限描述:&nbsp;
+			    <span class="blue"> {{sub_entity.desc}}</span>
+			</h4>
+			{% for third_entity in sub_entity.get_children %}
+				<h4 class="pl120">
+				    标示:&nbsp;
+				    <span class="red" >{{ third_entity.key }} </span>
+				    权限描述:&nbsp;
+				    <span class="blue"> {{ third_entity.desc }}</span>
+				    </br>
+				    绑定API:&nbsp;
+				    <span class="blue">
+					    &nbsp;
+					    {% for api in third_entity.get_apis %}
+						    {{api.get_name}} &nbsp; 
+					    {% endfor %}
+				    </span>
+				</h4>
+			 {% endfor %}
+		{%  endfor %}
+		</br>
+	    {% endfor %}
+        </div>
+    </body>
+</html>

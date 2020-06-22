@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+
+  zabbix:
+    restart: always
+    build: ./
+    container_name: zabbix-monitor
+    hostname: zabbix
+    ports:
+      - 80:80
+    networks:
+      - app_net
+
+networks:
+  app_net:
+   external:
+      name: oc_net

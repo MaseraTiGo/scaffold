@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  
+  nginx:
+    restart: always
+    build: ./
+    container_name: nginx
+    ports:
+      - 80:80
+    volumes:
+      - /data/balance/nginx/cdn:/nginx/cdn:Z
+      - /data/balance/nginx/logs:/nginx/logs:Z
+      - /etc/localtime:/etc/localtime 
+    networks:
+      - app_net
+
+networks:
+  app_net:
+   external:
+      name: oc_net

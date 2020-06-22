@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <title>api ducument</title>    
+        <style type="text/css">
+            table { border-collapse: collapse; }
+            th,td { border: 1px solid #888; padding:4px;}
+            
+            tr td:first-child{ text-align : center;}
+            
+            .b {font-weight:600;}
+            .red { color: red; }
+            .green { color: green; }
+            .purple { color: purple; }
+            .gray { color: gray; }
+            .yellow{ color: yellow; }
+            .blue{ color: blue; }
+            
+            .m20 { margin : 20px ; }
+            .p20 { padding : 20px ; }
+        </style>
+    </head>
+    
+    <body>
+        <div>
+            <h2>结构化数据疾病一览</h2>
+            <hr>
+            <ul style="">
+                {% for disease in show_list %}
+                    <li style="padding:10px;">
+                        <a href="#struct_data_{{disease.flag}}">{{disease.doc}}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div>
+            <h2>结构化数据匹配文档</h2>
+            <hr>
+            {% for disease in show_list %}
+                <div class="p20 m20" style="border:1px double green;">
+                    <div id="struct_data_{{disease.flag}}">
+                        <h3>{{disease.doc}}&nbsp;(标示 - <span class="red">{{disease.flag}}</span>)</h3>
+                    </div>
+                    <hr>
+                    
+                    <div class="m20">
+                        <h4>首诊表单</h4>
+                        <uL>
+                            {% for form in disease.first_treat %}
+                                <li>
+                                    <a href="#form_{{form.key}}">{{form.name}} - <span class="red">{{form.key}}</span></a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <hr>
+                    
+                    <div class="m20">
+                        <h4>可选方案</h4>
+                        {% for case in disease.case_list %}
+                            <div class="m20">
+                                <h4>{{case.name}} - <span class="red">{{case.key}}</span></h4>
+                                <div class="m20">
+                                    <h4>基础表单</h4>
+                                    <ul>
+                                        {% for form in case.base_form_list %}
+                                            <li>
+                                                <a href="#form_{{form.key}}">{{form.name}} - <span class="red">{{form.key}}</span></a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="m20">
+                                    <div>
+                                        <span>数据采集时间点: </span>
+                                        {% for day in case.plan_days %}
+                                            <span>{{day}}</span>
+                                        {% endfor %}
+                                    </div>
+                                    <h4>数据采集表单</h4>
+                                    <ul>
+                                        {% for form in case.data_form_list %}
+                                            <li>
+                                                <a href="#form_{{form.key}}">{{form.name}} - <span class="red">{{form.key}}</span></a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <hr>
+                    
+                    <div class="m20">
+                        <h4>所有表单</h4>
+                        {% for form in disease.forms %}
+                            <div id="form_{{form.key}}" class="m20">
+                                <h4>{{forloop.counter}}
+                                    {{form.name}} - {{form.key}}</h4>
+                                <ul>
+                                    {% for field in form.fields %}
+                                        <li>
+                                            <span class="green b">{{field.verbose}}
+                                                {% if field.unit %}
+                                                    (<span class="purple b">{{field.unit}}</span>)
+                                                {% endif %}
+                                            </span> - <span class="red b">{{field.name}}</span> (<span class="blue b">{{field.field_type}}</span> 
+                                                {% for enum, desc in field.choices %}
+                                                    {{enum}}:<span class="green b">{{desc}}</span>
+                                                {% endfor %}
+                                                
+                                                {% for enum in field.enums %}
+                                                    <span class="green b"> {{enum}} </span>
+                                                {% endfor %}
+                                            )
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+    </body>
+</html>

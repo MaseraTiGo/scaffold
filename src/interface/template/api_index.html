@@ -1,0 +1,275 @@
+<html>
+    <head>
+        <title>api ducument</title>    
+        <style type="text/css">
+            table { border-collapse: collapse; }
+            th,td { border: 1px solid #888; padding:4px;}
+            .ml40 {margin-left: 40px}
+            
+            tr td:first-child{ text-align : center;}
+        </style>
+    </head>
+    
+    <body>
+        
+        <div>
+            <h2 style='border-bottom:1px solid rgb(188, 188, 188)'>错误信息</h2>
+            <table style='border:1px solid #dfdfdf'>
+                <tr>
+                    <td>错误类型</td>
+                    <td>错误代码</td>
+                    <td>错误描述</td>
+                </tr>
+                {% for flag, code, desc in error_list %}
+                    <tr>
+                        <td>{{ flag }}</td>
+                        <td>{{ code }}</td>
+                        <td>{{ desc }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        </br>
+        
+        <div>
+            <H2> 系统提供服务列表 </H2>
+            <hr/>
+            <div class="ml40">
+                {% for service in services %}
+                    <h4> <a> {{ service.get_name }} </a>: {{ service.get_desc }} </h4>
+                    <div>
+                        <ul>
+                            {% for pro in service.get_protocols %}
+                            <li>
+                                <a href="#{{ service.get_flag }}{{pro.get_flag }}">
+                                    {{service.get_flag}} - server
+                                </a>: 
+                                {{ pro.get_desc }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        </br>
+
+        <div>
+            <H2> 系统提供API列表 </H2>
+            <hr/>
+            <div>
+                {% for service in services %}
+                    {% for pro in service.get_protocols %}
+                        <h4 id="{{service.get_flag}}{{ pro.get_flag }}"> 
+                            {{ service.get_name }}（标识：{{service.get_flag}}） : {{ pro.get_desc }} 
+                        </h4>
+                        <table>
+                            <tr>
+                                <td>api名称</td>
+                                <td>api描述</td>
+                            </tr>
+                            {% for doc in service.api_docs %}
+                                {{api}}
+                                <tr>
+                                    <td style="text-align:left;padding: 5px 10px">
+                                        <a href="#{{service.get_flag}}{{pro.get_flag}}{{ doc.get_api.get_name }}">{{ doc.get_api.get_name }}</a></td>
+                                    <td>{{ doc.get_api.get_desc }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        <br>
+                        <div style="overflow:hidden">
+                            <div style="float:left;width:49%">
+                                <h4>请求协议头</h4>
+                                <table>
+                                    <tr>
+                                        <td>公共参数</td>
+                                        <td>描述</td>
+                                    </tr>
+                                    {% for name, field in pro.parser.get_fields.items %}
+                                        <tr>
+                                            <td>{{ name }}</td>
+                                            <td>{{ field.get_desc }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td>auth</td>
+                                        <td>当进行auth验证时，需要传该参数</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <div style="float:right:width:49%">
+                                <h4>返回报文</h4>
+                                <table>
+                                    <tr>
+                                        <td>状态</td>
+                                        <td>返回</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            成功状态
+                                        </td>
+                                        <td>
+                                            <ul>
+                                                {% for name, field in pro.responser.get_success_fields.items %}
+                                                    <li>
+                                                        {{name}} : {{field.get_desc}}
+                                                    </li>
+                                                {% endfor %}
+                                                <li>
+                                                    {{pro.responser.RESULT_FLAG}} :  返回api响应结果
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            失败状态
+                                        </td>
+                                        <td>
+                                            <ul>
+                                                {% for name, field in pro.responser.get_fail_fields.items %}
+                                                    <li>
+                                                        {{name}} : {{field.get_desc}}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        {% for doc in service.api_docs %}
+                            <div id="{{service.get_flag}}{{pro.get_flag}}{{ doc.get_api.get_name }}">
+                                <h4>方法名：{{ doc.get_api.get_name }}</h4>
+<pre style="padding:20px;border:1px solid gray">
+{{ doc.generate }}
+</pre>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    <br/>
+                    <br/>
+                    <br/>
+                    <hr/>
+                    <br/>
+                    <br/>
+                    <br/>
+                {% endfor %}
+            </div>
+        </div>
+        </br>
+
+        <div>
+            <h2>API 服务</h2>
+            <hr>
+            <ul style="">
+                <li style="padding:10px;">
+                    <a href="#api_signature">签名算法</a>
+                </li>
+                <li style="padding:10px;">
+                    <a href="#api_message">api消息类型列表</a>
+                </li>
+            </ul>
+        </div>
+        
+        
+        <div id="api_signature">
+            <h2>api签名算法</h2>
+            <hr>
+            <pre style="margin-left:40px;">
+                {{api_signature_doc}}
+            </pre>
+        </div>
+        
+        <div>
+            <h2>文件上传</h2>
+            <hr>
+            <div style="margin-left:40px;">
+                <h4>传输协议</h4>
+                    <div style="margin-left:40px;">
+                        <p>url地址：http://[domain][:port]/file/upload</p>
+                        <table style='border:1px solid #dfdfdf;'>
+                            <tr>
+                                <td>字段名</td>
+                                <td>描述</td>
+                            </tr>
+                            <tr>
+                                <td>auth_token</td>
+                                <td>访问令牌</td>
+                            </tr>
+                            <tr>
+                                <td>upload_file</td>
+                                <td>文件IO流名称</td>
+                            </tr>
+                            <tr>
+                                <td>store_type</td>
+                                <td >上传文件类型，如：
+                                    <div style="padding:5px 10px;">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+            </div>
+            <div style="margin-left:40px;">
+                <h4>文件传输流HTTP协议剖析 </h4>
+                <pre style="margin-left:40px;">
+POST /file/upload HTTP/1.1
+Host: 192.168.1.240
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Accept: */*
+User-Agent: python-requests/2.11.1
+Content-Length: 626387
+Content-Type: multipart/form-data; boundary=dbc716d9b20c4c5989d24951dae9d58b
+
+--dbc716d9b20c4c5989d24951dae9d58b
+Content-Disposition: form-data; name="store_type"
+
+nick
+--dbc716d9b20c4c5989d24951dae9d58b
+Content-Disposition: form-data; name="auth_token"
+
+7f0a14bdae056193
+--dbc716d9b20c4c5989d24951dae9d58b
+Content-Disposition: form-data; name="upload_file"; filename="test.jpg"
+
+...n.(..W!.>.A..-..F.6.fn.D...VS.kc#...8..+../.]k..dRx^........}.b9..G=?..J
+p....{~=
+......If...a...D....?.G...W..2....(3g..E..(...(...(......_.If...a...D....?.....+..1.........(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...........
+..
+c.Ia.Yc..W....yy.E....."......y.NTQ......m.^....?...=z...d/.,......~f.i.z...H.. .w.....<v...............~-..lt......Gk..6..P% 7..?x.......=.V...O.]A..2+".2.\..}ET..5.S.........Y..t!...R...w<...\.....z
+..^..a..^U..B.}....H...@}E.w...%.......i.$0.k..&......[.^   ?..u..c.:.o....n.\dE..........}....`.Y...8....{.1.......Z.....O..r.N........,.s..c..M/P?.>$...GZ..=3O...%........t.-..z.....E........J=_Wv..m.1..r..u.>../........x...S.}..:@.7R......u[...|h.{.....G
+....Ky....2W..h}(....._ .i.,....-...g[...0..~......~g.......    .}L./..R...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(.....?..j......DA^..^.....,...3/......
+(..*^..c...dA.z....F;.+..cu..xJ.o...i.iw.o2m`C....O|.O9.[..U.
+v.p ........
+.|Oimi...dV...<w=..3X..Iy...:...QH.+.?m..%.W..b........~....K4.......'..n..(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(...(.....CM.dy4;.v)\A%...iul.+....o._.5.3.Zcj:....../..........R.........KE..U.dW.#IJ..j...j..w.mR...z...   ...Ke*..E...r..A..'.g.V.....<;
+.....S..
+#........+.tk....N..|C...{..G..{..G,
+......8.....O.:^./.5.R.....E1L..9.]..
+B8..........C...>G$...,z.k.........%f.5[i&....6..(.z..I...F.]...7....C.\^..<.<..a..0z.}O9.....3.e...K...k....t......r..*r...+7.....~".4Z..u....Hm.....k..
+.F.1.:b..Ck.].~.?..6.}..2.,.y.n........c.k?..?>&.....Y..[{_+a..$....#.....|i.x.Q......
+9..-.o.......;U......
+h6Z..{.4...H...2....~6%..g...C.H.H...."b.M........?..U.8]..>.........l....Y$".4?h"....*.$~f...F .....?.^h......?..........3w....8........6......./..........K.>....&.ZI$....3.'..9.\x_O.G......h.....>.;Ds.D9"..]kZ......{Q.....<.O/.......<...,..x.........MR..9.....U.(....^.P.e.o..'..?.
+7....hwMt.
+.Fx'..]my...k.7.&....=[.O."h....8.[..p..tu&...  4.KS....X..........c...<P.w.1.....Y...+t.....y.O.B./.....m..-....m.S...[..I.Z.....C......c..n.$p..q.......$.%...s.G<.H.m..k............ ..8`.a.....
+........v...3.....,Ww..A........m..7.'.`d...tQE..QE..QE..QE..QE..QE..QE..QE..QE..QE..QE..QE..QE..QE..QE..QE..QE..QE...?.G...W..2....+....b..%....e....P...E..QE..QE..QE..QE......../.?....>......p........#..G.....E.P.E.P.E.P.E.P.E.P.E.P.E.P.E.P.E.P.E.P.E.P.E.P.E.P.E.P.E.P.E.P.E.P.E.P..z..m5......xg.......#.#.W8<.4...h...Q...O.M.\+.3.."..8.....A_......-...A_...._.-(.......x.......:....O
+]x.K...O2[X.m......3\.......6.+...]...o..c.G..rV7..:.<|..S. ....~.../.Guo..k....L.`|...h..tm:.H..4.5e...a.1....&..9..
+...I..U..#.U.}..S.
+GQ..<W%..
+K........y..
+....../.|5.M..=0k[.[..|....8.g..WS...........P.&k...'....o........#M.......Q...3.y..H6......|......k.....@..^G.|S.U[..x'.Iiu:.f...e...,p..G.+.......:._..n7.3..E..0H'.>...........v......x..._.V.j2.@,........9._.1^G.w.:O...;..q...."...{#o..g.^+.<e.k/.i.YjR...S  .....pV^..c^........o.5...!.......FL+..^8>...?...*..v.k...D........].....Km.........Tr%......S.F~..i...^ ......
+.5..L...5{Qp-'[.Av.$S.n.....>..5..|E.t...'U..m.......ff...q......[.:........s#.".,...@.@.pq]o...-_.......E..>&].~2...z........4W}.f..T7..q.@...4.c....R...&.....[$.*...5.7.W.....   uD..m"...2..]...\....
+...>..Mk...F.....7.H..c?.....z....a..j.w.w.K6e.......Oj...(..
+.......
+(IO流.....)
+
+                </pre>
+            </div>
+        </div>
+        
+    </body>
+</html>
