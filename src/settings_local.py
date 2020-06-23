@@ -28,16 +28,14 @@ SECRET_KEY = 'n(ga_y0y4l&e8!tyt2)=f5q1=8(b=3&(cwvhfd*w8=0pm(0@00'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'crm',
-        'NAME': 'data',
+        'NAME': 'crm_base',  # crm_201812282
         'USER': 'root',
-        # 'HOST': '192.168.3.250',
-        # 'PORT': '3306',
-        'HOST': '127.0.0.1',
-        'PASSWORD': '123456',
-        'PORT': '3306',
+        'PASSWORD': 'fsy007',
+        'HOST': 'localhost',
+        'PORT': '3306'
     },
 }
+
 
 
 # MySQL数据库配置
@@ -80,7 +78,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'maxBytes': 1024*1024,
+            'maxBytes': 1024 * 1024,
             'backupCount': 5,
             'filename': '/tmp/app/run.log',
             'formatter': 'verbose'
