@@ -2,4 +2,4 @@ __pycache__/
 *.py[cod]
 tags
 
-settings_local.py
+ssrc/settings_local.py
