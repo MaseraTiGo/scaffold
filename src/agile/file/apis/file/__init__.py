@@ -44,7 +44,7 @@ class Upload(NoAuthrizedApi):
         print(path_list)
         return path_list
         """
-        print(request._upload_files)
+        print(request.role, request.auth, request._upload_files)
         return []
 
     def fill(self, response, path_list):
