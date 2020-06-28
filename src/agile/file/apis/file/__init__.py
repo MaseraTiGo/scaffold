@@ -5,16 +5,15 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
-from agile.apis.server import MiniAuthorizedApi
-from abs.middleware.file import file_middleware
-from abs.middleware.transport.file import FileTransport
+from agile.base.api import NoAuthrizedApi
 
 
-class Upload(MiniAuthorizedApi):
+class Upload(NoAuthrizedApi):
     """上传文件"""
     request = with_metaclass(RequestFieldSet)
-    request._upload_files = RequestField(FileField, desc = "文件名称")
-    request._ip = RequestField(CharField, desc = "上传分类")
+    request._upload_files = RequestField(FileField, desc = "文件名称：协议内置参数")
+    request.role = RequestField(CharField, desc = "访问服务标识，如：crm")
+    request.auth = RequestField(CharField, desc = "访问用户token")
     request.store_type = RequestField(CharField, desc = "上传分类")
 
     response = with_metaclass(ResponseFieldSet)
@@ -31,6 +30,7 @@ class Upload(MiniAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        """
         path_list = []
         if not FileTransport.is_fileserver(request._ip):
             ft = FileTransport(request._upload_files)
@@ -43,6 +43,9 @@ class Upload(MiniAuthorizedApi):
                 path_list.append(host_url + path)
         print(path_list)
         return path_list
+        """
+        print(request._upload_files)
+        return []
 
     def fill(self, response, path_list):
         response.file_paths = path_list

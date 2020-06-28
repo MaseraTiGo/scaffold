@@ -12,8 +12,8 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.core.field.base import CharField, DictField, IntField, ListField, DatetimeField, DateField, BooleanField
 
-from agile.apis.base import StaffAuthorizedApi
-from agile.apis.base import NoAuthrizedApi
+from agile.crm.manager.api import StaffAuthorizedApi
+from agile.base.api import NoAuthrizedApi
 from abs.service.staff.manager import StaffServer, StaffAccountServer
 
 

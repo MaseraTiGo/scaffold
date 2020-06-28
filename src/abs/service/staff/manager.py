@@ -7,11 +7,12 @@ from django.db.models import Q
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
+from abs.service.base import BaseServer
 from abs.service.staff.token import Token
 from model.store.model_staff import Staff, Role, Department, DepartmentRole, Account
 
 
-class StaffServer(object):
+class StaffServer(BaseServer):
 
     @classmethod
     def get(cls, staff):
@@ -41,7 +42,7 @@ class StaffServer(object):
         return staff
 
 
-class StaffAccountServer(object):
+class StaffAccountServer(BaseServer):
 
     @classmethod
     def login(cls, username, password):
@@ -63,7 +64,7 @@ class StaffAccountServer(object):
     def get_image_verification_code(cls):
         return "654321"
 
-class StaffTokenServer(object):
+class StaffTokenServer(BaseServer):
 
     @classmethod
     def generate_token(cls, staff):

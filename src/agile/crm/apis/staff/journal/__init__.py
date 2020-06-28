@@ -12,7 +12,7 @@ from infrastructure.core.field.base import CharField, DictField, IntField, ListF
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
-from agile.apis.base import StaffAuthorizedApi
+from agile.crm.manager.api import StaffAuthorizedApi
 from abs.middleware.journal import JournalMiddleware
 
 

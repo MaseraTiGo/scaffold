@@ -58,7 +58,7 @@ class StaffTestCase(APITestCase):
 
     def test_create_staff(self):
         api = 'staff.add'
-        self.access_crm_api(api = api, is_auth = False, staff_info = json.dumps(self.staff_info))
+        self.access_crm_api(api = api, staff_info = json.dumps(self.staff_info))
 
     def test_search_staff(self):
         api = 'staff.search' 

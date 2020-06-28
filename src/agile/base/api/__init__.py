@@ -4,8 +4,6 @@
 from infrastructure.core.api.base import BaseApi
 from infrastructure.core.exception.debug_error import DebugError
 
-from abs.service.staff.manager import StaffServer, StaffTokenServer
-
 
 class NoAuthrizedApi(BaseApi):
 
@@ -13,7 +11,7 @@ class NoAuthrizedApi(BaseApi):
         return parms
 
 
-class UserAuthorizedApi(BaseApi):
+class AuthorizedApi(BaseApi):
 
     _user_id = None
     _auth_flag = "auth"
@@ -43,11 +41,3 @@ class UserAuthorizedApi(BaseApi):
         raise NotImplementedError('Please imporlement this interface in subclass')
 
 
-class StaffAuthorizedApi(UserAuthorizedApi):
-
-    def load_token(self, auth_str):
-        return StaffTokenServer.get_token(auth_str)
-
-    def load_auth_user(self):
-        staff = StaffServer.get_byid(self._user_id)
-        return staff

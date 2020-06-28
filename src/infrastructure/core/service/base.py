@@ -51,15 +51,3 @@ class BaseAPIService(Single):
 
     def get_apis(self):
         return self._api_mapping.values()
-
-
-class ToolAPIService(BaseAPIService):
-    pass
-
-
-class BusinessAPIService(BaseAPIService):
-    pass
-
-
-class RoleAPIService(BaseAPIService):
-    pass

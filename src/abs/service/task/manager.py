@@ -11,11 +11,12 @@ from abs.middleware.department import department_middleware
 
 from model.store.model_staff import Staff, AuthAccess, AccessTypes, Role, Department
 
+from abs.service.base import BaseServer
 from abs.service.task.container import TaskContainerHelper
 from abs.service.task.group import TaskGroupHelper
 
 
-class TaskContainerServer(object):
+class TaskContainerServer(BaseServer):
 
     @classmethod
     def add(cls, **attrs):
@@ -43,7 +44,7 @@ class TaskContainerServer(object):
         return TaskContainerHelper.remover(task_container)
 
 
-class TaskGroupServer(object):
+class TaskGroupServer(BaseServer):
 
     @classmethod
     def add(cls, **attrs):

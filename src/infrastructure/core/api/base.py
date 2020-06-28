@@ -9,7 +9,7 @@ from infrastructure.core.api.utils import with_metaclass
 class ApiInterface(object):
 
     @classmethod
-    def get_name(cls, level = 2):
+    def get_name(cls, level = 3):
         name = cls.__name__.lower()
         namespace = '.'.join(cls.__module__.split('.')[level:])
         return '.'.join([namespace, name])

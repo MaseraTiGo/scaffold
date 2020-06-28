@@ -12,13 +12,11 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 
-from agile.apis.base import StaffAuthorizedApi
-from agile.apis.base import NoAuthrizedApi
+from agile.crm.manager.api import StaffAuthorizedApi
 from abs.service.staff.manager import StaffServer
 
 
-# class Add(StaffAuthorizedApi):
-class Add(NoAuthrizedApi):
+class Add(StaffAuthorizedApi):
     """添加员工"""
     request = with_metaclass(RequestFieldSet)
     request.staff_info = RequestField(DictField, desc = "员工详情", conf = {
@@ -54,7 +52,7 @@ class Add(NoAuthrizedApi):
 
 
 
-class Search(NoAuthrizedApi):
+class Search(StaffAuthorizedApi):
     """搜索员工"""
     request = with_metaclass(RequestFieldSet)
     request.current_page = RequestField(IntField, desc = "当前页码")

@@ -62,7 +62,7 @@ class APITestCase(unittest.TestCase):
         self.assertEqual(status, 'ok', result.get("msg", ""))
         return result['result']
 
-    def _get_crm_auth_token(self, flag = 'crm'):
+    def _get_crm_auth_token(self, flag = 'crm-pc'):
         api = "staff.account.login"
         username = "admin"  # "15623937796"#"13682286629"#
         password = hashlib.md5("123456".encode('utf8'))\
@@ -78,7 +78,7 @@ class APITestCase(unittest.TestCase):
                 self._get_crm_auth_token()
             parms.update({'auth':self._auth_token})
 
-        return self.access_base('crm', api, **parms)
+        return self.access_base('crm-pc', api, **parms)
 
     def access_file_api(self, api, files = None, flag = 'file', is_auth = True, **parms):
         if self._auth_token == "":
