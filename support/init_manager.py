@@ -13,13 +13,13 @@ class InitManager(Single):
         # staff init
         self._staff = StaffGenerator(StaffLoader().load())
         self._account = AccountGenerator()
-        self._department = DepartmentGenerator(DepartmentLoader().load())
-        self._role = RoleGenerator(RoleLoader().load())
-        self._access = DepartmentRoleGenerator()
+        # self._department = DepartmentGenerator(DepartmentLoader().load())
+        # self._role = RoleGenerator(RoleLoader().load())
+        # self._access = DepartmentRoleGenerator()
 
     def generate_staff_relate(self):
         self._staff.add_outputs(self._account)
-        self._access.add_inputs(self._staff, self._role, self._department)
+        # self._access.add_inputs(self._staff, self._role, self._department)
         return self._staff
 
     def run(self):

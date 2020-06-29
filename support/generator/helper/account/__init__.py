@@ -6,7 +6,7 @@ from infrastructure.utils.common.dictwrapper import DictWrapper
 from support.generator.base import BaseGenerator
 from support.generator.helper import StaffGenerator
 from model.common.model_account_base import StatusTypes
-from model.store.model_staff import Account
+from model.store.model_staff import StaffAccount
 
 
 class AccountGenerator(BaseGenerator):
@@ -15,10 +15,10 @@ class AccountGenerator(BaseGenerator):
         staff_list = result_mapping.get(StaffGenerator.get_key())
         account_list = []
         for staff in staff_list:
-            if staff.certification.name == "admin":
-                username = staff.certification.name
+            if staff.name == "admin":
+                username = staff.name
             else:
-                username = staff.certification.phone
+                username = staff.phone
             account_info = DictWrapper({
                 "username": username,
                 "password": hashlib.md5("123456".encode('utf8'))\
@@ -30,11 +30,11 @@ class AccountGenerator(BaseGenerator):
         return account_list
 
     def create(self, account_info, result_mapping):
-        account_qs = Account.query().filter(staff = account_info.staff)
+        account_qs = StaffAccount.query().filter(staff = account_info.staff)
         if account_qs.count():
             account = account_qs[0]
         else:
-            account = Account.create(**account_info)
+            account = StaffAccount.create(**account_info)
         return account
 
     def delete(self):

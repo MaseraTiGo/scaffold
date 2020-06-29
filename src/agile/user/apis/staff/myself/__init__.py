@@ -62,13 +62,13 @@ class Get(StaffAuthorizedApi):
             'department_role_id': department_role.id,
         } for department_role in staff.department_role_list]
         response.staff_info = {
-            'name': staff.certification.name,
+            'name': staff.name,
             'id_number': staff.id_number,
             'identification': staff.certification.identification,
-            'gender': staff.certification.gender,
-            'birthday': staff.certification.birthday,
-            'phone': staff.certification.phone,
-            'email': staff.certification.email,
+            'gender': staff.gender,
+            'birthday': staff.birthday,
+            'phone': staff.phone,
+            'email': staff.email,
             'is_admin': staff.is_admin,
             'department_role_list': department_role_list
         }

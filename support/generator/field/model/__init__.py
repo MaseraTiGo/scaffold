@@ -1,7 +1,7 @@
 # coding=UTF-8
 
 import random
-from support.simulate.tool.base.base import BaseHelper
+from support.generator.field.base import BaseHelper
 
 
 class GenderHelper(BaseHelper):

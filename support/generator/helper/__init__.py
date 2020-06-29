@@ -3,9 +3,9 @@
 # staff generator
 from support.generator.helper.staff import StaffGenerator
 from support.generator.helper.account import AccountGenerator
-from support.generator.helper.department import DepartmentGenerator
-from support.generator.helper.role import RoleGenerator
-from support.generator.helper.departmentrole import DepartmentRoleGenerator
+# from support.generator.helper.department import DepartmentGenerator
+# from support.generator.helper.role import RoleGenerator
+# from support.generator.helper.departmentrole import DepartmentRoleGenerator
 
 
 # product generator

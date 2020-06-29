@@ -10,14 +10,21 @@ import json
 from django.db.models import *
 from django.utils import timezone
 from model.base import BaseModel
-from model.common.model_user_base import UserCertification
+from model.common.model_user_base import GenderTypes, EducationType, UserCertification
 from model.common.model_account_base import BaseAccount
 
 
 class Staff(BaseModel):
     """员工表"""
     id_number = CharField(verbose_name = "员工工号", max_length = 128)
-    certification = ForeignKey(UserCertification, on_delete=DO_NOTHING)
+    name = CharField(verbose_name = "姓名", max_length = 32)
+    gender = CharField(verbose_name = "性别", max_length = 24, choices = GenderTypes.CHOICES, default = GenderTypes.UNKNOWN)
+    birthday = DateField(verbose_name = "生日", null = True, blank = True)
+    education = CharField(verbose_name = "学历", max_length = 24, choices = EducationType.CHOICES, default = EducationType.OTHER)
+
+    phone = CharField(verbose_name = "手机号", max_length = 20, default = "" , null = True)
+    email = CharField(verbose_name = "邮箱", max_length = 128, default = "", null = True)
+    certification = ForeignKey(UserCertification, on_delete=DO_NOTHING, null = True, default = None)
     entry_time = DateField(verbose_name = "入职时间", null = True, blank = True)
     resignation_time = DateField(verbose_name = "离职时间", null = True, blank = True)
     is_admin = BooleanField(verbose_name = "是否是管理员", default = False)
@@ -45,15 +52,6 @@ class Staff(BaseModel):
         staff_qs = cls.query().filter(**attrs)
         return staff_qs
 
-    @classmethod
-    def create(cls, **infos):
-        staff = cls.create(**infos)
-        if staff is not None:
-             number = "BQ{number}".format(number = (staff.id + 10000))
-             staff.update(number = number)
-
-        return staff
-
     def update(self, **infos):
         certification = self.certification.update(**infos)
         if certification:
@@ -63,7 +61,7 @@ class Staff(BaseModel):
             return None
 
 
-class Account(BaseAccount):
+class StaffAccount(BaseAccount):
     """员工账号表"""
     staff = ForeignKey(Staff, on_delete=CASCADE)
 
@@ -152,55 +150,3 @@ class DepartmentRole(BaseModel):
     @classmethod
     def get_all_bystaff(cls, staff):
         return cls.query(staff = staff)
-
-
-class JournalTypes(object):
-    LOGIN = "login"
-    OTHER = "other"
-    DELETE = "delete"
-    IMPORTRESET = "status reset"
-    LOOK = "look"
-    SEARCH = "search"
-    EDIT = "edit"
-    REMOVE = "remove"
-    UPDATE = "update"
-    ADD = "add"
-    RECOVER = "recover"
-    IMPORTDATA = "import"
-    ALLOT = "allot"
-    CLOSE = "close"
-    CHOICES = ((LOGIN, '登录'), (OTHER, "其它"), (IMPORTRESET, "导入数据状态重置"), (DELETE, "删除"), (LOOK, "查詢"), \
-               (EDIT, "編輯"), (SEARCH, "搜索"), (REMOVE, "刪除"), (UPDATE, "更新"), (ADD, "新增"), (IMPORTDATA, "数据导入"), \
-               (RECOVER, "恢复"), (ALLOT, "分配"), (CLOSE, "关闭"),
-               )
-
-
-class OperationTypes(object):
-    STAFF = "staff"
-    USER = "user"
-    SYSTEM = "system"
-    CHOICES = ((STAFF, '员工'), (USER, "用户"), (SYSTEM, "系统"))
-
-
-class Journal(BaseModel):
-    """日志表"""
-    active_uid = IntegerField(verbose_name = "主动方uid", default = 0)
-    active_name = CharField(verbose_name = "主动方姓名", max_length = 128)
-    active_type = CharField(verbose_name = "主动方类型", max_length = 64, choices = OperationTypes.CHOICES, default = OperationTypes.SYSTEM)
-    passive_uid = IntegerField(verbose_name = "被动方uid", default = 0)
-    passive_name = CharField(verbose_name = "被动方姓名", max_length = 128)
-    passive_type = CharField(verbose_name = "被动方类型", max_length = 64, choices = OperationTypes.CHOICES, default = OperationTypes.SYSTEM)
-    journal_type = CharField(verbose_name = "日志类型", max_length = 64, choices = JournalTypes.CHOICES, default = JournalTypes.OTHER)
-    record_detail = TextField(verbose_name = "详情")
-    remark = TextField(verbose_name = "备注")
-
-    create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)
-
-    class Meta:
-        db_table = "staff_journal"
-
-    @classmethod
-    def search(cls, **attrs):
-        journal_qs = cls.query().filter(**attrs)
-        return journal_qs
-

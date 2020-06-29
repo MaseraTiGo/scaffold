@@ -36,8 +36,8 @@ class BaseModel(Model):
         try:
             return cls.objects.create(**default)
         except Exception as e:
-            # print("【attention】(class:{class_name}) to create error, the detail : {e}"\
-            #       .format(class_name = cls.__name__, e = e))
+            print("【attention】(class:{class_name}) to create error, the detail : {e}"\
+                  .format(class_name = cls.__name__, e = e))
             raise e
             return None
 

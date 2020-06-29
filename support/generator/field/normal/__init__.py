@@ -3,9 +3,9 @@
 import random
 import datetime
 from infrastructure.utils.common.single import Single
-from support.simulate.tool.base.base import BaseHelper, BaseDateHelper
-from support.simulate.tool.data.address import ADDRES_TEMPLATES
-from support.simulate.tool.data.name import NAME_LIST
+from support.generator.field.base import BaseHelper, BaseDateHelper
+from support.generator.field.data.address import ADDRES_TEMPLATES
+from support.generator.field.data.name import NAME_LIST
 
 
 class NameHelper(BaseHelper):

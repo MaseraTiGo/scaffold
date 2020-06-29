@@ -9,7 +9,7 @@ from infrastructure.utils.common.split_page import Splitor
 
 from abs.service.base import BaseServer
 from abs.middleware.token import TokenManager
-from model.store.model_staff import Staff, Role, Department, DepartmentRole, Account
+from model.store.model_staff import Staff, Role, Department, DepartmentRole, StaffAccount
 
 
 class StaffServer(BaseServer):
@@ -46,7 +46,7 @@ class StaffAccountServer(BaseServer):
 
     @classmethod
     def login(cls, username, password):
-        is_exsited, account = Account.is_exsited(username, password)
+        is_exsited, account = StaffAccount.is_exsited(username, password)
         if is_exsited:
             token = TokenManager.generate_token('crm', account.staff.id)
             return token

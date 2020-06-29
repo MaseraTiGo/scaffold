@@ -28,8 +28,7 @@ class StaffGenerator(BaseGenerator):
         if staff_qs.count():
             staff = staff_qs[0]
         else:
-            staff_info.update({'certification': user_certification})
-            staff = Staff.create(**staff_info)
+            staff = Staff.create(certification = user_certification, **staff_info)
         return staff
 
     def delete(self):

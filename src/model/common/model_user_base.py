@@ -33,14 +33,11 @@ class EducationType(object):
 
 
 class UserCertification(BaseModel):
-    identification = CharField(verbose_name = "身份证号", max_length = 24, default = "", null = True)
-    name = CharField(verbose_name = "姓名", max_length = 64, default = "")
-    gender = CharField(verbose_name = "性别", max_length = 24, choices = GenderTypes.CHOICES, default = GenderTypes.UNKNOWN)
-    birthday = DateField(verbose_name = "生日", null = True, blank = True)
-    education = CharField(verbose_name = "学历", max_length = 24, choices = EducationType.CHOICES, default = EducationType.OTHER)
-
-    phone = CharField(verbose_name = "手机号", max_length = 20, default = "" , null = True)
-    email = CharField(verbose_name = "邮箱", max_length = 128, default = "", null = True)
+    name = CharField(verbose_name = "姓名", max_length = 64)
+    identification = CharField(verbose_name = "身份证号", max_length = 24)
+    id_front = CharField(verbose_name = "身份证正面", max_length = 256, default = "", null = True)
+    id_back = CharField(verbose_name = "身份证反面", max_length = 256, default = "", null = True)
+    id_in_hand = CharField(verbose_name = "身份证反面", max_length = 256, default = "", null = True)
     remark = TextField(verbose_name = "备注", default = "", null = True)
 
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
