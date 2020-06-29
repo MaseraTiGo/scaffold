@@ -156,9 +156,8 @@ class AutoTest(object):
         self._execute_ddl_sql("DROP DATABASE IF EXISTS {db_name};".format(db_name=default_db['NAME']))
 
     def _init_data(self):
-        # import init_manager
-        # init_manager.InitManager.get_manager().run()
-        pass
+        import init_manager
+        init_manager.InitManager().run()
 
     def run(self):
         logger.info('-------------- auto test start --------------')
