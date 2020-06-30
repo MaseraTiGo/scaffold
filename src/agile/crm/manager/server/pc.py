@@ -30,5 +30,9 @@ crm_pc_service.add(Get, Update)
 
 from agile.crm.apis.staff.account import Login, Logout
 crm_pc_service.add(Login, Logout)
+
 from agile.crm.apis.staff.account.vcode import Phone, Image
 crm_pc_service.add(Phone, Image)
+
+from agile.crm.apis.customer import Get, Search, Update, Add
+crm_pc_service.add(Get, Search, Update, Add)

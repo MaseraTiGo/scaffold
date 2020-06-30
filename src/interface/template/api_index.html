@@ -143,7 +143,14 @@
 
                         {% for doc in service.api_docs %}
                             <div id="{{service.get_flag}}{{pro.get_flag}}{{ doc.get_api.get_name }}">
-                                <h4>方法名：{{ doc.get_api.get_name }}</h4>
+                                <h4>方法名：{{ doc.get_api.get_name }} 
+                                    {% if not doc.get_api.is_auth %}
+                                    <span style="color:red" />
+                                        (不需要验证参数：auth)
+                                    </span>
+                                    {% endif %}
+
+                                </h4>
 <pre style="padding:20px;border:1px solid gray">
 {{ doc.generate }}
 </pre>

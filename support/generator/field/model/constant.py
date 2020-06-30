@@ -1,0 +1,18 @@
+# coding=UTF-8
+
+import random
+from support.generator.field.base import BaseHelper
+
+
+class GenderConstant(BaseHelper):
+
+    def calc(self):
+        from model.common.model_user_base import GenderTypes
+        return random.choice(GenderTypes.CHOICES)[0]
+
+
+class EducationConstant(BaseHelper):
+
+    def calc(self):
+        from model.common.model_user_base import EducationType
+        return random.choice(EducationType.CHOICES)[0]

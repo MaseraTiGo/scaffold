@@ -24,6 +24,7 @@ from infrastructure.log.base import logger
 
 from agile.base.protocol.django import DjangoProtocol
 from agile.crm.manager.server import crm_pc_service
+from agile.customer.manager.server import customer_mobile_service
 from agile.file.manager.server import file_service
 from abs.middleware.rule import rule_register
 from abs.middleware.xml import XMLHandler
@@ -31,6 +32,7 @@ from abs.middleware.xml import XMLHandler
 protocol = DjangoProtocol()
 protocol.add(crm_pc_service)
 protocol.add(file_service)
+protocol.add(customer_mobile_service)
 
 
 def router(request):

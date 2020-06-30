@@ -46,6 +46,11 @@ class EquipNumberHelper(BaseHelper):
     def calc(self):
         return "SN" + str(self.get_count()).rjust(8, '0')
 
+class WorkNumberHelper(BaseHelper):
+
+    def calc(self):
+        return "WN" + str(self.get_count()).rjust(8, '0')
+
 
 class MobilePhoneHelper(BaseHelper):
 
@@ -125,13 +130,6 @@ class EmailHelper(BaseHelper):
         return str(random.randint(100000,99999999)) + "@" \
                + random.choice(["163", "qq", "google", "wangyi"]) + "."\
                     + random.choice(['cn','com'])
-
-
-class EducationHelper(BaseHelper):
-
-    def calc(self):
-        return random.choice(['primary', 'middle', 'high', 'undergraduate', 'college', \
-                              'master', 'doctor', 'other'])
 
 
 class ContractHelper(BaseHelper):

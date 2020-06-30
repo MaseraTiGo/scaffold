@@ -7,6 +7,10 @@ from infrastructure.core.exception.debug_error import DebugError
 
 class NoAuthrizedApi(BaseApi):
 
+    @classmethod
+    def is_auth(cls):
+        return False
+
     def authorized(self, request, parms):
         return parms
 

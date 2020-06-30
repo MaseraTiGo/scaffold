@@ -39,7 +39,7 @@ class Customer(BaseModel):
 
     @classmethod
     def get_customer_byname(cls, name):
-        """根据姓名查询员工"""
+        """根据姓名查询客户"""
         try:
             return cls.query().filter(name = name)[0]
         except:
@@ -49,15 +49,6 @@ class Customer(BaseModel):
     def search(cls, **attrs):
         customer_qs = cls.query().filter(**attrs)
         return customer_qs
-
-    @classmethod
-    def create(cls, **infos):
-        customer = cls.create(**infos)
-        if customer is not None:
-             number = "BQ{number}".format(number = (customer.id + 10000))
-             customer.update(number = number)
-
-        return customer
 
     def update(self, **infos):
         certification = self.certification.update(**infos)
@@ -69,7 +60,7 @@ class Customer(BaseModel):
 
 
 class CustomerAccount(BaseAccount):
-    """员工账号表"""
+    """客户账号表"""
     nick = CharField(verbose_name = "昵称", max_length = 64)
     profile = CharField(verbose_name = "头像", max_length = 256)
     customer = ForeignKey(Customer, on_delete=CASCADE)

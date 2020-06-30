@@ -3,8 +3,6 @@
 import random
 import datetime
 from infrastructure.utils.common.single import Single
-from model.store.model_user import GenderTypes
-from support.simulate.tool.data.address import ADDRES_TEMPLATES
 
 
 class BaseHelper(Single):

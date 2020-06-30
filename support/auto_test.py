@@ -23,7 +23,7 @@ from infrastructure.log.base import logger
 join = os.path.join
 
 base_dir = init_envt.BASE_DIR
-api_test_dir = join(join(join(base_dir, 'support'), 'test'), 'api')
+api_test_dir = join(join(join(base_dir, 'support'), 'test'), 'projects')
 start_file = join(base_dir, "manage.py")
 
 account = '237818280@qq.com'

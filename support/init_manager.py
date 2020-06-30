@@ -12,19 +12,27 @@ class InitManager(Single):
     def __init__(self):
         # staff init
         self._staff = StaffGenerator(StaffLoader().load())
-        self._account = AccountGenerator()
+        self._staff_account = StaffAccountGenerator()
         # self._department = DepartmentGenerator(DepartmentLoader().load())
         # self._role = RoleGenerator(RoleLoader().load())
         # self._access = DepartmentRoleGenerator()
 
+        # customer init 
+        self._customer = CustomerGenerator(CustomerLoader().load())
+        self._customer_account = CustomerAccountGenerator()
+
+
     def generate_staff_relate(self):
-        self._staff.add_outputs(self._account)
+        self._staff.add_outputs(self._staff_account)
         # self._access.add_inputs(self._staff, self._role, self._department)
-        return self._staff
+
+        self._customer.add_outputs(self._customer_account)
+        return self._staff, self._customer
 
     def run(self):
-        staff_generator = self.generate_staff_relate()
+        staff_generator, customer_generator = self.generate_staff_relate()
         staff_generator.generate()
+        customer_generator.generate()
 
 
 if __name__ == "__main__":

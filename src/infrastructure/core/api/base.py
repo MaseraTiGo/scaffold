@@ -15,6 +15,10 @@ class ApiInterface(object):
         return '.'.join([namespace, name])
 
     @classmethod
+    def is_auth(cls):
+        return True
+
+    @classmethod
     def get_desc(cls):
         return "这是一个测试的desc"
 

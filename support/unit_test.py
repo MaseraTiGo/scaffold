@@ -18,10 +18,12 @@ import init_envt
 
 class UnitTest(object):
 
-    def __init__(self, file_names):
+    def __init__(self, model, file_names):
+        self._model = model
         self._file_names = file_names
         self.base_dir = init_envt.BASE_DIR
-        self._test_dir = join(join(self.base_dir, 'support'), 'test')
+        self._root_dir = join(join(join(self.base_dir, 'support'), 'test'), 'projects')
+        self._test_dir = join(self._root_dir, self._model)
 
     def _load(self):
         module_names = []
@@ -48,9 +50,10 @@ class UnitTest(object):
 
 if __name__ == "__main__":
     test_file = [sys.argv[0]]
-    file_names = sys.argv[1:]
+    test_model = sys.argv[1]
+    file_names = sys.argv[2:]
 
     if len(file_names) > 0:
-        UnitTest(file_names).run()
+        UnitTest(test_model, file_names).run()
     else:
-        print("Sorry, please input test file name.")
+        print("Sorry, please input test file and test_model name.")
