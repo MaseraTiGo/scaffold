@@ -22,8 +22,14 @@ customer_mobile_service = CustomerMobileService()
 from agile.customer.apis.customer.account.vcode import Phone, Image
 customer_mobile_service.add(Phone, Image)
 
-from agile.customer.apis.customer.account import Login, Logout
-customer_mobile_service.add(Login, Logout)
+from agile.customer.apis.customer.account import Login, Logout, Register
+customer_mobile_service.add(Register, Login, Logout)
 
 from agile.customer.apis.customer.myself import Get, Update
 customer_mobile_service.add(Get, Update)
+
+from agile.customer.apis.customer.myself.address import Get, All, Remove, Add, Update
+customer_mobile_service.add(Add, Get, All, Update, Remove)
+
+from agile.customer.apis.customer.myself.bankcard import Get, All, Remove, Add
+customer_mobile_service.add(Add, Get, All, Remove)

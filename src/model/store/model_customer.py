@@ -25,17 +25,13 @@ class Customer(BaseModel):
     email = CharField(verbose_name = "邮箱", max_length = 128, default = "", null = True)
     wechat = CharField(verbose_name = "微信", max_length = 128, default = "", null = True)
     qq = CharField(verbose_name = "qq", max_length = 128, default = "", null = True)
-    certification = ForeignKey(UserCertification, on_delete=DO_NOTHING)
+    certification = ForeignKey(UserCertification, on_delete=DO_NOTHING, null = True, default = None)
 
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)
 
     class Meta:
         db_table = "customer_info"
-
-    @property
-    def department_role_list(self):
-        return DepartmentRole.get_all_bycustomer(self)
 
     @classmethod
     def get_customer_byname(cls, name):
@@ -69,6 +65,11 @@ class CustomerAccount(BaseAccount):
         db_table = "customer_account"
 
     @classmethod
+    def search(cls, **attrs):
+        account_qs = cls.query().filter(**attrs)
+        return account_qs
+
+    @classmethod
     def is_exsited(cls, username, password):
         account_qs = cls.objects.filter(username = username, password = password)
         if account_qs.count():
@@ -82,3 +83,48 @@ class CustomerAccount(BaseAccount):
             return cls.objects.filter(customer = customer_id)[0]
         except:
             return None
+
+
+class CustomerAddress(BaseModel):
+    """客户联系地址"""
+    contacts = CharField(verbose_name = "联系人", max_length = 64)
+    gender = CharField(verbose_name = "性别", max_length = 24, choices = GenderTypes.CHOICES, default = GenderTypes.UNKNOWN)
+    phone = CharField(verbose_name = "联系电话", max_length = 64)
+    is_default = BooleanField(verbose_name = "是否默认", default= False)
+
+    city = CharField(verbose_name = "城市", max_length = 64)
+    address = CharField(verbose_name = "详细地址", max_length = 256)
+
+    customer = ForeignKey(Customer, on_delete=CASCADE)
+
+    update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
+    create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)
+
+    class Meta:
+        db_table = "customer_address"
+
+    @classmethod
+    def search(cls, **attrs):
+        address_qs = cls.query().filter(**attrs)
+        return address_qs
+
+
+class CustomerBankCard(BaseModel):
+    """客户银行卡"""
+    number = CharField(verbose_name = "银行卡号", max_length = 64)
+    name = CharField(verbose_name = "开户人姓名", max_length = 16)
+    phone = CharField(verbose_name = "开户人手机号", max_length = 20)
+    identification = CharField(verbose_name = "开户人身份证", max_length = 24)
+
+    customer = ForeignKey(Customer, on_delete=CASCADE)
+
+    update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
+    create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)
+
+    class Meta:
+        db_table = "customer_bankcard"
+
+    @classmethod
+    def search(cls, **attrs):
+        bankcard_qs = cls.query().filter(**attrs)
+        return bankcard_qs

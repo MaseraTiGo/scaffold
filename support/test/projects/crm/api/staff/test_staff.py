@@ -67,27 +67,26 @@ class StaffTestCase(APITestCase):
         self.assertTrue("data_list" in result)
         self.assertTrue("total" in result)
         self.assertTrue("total_page" in result)
+
+        if result['total'] <= 0 :
+            self.test_create_staff()
+            result = self.access_crm_api(api = api, current_page = current_page, search_info = json.dumps({}))
+
         for staff in result['data_list']:
             self.assert_staff_fields(staff, True)
         return result['data_list']
 
     def test_get_staff(self):
         staff_list = self.test_search_staff()
-        if staff_list:
-            staff_id = staff_list[-1]['id']
-            api = "staff.get"
-            result = self.access_crm_api(api = api, staff_id = staff_id)
-            self.assertTrue('staff_info' in result)
-            self.assert_staff_fields(result['staff_info'])
-        else:
-            self.assertTrue("the staff_id cann't acquired! " == "")
+        staff_id = staff_list[-1]['id']
+        api = "staff.get"
+        result = self.access_crm_api(api = api, staff_id = staff_id)
+        self.assertTrue('staff_info' in result)
+        self.assert_staff_fields(result['staff_info'])
 
     def test_update_staff(self):
         staff_list = self.test_search_staff()
-        if staff_list:
-            staff_id = staff_list[-1]['id']
-            api = "staff.update"
-            self.access_crm_api(api = api, staff_id = staff_id, staff_info =
-                                         json.dumps(self.update_info))
-        else:
-            self.assertTrue("the staff_id cann't acquired! " == "")
+        staff_id = staff_list[-1]['id']
+        api = "staff.update"
+        self.access_crm_api(api = api, staff_id = staff_id, staff_info =
+                                     json.dumps(self.update_info))

@@ -18,7 +18,7 @@ from abs.service.staff.manager import StaffServer, StaffAccountServer
 
 
 class Phone(NoAuthrizedApi):
-    """获取登录手机验证码"""
+
     request = with_metaclass(RequestFieldSet)
     request.number = RequestField(CharField, desc = "手机号码")
 
@@ -27,7 +27,7 @@ class Phone(NoAuthrizedApi):
 
     @classmethod
     def get_desc(cls):
-        return "员工登录接口"
+        return "获取登录手机验证码"
 
     @classmethod
     def get_author(cls):
@@ -43,7 +43,7 @@ class Phone(NoAuthrizedApi):
 
 
 class Image(NoAuthrizedApi):
-    """获取登录图片验证码"""
+
     request = with_metaclass(RequestFieldSet)
 
     response = with_metaclass(ResponseFieldSet)
