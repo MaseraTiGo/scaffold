@@ -45,11 +45,11 @@ class CustomerAddressTestCase(APITestCase):
     def test_customer_myself_address_all(self):
         api = 'customer.myself.address.all'
         result = self.access_customer_api(api)
-        if not result:
+        self.assertTrue("address_list" in result)
+        if not result['address_list']:
             self.test_customer_myself_address_add()
             result = self.access_customer_api(api)
 
-        self.assertTrue("address_list" in result)
         for address in result['address_list']:
             self.assert_address_fields(address)
         return result['address_list']
