@@ -6,8 +6,8 @@ source ./deploy_project.sh
 log "server" "to start project is starting ..."
 if [ -e ${deploydir} ]
 then
-	server_names=('mysql' 'mycat' 'rabbitmq' 'redis' 'web' 'nginx')
-	server_path=('/database/mysql' '/middleware/mycat' '/middleware/rabbitmq' '/cache/redis' '/application/web' '/balance/nginx')
+	server_names=('mysql' 'rabbitmq' 'redis' 'web' 'nginx')
+	server_path=('/database/mysql' '/middleware/rabbitmq' '/cache/redis' '/application/web' '/balance/nginx')
 
 	server_len=${#server_names[@]} 
 	for((i=0;i<${server_len};i++))

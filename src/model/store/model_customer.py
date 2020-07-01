@@ -47,12 +47,11 @@ class Customer(BaseModel):
         return customer_qs
 
     def update(self, **infos):
-        certification = self.certification.update(**infos)
-        if certification:
-            super(Customer, self).update(certification = certification, **infos)
-            return self
-        else:
-            return None
+        certification = None
+        if self.certification:
+            certification = self.certification.update(**infos)
+        customer = super(Customer, self).update(certification = certification, **infos)
+        return customer
 
 
 class CustomerAccount(BaseAccount):

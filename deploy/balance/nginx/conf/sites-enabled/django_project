@@ -15,16 +15,6 @@ server {
 
     keepalive_timeout  65;
 
-    location ^~ /IM/ {
-        root   /nginx/cdn;
-    }
-
-    location ^~ /gzh/ {
-        root   /nginx/cdn;
-        try_files $uri /gzh/index.html;
-        index  index.html index.htm;
-    }
-
     location / {
         root   /nginx/cdn;
         try_files $uri /index.html;

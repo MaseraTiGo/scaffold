@@ -26,6 +26,6 @@ docker_backup_dir=/var/lib/backup
 
 # invalide project files
 invalide_files=(
-    "${deploydir}/application/web/tuoen/settings_local.py" 
-    "${deploydir}/application/web/tuoen/settings_local.pyc"
+    "${deploydir}/application/web/src/settings_local.py" 
+    "${deploydir}/application/web/src/settings_local.pyc"
 )
