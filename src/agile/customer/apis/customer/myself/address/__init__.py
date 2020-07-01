@@ -92,12 +92,12 @@ class Update(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.address_id = RequestField(IntField, desc = "地址ID")
     request.update_info = RequestField(DictField, desc = "客户修改详情", conf = {
-        'contacts': CharField(desc = "联系人"),
-        'gender': CharField(desc = "性别"),
-        'phone': CharField(desc = "手机号"),
-        'city': CharField(desc = "城市"),
-        'address': CharField(desc = "详细地址"),
-        'is_default': BooleanField(desc = "是否是默认"),
+        'contacts': CharField(desc = "联系人", is_required  = False),
+        'gender': CharField(desc = "性别", is_required  = False),
+        'phone': CharField(desc = "手机号", is_required  = False),
+        'city': CharField(desc = "城市", is_required  = False),
+        'address': CharField(desc = "详细地址", is_required  = False),
+        'is_default': BooleanField(desc = "是否是默认", is_required  = False),
     })
 
     response = with_metaclass(ResponseFieldSet)

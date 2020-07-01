@@ -17,18 +17,11 @@ class CustomerGenerator(BaseGenerator):
         return self._customer_infos
 
     def create(self, customer_info, result_mapping):
-        user_certification_qs = UserCertification.query().filter(identification =
-                                                                 customer_info.identification)
-        if user_certification_qs.count():
-            user_certification = user_certification_qs[0]
-        else :
-            user_certification = UserCertification.create(**customer_info)
-
         customer_qs = Customer.query().filter(phone = customer_info.phone)
         if customer_qs.count():
             customer = customer_qs[0]
         else:
-            customer = Customer.create(certification = user_certification, **customer_info)
+            customer = Customer.create(**customer_info)
         return customer
 
     def delete(self):

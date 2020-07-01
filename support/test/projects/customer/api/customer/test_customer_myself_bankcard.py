@@ -10,7 +10,7 @@ class CustomerBankcardTestCase(APITestCase):
 
     def setUp(self):
         self.add_info = {
-            'number': '6222020607000847162',
+            'bank_number': '6222020607000847162',
             'phone': '15527701100',
             'name': '胡晓星',
             'identification': '152127188807091121',
@@ -22,7 +22,9 @@ class CustomerBankcardTestCase(APITestCase):
 
     def assert_bankcard_fields(self, bankcard):
         self.assertTrue('id' in bankcard)
-        self.assertTrue('number' in bankcard)
+        self.assertTrue('bank_number' in bankcard)
+        self.assertTrue('bank_name' in bankcard)
+        self.assertTrue('bank_name' in bankcard)
         self.assertTrue('phone' in bankcard)
         self.assertTrue('name' in bankcard)
         self.assertTrue('identification' in bankcard)

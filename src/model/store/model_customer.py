@@ -46,13 +46,15 @@ class Customer(BaseModel):
         customer_qs = cls.query().filter(**attrs)
         return customer_qs
 
+    """
+    # todo: need to refractor
     def update(self, **infos):
         certification = None
         if self.certification:
             certification = self.certification.update(**infos)
         customer = super(Customer, self).update(certification = certification, **infos)
         return customer
-
+    """
 
 class CustomerAccount(BaseAccount):
     """客户账号表"""
@@ -110,7 +112,9 @@ class CustomerAddress(BaseModel):
 
 class CustomerBankCard(BaseModel):
     """客户银行卡"""
-    number = CharField(verbose_name = "银行卡号", max_length = 64)
+    bank_name = CharField(verbose_name = "银行名称", max_length = 24)
+    bank_code = CharField(verbose_name = "银行编码", max_length = 20)
+    bank_number = CharField(verbose_name = "银行卡号", max_length = 64)
     name = CharField(verbose_name = "开户人姓名", max_length = 16)
     phone = CharField(verbose_name = "开户人手机号", max_length = 20)
     identification = CharField(verbose_name = "开户人身份证", max_length = 24)

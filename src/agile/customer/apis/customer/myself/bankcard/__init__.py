@@ -22,7 +22,7 @@ class Add(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.bankcard_info = RequestField(DictField, desc = "添加银行卡", conf = {
         'name': CharField(desc = "姓名"),
-        'number': CharField(desc = "银行卡号"),
+        'bank_number': CharField(desc = "银行卡号"),
         'phone': CharField(desc = "手机号"),
         'identification': CharField(desc = "身份证"),
         'code': CharField(desc = "验证码"),
@@ -55,7 +55,9 @@ class Get(CustomerAuthorizedApi):
     response.bankcard_info = ResponseField(DictField, desc = "银行卡详情", conf = {
         'id': IntField(desc = "银行卡id"),
         'name': CharField(desc = "姓名"),
-        'number': CharField(desc = "银行卡号"),
+        'bank_code': CharField(desc = "银行编码"),
+        'bank_name': CharField(desc = "银行名称"),
+        'bank_number': CharField(desc = "银行卡号"),
         'phone': CharField(desc = "手机号"),
         'identification': CharField(desc = "身份证"),
     })
@@ -76,7 +78,9 @@ class Get(CustomerAuthorizedApi):
             'id': bankcard.id,
             'name': bankcard.name,
             'identification': bankcard.identification,
-            'number': bankcard.number,
+            'bank_number': bankcard.bank_number,
+            'bank_name': bankcard.bank_name,
+            'bank_code': bankcard.bank_code,
             'phone': bankcard.phone,
         }
         return response
@@ -91,7 +95,9 @@ class All(CustomerAuthorizedApi):
                                        DictField(desc = "银行卡详情", conf = {
                                             'id': IntField(desc = "银行卡id"),
                                             'name': CharField(desc = "姓名"),
-                                            'number': CharField(desc = "银行卡号"),
+                                            'bank_code': CharField(desc = "银行编码"),
+                                            'bank_name': CharField(desc = "银行名称"),
+                                            'bank_number': CharField(desc = "银行卡号"),
                                             'phone': CharField(desc = "手机号"),
                                             'identification': CharField(desc = "身份证"),
                                         }))
@@ -114,7 +120,9 @@ class All(CustomerAuthorizedApi):
             'id': bankcard.id,
             'name': bankcard.name,
             'identification': bankcard.identification,
-            'number': bankcard.number,
+            'bank_number': bankcard.bank_number,
+            'bank_name': bankcard.bank_name,
+            'bank_code': bankcard.bank_code,
             'phone': bankcard.phone,
         } for bankcard in bankcard_qs]
         return response

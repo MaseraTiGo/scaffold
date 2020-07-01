@@ -15,7 +15,7 @@ class StaffMaker(BaseMaker):
 
     def generate(self):
         staff = StaffGenerator(StaffTemplate().generate())
-        account = AccountGenerator()
+        account = StaffAccountGenerator()
         # department = DepartmentGenerator(DepartmentTemplate().generate())
         # role = RoleGenerator(RoleTemplate().generate())
         # auth = AuthAccessGenerator()

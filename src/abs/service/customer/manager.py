@@ -68,9 +68,14 @@ class CustomerServer(BaseServer):
         return address
 
     @classmethod
-    def add_bankcard(cls, customer_id, **bankcard_info):
+    def add_bankcard(cls, customer_id, bank_number, **bankcard_info):
         customer = cls.get_byid(customer_id)
-        bankcard = CustomerBankCard.create(customer = customer, **bankcard_info)
+
+        # todo: add card to verify
+        bank_name, bank_code = '中国工商银行', 'ICBC'
+
+        bankcard = CustomerBankCard.create(customer = customer, bank_name = bank_name, bank_code =
+                                           bank_code, bank_number = bank_number, **bankcard_info)
         return bankcard
 
     @classmethod

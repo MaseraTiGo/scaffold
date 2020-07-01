@@ -40,22 +40,10 @@ class OrderNumberHelper(BaseHelper):
     def calc(self):
         return "OR" + str(self.get_count()).rjust(8, '0')
 
-
-class EquipNumberHelper(BaseHelper):
-
-    def calc(self):
-        return "SN" + str(self.get_count()).rjust(8, '0')
-
 class WorkNumberHelper(BaseHelper):
 
     def calc(self):
         return "WN" + str(self.get_count()).rjust(8, '0')
-
-
-class MobilePhoneHelper(BaseHelper):
-
-    def calc(self):
-        return "MP" + str(self.get_count()).rjust(4, '0')
 
 
 class PhoneHelper(BaseHelper):
@@ -68,6 +56,12 @@ class PhoneHelper(BaseHelper):
 
     def calc(self):
         return str(random.choice(self.get_enume()) * 100000000 + self.get_count())
+
+
+class QQHelper(BaseHelper):
+
+    def calc(self):
+        return str(random.randint(0, 1000) * 1000000 + random.randint(0, 1000000))
 
 
 class DateHelper(BaseDateHelper):
