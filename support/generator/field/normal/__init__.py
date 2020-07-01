@@ -100,9 +100,18 @@ class DateTimeHelper(BaseDateHelper):
 class BankCardHelper(BaseHelper):
 
     def calc(self):
-        name = random.choice(['中国银行', '招商银行', '光大银行'])
-        number = str(random.randint(10000000, 99999999)) + str(random.randint(10000000, 99999999))
-        return name, number
+        bank_list = (
+            ('中国工商银行', "ICBC"),
+            ('中国邮政储蓄银行', "PSBC"),
+            ('中国农业银行', "ABC"),
+            ('中国银行', "BOC"),
+            ('中国建设银行', "CCB"),
+            ('中国交通银行', "COMM"),
+            ('招商银行', "CMB"),
+        )
+        bank_name, bank_code = random.choice(bank_list)
+        bank_number = str(random.randint(10000000, 99999999)) + str(random.randint(10000000, 99999999))
+        return bank_name, bank_code, bank_number
 
 
 class LogisticsCompanyHelper(BaseHelper):
@@ -132,7 +141,7 @@ class ContractHelper(BaseHelper):
         return "BQ" + str(random.randint(0, 10000)).rjust(5, '0')
 
 
-class IdentityHelper(BaseHelper):
+class IdentificationHelper(BaseHelper):
 
     def calc(self):
         return str(random.randint(100000,999999)) \
@@ -154,5 +163,5 @@ class AddressHelper(BaseHelper):
 
     def calc(self):
         if not hasattr(self, '_enume'):
-            self._enume = [data[3] for data in ADDRES_TEMPLATES]
+            self._enume = [ ('-'.join([data[0], data[1]]), data[3]) for data in ADDRES_TEMPLATES]
         return random.choice(self._enume)

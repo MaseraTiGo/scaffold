@@ -2,6 +2,7 @@
 
 
 import hashlib
+import random
 from django.db.models import Q
 
 from infrastructure.core.exception.business_error import BusinessError
@@ -72,7 +73,16 @@ class CustomerServer(BaseServer):
         customer = cls.get_byid(customer_id)
 
         # todo: add card to verify
-        bank_name, bank_code = '中国工商银行', 'ICBC'
+        bank_list = (
+            ('中国工商银行', "ICBC"),
+            ('中国邮政储蓄银行', "PSBC"),
+            ('中国农业银行', "ABC"),
+            ('中国银行', "BOC"),
+            ('中国建设银行', "CCB"),
+            ('中国交通银行', "COMM"),
+            ('招商银行', "CMB"),
+        )
+        bank_name, bank_code = random.choice(bank_list)
 
         bankcard = CustomerBankCard.create(customer = customer, bank_name = bank_name, bank_code =
                                            bank_code, bank_number = bank_number, **bankcard_info)

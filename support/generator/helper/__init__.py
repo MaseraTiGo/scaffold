@@ -11,6 +11,8 @@ from support.generator.helper.crm.account import StaffAccountGenerator
 # customer generate
 from support.generator.helper.customer.customer import CustomerGenerator
 from support.generator.helper.customer.account import CustomerAccountGenerator
+from support.generator.helper.customer.address import CustomerAddressGenerator
+from support.generator.helper.customer.bankcard import CustomerBankcardGenerator
 
 # product generator
 
