@@ -79,7 +79,7 @@ class Login(NoAuthrizedApi):
 
 
 class Logout(CustomerAuthorizedApi):
-    
+
     request = with_metaclass(RequestFieldSet)
     response = with_metaclass(ResponseFieldSet)
 

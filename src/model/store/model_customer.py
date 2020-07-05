@@ -311,7 +311,6 @@ class CustomerTransactionOutputRecord(BaseModel):
         return output_record
 
 
-
 class CustomerBalanceRecord(BaseModel):
     """客户余额记录"""
     number = CharField(verbose_name = "交易编号", max_length = 48)

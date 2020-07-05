@@ -41,7 +41,7 @@ class Forget(NoAuthrizedApi):
         token = CustomerAccountServer.forget_password(
             phone = request.phone,
             code = request.code,
-            new_password = request.password,
+            new_password = request.password
         )
         return token
 

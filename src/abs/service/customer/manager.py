@@ -144,6 +144,9 @@ class CustomerAccountServer(BaseServer):
         if code  != "123456":
             raise BusinessError('验证码错误，请重新输入！')
         account = CustomerAccount.get_byphone(phone)
+        if account is None:
+            raise BusinessError('账户不存在！')
+
         account.update(password = new_password)
         token = TokenManager.generate_token('user', account.customer.id)
         return token
