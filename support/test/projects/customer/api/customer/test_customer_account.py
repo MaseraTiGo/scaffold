@@ -45,3 +45,20 @@ class CustomerAccountTest(APITestCase):
         api = 'customer.account.logout'
         params = {}
         self.access_customer_api(api = api, **params)
+
+    def test_account_password_modify(self):
+        api = 'customer.account.password.modify'
+        params = {
+            "old_password": hashlib.md5("123456".encode('utf8')).hexdigest(),
+            "new_password": hashlib.md5("123456".encode('utf8')).hexdigest(),
+        }
+        self.access_customer_api(api = api, **params)
+
+    def test_account_password_forget(self):
+        api = 'customer.account.password.forget'
+        params = {
+            "password": hashlib.md5("123456".encode('utf8')).hexdigest(),
+            "code": "123456",
+            "phone": "15527703115",
+        }
+        self.access_customer_api(api = api, **params)

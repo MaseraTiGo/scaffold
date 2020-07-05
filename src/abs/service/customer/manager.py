@@ -3,6 +3,7 @@
 
 import hashlib
 import random
+import collections
 from django.db.models import Q
 
 from infrastructure.core.exception.business_error import BusinessError
@@ -11,7 +12,10 @@ from infrastructure.utils.common.split_page import Splitor
 from abs.service.base import BaseServer
 from abs.middleware.token import TokenManager
 from model.common.model_account_base import StatusTypes
-from model.store.model_customer import Customer, CustomerAccount, CustomerAddress, CustomerBankCard
+from model.store.model_customer import Customer, CustomerAccount, CustomerAddress, \
+                CustomerBankCard, CustomerTransactionRecord, CustomerTransactionOutputRecord, \
+                    CustomerTransactionInputRecord, CustomerBalanceRecord, BusinessTypes, \
+                        TransacationStatus, PayTypes
 
 
 class CustomerServer(BaseServer):
@@ -127,6 +131,24 @@ class CustomerAccountServer(BaseServer):
         raise BusinessError('账号或密码不存在！')
 
     @classmethod
+    def modify_password(cls, customer_id, old_password, new_password):
+        account = CustomerAccount.get_account_bycustomer(customer_id)
+        if account.password != old_password:
+            raise BusinessError('老密码不正确，请重试！')
+        account.update(password = new_password)
+        return True
+
+    @classmethod
+    def forget_password(cls, phone, code, new_password):
+        # todo: 需要获取验证码
+        if code  != "123456":
+            raise BusinessError('验证码错误，请重新输入！')
+        account = CustomerAccount.get_byphone(phone)
+        account.update(password = new_password)
+        token = TokenManager.generate_token('user', account.customer.id)
+        return token
+
+    @classmethod
     def logout(cls, customer):
         pass
 
@@ -137,3 +159,109 @@ class CustomerAccountServer(BaseServer):
     @classmethod
     def get_image_verification_code(cls):
         return "654321"
+
+
+class CustomerFinanceServer(BaseServer):
+
+    @classmethod
+    def search_transaction_record(cls, current_page, **search_info):
+        transaction_record_qs = CustomerTransactionRecord.search(**search_info)
+        transaction_record_qs.order_by('-create_time')
+        return Splitor(current_page, transaction_record_qs)
+
+    @classmethod
+    def statistics_customer_bymonth(cls, customer_id):
+        customer = CustomerServer.get_byid(customer_id)
+        transaction_record_qs = CustomerTransactionRecord.\
+                search(customer = customer).order_by("-create_time")
+        statistics_result = collections.OrderedDict()
+        for transaction in transaction_record_qs:
+            key = (transaction.create_time.year, transaction.create_time.month)
+            if key not in statistics_result:
+                statistics_result[key] = [0, 0]
+            if transaction.input_record_id:
+                statistics_result[key][0] += transaction.amount
+            if transaction.output_record_id:
+                statistics_result[key][1] += transaction.amount
+
+        result = [[key[0], key[1], result[0], result[1]] for key, result in statistics_result.items()]
+        return result
+
+    @classmethod
+    def get_balance(cls, customer_id):
+        customer = CustomerServer.get_byid(customer_id)
+        balance = CustomerBalanceRecord.get_balance(customer)
+        return balance
+
+    @classmethod
+    def withdraw(cls, customer_id, amount, pay_type, remark):
+        customer = CustomerServer.get_byid(customer_id)
+        balance = cls.get_balance(customer_id)
+        if amount > balance:
+            raise BusinessError('账号余额不足！')
+
+        # 1. 创建余额凭证
+        balance_record = CustomerBalanceRecord.create(
+            amount = amount,
+            remark = remark,
+            pay_type = pay_type,
+            customer = customer,
+        )
+
+        # 2. 生成出账单
+        output_record = CustomerTransactionOutputRecord.create(
+            amount = amount,
+            pay_type = pay_type,
+            remark = remark,
+            customer = customer,
+            business_type = BusinessTypes.BALANCE,
+            business_id = balance_record.id,
+        )
+
+        # 3. 绑定出账单到余额凭证中
+        balance_record.update(
+            output_record = output_record,
+        )
+        return balance_record
+
+    @classmethod
+    def top_up(cls, customer_id, amount, pay_type, remark):
+        customer = CustomerServer.get_byid(customer_id)
+
+        # 1. 生成入账单
+        input_record = CustomerTransactionInputRecord.create(
+            amount = amount,
+            pay_type = pay_type,
+            remark = remark,
+            customer = customer,
+            business_type = BusinessTypes.BALANCE,
+        )
+
+        # 2. 创建余额凭证
+        balance_record = CustomerBalanceRecord.create(
+            amount = input_record.amount,
+            remark = input_record.remark,
+            pay_type = input_record.pay_type,
+            customer = input_record.customer,
+            input_record = input_record,
+        )
+
+        # 3. 绑定余额凭证到入账单
+        input_record.update(
+            business_id = balance_record.id,
+        )
+
+        # 4. 模拟支付到账
+        input_record.update(
+            status = TransacationStatus.ACCOUNT_FINISH,
+        )
+        return balance_record
+
+    @classmethod
+    def get_transacation_detail(cls, transaction_id):
+        transaction =  CustomerTransactionRecord.get_byid(transaction_id)
+        if transaction.input_record_id:
+            transaction.record = CustomerTransactionInputRecord.get_byid(transaction.input_record_id)
+        if transaction.output_record_id:
+            transaction.record = CustomerTransactionOutputRecord.get_byid(transaction.output_record_id)
+        return transaction

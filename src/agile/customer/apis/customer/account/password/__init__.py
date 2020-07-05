@@ -1,7 +1,7 @@
 # coding=UTF-8
 
 '''
-Created on 2020年7月3日
+Created on 2020年7月5日
 
 @author: Roy
 '''
@@ -17,41 +17,11 @@ from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.service.customer.manager import CustomerServer, CustomerAccountServer
 
 
-class Register(NoAuthrizedApi):
+class Forget(NoAuthrizedApi):
 
     request = with_metaclass(RequestFieldSet)
     request.phone = RequestField(CharField, desc = "手机号码")
-    request.password = RequestField(CharField, desc = "密码")
     request.code = RequestField(CharField, desc = "验证码")
-
-    response = with_metaclass(ResponseFieldSet)
-    response.access_token = ResponseField(CharField, desc = "访问凭证")
-    response.renew_flag = ResponseField(CharField, desc = "续签标识")
-    response.expire_time = ResponseField(CharField, desc = "到期时间")
-
-    @classmethod
-    def get_desc(cls):
-        return "客户注册接口"
-
-    @classmethod
-    def get_author(cls):
-        return "Roy"
-
-    def execute(self, request):
-        token = CustomerAccountServer.register(request.phone, request.password, request.code)
-        return token
-
-    def fill(self, response, token):
-        response.access_token = token.auth_token
-        response.renew_flag = token.renew_flag
-        response.expire_time = token.expire_time
-        return response
-
-
-class Login(NoAuthrizedApi):
-
-    request = with_metaclass(RequestFieldSet)
-    request.username = RequestField(CharField, desc = "账号")
     request.password = RequestField(CharField, desc = "密码")
 
     response = with_metaclass(ResponseFieldSet)
@@ -61,14 +31,18 @@ class Login(NoAuthrizedApi):
 
     @classmethod
     def get_desc(cls):
-        return "客户登录接口"
+        return "客户忘记密码接口"
 
     @classmethod
     def get_author(cls):
         return "Roy"
 
     def execute(self, request):
-        token = CustomerAccountServer.login(request.username, request.password)
+        token = CustomerAccountServer.forget_password(
+            phone = request.phone,
+            code = request.code,
+            new_password = request.password,
+        )
         return token
 
     def fill(self, response, token):
@@ -78,22 +52,28 @@ class Login(NoAuthrizedApi):
         return response
 
 
-class Logout(CustomerAuthorizedApi):
-    
+class Modify(CustomerAuthorizedApi):
+
     request = with_metaclass(RequestFieldSet)
+    request.old_password = RequestField(CharField, desc = "老密码")
+    request.new_password = RequestField(CharField, desc = "新密码")
+
     response = with_metaclass(ResponseFieldSet)
 
     @classmethod
     def get_desc(cls):
-        return "客户注销接口"
+        return "客户修改密码接口"
 
     @classmethod
     def get_author(cls):
         return "Roy"
 
     def execute(self, request):
-        customer = self.auth_user
-        CustomerAccountServer.logout(customer)
+        CustomerAccountServer.modify_password(
+            customer_id = self.auth_user.id,
+            old_password = request.old_password,
+            new_password = request.new_password
+        )
 
-    def fill(self, response):
+    def fill(self, response, token):
         return response

@@ -19,11 +19,14 @@ class CustomerMobileService(BaseAPIService):
 
 
 customer_mobile_service = CustomerMobileService()
+from agile.customer.apis.customer.account import Login, Logout, Register
+customer_mobile_service.add(Register, Login, Logout)
+
 from agile.customer.apis.customer.account.vcode import Phone, Image
 customer_mobile_service.add(Phone, Image)
 
-from agile.customer.apis.customer.account import Login, Logout, Register
-customer_mobile_service.add(Register, Login, Logout)
+from agile.customer.apis.customer.account.password import Forget, Modify
+customer_mobile_service.add(Forget, Modify)
 
 from agile.customer.apis.customer.myself import Get, Update
 customer_mobile_service.add(Get, Update)
@@ -33,3 +36,12 @@ customer_mobile_service.add(Add, Get, All, Update, Remove)
 
 from agile.customer.apis.customer.myself.bankcard import Get, All, Remove, Add
 customer_mobile_service.add(Add, Get, All, Remove)
+
+from agile.customer.apis.customer.finance.balance import Get, TopUp, Withdraw
+customer_mobile_service.add(Get, TopUp, Withdraw)
+
+from agile.customer.apis.customer.finance.transaction import Get, Search
+customer_mobile_service.add(Get, Search)
+
+from agile.customer.apis.customer.finance.transaction.statistics import Monthly
+customer_mobile_service.add(Monthly)

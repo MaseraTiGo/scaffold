@@ -16,3 +16,10 @@ class EducationConstant(BaseHelper):
     def calc(self):
         from model.common.model_user_base import EducationType
         return random.choice(EducationType.CHOICES)[0]
+
+
+class PayTypeConstant(BaseHelper):
+
+    def calc(self):
+        from model.store.model_customer import PayTypes
+        return random.choice(PayTypes.CHOICES)[0]
