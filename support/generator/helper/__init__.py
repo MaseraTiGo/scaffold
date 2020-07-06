@@ -13,6 +13,7 @@ from support.generator.helper.customer.customer import CustomerGenerator
 from support.generator.helper.customer.account import CustomerAccountGenerator
 from support.generator.helper.customer.address import CustomerAddressGenerator
 from support.generator.helper.customer.bankcard import CustomerBankcardGenerator
+from support.generator.helper.customer.finance import CustomerBalanceGenerator
 
 # product generator
 

@@ -25,7 +25,7 @@ class TestDataManager(Single):
         # MobileDevicesMaker().run(10)
 
         # generate customer by staff
-        CustomerMaker().run(100)
+        CustomerMaker().run(10)
 
 if __name__ == "__main__":
     TestDataManager().run()

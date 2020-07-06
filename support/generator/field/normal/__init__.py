@@ -64,6 +64,12 @@ class QQHelper(BaseHelper):
         return str(random.randint(0, 1000) * 1000000 + random.randint(0, 1000000))
 
 
+class AmountHelper(BaseHelper):
+
+    def calc(self):
+        return random.randint(1, 99999999)
+
+
 class DateHelper(BaseDateHelper):
 
     def calc(self, is_direction = False, years = 0, days = 0):

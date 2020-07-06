@@ -15,7 +15,7 @@ from model.common.model_account_base import StatusTypes
 from model.store.model_customer import Customer, CustomerAccount, CustomerAddress, \
                 CustomerBankCard, CustomerTransactionRecord, CustomerTransactionOutputRecord, \
                     CustomerTransactionInputRecord, CustomerBalanceRecord, BusinessTypes, \
-                        TransacationStatus, PayTypes
+                        TransactionStatus, PayTypes
 
 
 class CustomerServer(BaseServer):
@@ -256,7 +256,7 @@ class CustomerFinanceServer(BaseServer):
 
         # 4. 模拟支付到账
         input_record.update(
-            status = TransacationStatus.ACCOUNT_FINISH,
+            status = TransactionStatus.ACCOUNT_FINISH,
         )
         return balance_record
 

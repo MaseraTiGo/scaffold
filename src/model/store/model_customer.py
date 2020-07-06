@@ -168,7 +168,7 @@ class BusinessTypes(object):
     CHOICES = ((ORDER, '订单'), (BALANCE, "余额"))
 
 
-class TransacationStatus(object):
+class TransactionStatus(object):
     PAY_FINISH = "pay_finish"
     TRANSACTION_DEALING = "transaction_dealing"
     ACCOUNT_FINISH = "account_finish"
@@ -215,7 +215,7 @@ class CustomerTransactionInputRecord(BaseModel):
     number = CharField(verbose_name = "入账交易编号", max_length = 48)
     amount = IntegerField(verbose_name = "金额，单位：分") # 有正负之分
     pay_type = CharField(verbose_name = "支付方式", max_length = 12, choices = PayTypes.CHOICES)
-    status = CharField(verbose_name = "交易状态", max_length = 24, choices = TransacationStatus.CHOICES, default = TransacationStatus.PAY_FINISH)
+    status = CharField(verbose_name = "交易状态", max_length = 24, choices = TransactionStatus.CHOICES, default = TransactionStatus.PAY_FINISH)
     remark = TextField(verbose_name = "记录备注", default = "")
 
     business_type = CharField(verbose_name = "业务来源", max_length = 16, choices = BusinessTypes.CHOICES)
@@ -243,7 +243,7 @@ class CustomerTransactionInputRecord(BaseModel):
 
     def update(self, **output_infos):
         self = super(CustomerTransactionInputRecord, self).update(**output_infos)
-        if self.status == TransacationStatus.ACCOUNT_FINISH and self.transaction is None:
+        if self.status == TransactionStatus.ACCOUNT_FINISH and self.transaction is None:
             transacation_record = CustomerTransactionRecord.create(
                 amount =  self.amount,
                 pay_type = self.pay_type,
@@ -268,7 +268,7 @@ class CustomerTransactionOutputRecord(BaseModel):
     number = CharField(verbose_name = "出账交易编号", max_length = 48)
     amount = IntegerField(verbose_name = "金额，单位：分") # 有正负之分
     pay_type = CharField(verbose_name = "支付方式", max_length = 12, choices = PayTypes.CHOICES)
-    status = CharField(verbose_name = "交易状态", max_length = 24, choices = TransacationStatus.CHOICES, default = TransacationStatus.PAY_FINISH)
+    status = CharField(verbose_name = "交易状态", max_length = 24, choices = TransactionStatus.CHOICES, default = TransactionStatus.PAY_FINISH)
     remark = TextField(verbose_name = "记录备注", default = "")
 
     business_type = CharField(verbose_name = "业务来源", max_length = 16, choices = BusinessTypes.CHOICES)
