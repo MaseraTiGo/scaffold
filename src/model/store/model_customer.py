@@ -72,7 +72,7 @@ class CustomerAccount(BaseAccount):
 
     @classmethod
     def is_exsited(cls, username, password):
-        account_qs = cls.objects.filter(username = username, password = password)
+        account_qs = cls.search(username = username, password = password)
         if account_qs.count():
             return True, account_qs[0]
         return False, None
@@ -123,6 +123,17 @@ class CustomerAddress(BaseModel):
     def search(cls, **attrs):
         address_qs = cls.query().filter(**attrs)
         return address_qs
+
+    def update(self, **attrs):
+        org_is_default = self.is_default
+        cur_is_default = attrs.get("is_default", None)
+        super(CustomerAddress, self).update(**attrs)
+
+        if cur_is_default is not None and org_is_default != cur_is_default:
+            if cur_is_default:
+                self.__class__.search(customer = self.customer)\
+                        .filter(~Q(id = self.id)).update(is_default = False)
+        return self
 
 
 class CustomerBankCard(BaseModel):

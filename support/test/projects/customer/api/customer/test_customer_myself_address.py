@@ -23,7 +23,7 @@ class CustomerAddressTestCase(APITestCase):
             'phone': '15527701111',
             'city': '湖北省-武汉市-洪山区',
             'address': '光谷软件园展示中心C做3楼301',
-            'is_default': False,
+            'is_default': True,
         }
 
     def tearDown(self):
