@@ -48,7 +48,7 @@ class TextApiDoc(ApiDocBuilder):
         tmp_str = fmt_str.format(field.get_type(), field.get_desc())
         choices = field.get_choices()
         if choices:
-            tmp_str += " 如：" + ' '.join("、".join(map(str, [key, value])) for key, value in choices)
+            tmp_str += " 例：" + ' 、 '.join(" -> ".join(map(str, [key, value])) for key, value in choices)
         return tmp_str
 
     def generate_param_desc(self, field):
@@ -56,7 +56,7 @@ class TextApiDoc(ApiDocBuilder):
         tmp_str = fmt_str.format(field.get_type(), field.get_desc())
         choices = field.get_choices()
         if choices:
-            tmp_str += " 例：" + ' '.join("、".join(map(str, [key, value])) for key, value in choices)
+            tmp_str += " 例：" + ' 、 '.join(" -> ".join(map(str, [key, value])) for key, value in choices)
 
         default = field.get_default()
         if default:

@@ -252,6 +252,7 @@ class CustomerTransactionInputRecord(BaseModel):
                 business_type = self.business_type,
                 business_id = self.business_id,
                 customer = self.customer,
+                create_time = self.create_time,
             )
             self.update(transaction = transacation_record)
         return self
@@ -306,6 +307,7 @@ class CustomerTransactionOutputRecord(BaseModel):
                 business_type = output_record.business_type,
                 business_id = output_record.business_id,
                 customer = output_record.customer,
+                create_time = output_record.create_time,
             )
             output_record.update(transaction = transacation_record)
         return output_record

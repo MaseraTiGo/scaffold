@@ -83,7 +83,7 @@ class APITestCase(unittest.TestCase):
 
     def _get_customer_auth_token(self, flag = 'customer-mobile'):
         api = "customer.account.login"
-        username = "15527703115"  # "15623937796"#"13682286629"#
+        username = "15527703115"  # "15623937796"
         password = hashlib.md5("123456".encode('utf8'))\
                                 .hexdigest()
         result = self.access_base(flag = flag, api = api, username = username, \

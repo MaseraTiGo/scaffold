@@ -67,7 +67,7 @@ class QQHelper(BaseHelper):
 class AmountHelper(BaseHelper):
 
     def calc(self):
-        return random.randint(1, 99999999)
+        return random.randint(1, 999999)
 
 
 class DateHelper(BaseDateHelper):

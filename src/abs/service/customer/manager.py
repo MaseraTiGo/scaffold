@@ -203,9 +203,10 @@ class CustomerFinanceServer(BaseServer):
         if amount > balance:
             raise BusinessError('账号余额不足！')
 
+        expense_amount = 0 - amount
         # 1. 创建余额凭证
         balance_record = CustomerBalanceRecord.create(
-            amount = amount,
+            amount = expense_amount,
             remark = remark,
             pay_type = pay_type,
             customer = customer,
@@ -213,9 +214,9 @@ class CustomerFinanceServer(BaseServer):
 
         # 2. 生成出账单
         output_record = CustomerTransactionOutputRecord.create(
-            amount = amount,
-            pay_type = pay_type,
-            remark = remark,
+            amount = balance_record.amount,
+            pay_type = balance_record.pay_type,
+            remark = balance_record.remark,
             customer = customer,
             business_type = BusinessTypes.BALANCE,
             business_id = balance_record.id,

@@ -28,7 +28,10 @@ class Get(CustomerAuthorizedApi):
                                         'amount': IntField(desc = "交易金额"),
                                         'pay_type': CharField(desc = "交易方式"),
                                         'remark': CharField(desc = "交易说明"),
-                                        'status': CharField(desc = "交易状态"),
+                                        'status': CharField(desc = "交易状态", choices = (\
+                                                ('pay_finish', '付款成功'), \
+                                                ('transaction_dealing', "交易处理中"),\
+                                                ('account_finish', "到账成功"))),
                                         'create_time': DatetimeField(desc = "交易时间"),
                                     })
 

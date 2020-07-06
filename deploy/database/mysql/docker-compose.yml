@@ -10,7 +10,7 @@ services:
       - /tmp/data/database/mysql-master/logs:/var/log/mysql:z
       - /tmp/data/database/mysql-master/backup:/var/lib/backup:Z
     ports:
-      - "3309:3306" #暴露mysql的端口
+      - "3306:3306" #暴露mysql的端口
     hostname: m1
     restart: always
     environment:

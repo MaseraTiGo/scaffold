@@ -46,7 +46,9 @@ class TopUp(CustomerAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
     request.amount = RequestField(IntField, desc = "充值金额")
-    request.pay_type = RequestField(CharField, desc = "交易方式")
+    request.pay_type = RequestField(CharField, desc = "交易方式", \
+                        choices = (('bank', '银行'), ('alipay', "支付宝"), ('wechat', "微信"),
+                                  ('balance', "余额")))
     request.remark = RequestField(CharField, desc = "充值说明")
 
     response = with_metaclass(ResponseFieldSet)
@@ -76,7 +78,9 @@ class Withdraw(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.amount = RequestField(IntField, desc = "提现金额")
     request.remark = RequestField(CharField, desc = "提现说明")
-    request.pay_type = RequestField(CharField, desc = "交易方式")
+    request.pay_type = RequestField(CharField, desc = "交易方式", \
+                        choices = (('bank', '银行'), ('alipay', "支付宝"), ('wechat', "微信"),
+                                  ('balance', "余额")))
 
     response = with_metaclass(ResponseFieldSet)
 
