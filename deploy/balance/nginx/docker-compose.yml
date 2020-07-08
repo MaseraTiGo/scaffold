@@ -9,6 +9,7 @@ services:
     ports:
       - 80:80
     volumes:
+      - /tmp/data/balance/nginx/resource:/nginx/resource:Z
       - /tmp/data/balance/nginx/cdn:/nginx/cdn:Z
       - /tmp/data/balance/nginx/logs:/nginx/logs:Z
     networks:

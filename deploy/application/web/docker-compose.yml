@@ -20,6 +20,7 @@ services:
       - REDIS_POOL_SIZE=500
     volumes:
       - /tmp/data/application/web/log:/var/log/app:Z
+      - /tmp/data/balance/nginx/resource:/usr/src/app/resource:Z
     external_links:
       - redis
       - rabbitmq

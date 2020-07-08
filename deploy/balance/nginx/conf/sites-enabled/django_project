@@ -15,6 +15,10 @@ server {
 
     keepalive_timeout  65;
 
+    location /static/ {
+        root   /nginx/resource;
+    }
+
     location / {
         root   /nginx/cdn;
         try_files $uri /index.html;

@@ -3,7 +3,7 @@
 import os
 import time
 from infrastructure.utils.common.single import Single
-from settings import FILE_CONF
+from settings import STATIC_URL, STATICFILES_DIRS
 
 
 class FileMiddleware(Single):
@@ -15,14 +15,16 @@ class FileMiddleware(Single):
 
     def save(self, name, f_io, store_type = 'default'):
         new_name = self.get_save_file_name(name)
-        save_path = os.path.join(FILE_CONF['path'], store_type)
+        base_dir = STATICFILES_DIRS[0]
+        save_path = os.path.join(base_dir, store_type)
         if not os.path.exists(save_path):
-            print(save_path)
             os.makedirs(save_path)
         file_path = os.path.join(save_path, new_name)
         with open(file_path, 'wb') as f:
             f.write(f_io.read())
-        return file_path
+
+        url = STATIC_URL + file_path.replace(base_dir, "")
+        return url.replace("//", "/")
 
 
 file_middleware = FileMiddleware()

@@ -29,13 +29,11 @@ class Upload(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        print(request.role, request.auth, request._upload_files)
         path_list = []
         for name, f in request._upload_files.items():
             path = file_middleware.save(name, f, request.store_type)
             host_url = ""
             path_list.append(host_url + path)
-        print(path_list)
         return path_list
 
     def fill(self, response, path_list):

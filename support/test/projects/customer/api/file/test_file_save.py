@@ -5,7 +5,7 @@ import json
 
 from support.common.testcase.api_test_case import APITestCase
 
-class RegisterUpload(APITestCase):
+class FileUpload(APITestCase):
 
     def setUp(self):
         pass

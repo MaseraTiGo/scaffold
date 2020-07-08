@@ -118,12 +118,6 @@ REDIS_CONF = {
     'max_connections': os.environ.get('REDIS_POOL_SIZE'),
 }
 
-FILE_CONF = {
-    'host': os.environ.get('FILE_HOST'),
-    'port': os.environ.get('FILE_PORT'),
-    'path': os.environ.get('FILE_PATH'),
-}
-
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 # AUTH_PASSWORD_VALIDATORS = [
@@ -157,8 +151,10 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-STATIC_URL = '/static/'
-
+STATIC_URL = '/resource/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "resource"),
+]
 
 try:
     from logger_conf import *
