@@ -16,9 +16,9 @@ class CustomerBankcardTemplate(BaseTemplate):
         for _ in range(times):
             bank_name, bank_code, bank_number = BankCardHelper().generate()
             bankcard = {
-                'bank_number': NameHelper().generate(),
-                'bank_name': NameHelper().generate(),
-                'bank_code': NameHelper().generate(),
+                'bank_number': bank_number,
+                'bank_name': bank_name,
+                'bank_code': bank_code,
                 'phone': PhoneHelper().generate(),
                 'name': NameHelper().generate(),
                 'identification': IdentificationHelper().generate(),

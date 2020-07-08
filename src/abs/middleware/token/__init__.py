@@ -14,8 +14,10 @@ class TokenManager(object):
 
     @classmethod
     def renew_token(cls, auth_str, renew_str):
+        print('------>>>>>  ', auth_str, renew_str)
         token = Token.get(auth_str)
         token.renew(renew_str)
+        print('------>>>>>  ', token)
         return token
 
     @classmethod

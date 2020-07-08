@@ -90,8 +90,6 @@ class CustomerAccount(BaseAccount):
         account = account_qs[0]
         return account
 
-
-
     @classmethod
     def get_account_bycustomer(cls, customer_id):
         """根据customer_id查询账号信息"""
@@ -123,6 +121,15 @@ class CustomerAddress(BaseModel):
     def search(cls, **attrs):
         address_qs = cls.query().filter(**attrs)
         return address_qs
+
+    @classmethod
+    def create(cls, **attrs):
+        address = super(CustomerAddress, cls).create(**attrs)
+
+        if address.is_default:
+            cls.search(customer = address.customer)\
+                    .filter(~Q(id = address.id)).update(is_default = False)
+        return address
 
     def update(self, **attrs):
         org_is_default = self.is_default

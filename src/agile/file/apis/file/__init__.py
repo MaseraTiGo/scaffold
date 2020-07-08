@@ -6,6 +6,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.base.api import NoAuthorizedApi
+from abs.middleware.file import file_middleware
 
 
 class Upload(NoAuthorizedApi):
@@ -19,8 +20,6 @@ class Upload(NoAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.file_paths = ResponseField(ListField, desc = '文件路径列表', fmt = CharField(desc = "文件路径列表"))
 
-    count = False
-
     @classmethod
     def get_desc(cls):
         return "上传文件"
@@ -30,22 +29,14 @@ class Upload(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        """
+        print(request.role, request.auth, request._upload_files)
         path_list = []
-        if not FileTransport.is_fileserver(request._ip):
-            ft = FileTransport(request._upload_files)
-            result = ft.run(store_type = request.store_type)
-            path_list = result.file_paths
-        else:
-            for name, f in request._upload_files.items():
-                path = file_middleware.save(name, f, request.store_type)
-                host_url = FileTransport.get_server_host()
-                path_list.append(host_url + path)
+        for name, f in request._upload_files.items():
+            path = file_middleware.save(name, f, request.store_type)
+            host_url = ""
+            path_list.append(host_url + path)
         print(path_list)
         return path_list
-        """
-        print(request.role, request.auth, request._upload_files)
-        return []
 
     def fill(self, response, path_list):
         response.file_paths = path_list
