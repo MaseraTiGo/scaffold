@@ -13,9 +13,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 
 from agile.crm.manager.api import StaffAuthorizedApi
-from agile.base.api import NoAuthrizedApi
 from abs.service.staff.manager import StaffServer
-
 
 
 class Get(StaffAuthorizedApi):

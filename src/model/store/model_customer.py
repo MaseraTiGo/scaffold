@@ -212,8 +212,8 @@ class CustomerTransactionRecord(BaseModel):
 
     @classmethod
     def search(cls, **attrs):
-        bankcard_qs = cls.query().filter(**attrs)
-        return bankcard_qs
+        transaction_qs = cls.query().filter(**attrs).order_by('-create_time')
+        return transaction_qs
 
     @classmethod
     def create(cls, **transacation_record):

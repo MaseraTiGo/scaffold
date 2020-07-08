@@ -1,7 +1,7 @@
 # coding=UTF-8
 
 '''
-Created on 2016年7月23日
+Created on 2020年7月8日
 
 @author: Roy
 '''
@@ -13,15 +13,14 @@ from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.core.field.base import CharField, DictField, IntField, ListField, DatetimeField, DateField, BooleanField
 
 from agile.base.api import NoAuthorizedApi
-from agile.crm.manager.api import StaffAuthorizedApi
-from abs.service.staff.manager import StaffServer, StaffAccountServer
+from abs.service.customer.manager import CustomerAccountServer
 
 
-class Login(NoAuthorizedApi):
-    """员工登录接口"""
+class Renew(NoAuthorizedApi):
+
     request = with_metaclass(RequestFieldSet)
-    request.username = RequestField(CharField, desc = "账号")
-    request.password = RequestField(CharField, desc = "密码")
+    request.auth_token = RequestField(CharField, desc = "用户凭证")
+    request.renew_flag = RequestField(CharField, desc = "续签标识")
 
     response = with_metaclass(ResponseFieldSet)
     response.access_token = ResponseField(CharField, desc = "访问凭证")
@@ -30,39 +29,18 @@ class Login(NoAuthorizedApi):
 
     @classmethod
     def get_desc(cls):
-        return "员工登录接口"
+        return "客户重新续签标识"
 
     @classmethod
     def get_author(cls):
         return "Roy"
 
     def execute(self, request):
-        token = StaffAccountServer.login(request.username, request.password)
+        token = CustomerAccountServer.renew_token(request.auth_token, request.renew_flag)
         return token
 
     def fill(self, response, token):
         response.access_token = token.auth_token
         response.renew_flag = token.renew_flag
         response.expire_time = token.expire_time
-        return response
-
-
-class Logout(StaffAuthorizedApi):
-    """注销"""
-    request = with_metaclass(RequestFieldSet)
-    response = with_metaclass(ResponseFieldSet)
-
-    @classmethod
-    def get_desc(cls):
-        return "员工注销接口"
-
-    @classmethod
-    def get_author(cls):
-        return "Roy"
-
-    def execute(self, request):
-        staff = self.auth_user
-        StaffAccountServer.logout(staff)
-
-    def fill(self, response):
         return response

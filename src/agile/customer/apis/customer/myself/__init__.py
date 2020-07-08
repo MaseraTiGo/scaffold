@@ -12,7 +12,6 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 
-from agile.base.api import NoAuthrizedApi
 from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.service.customer.manager import CustomerServer, CustomerAccountServer
 

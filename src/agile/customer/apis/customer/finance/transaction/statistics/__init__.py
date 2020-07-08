@@ -26,7 +26,7 @@ class Monthly(CustomerAuthorizedApi):
                                             'year': IntField(desc = "年份"),
                                             'month': IntField(desc = "月份"),
                                             'income': IntField(desc = "总收入额"),
-                                            'expense': CharField(desc = "总花费额"),
+                                            'expense': IntField(desc = "总花费额"),
                                         }))
 
     @classmethod

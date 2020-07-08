@@ -5,7 +5,7 @@ from infrastructure.core.api.base import BaseApi
 from infrastructure.core.exception.debug_error import DebugError
 
 
-class NoAuthrizedApi(BaseApi):
+class NoAuthorizedApi(BaseApi):
 
     @classmethod
     def is_auth(cls):

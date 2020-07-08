@@ -28,6 +28,9 @@ customer_mobile_service.add(Phone, Image)
 from agile.customer.apis.customer.account.password import Forget, Modify
 customer_mobile_service.add(Forget, Modify)
 
+from agile.customer.apis.customer.account.token import Renew
+customer_mobile_service.add(Renew)
+
 from agile.customer.apis.customer.myself import Get, Update
 customer_mobile_service.add(Get, Update)
 

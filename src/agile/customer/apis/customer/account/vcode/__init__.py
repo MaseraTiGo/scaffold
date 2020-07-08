@@ -12,13 +12,13 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.core.field.base import CharField, DictField, IntField, ListField, DatetimeField, DateField, BooleanField
 
-from agile.base.api import NoAuthrizedApi
+from agile.base.api import NoAuthorizedApi
 from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.service.customer.manager import CustomerServer, CustomerAccountServer
 
 
 
-class Phone(NoAuthrizedApi):
+class Phone(NoAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
     request.number = RequestField(CharField, desc = "手机号码")
@@ -43,7 +43,7 @@ class Phone(NoAuthrizedApi):
 
 
 
-class Image(NoAuthrizedApi):
+class Image(NoAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
 

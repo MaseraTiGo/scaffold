@@ -5,10 +5,10 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
-from agile.base.api import NoAuthrizedApi
+from agile.base.api import NoAuthorizedApi
 
 
-class Upload(NoAuthrizedApi):
+class Upload(NoAuthorizedApi):
     """上传文件"""
     request = with_metaclass(RequestFieldSet)
     request._upload_files = RequestField(FileField, desc = "文件名称：协议内置参数")

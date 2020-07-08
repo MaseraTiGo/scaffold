@@ -123,6 +123,10 @@ class CustomerAccountServer(BaseServer):
         return token
 
     @classmethod
+    def renew_token(cls, auth_str, renew_str):
+        return TokenManager.renew_token(auth_str, renew_str)
+
+    @classmethod
     def login(cls, username, password):
         is_exsited, account = CustomerAccount.is_exsited(username, password)
         if is_exsited:

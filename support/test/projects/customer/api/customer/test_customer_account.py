@@ -29,6 +29,19 @@ class CustomerAccountTest(APITestCase):
         self.assertTrue('renew_flag' in result)
         self.assertTrue('expire_time' in result)
 
+    def test_account_renew_token(self):
+        result = self.test_account_login()
+        api = 'customer.account.token.renew'
+        params = {
+            'auth_token': result['access_token'],
+            'renew_flag': result['renew_flag'],
+        }
+
+        result = self.access_customer_api(api = api, is_auth = False, **params)
+        self.assertTrue('access_token' in result)
+        self.assertTrue('renew_flag' in result)
+        self.assertTrue('expire_time' in result)
+
     def test_account_login(self):
         api = 'customer.account.login'
         params = {
@@ -39,7 +52,7 @@ class CustomerAccountTest(APITestCase):
         self.assertTrue('access_token' in result)
         self.assertTrue('renew_flag' in result)
         self.assertTrue('expire_time' in result)
-
+        return result
 
     def test_account_logout(self):
         api = 'customer.account.logout'
