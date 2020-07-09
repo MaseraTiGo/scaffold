@@ -52,7 +52,7 @@ class Token(object):
 
     def renew(self, renew_flag):
         if renew_flag == self.renew_flag:
-            result = self.calculate(self.user_id, self.role)
+            result = self.calculate(self.role, self.user_id)
             self.auth_token = result.auth_token
             self.renew_flag = result.renew_flag
             self.expire_time = result.expire_time

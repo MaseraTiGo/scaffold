@@ -80,7 +80,6 @@ class APITestCase(unittest.TestCase):
 
         return self.access_base('crm-pc', api, **parms)
 
-
     def _get_customer_auth_token(self, flag = 'customer-mobile'):
         api = "customer.account.login"
         username = "15527703115"  # "15623937796"
@@ -91,14 +90,25 @@ class APITestCase(unittest.TestCase):
         self._auth_token = result['access_token']
         self._renew_flag = result['renew_flag']
 
+    def _renew_account_token(self):
+        api = 'customer.account.token.renew'
+        params = {
+            'auth_token': self._auth_token,
+            'renew_flag': self._renew_flag,
+        }
+
+        result = self.access_customer_api(api = api, is_auth = False, **params)
+        self._auth_token = result['access_token']
+        self._renew_flag = result['renew_flag']
+
     def access_customer_api(self, api, is_auth = True, **parms):
         if is_auth:
             if self._auth_token == "":
                 self._get_customer_auth_token()
+                self._renew_account_token()
             parms.update({'auth':self._auth_token})
 
         return self.access_base('customer-mobile', api, **parms)
-
 
     def access_file_api(self, api, files = None, flag = 'file', is_auth = True, **parms):
         if self._auth_token == "":
