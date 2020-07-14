@@ -10,7 +10,7 @@ class CustomerAccountTest(APITestCase):
 
     def setUp(self):
         self.customer_info = {
-            'username': '15523053127',
+            'username': '15527703115',
             "password": hashlib.md5("123456".encode('utf8')).hexdigest(),
         }
 
@@ -22,7 +22,7 @@ class CustomerAccountTest(APITestCase):
         params = {
             'phone': self.customer_info['username'],
             "password": self.customer_info['password'],
-            "code": '123455'
+            "code": '123456'
         }
         result = self.access_customer_api(api = api, is_auth = False, **params)
         self.assertTrue('access_token' in result)

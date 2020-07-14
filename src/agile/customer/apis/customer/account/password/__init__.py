@@ -14,7 +14,8 @@ from infrastructure.core.field.base import CharField, DictField, IntField, ListF
 
 from agile.base.api import NoAuthorizedApi
 from agile.customer.manager.api import CustomerAuthorizedApi
-from abs.service.customer.manager import CustomerServer, CustomerAccountServer
+from abs.service.customer.manager import CustomerAccountServer
+from abs.services.customer.account.manager import CustomerAccountServer
 
 
 class Forget(NoAuthorizedApi):

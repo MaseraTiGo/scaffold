@@ -21,3 +21,5 @@ from model.common.model_event_base import *
 
 
 
+# ======  transfer new model =====
+# from abs.middleground.services.user.model.entity import *

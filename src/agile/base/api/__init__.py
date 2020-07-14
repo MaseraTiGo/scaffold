@@ -43,5 +43,3 @@ class AuthorizedApi(BaseApi):
 
     def load_auth_user(self):
         raise NotImplementedError('Please imporlement this interface in subclass')
-
-

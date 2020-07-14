@@ -1,8 +1,8 @@
 # coding=UTF-8
 
-from  agile.base.api import AuthorizedApi
+from agile.base.api import AuthorizedApi
 from abs.middleware.token import TokenManager
-from abs.service.customer.manager import CustomerServer
+from abs.services.customer.personal.manager import CustomerServer
 
 
 class CustomerAuthorizedApi(AuthorizedApi):
@@ -12,5 +12,5 @@ class CustomerAuthorizedApi(AuthorizedApi):
         return token
 
     def load_auth_user(self):
-        customer = CustomerServer.get_byid(self._user_id)
+        customer = CustomerServer.get(self._user_id)
         return customer

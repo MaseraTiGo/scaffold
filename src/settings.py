@@ -48,6 +48,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'model',
     'interface',
+    'abs.middleground.business.account',
+    'abs.middleground.business.user',
+    'abs.services.customer.account',
+    'abs.services.customer.personal',
+    'abs.services.customer.finance',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -98,6 +103,10 @@ DATABASES = {
         'HOST': os.environ.get('DB_HOST'),
         'PORT': os.environ.get('DB_PORT')
     },
+}
+
+DATABASE_ROUTERS = ['src.database_router.DatabaseAppsRouter']
+DATABASE_APPS_MAPPING = {
 }
 
 # Postgresql 数据库配置

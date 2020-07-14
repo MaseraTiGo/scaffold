@@ -31,7 +31,7 @@ class Customer(BaseModel):
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)
 
     class Meta:
-        db_table = "customer_info"
+        db_table = "customer_info_1"
 
     @classmethod
     def get_customer_byname(cls, name):
@@ -63,7 +63,7 @@ class CustomerAccount(BaseAccount):
     customer = ForeignKey(Customer, on_delete=CASCADE)
 
     class Meta:
-        db_table = "customer_account"
+        db_table = "customer_account_1"
 
     @classmethod
     def search(cls, **attrs):
