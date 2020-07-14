@@ -9,26 +9,24 @@ Created on 2020年7月5日
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
-from infrastructure.core.exception.business_error import BusinessError
-from infrastructure.core.field.base import CharField, DictField, IntField, ListField, DatetimeField, DateField, BooleanField
+from infrastructure.core.field.base import CharField
 
 from agile.base.api import NoAuthorizedApi
 from agile.customer.manager.api import CustomerAuthorizedApi
-from abs.service.customer.manager import CustomerAccountServer
 from abs.services.customer.account.manager import CustomerAccountServer
 
 
 class Forget(NoAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.phone = RequestField(CharField, desc = "手机号码")
-    request.code = RequestField(CharField, desc = "验证码")
-    request.password = RequestField(CharField, desc = "密码")
+    request.phone = RequestField(CharField, desc="手机号码")
+    request.code = RequestField(CharField, desc="验证码")
+    request.password = RequestField(CharField, desc="密码")
 
     response = with_metaclass(ResponseFieldSet)
-    response.access_token = ResponseField(CharField, desc = "访问凭证")
-    response.renew_flag = ResponseField(CharField, desc = "续签标识")
-    response.expire_time = ResponseField(CharField, desc = "到期时间")
+    response.access_token = ResponseField(CharField, desc="访问凭证")
+    response.renew_flag = ResponseField(CharField, desc="续签标识")
+    response.expire_time = ResponseField(CharField, desc="到期时间")
 
     @classmethod
     def get_desc(cls):
@@ -40,9 +38,9 @@ class Forget(NoAuthorizedApi):
 
     def execute(self, request):
         token = CustomerAccountServer.forget_password(
-            phone = request.phone,
-            code = request.code,
-            new_password = request.password
+            phone=request.phone,
+            code=request.code,
+            new_password=request.password
         )
         return token
 
@@ -56,8 +54,8 @@ class Forget(NoAuthorizedApi):
 class Modify(CustomerAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.old_password = RequestField(CharField, desc = "老密码")
-    request.new_password = RequestField(CharField, desc = "新密码")
+    request.old_password = RequestField(CharField, desc="老密码")
+    request.new_password = RequestField(CharField, desc="新密码")
 
     response = with_metaclass(ResponseFieldSet)
 
@@ -71,9 +69,9 @@ class Modify(CustomerAuthorizedApi):
 
     def execute(self, request):
         CustomerAccountServer.modify_password(
-            customer_id = self.auth_user.id,
-            old_password = request.old_password,
-            new_password = request.new_password
+            customer_id=self.auth_user.id,
+            old_password=request.old_password,
+            new_password=request.new_password
         )
 
     def fill(self, response, token):

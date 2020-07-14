@@ -45,27 +45,30 @@ class CustomerServer(object):
 
     @classmethod
     def update(cls, customer_id, **update_info):
-        customer = cls.get_byid(customer_id)
+        customer = cls.get(customer_id)
         UserServer.update(customer.user_id, **update_info)
         customer.update(**update_info)
         return customer
 
     """
-
     @classmethod
     def add_address(cls, customer_id, **address_info):
-        customer = cls.get_byid(customer_id)
-        address = CustomerAddress.create(customer = customer, **address_info)
+        customer = cls.get(customer_id)
+        user = UserServer.get(customer.user_id)
+        address = Address.create(
+            user=user,
+            **address_info
+        )
         return address
 
     @classmethod
     def get_address(cls, address_id):
-        address = CustomerAddress.get_byid(address_id)
+        address = Address.get_byid(address_id)
         return address
 
     @classmethod
     def get_all_address(cls, customer_id):
-        address_qs = CustomerAddress.search(customer = customer_id)
+        address_qs = Address.search(customer=customer_id)
         return address_qs
 
     @classmethod
@@ -78,6 +81,8 @@ class CustomerServer(object):
         address.update(**address_info)
         return address
 
+    """
+    """
     @classmethod
     def add_bankcard(cls, customer_id, bank_number, **bankcard_info):
         customer = cls.get_byid(customer_id)
@@ -94,8 +99,9 @@ class CustomerServer(object):
         )
         bank_name, bank_code = random.choice(bank_list)
 
-        bankcard = CustomerBankCard.create(customer = customer, bank_name = bank_name, bank_code =
-                                           bank_code, bank_number = bank_number, **bankcard_info)
+        bankcard = CustomerBankCard.create(
+            customer = customer, bank_name = bank_name,
+            bank_code = bank_code, bank_number = bank_number, **bankcard_info)
         return bankcard
 
     @classmethod

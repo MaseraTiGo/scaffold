@@ -46,3 +46,15 @@ class UserStatus(BaseModel):
 
     class Meta:
         db_table = DB_PREFIX + "status"
+
+    @classmethod
+    def search(cls, **attrs):
+        status_qs = cls.query().filter(**attrs)
+        return status_qs
+
+    @classmethod
+    def get_byuser(cls, user):
+        status_qs = cls.search(user=user)
+        if status_qs.count() > 0:
+            return status_qs[0]
+        return None

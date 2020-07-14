@@ -6,26 +6,26 @@ Created on 2020年6月30日
 @author: Roy
 '''
 
-from infrastructure.core.field.base import CharField, DictField, IntField, ListField, DatetimeField, DateField, BooleanField
+from infrastructure.core.field.base import CharField, DictField, \
+        IntField, ListField, BooleanField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
-from infrastructure.core.exception.business_error import BusinessError
 
 from agile.customer.manager.api import CustomerAuthorizedApi
-from abs.service.customer.manager import CustomerServer, CustomerAccountServer
+from abs.middleground.business.user.manager import UserServer
 
 
 class Add(CustomerAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.address_info = RequestField(DictField, desc = "客户修改详情", conf = {
-        'contacts': CharField(desc = "联系人"),
-        'gender': CharField(desc = "性别"),
-        'phone': CharField(desc = "手机号"),
-        'city': CharField(desc = "城市"),
-        'address': CharField(desc = "详细地址"),
-        'is_default': BooleanField(desc = "是否是默认"),
+    request.is_default = RequestField(BooleanField, desc="是否默认地址")
+    request.address_info = RequestField(DictField, desc="客户修改详情", conf={
+        'contacts': CharField(desc="联系人"),
+        'gender': CharField(desc="性别"),
+        'phone': CharField(desc="手机号"),
+        'city': CharField(desc="城市"),
+        'address': CharField(desc="详细地址"),
     })
 
     response = with_metaclass(ResponseFieldSet)
@@ -40,7 +40,11 @@ class Add(CustomerAuthorizedApi):
 
     def execute(self, request):
         customer = self.auth_user
-        CustomerServer.add_address(customer.id, **request.address_info)
+        UserServer.add_address(
+            customer.user_id,
+            request.is_default,
+            **request.address_info
+        )
 
     def fill(self, response):
         return response
@@ -49,17 +53,17 @@ class Add(CustomerAuthorizedApi):
 class Get(CustomerAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.address_id = RequestField(IntField, desc = "地址ID")
+    request.address_id = RequestField(IntField, desc="地址ID")
 
     response = with_metaclass(ResponseFieldSet)
-    response.address_info = ResponseField(DictField, desc = "地址详情", conf = {
-        'id': IntField(desc = "地址ID"),
-        'contacts': CharField(desc = "联系人"),
-        'gender': CharField(desc = "性别"),
-        'phone': CharField(desc = "手机号"),
-        'city': CharField(desc = "城市"),
-        'address': CharField(desc = "详细地址"),
-        'is_default': BooleanField(desc = "是否是默认"),
+    response.address_info = ResponseField(DictField, desc="地址详情", conf={
+        'id': IntField(desc="地址ID"),
+        'contacts': CharField(desc="联系人"),
+        'gender': CharField(desc="性别"),
+        'phone': CharField(desc="手机号"),
+        'city': CharField(desc="城市"),
+        'address': CharField(desc="详细地址"),
+        'is_default': BooleanField(desc="是否是默认"),
     })
 
     @classmethod
@@ -71,7 +75,7 @@ class Get(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return CustomerServer.get_address(request.address_id)
+        return UserServer.get_address(request.address_id)
 
     def fill(self, response, address):
         response.address_info = {
@@ -89,14 +93,14 @@ class Get(CustomerAuthorizedApi):
 class Update(CustomerAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.address_id = RequestField(IntField, desc = "地址ID")
-    request.update_info = RequestField(DictField, desc = "客户修改详情", conf = {
-        'contacts': CharField(desc = "联系人", is_required  = False),
-        'gender': CharField(desc = "性别", is_required  = False),
-        'phone': CharField(desc = "手机号", is_required  = False),
-        'city': CharField(desc = "城市", is_required  = False),
-        'address': CharField(desc = "详细地址", is_required  = False),
-        'is_default': BooleanField(desc = "是否是默认", is_required  = False),
+    request.address_id = RequestField(IntField, desc="地址ID")
+    request.is_default = RequestField(BooleanField, desc="是否默认地址")
+    request.update_info = RequestField(DictField, desc="客户修改详情", conf={
+        'contacts': CharField(desc="联系人", is_required=False),
+        'gender': CharField(desc="性别", is_required=False),
+        'phone': CharField(desc="手机号", is_required=False),
+        'city': CharField(desc="城市", is_required=False),
+        'address': CharField(desc="详细地址", is_required=False),
     })
 
     response = with_metaclass(ResponseFieldSet)
@@ -110,7 +114,11 @@ class Update(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        CustomerServer.update_address(request.address_id, **request.update_info)
+        UserServer.update_address(
+            request.address_id,
+            request.is_default,
+            **request.update_info
+        )
 
     def fill(self, response):
         return response
@@ -121,16 +129,20 @@ class All(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
 
     response = with_metaclass(ResponseFieldSet)
-    response.address_list = ResponseField(ListField, desc = "地址列表", fmt = \
-                                       DictField(desc = "地址详情", conf = {
-                                            'id': IntField(desc = "地址ID"),
-                                            'contacts': CharField(desc = "联系人"),
-                                            'gender': CharField(desc = "性别"),
-                                            'phone': CharField(desc = "手机号"),
-                                            'city': CharField(desc = "城市"),
-                                            'address': CharField(desc = "详细地址"),
-                                            'is_default': BooleanField(desc = "是否是默认"),
-                                        }))
+    response.address_list = ResponseField(
+        ListField,
+        desc="地址列表",
+        fmt=DictField(
+            desc="地址详情",
+            conf={
+                    'id': IntField(desc="地址ID"),
+                    'contacts': CharField(desc="联系人"),
+                    'gender': CharField(desc="性别"),
+                    'phone': CharField(desc="手机号"),
+                    'city': CharField(desc="城市"),
+                    'address': CharField(desc="详细地址"),
+                    'is_default': BooleanField(desc="是否是默认"),
+            }))
 
     @classmethod
     def get_desc(cls):
@@ -142,7 +154,7 @@ class All(CustomerAuthorizedApi):
 
     def execute(self, request):
         customer = self.auth_user
-        address_qs = CustomerServer.get_all_address(customer.id)
+        address_qs = UserServer.get_all_address(customer.id)
         return address_qs
 
     def fill(self, response, address_qs):
@@ -161,7 +173,7 @@ class All(CustomerAuthorizedApi):
 class Remove(CustomerAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.address_id = RequestField(IntField, desc = "地址ID")
+    request.address_id = RequestField(IntField, desc="地址ID")
 
     response = with_metaclass(ResponseFieldSet)
 
@@ -174,8 +186,7 @@ class Remove(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        CustomerServer.remove_address(request.address_id)
+        UserServer.remove_address(request.address_id)
 
     def fill(self, response):
         return response
-

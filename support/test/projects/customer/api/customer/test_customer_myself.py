@@ -33,7 +33,6 @@ class CustomerTestCase(APITestCase):
         self.assertTrue('email' in customer)
         self.assertTrue('wechat' in customer)
         self.assertTrue('qq' in customer)
-        self.assertTrue('education' in customer)
 
     def test_customer_myself_get(self):
         api = 'customer.myself.get'
