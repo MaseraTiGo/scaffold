@@ -1,7 +1,9 @@
 # coding=UTF-8
 
+import random
+
 from abs.middleground.business.user.models import User,\
-        Address, UserStatus
+        Address, BankCard, UserStatus
 
 
 class UserServer(object):
@@ -95,3 +97,42 @@ class UserServer(object):
         if is_default:
             cls.update_default_address(address.user, address)
         return address
+
+    @classmethod
+    def add_bankcard(cls, user_id, bank_number, **bankcard_info):
+        user = cls.get(user_id)
+
+        # todo: add card to verify
+        bank_list = (
+            ('中国工商银行', "ICBC"),
+            ('中国邮政储蓄银行', "PSBC"),
+            ('中国农业银行', "ABC"),
+            ('中国银行', "BOC"),
+            ('中国建设银行', "CCB"),
+            ('中国交通银行', "COMM"),
+            ('招商银行', "CMB"),
+        )
+        bank_name, bank_code = random.choice(bank_list)
+
+        bankcard = BankCard.create(
+            user=user,
+            bank_name=bank_name,
+            bank_code=bank_code,
+            bank_number=bank_number,
+            **bankcard_info
+        )
+        return bankcard
+
+    @classmethod
+    def get_bankcard(cls, bankcard_id):
+        bankcard = BankCard.get_byid(bankcard_id)
+        return bankcard
+
+    @classmethod
+    def get_all_bankcard(cls, user_id):
+        bankcard = BankCard.search(user=user_id)
+        return bankcard
+
+    @classmethod
+    def remove_bankcard(cls, bankcard_id):
+        return cls.get_bankcard(bankcard_id).delete()
