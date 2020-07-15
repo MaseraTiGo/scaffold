@@ -1,7 +1,8 @@
 # coding=UTF-8
 
-from abs.common.model import BaseModel, Sum, CASCADE, \
+from abs.common.model import BaseModel, Sum, \
         IntegerField, CharField, TextField, DateTimeField, timezone
+from abs.middleground.business.transaction.utils.constant import PayTypes
 from abs.services.customer.finance.settings import DB_PREFIX
 
 
@@ -18,10 +19,10 @@ class CustomerBalanceRecord(BaseModel):
     )
     remark = TextField(verbose_name="记录备注", default="")
 
-    input_record_id = IntegerField(version_name="入账凭证id", null=True)
-    output_record_id = IntegerField(version_name="出账凭证id", null=True)
+    input_record_id = IntegerField(verbose_name="入账凭证id", null=True)
+    output_record_id = IntegerField(verbose_name="出账凭证id", null=True)
 
-    customer_id = IntegerField(version_name="客户id")
+    customer_id = IntegerField(verbose_name="客户id")
 
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)
@@ -33,16 +34,6 @@ class CustomerBalanceRecord(BaseModel):
     def generate_number(cls):
         import time
         return "BL" + str(int(time.time()))
-
-    @classmethod
-    def get_balance(cls, customer):
-        result = CustomerTransactionRecord.search(
-                    customer=customer,
-                    business_type=BusinessTypes.BALANCE
-                ).aggregate(total=Sum('amount'))
-        if result['total'] is None:
-            return 0
-        return result['total']
 
     @classmethod
     def create(cls, **transacation_record):

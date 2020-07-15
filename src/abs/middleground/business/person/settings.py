@@ -1,4 +1,4 @@
 # coding=UTF-8
 
 
-DB_PREFIX = "moddleground_user_"
+DB_PREFIX = "moddleground_person_"

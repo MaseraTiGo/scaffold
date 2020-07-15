@@ -9,31 +9,39 @@ Created on 2020年7月3日
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
-from infrastructure.core.exception.business_error import BusinessError
-from infrastructure.core.field.base import CharField, DictField, IntField, ListField, DatetimeField, DateField, BooleanField
+from infrastructure.core.field.base import CharField, DictField, IntField,\
+        ListField, DatetimeField
 
 from agile.customer.manager.api import CustomerAuthorizedApi
-from abs.service.customer.manager import CustomerServer, CustomerFinanceServer
+from abs.middleground.business.transaction.manager import TransactionServer
 
 
 class Get(CustomerAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.transaction_id = RequestField(IntField, desc = "交易id")
+    request.transaction_id = RequestField(IntField, desc="交易id")
 
     response = with_metaclass(ResponseFieldSet)
-    response.transaction_info = ResponseField(DictField, desc = "交易详情", conf = {
-                                        'id': IntField(desc = "交易ID"),
-                                        'number': CharField(desc = "交易编号"),
-                                        'amount': IntField(desc = "交易金额"),
-                                        'pay_type': CharField(desc = "交易方式"),
-                                        'remark': CharField(desc = "交易说明"),
-                                        'status': CharField(desc = "交易状态", choices = (\
-                                                ('pay_finish', '付款成功'), \
-                                                ('transaction_dealing', "交易处理中"),\
-                                                ('account_finish', "到账成功"))),
-                                        'create_time': DatetimeField(desc = "交易时间"),
-                                    })
+    response.transaction_info = ResponseField(
+        DictField,
+        desc="交易详情",
+        conf={
+            'id': IntField(desc="交易ID"),
+            'number': CharField(desc="交易编号"),
+            'amount': IntField(desc="交易金额"),
+            'pay_type': CharField(desc="交易方式"),
+            'remark': CharField(desc="交易说明"),
+            'status': CharField(
+                desc="交易状态",
+                choices=(
+                    ('pay_finish', '付款成功'),
+                    ('transaction_dealing', "交易处理中"),
+                    ('account_finish', "到账成功")
+                )
+            ),
+            'create_time': DatetimeField(desc="交易时间"),
+        }
+    )
 
     @classmethod
     def get_desc(cls):
@@ -44,8 +52,8 @@ class Get(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        transaction = CustomerFinanceServer.get_transacation_detail(
-            transaction_id = request.transaction_id
+        transaction = TransactionServer.get_transacation_detail(
+            transaction_id=request.transaction_id
         )
         return transaction
 
@@ -65,24 +73,34 @@ class Get(CustomerAuthorizedApi):
 class Search(CustomerAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.current_page = RequestField(IntField, desc = "当前页码")
-    request.search_info = RequestField(DictField, desc = "搜索交易条件", conf = {
-    })
+    request.current_page = RequestField(IntField, desc="当前页码")
+    request.search_info = RequestField(
+        DictField,
+        desc="搜索交易条件",
+        conf={
+        }
+    )
 
     response = with_metaclass(ResponseFieldSet)
-    response.total = ResponseField(IntField, desc = "数据总数")
-    response.total_page = ResponseField(IntField, desc = "总页码数")
-    response.data_list = ResponseField(ListField, desc = "用户列表", fmt = \
-                                       DictField(desc = "用户详情", conf = {
-                                            'id': IntField(desc = "交易ID"),
-                                            'number': CharField(desc = "交易编号"),
-                                            'amount': IntField(desc = "交易金额"),
-                                            'pay_type': CharField(desc = "交易方式"),
-                                            'remark': CharField(desc = "交易说明"),
-                                            'create_time': DatetimeField(desc = "交易时间"),
-                                        }))
-    response.total = ResponseField(IntField, desc = "数据总数")
-    response.total_page = ResponseField(IntField, desc = "总页码数")
+    response.total = ResponseField(IntField, desc="数据总数")
+    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.data_list = ResponseField(
+        ListField,
+        desc="用户列表",
+        fmt=DictField(
+            desc="用户详情",
+            conf={
+                'id': IntField(desc="交易ID"),
+                'number': CharField(desc="交易编号"),
+                'amount': IntField(desc="交易金额"),
+                'pay_type': CharField(desc="交易方式"),
+                'remark': CharField(desc="交易说明"),
+                'create_time': DatetimeField(desc="交易时间"),
+            }
+        )
+    )
+    response.total = ResponseField(IntField, desc="数据总数")
+    response.total_page = ResponseField(IntField, desc="总页码数")
 
     @classmethod
     def get_desc(cls):
@@ -93,8 +111,9 @@ class Search(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        transaction_spliter = CustomerFinanceServer.search_transaction_record(
-            current_page = request.current_page,
+        transaction_spliter = TransactionServer.search_person_transaction(
+            current_page=request.current_page,
+            person_id=self.auth_user.person_id,
             **request.search_info,
         )
         return transaction_spliter

@@ -9,11 +9,10 @@ Created on 2020年7月3日
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
-from infrastructure.core.exception.business_error import BusinessError
-from infrastructure.core.field.base import CharField, DictField, IntField, ListField, DatetimeField, DateField, BooleanField
+from infrastructure.core.field.base import CharField, IntField
 
 from agile.customer.manager.api import CustomerAuthorizedApi
-from abs.service.customer.manager import CustomerServer, CustomerFinanceServer
+from abs.services.customer.finance.manager import CustomerFinanceServer
 
 
 class Get(CustomerAuthorizedApi):
@@ -21,7 +20,7 @@ class Get(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
 
     response = with_metaclass(ResponseFieldSet)
-    response.balance = ResponseField(IntField, desc = "余额")
+    response.balance = ResponseField(IntField, desc="余额")
 
     @classmethod
     def get_desc(cls):
@@ -33,7 +32,7 @@ class Get(CustomerAuthorizedApi):
 
     def execute(self, request):
         balance = CustomerFinanceServer.get_balance(
-            customer_id = self.auth_user.id
+            customer_id=self.auth_user.id
         )
         return balance
 
@@ -45,11 +44,18 @@ class Get(CustomerAuthorizedApi):
 class TopUp(CustomerAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.amount = RequestField(IntField, desc = "充值金额")
-    request.pay_type = RequestField(CharField, desc = "交易方式", \
-                        choices = (('bank', '银行'), ('alipay', "支付宝"), ('wechat', "微信"),
-                                  ('balance', "余额")))
-    request.remark = RequestField(CharField, desc = "充值说明")
+    request.amount = RequestField(IntField, desc="充值金额")
+    request.pay_type = RequestField(
+        CharField,
+        desc="交易方式",
+        choices=(
+            ('bank', '银行'),
+            ('alipay', "支付宝"),
+            ('wechat', "微信"),
+            ('balance', "余额")
+        )
+    )
+    request.remark = RequestField(CharField, desc="充值说明")
 
     response = with_metaclass(ResponseFieldSet)
 
@@ -63,10 +69,10 @@ class TopUp(CustomerAuthorizedApi):
 
     def execute(self, request):
         CustomerFinanceServer.top_up(
-            customer_id = self.auth_user.id,
-            amount = request.amount,
-            pay_type = request.pay_type,
-            remark = request.remark,
+            customer_id=self.auth_user.id,
+            amount=request.amount,
+            pay_type=request.pay_type,
+            remark=request.remark,
         )
 
     def fill(self, response, token):
@@ -76,11 +82,18 @@ class TopUp(CustomerAuthorizedApi):
 class Withdraw(CustomerAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.amount = RequestField(IntField, desc = "提现金额")
-    request.remark = RequestField(CharField, desc = "提现说明")
-    request.pay_type = RequestField(CharField, desc = "交易方式", \
-                        choices = (('bank', '银行'), ('alipay', "支付宝"), ('wechat', "微信"),
-                                  ('balance', "余额")))
+    request.amount = RequestField(IntField, desc="提现金额")
+    request.remark = RequestField(CharField, desc="提现说明")
+    request.pay_type = RequestField(
+        CharField,
+        desc="交易方式",
+        choices=(
+            ('bank', '银行'),
+            ('alipay', "支付宝"),
+            ('wechat', "微信"),
+            ('balance', "余额")
+        )
+    )
 
     response = with_metaclass(ResponseFieldSet)
 
@@ -94,10 +107,10 @@ class Withdraw(CustomerAuthorizedApi):
 
     def execute(self, request):
         CustomerFinanceServer.withdraw(
-            customer_id = self.auth_user.id,
-            amount = request.amount,
-            pay_type = request.pay_type,
-            remark = request.remark,
+            customer_id=self.auth_user.id,
+            amount=request.amount,
+            pay_type=request.pay_type,
+            remark=request.remark,
         )
 
     def fill(self, response):

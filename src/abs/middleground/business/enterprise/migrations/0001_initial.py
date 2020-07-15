@@ -13,18 +13,18 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Customer',
+            name='Enterprise',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('unique_number', models.CharField(max_length=64, unique=True, verbose_name='唯一逻辑码')),
-                ('nick', models.CharField(max_length=32, verbose_name='昵称')),
-                ('head_url', models.CharField(max_length=256, verbose_name='头像URL')),
-                ('person_id', models.IntegerField(verbose_name='用户id')),
+                ('name', models.CharField(max_length=32, verbose_name='公司名称')),
+                ('license_number', models.CharField(max_length=32, verbose_name='营业执照编号')),
+                ('license_url', models.CharField(default='', max_length=256, verbose_name='营业执照')),
                 ('update_time', models.DateTimeField(auto_now=True, verbose_name='更新时间')),
                 ('create_time', models.DateTimeField(default=django.utils.timezone.now, verbose_name='创建时间')),
             ],
             options={
-                'db_table': 'customer_personal_base',
+                'db_table': 'moddleground_enterprise_base',
             },
         ),
     ]
