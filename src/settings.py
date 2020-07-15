@@ -15,7 +15,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import sys
 import pymysql
-import redis
+
 pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'model',
     'interface',
     'abs.middleground.business.account',
-    'abs.middleground.business.user',
+    'abs.middleground.business.person',
     'abs.services.customer.account',
     'abs.services.customer.personal',
     'abs.services.customer.finance',
@@ -167,10 +167,10 @@ STATICFILES_DIRS = [
 
 try:
     from logger_conf import *
-except:
+except Exception as et:
     pass
 
 try:
     from settings_local import *
-except:
+except Exception as e:
     pass

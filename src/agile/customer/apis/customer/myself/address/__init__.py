@@ -13,7 +13,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.customer.manager.api import CustomerAuthorizedApi
-from abs.middleground.business.user.manager import UserServer
+from abs.middleground.business.person.manager import PersonServer
 
 
 class Add(CustomerAuthorizedApi):
@@ -40,8 +40,8 @@ class Add(CustomerAuthorizedApi):
 
     def execute(self, request):
         customer = self.auth_user
-        UserServer.add_address(
-            customer.user_id,
+        PersonServer.add_address(
+            customer.person_id,
             request.is_default,
             **request.address_info
         )
@@ -75,7 +75,7 @@ class Get(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return UserServer.get_address(request.address_id)
+        return PersonServer.get_address(request.address_id)
 
     def fill(self, response, address):
         response.address_info = {
@@ -114,7 +114,7 @@ class Update(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        UserServer.update_address(
+        PersonServer.update_address(
             request.address_id,
             request.is_default,
             **request.update_info
@@ -154,7 +154,7 @@ class All(CustomerAuthorizedApi):
 
     def execute(self, request):
         customer = self.auth_user
-        address_qs = UserServer.get_all_address(customer.id)
+        address_qs = PersonServer.get_all_address(customer.id)
         return address_qs
 
     def fill(self, response, address_qs):
@@ -186,7 +186,7 @@ class Remove(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        UserServer.remove_address(request.address_id)
+        PersonServer.remove_address(request.address_id)
 
     def fill(self, response):
         return response

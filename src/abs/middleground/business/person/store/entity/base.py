@@ -8,11 +8,11 @@ Created on 2020年7月10日
 
 from abs.common.model import BaseModel, \
         CharField, DateTimeField, DateField, timezone
-from abs.middleground.business.user.utils.constant import GenderTypes
-from abs.middleground.business.user.settings import DB_PREFIX
+from abs.middleground.business.person.utils.constant import GenderTypes
+from abs.middleground.business.person.settings import DB_PREFIX
 
 
-class User(BaseModel):
+class Person(BaseModel):
     """个人信息表"""
     name = CharField(verbose_name="姓名", max_length=32)
     gender = CharField(

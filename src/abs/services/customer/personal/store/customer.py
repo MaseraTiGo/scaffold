@@ -9,7 +9,7 @@ class Customer(BaseModel):
     nick = CharField(verbose_name="昵称", max_length=32)
     head_url = CharField(verbose_name="头像URL", max_length=256)
 
-    user_id = IntegerField(verbose_name="用户id")
+    person_id = IntegerField(verbose_name="用户id")
 
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)

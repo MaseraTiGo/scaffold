@@ -45,13 +45,13 @@ class Get(CustomerAuthorizedApi):
 
     def fill(self, response, customer):
         response.customer_info = {
-            'name': customer.user.name,
-            'gender': customer.user.gender,
-            'birthday': customer.user.birthday,
-            'phone': customer.user.phone,
-            'email': customer.user.email,
-            'wechat': customer.user.wechat,
-            'qq': customer.user.qq,
+            'name': customer.person.name,
+            'gender': customer.person.gender,
+            'birthday': customer.person.birthday,
+            'phone': customer.person.phone,
+            'email': customer.person.email,
+            'wechat': customer.person.wechat,
+            'qq': customer.person.qq,
         }
         return response
 

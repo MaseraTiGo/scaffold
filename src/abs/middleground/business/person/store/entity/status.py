@@ -8,13 +8,14 @@ Created on 2020年7月10日
 
 from abs.common.model import CASCADE, DO_NOTHING,\
         BaseModel, ForeignKey, DateTimeField, timezone
-from abs.middleground.business.user.settings import DB_PREFIX
-from abs.middleground.business.user.store.entity.base import User
-from abs.middleground.business.user.store.entity.auxiliary import Address, \
+from abs.middleground.business.person.settings import DB_PREFIX
+from abs.middleground.business.person.store.entity.base import Person
+from abs.middleground.business.person.store.entity.auxiliary import Address, \
         BankCard, Certification, Education
 
 
-class UserStatus(BaseModel):
+class PersonStatus(BaseModel):
+
     certification = ForeignKey(
         Certification,
         on_delete=DO_NOTHING,
@@ -40,7 +41,7 @@ class UserStatus(BaseModel):
         default=None
     )
 
-    user = ForeignKey(User, on_delete=CASCADE)
+    person = ForeignKey(Person, on_delete=CASCADE)
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)
 
@@ -53,8 +54,8 @@ class UserStatus(BaseModel):
         return status_qs
 
     @classmethod
-    def get_byuser(cls, user):
-        status_qs = cls.search(user=user)
+    def get_byperson(cls, person):
+        status_qs = cls.search(person=person)
         if status_qs.count() > 0:
             return status_qs[0]
         return None

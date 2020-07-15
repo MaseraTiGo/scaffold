@@ -2,82 +2,83 @@
 
 import random
 
-from abs.middleground.business.user.models import User,\
-        Address, BankCard, UserStatus
+from abs.middleground.business.person.models import Person,\
+        Address, BankCard, PersonStatus, PersonStatistics
 
 
-class UserServer(object):
-
-    @classmethod
-    def create(cls, **user_infos):
-        user = User.create(**user_infos)
-        UserStatus.create(user=user)
-        return user
+class PersonServer(object):
 
     @classmethod
-    def get(cls, user_id):
-        user = User.get_byid(user_id)
-        return user
+    def create(cls, **person_infos):
+        person = Person.create(**person_infos)
+        PersonStatus.create(person=person)
+        PersonStatistics.create(person=person)
+        return person
+
+    @classmethod
+    def get(cls, person_id):
+        person = Person.get_byid(person_id)
+        return person
 
     @classmethod
     def search(cls, current_page, **search_info):
-        user_qs = User.search(**search_info)
-        return user_qs
+        person_qs = Person.search(**search_info)
+        return person_qs
 
     @classmethod
-    def hung_users(cls, obj_list):
-        obj_mapping = {obj.user_id: obj for obj in obj_list}
-        user_qs = User.search(id__in=obj_mapping.keys())
-        user_mapping = {user.id: user for user in user_qs}
-        status_qs = UserStatus.search(user_id__in=obj_mapping.keys())
-        status_mapping = {status.user.id: status for status in status_qs}
+    def hung_persons(cls, obj_list):
+        obj_mapping = {obj.person_id: obj for obj in obj_list}
+        person_qs = Person.search(id__in=obj_mapping.keys())
+        person_mapping = {person.id: person for person in person_qs}
+        status_qs = PersonStatus.search(person_id__in=obj_mapping.keys())
+        status_mapping = {status.person.id: status for status in status_qs}
         for obj in obj_list:
-            obj.user = user_mapping.get(obj.user_id, None)
-            obj.user_status = status_mapping.get(obj.user_id, None)
+            obj.person = person_mapping.get(obj.person_id, None)
+            obj.person_status = status_mapping.get(obj.person_id, None)
         return obj_list
 
     @classmethod
-    def update(cls, user_id, **user_infos):
-        user = cls.get(user_id)
-        user.update(**user_infos)
-        return user
+    def update(cls, person_id, **person_infos):
+        person = cls.get(person_id)
+        person.update(**person_infos)
+        return person
 
     @classmethod
     def is_exsited(cls, phone):
-        is_exsited, user = User.is_exsited(phone)
-        return is_exsited, user
+        is_exsited, person = Person.is_exsited(phone)
+        return is_exsited, person
 
     @classmethod
-    def update_default_address(cls, user, address):
-        status = UserStatus.get_byuser(user)
+    def update_default_address(cls, person, address):
+        status = PersonStatus.get_byperson(person)
         if status.default_address and status.default_address.id != address.id:
             status.update(default_address=address)
         return True
 
     @classmethod
-    def add_address(cls, user_id, is_default, **address_info):
-        user = cls.get(user_id)
+    def add_address(cls, person_id, is_default, **address_info):
+        person = cls.get(person_id)
         address = Address.create(
-            user=user,
+            person=person,
             **address_info
         )
         if is_default:
-            cls.update_default_address(user, address)
+            cls.update_default_address(person, address)
         return address
 
     @classmethod
     def get_address(cls, address_id):
         address = Address.get_byid(address_id)
-        status = UserStatus.get_byuser(address.user)
+        status = PersonStatus.get_byperson(address.person)
         address.is_default = False
         if status and status.default_address:
             address.is_default = status.default_address.id == address.id
         return address
 
     @classmethod
-    def get_all_address(cls, user_id):
-        address_qs = Address.search(user=user_id)
-        status = UserStatus.get_byuser(user_id)
+    def get_all_address(cls, person_id):
+        address_qs = Address.search(person=person_id)
+        status = PersonStatus.get_byperson(person_id)
         address_list = []
         for address in address_qs:
             address.is_default = False
@@ -95,12 +96,12 @@ class UserServer(object):
         address = cls.get_address(address_id)
         address.update(**address_info)
         if is_default:
-            cls.update_default_address(address.user, address)
+            cls.update_default_address(address.person, address)
         return address
 
     @classmethod
-    def add_bankcard(cls, user_id, bank_number, **bankcard_info):
-        user = cls.get(user_id)
+    def add_bankcard(cls, person_id, bank_number, **bankcard_info):
+        person = cls.get(person_id)
 
         # todo: add card to verify
         bank_list = (
@@ -115,7 +116,7 @@ class UserServer(object):
         bank_name, bank_code = random.choice(bank_list)
 
         bankcard = BankCard.create(
-            user=user,
+            person=person,
             bank_name=bank_name,
             bank_code=bank_code,
             bank_number=bank_number,
@@ -129,8 +130,8 @@ class UserServer(object):
         return bankcard
 
     @classmethod
-    def get_all_bankcard(cls, user_id):
-        bankcard = BankCard.search(user=user_id)
+    def get_all_bankcard(cls, person_id):
+        bankcard = BankCard.search(person=person_id)
         return bankcard
 
     @classmethod

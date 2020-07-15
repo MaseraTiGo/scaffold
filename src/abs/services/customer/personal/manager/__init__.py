@@ -4,7 +4,7 @@
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
-from abs.middleground.business.user.manager import UserServer
+from abs.middleground.business.person.manager import PersonServer
 from abs.services.customer.personal.models import Customer
 
 
@@ -13,7 +13,7 @@ class CustomerServer(object):
     @classmethod
     def get(cls, customer_id):
         customer = Customer.get_byid(customer_id)
-        UserServer.hung_users([customer])
+        PersonServer.hung_persons([customer])
         return customer
 
     @classmethod
@@ -21,7 +21,7 @@ class CustomerServer(object):
         customer_qs = Customer.search(**search_info)
         customer_qs.order_by('-create_time')
         splitor = Splitor(current_page, customer_qs)
-        UserServer.hung_users(splitor.get_list())
+        PersonServer.hung_persons(splitor.get_list())
         return splitor
 
     @classmethod
@@ -31,13 +31,13 @@ class CustomerServer(object):
 
     @classmethod
     def create(cls, phone, **customer_info):
-        is_user_exsited, user = UserServer.is_exsited(phone)
-        if is_user_exsited:
+        is_person_exsited, person = PersonServer.is_exsited(phone)
+        if is_person_exsited:
             raise BusinessError('客户已存在，不能创建')
 
-        user = UserServer.create(phone=phone, **customer_info)
+        person = PersonServer.create(phone=phone, **customer_info)
         customer = Customer.create(
-            user_id=user.id,
+            person_id=person.id,
             phone=phone,
             **customer_info
         )
@@ -46,6 +46,6 @@ class CustomerServer(object):
     @classmethod
     def update(cls, customer_id, **update_info):
         customer = cls.get(customer_id)
-        UserServer.update(customer.user_id, **update_info)
+        PersonServer.update(customer.person_id, **update_info)
         customer.update(**update_info)
         return customer

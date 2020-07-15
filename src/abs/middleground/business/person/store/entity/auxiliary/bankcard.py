@@ -2,8 +2,8 @@
 
 from abs.common.model import CASCADE,\
         BaseModel, ForeignKey, CharField, DateTimeField, timezone
-from abs.middleground.business.user.settings import DB_PREFIX
-from abs.middleground.business.user.store.entity.base import User
+from abs.middleground.business.person.settings import DB_PREFIX
+from abs.middleground.business.person.store.entity.base import Person
 
 
 class BankCard(BaseModel):
@@ -15,7 +15,7 @@ class BankCard(BaseModel):
     phone = CharField(verbose_name="开户人手机号", max_length=20)
     identification = CharField(verbose_name="开户人身份证", max_length=24)
 
-    user = ForeignKey(User, on_delete=CASCADE)
+    person = ForeignKey(Person, on_delete=CASCADE)
 
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)

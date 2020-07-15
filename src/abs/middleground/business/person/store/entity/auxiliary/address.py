@@ -2,9 +2,9 @@
 
 from abs.common.model import CASCADE,\
         BaseModel, ForeignKey, CharField, DateTimeField, timezone
-from abs.middleground.business.user.settings import DB_PREFIX
-from abs.middleground.business.user.store.entity.base import User
-from abs.middleground.business.user.utils.constant import GenderTypes
+from abs.middleground.business.person.settings import DB_PREFIX
+from abs.middleground.business.person.store.entity.base import Person
+from abs.middleground.business.person.utils.constant import GenderTypes
 
 
 class Address(BaseModel):
@@ -21,7 +21,7 @@ class Address(BaseModel):
     city = CharField(verbose_name="城市", max_length=64)
     address = CharField(verbose_name="详细地址", max_length=256)
 
-    user = ForeignKey(User, on_delete=CASCADE)
+    person = ForeignKey(Person, on_delete=CASCADE)
 
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)

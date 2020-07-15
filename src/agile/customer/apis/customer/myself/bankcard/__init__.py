@@ -13,7 +13,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.customer.manager.api import CustomerAuthorizedApi
-from abs.middleground.business.user.manager import UserServer
+from abs.middleground.business.person.manager import PersonServer
 
 
 class Add(CustomerAuthorizedApi):
@@ -39,8 +39,8 @@ class Add(CustomerAuthorizedApi):
 
     def execute(self, request):
         customer = self.auth_user
-        UserServer.add_bankcard(
-            customer.user_id,
+        PersonServer.add_bankcard(
+            customer.person_id,
             **request.bankcard_info
         )
 
@@ -73,7 +73,7 @@ class Get(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return UserServer.get_bankcard(request.bankcard_id)
+        return PersonServer.get_bankcard(request.bankcard_id)
 
     def fill(self, response, bankcard):
         response.bankcard_info = {
@@ -118,7 +118,7 @@ class All(CustomerAuthorizedApi):
 
     def execute(self, request):
         customer = self.auth_user
-        bankcard_qs = UserServer.get_all_bankcard(customer.user_id)
+        bankcard_qs = PersonServer.get_all_bankcard(customer.person_id)
         return bankcard_qs
 
     def fill(self, response, bankcard_qs):
@@ -150,7 +150,7 @@ class Remove(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        UserServer.remove_bankcard(request.bankcard_id)
+        PersonServer.remove_bankcard(request.bankcard_id)
 
     def fill(self, response):
         return response
