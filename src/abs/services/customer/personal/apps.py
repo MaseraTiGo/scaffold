@@ -5,4 +5,4 @@ from django.apps import AppConfig
 
 class CustomerConfig(AppConfig):
     name = "abs.services.customer.personal"
-    label = 'customer_base'
+    label = 'customer_personal'

@@ -9,21 +9,19 @@ Created on 2016年7月23日
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
-from infrastructure.core.exception.business_error import BusinessError
-from infrastructure.core.field.base import CharField, DictField, IntField, ListField, DatetimeField, DateField, BooleanField
+from infrastructure.core.field.base import CharField
 
 from agile.base.api import NoAuthorizedApi
-from agile.crm.manager.api import StaffAuthorizedApi
-from abs.service.staff.manager import StaffServer, StaffAccountServer
+from abs.services.crm.account.manager import StaffAccountServer
 
 
 class Phone(NoAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.number = RequestField(CharField, desc = "手机号码")
+    request.number = RequestField(CharField, desc="手机号码")
 
     response = with_metaclass(ResponseFieldSet)
-    response.code = ResponseField(CharField, desc = "手机验证码")
+    response.code = ResponseField(CharField, desc="手机验证码")
 
     @classmethod
     def get_desc(cls):
@@ -34,12 +32,13 @@ class Phone(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return StaffAccountServer.get_phone_verification_code(request.number)
+        return StaffAccountServer.get_phone_verification_code(
+            request.number
+        )
 
     def fill(self, response, code):
         response.code = code
         return response
-
 
 
 class Image(NoAuthorizedApi):
@@ -47,7 +46,7 @@ class Image(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
 
     response = with_metaclass(ResponseFieldSet)
-    response.code = ResponseField(CharField, desc = "图片验证码")
+    response.code = ResponseField(CharField, desc="图片验证码")
 
     @classmethod
     def get_desc(cls):

@@ -7,13 +7,12 @@ Created on 2020年7月3日
 '''
 
 from infrastructure.core.api.utils import with_metaclass
-from infrastructure.core.api.request import RequestField, RequestFieldSet
+from infrastructure.core.api.request import RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
-from infrastructure.core.exception.business_error import BusinessError
-from infrastructure.core.field.base import CharField, DictField, IntField, ListField, DatetimeField, DateField, BooleanField
+from infrastructure.core.field.base import DictField, IntField, ListField
 
 from agile.customer.manager.api import CustomerAuthorizedApi
-from abs.service.customer.manager import CustomerServer, CustomerFinanceServer
+from abs.middleground.business.transaction.manager import TransactionServer
 
 
 class Monthly(CustomerAuthorizedApi):
@@ -21,13 +20,19 @@ class Monthly(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
 
     response = with_metaclass(ResponseFieldSet)
-    response.statistics_list = ResponseField(ListField, desc = "用户列表", fmt = \
-                                       DictField(desc = "用户详情", conf = {
-                                            'year': IntField(desc = "年份"),
-                                            'month': IntField(desc = "月份"),
-                                            'income': IntField(desc = "总收入额"),
-                                            'expense': IntField(desc = "总花费额"),
-                                        }))
+    response.statistics_list = ResponseField(
+        ListField,
+        desc="用户列表",
+        fmt=DictField(
+            desc="用户详情",
+            conf={
+                'year': IntField(desc="年份"),
+                'month': IntField(desc="月份"),
+                'income': IntField(desc="总收入额"),
+                'expense': IntField(desc="总花费额"),
+            }
+        )
+    )
 
     @classmethod
     def get_desc(cls):
@@ -38,8 +43,8 @@ class Monthly(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        statistics_result = CustomerFinanceServer.statistics_customer_bymonth(
-            customer_id = self.auth_user.id,
+        statistics_result = TransactionServer.statistics_person_bymonth(
+            person_id=self.auth_user.person_id,
         )
         return statistics_result
 

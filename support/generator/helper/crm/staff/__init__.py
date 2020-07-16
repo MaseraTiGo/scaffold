@@ -17,8 +17,9 @@ class StaffGenerator(BaseGenerator):
         return self._staff_infos
 
     def create(self, staff_info, result_mapping):
-        user_certification_qs = UserCertification.query().filter(identification =
-                                                                 staff_info.identification)
+        user_certification_qs = UserCertification.query().filter(
+            identification=staff_info.identification
+        )
         if user_certification_qs.count():
             user_certification = user_certification_qs[0]
         else :

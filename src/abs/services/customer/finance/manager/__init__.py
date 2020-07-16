@@ -14,16 +14,6 @@ from abs.services.customer.finance.models import CustomerBalanceRecord
 class CustomerFinanceServer(object):
 
     @classmethod
-    def get_main_company(cls):
-        company_qs = EnterpriseServer.search(
-            current_page=1,
-            license_number="123456"
-        )
-        if company_qs.count() > 0:
-            return company_qs[0]
-        raise BusinessError('缺少客户的打款公司信息！')
-
-    @classmethod
     def get_balance(cls, customer_id):
         customer = CustomerServer.get(customer_id)
         balance = TransactionServer.get_person_balance(customer.person_id)
@@ -48,7 +38,7 @@ class CustomerFinanceServer(object):
         # 2. 生成出账单
         output_record = TransactionServer.generate_p2c_outputrecord(
             person_id=customer.person_id,
-            company_id=cls.get_main_company().id,
+            company_id=EnterpriseServer.get_main_company().id,
             amount=balance_record.amount,
             pay_type=balance_record.pay_type,
             remark=balance_record.remark,
@@ -69,7 +59,7 @@ class CustomerFinanceServer(object):
         # 1. 生成入账单
         input_record = TransactionServer.generate_p2c_inputrecord(
             person_id=customer.person_id,
-            company_id=cls.get_main_company().id,
+            company_id=EnterpriseServer.get_main_company().id,
             amount=amount,
             pay_type=pay_type,
             remark=remark,

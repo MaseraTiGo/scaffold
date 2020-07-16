@@ -1,11 +1,21 @@
 # coding=UTF-8
 
-import random
+from infrastructure.core.exception.business_error import BusinessError
+from infrastructure.utils.common.split_page import Splitor
 
 from abs.middleground.business.enterprise.models import Enterprise
 
 
 class EnterpriseServer(object):
+
+    @classmethod
+    def get_main_company(cls):
+        company_qs = Enterprise.search(
+            license_number="123456"
+        )
+        if company_qs.count() > 0:
+            return company_qs[0]
+        raise BusinessError('缺少客户的打款公司信息！')
 
     @classmethod
     def create(cls, **enterprise_infos):
@@ -20,7 +30,8 @@ class EnterpriseServer(object):
     @classmethod
     def search(cls, current_page, **search_info):
         enterprise_qs = Enterprise.search(**search_info)
-        return enterprise_qs
+        splitor = Splitor(current_page, enterprise_qs)
+        return splitor
 
     @classmethod
     def update(cls, enterprise_id, **enterprise_infos):

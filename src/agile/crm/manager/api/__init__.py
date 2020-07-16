@@ -1,8 +1,8 @@
 # coding=UTF-8
 
-from  agile.base.api import AuthorizedApi
+from agile.base.api import AuthorizedApi
 from abs.middleware.token import TokenManager
-from abs.service.staff.manager import StaffServer
+from abs.services.crm.staff.manager import StaffServer
 
 
 class StaffAuthorizedApi(AuthorizedApi):
@@ -13,4 +13,3 @@ class StaffAuthorizedApi(AuthorizedApi):
     def load_auth_user(self):
         staff = StaffServer.get_byid(self._user_id)
         return staff
-
