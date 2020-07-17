@@ -2,7 +2,8 @@
 
 
 from support.generator.base import BaseGenerator
-from abs.middleground.business.person.models import Person
+from abs.middleground.business.person.models import Person,\
+        PersonStatus, PersonStatistics
 from abs.services.customer.personal.models import Customer
 
 
@@ -19,6 +20,8 @@ class CustomerGenerator(BaseGenerator):
         is_exsitd, person = Person.is_exsited(customer_info.phone)
         if not is_exsitd:
             person = Person.create(**customer_info)
+            PersonStatus.create(person=person)
+            PersonStatistics.create(person=person)
 
         customer_qs = Customer.search(person_id=person.id)
         if customer_qs.count() > 0:

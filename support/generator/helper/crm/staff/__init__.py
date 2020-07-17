@@ -3,7 +3,8 @@
 import random
 
 from support.generator.base import BaseGenerator
-from abs.middleground.business.person.models import Person
+from abs.middleground.business.person.models import Person,\
+        PersonStatus, PersonStatistics
 from support.generator.helper import EnterpriseGenerator
 from abs.services.crm.staff.models import Staff
 
@@ -30,6 +31,8 @@ class StaffGenerator(BaseGenerator):
             is_exsitd, person = Person.is_exsited(staff_info.phone)
             if not is_exsitd:
                 person = Person.create(**staff_info)
+                PersonStatus.create(person=person)
+                PersonStatistics.create(person=person)
 
             staff = Staff.create(
                 person_id=person.id,
