@@ -11,7 +11,7 @@ class EnterpriseServer(object):
     @classmethod
     def get_main_company(cls):
         company_qs = Enterprise.search(
-            license_number="123456"
+            license_number="91420100MA4KM4XY1Y"
         )
         if company_qs.count() > 0:
             return company_qs[0]

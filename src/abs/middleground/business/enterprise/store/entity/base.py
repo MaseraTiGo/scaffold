@@ -7,7 +7,7 @@ Created on 2020年7月10日
 '''
 
 from abs.common.model import BaseModel, \
-        CharField, DateTimeField, timezone
+        CharField, DateTimeField, TextField, timezone
 from abs.middleground.business.enterprise.settings import DB_PREFIX
 
 
@@ -19,6 +19,7 @@ class Enterprise(BaseModel):
     license_number = CharField(verbose_name="营业执照编号", max_length=32)
     license_url = CharField(verbose_name="营业执照", max_length=256, default="")
 
+    remark = TextField(verbose_name="备注")
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)
 

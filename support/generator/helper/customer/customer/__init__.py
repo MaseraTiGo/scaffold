@@ -1,10 +1,9 @@
 # coding=UTF-8
 
 
-from infrastructure.log.base import logger
 from support.generator.base import BaseGenerator
-from model.common.model_user_base import UserCertification
-from model.store.model_customer import Customer
+from abs.middleground.business.person.models import Person
+from abs.services.customer.personal.models import Customer
 
 
 class CustomerGenerator(BaseGenerator):
@@ -17,13 +16,20 @@ class CustomerGenerator(BaseGenerator):
         return self._customer_infos
 
     def create(self, customer_info, result_mapping):
-        customer_qs = Customer.query().filter(phone = customer_info.phone)
-        if customer_qs.count():
-            customer = customer_qs[0]
+        is_exsitd, person = Person.is_exsited(customer_info.phone)
+        if not is_exsitd:
+            person = Person.create(**customer_info)
+
+        customer_qs = Customer.search(person_id=person.id)
+        if customer_qs.count() > 0:
+            return customer_qs[0]
         else:
-            customer = Customer.create(**customer_info)
-        return customer
+            customer = Customer.create(
+                person_id=person.id,
+                **customer_info
+            )
+            return customer
 
     def delete(self):
-        print('======================>>> delete customer <======================')
+        print('===================>>> delete customer <====================')
         return None

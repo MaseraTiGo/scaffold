@@ -35,7 +35,7 @@ class BaseAccount(BaseModel):
 
     @classmethod
     def is_exsited(cls, username, password):
-        account_qs = cls.search(username = username, password = password)
+        account_qs = cls.search(username=username, password=password)
         if account_qs.count():
             return True, account_qs[0]
         return False, None

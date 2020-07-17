@@ -1,7 +1,7 @@
 # coding=UTF-8
 
 import datetime
-from model.models import GenderTypes
+from support.generator.field.model.constant import GenderConstant
 from support.init.base import BaseLoader
 
 
@@ -10,7 +10,8 @@ class StaffLoader(BaseLoader):
     def load(self):
         return [{
             'name': 'admin',
-            'gender': GenderTypes.MAN,
+            'nick': 'admin',
+            'gender': GenderConstant().generate(),
             'birthday': datetime.datetime(2018, 6, 1),
             'work_number': 'BQ10001',
             'phone': '15527703115',

@@ -1,10 +1,11 @@
 # coding=UTF-8
 
+import random
 
-from infrastructure.log.base import logger
-from model.store.model_staff import Staff
-from model.common.model_user_base import UserCertification
 from support.generator.base import BaseGenerator
+from abs.middleground.business.person.models import Person
+from support.generator.helper import EnterpriseGenerator
+from abs.services.crm.staff.models import Staff
 
 
 class StaffGenerator(BaseGenerator):
@@ -14,22 +15,26 @@ class StaffGenerator(BaseGenerator):
         self._staff_infos = self.init(staff_info)
 
     def get_create_list(self, result_mapping):
+        enterprise_list = result_mapping.get(EnterpriseGenerator.get_key())
+        for staff_info in self._staff_infos:
+            enterprise = random.choice(enterprise_list)
+            staff_info.company_id = enterprise.id
+
         return self._staff_infos
 
     def create(self, staff_info, result_mapping):
-        user_certification_qs = UserCertification.query().filter(
-            identification=staff_info.identification
-        )
-        if user_certification_qs.count():
-            user_certification = user_certification_qs[0]
-        else :
-            user_certification = UserCertification.create(**staff_info)
-
-        staff_qs = Staff.query().filter(id_number = staff_info.id_number)
+        staff_qs = Staff.query().filter(work_number=staff_info.work_number)
         if staff_qs.count():
             staff = staff_qs[0]
         else:
-            staff = Staff.create(certification = user_certification, **staff_info)
+            is_exsitd, person = Person.is_exsited(staff_info.phone)
+            if not is_exsitd:
+                person = Person.create(**staff_info)
+
+            staff = Staff.create(
+                person_id=person.id,
+                **staff_info
+            )
         return staff
 
     def delete(self):

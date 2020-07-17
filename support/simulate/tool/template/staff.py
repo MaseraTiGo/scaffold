@@ -16,14 +16,11 @@ class StaffTemplate(BaseTemplate):
             entry_time, expire_time = expire_time, entry_time
 
         return {
-            'identification': IdentificationHelper().generate(),
             'name': NameHelper().generate(),
             'gender': GenderConstant().generate(),
             'birthday': birthday,
-            'id_number': WorkNumberHelper().generate(),
+            'work_number': WorkNumberHelper().generate(),
             'phone': PhoneHelper().generate(),
             'email': EmailHelper().generate(),
-            'entry_time':entry_time,
-            'education': EducationConstant().generate(),
             'is_admin': False,
         }

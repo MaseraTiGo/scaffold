@@ -7,7 +7,7 @@ from abs.services.customer.personal.settings import DB_PREFIX
 
 class Customer(BaseModel):
     nick = CharField(verbose_name="昵称", max_length=32)
-    head_url = CharField(verbose_name="头像URL", max_length=256)
+    head_url = CharField(verbose_name="头像URL", max_length=256, default="")
 
     person_id = IntegerField(verbose_name="用户id")
 
