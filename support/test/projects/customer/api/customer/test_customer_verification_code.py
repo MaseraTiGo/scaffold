@@ -1,12 +1,9 @@
 # coding=UTF-8
 
-import os
-import json
-import hashlib
+from support.common.testcase.customer_api_test_case import CustomerAPITestCase
 
-from support.common.testcase.api_test_case import APITestCase
 
-class CustomerAccountTest(APITestCase):
+class CustomerAccountTest(CustomerAPITestCase):
 
     def setUp(self):
         pass
@@ -19,11 +16,11 @@ class CustomerAccountTest(APITestCase):
         params = {
             "number": "15527703115",
         }
-        result = self.access_customer_api(api = api, is_auth = False, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue('code' in result)
 
     def test_account_image_verification_code(self):
         api = 'customer.account.vcode.image'
         params = {}
-        result = self.access_customer_api(api = api, is_auth = False, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue('code' in result)

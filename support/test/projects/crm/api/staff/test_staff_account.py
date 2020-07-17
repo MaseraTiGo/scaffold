@@ -4,9 +4,10 @@ import os
 import json
 import hashlib
 
-from support.common.testcase.api_test_case import APITestCase
+from support.common.testcase.crm_api_test_case import CrmAPITestCase
 
-class StaffAccountTest(APITestCase):
+
+class StaffAccountTest(CrmAPITestCase):
 
     def setUp(self):
         username = ''
@@ -21,7 +22,7 @@ class StaffAccountTest(APITestCase):
             'username': 'admin',
             "password": hashlib.md5("123456".encode('utf8')).hexdigest(),
         }
-        result = self.access_crm_api(api = api, is_auth = False, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue('access_token' in result)
         self.assertTrue('renew_flag' in result)
         self.assertTrue('expire_time' in result)
@@ -30,4 +31,4 @@ class StaffAccountTest(APITestCase):
     def test_account_logout(self):
         api = 'staff.account.logout'
         params = {}
-        self.access_crm_api(api = api, **params)
+        self.access_api(api=api, **params)

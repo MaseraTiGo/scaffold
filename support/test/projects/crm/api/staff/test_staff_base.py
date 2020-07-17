@@ -2,10 +2,10 @@
 
 import json
 
-from support.common.testcase.api_test_case import APITestCase
+from support.common.testcase.crm_api_test_case import CrmAPITestCase
 
 
-class StaffTestCase(APITestCase):
+class StaffTestCase(CrmAPITestCase):
 
     def setUp(self):
         self.staff_info = {
@@ -55,12 +55,12 @@ class StaffTestCase(APITestCase):
 
     def test_create_staff(self):
         api = 'staff.add'
-        self.access_crm_api(api=api, staff_info=json.dumps(self.staff_info))
+        self.access_api(api=api, staff_info=json.dumps(self.staff_info))
 
     def test_search_staff(self):
         api = 'staff.search'
         current_page = 1
-        result = self.access_crm_api(
+        result = self.access_api(
             api=api,
             current_page=current_page,
             search_info=json.dumps({})
@@ -71,7 +71,7 @@ class StaffTestCase(APITestCase):
 
         if result['total'] <= 0:
             self.test_create_staff()
-            result = self.access_crm_api(
+            result = self.access_api(
                 api=api,
                 current_page=current_page,
                 search_info=json.dumps({})
@@ -85,7 +85,7 @@ class StaffTestCase(APITestCase):
         staff_list = self.test_search_staff()
         staff_id = staff_list[-1]['id']
         api = "staff.get"
-        result = self.access_crm_api(api=api, staff_id=staff_id)
+        result = self.access_api(api=api, staff_id=staff_id)
         self.assertTrue('staff_info' in result)
         self.assert_staff_fields(result['staff_info'])
 
@@ -93,7 +93,7 @@ class StaffTestCase(APITestCase):
         staff_list = self.test_search_staff()
         staff_id = staff_list[-1]['id']
         api = "staff.update"
-        self.access_crm_api(
+        self.access_api(
             api=api,
             staff_id=staff_id,
             staff_info=json.dumps(self.update_info)

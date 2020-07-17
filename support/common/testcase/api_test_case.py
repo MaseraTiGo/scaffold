@@ -9,8 +9,6 @@ Created on 2016年8月3日
 # import python standard package
 import time
 import json
-import hashlib
-import requests
 import unittest
 import urllib.request
 import support.test_settings
@@ -18,12 +16,16 @@ import support.test_settings
 # import thread package
 
 # import my project package
-from infrastructure.utils.common.signature import unique_parms, generate_signature
+from infrastructure.utils.common.signature import unique_parms,\
+        generate_signature
 
 
 class APITestCase(unittest.TestCase):
 
-    _test_url = "http://localhost:{}/interface/".format(support.test_settings.TEST_PORT)
+    ACCESS_FLAG = ""
+    _test_url = "http://localhost:{}/interface/".format(
+        support.test_settings.TEST_PORT
+    )
     _auth_token = ""
     _renew_flag = ""
 
@@ -62,69 +64,23 @@ class APITestCase(unittest.TestCase):
         self.assertEqual(status, 'ok', result.get("msg", ""))
         return result['result']
 
-    def _get_crm_auth_token(self, flag = 'crm-pc'):
-        api = "staff.account.login"
-        username = "admin"  # "15623937796"#"13682286629"#
-        password = hashlib.md5("123456".encode('utf8'))\
-                                .hexdigest()
-        result = self.access_base(flag = flag, api = api, username = username, \
-            password = password)
-        self._auth_token = result['access_token']
-        self._renew_flag = result['renew_flag']
-
-    def access_crm_api(self, api, is_auth = True, **parms):
-        if is_auth:
-            if self._auth_token == "":
-                self._get_crm_auth_token()
-            parms.update({'auth':self._auth_token})
-
-        return self.access_base('crm-pc', api, **parms)
-
-    def _get_customer_auth_token(self, flag = 'customer-mobile'):
-        api = "customer.account.login"
-        username = "15527703115"  # "15623937796"
-        password = hashlib.md5("123456".encode('utf8'))\
-                                .hexdigest()
-        result = self.access_base(flag = flag, api = api, username = username, \
-            password = password)
-        self._auth_token = result['access_token']
-        self._renew_flag = result['renew_flag']
-
-    def _renew_account_token(self):
-        api = 'customer.account.token.renew'
-        params = {
-            'auth_token': self._auth_token,
-            'renew_flag': self._renew_flag,
-        }
-
-        result = self.access_customer_api(api = api, is_auth = False, **params)
-        self._auth_token = result['access_token']
-        self._renew_flag = result['renew_flag']
-
-    def access_customer_api(self, api, is_auth = True, **parms):
-        if is_auth:
-            if self._auth_token == "":
-                self._get_customer_auth_token()
-                self._renew_account_token()
-            parms.update({'auth':self._auth_token})
-
-        return self.access_base('customer-mobile', api, **parms)
-
-    def access_file_api(self, api, files = None, flag = 'file', is_auth = True, **parms):
-        if self._auth_token == "":
-            self._get_crm_auth_token()
-
-        if is_auth:
-            parms.update({'auth':self._auth_token})
-
-        access_parms = self._combination_parms(flag = flag, api = api, **parms)
-
-        url = self._get_api_url()
-        result = requests.post(url, data = access_parms, files = files)
-        return self._get_response_data(result.json())
-
     def access_base(self, flag, api, **parms):
-        access_parms = self._combination_parms(flag = flag, api = api, **parms)
+        access_parms = self._combination_parms(flag=flag, api=api, **parms)
         response_text = self._connect(self._get_api_url(), access_parms)
         result = self._parse(response_text)
         return self._get_response_data(result)
+
+    def access_api(self, api, is_auth=True, **parms):
+        if is_auth:
+            if self._auth_token == "":
+                self.get_auth_token()
+                self.renew_token()
+            parms.update({'auth': self._auth_token})
+
+        return self.access_base(self.ACCESS_FLAG, api, **parms)
+
+    def get_auth_token(self, api, is_auth=True, **parms):
+        raise Exception("this interface is need to implement!")
+
+    def renew_token(self, api, is_auth=True, **parms):
+        raise Exception("this interface is need to implement!")

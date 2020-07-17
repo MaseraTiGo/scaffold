@@ -1,12 +1,11 @@
 # coding=UTF-8
 
-import os
-import json
 import hashlib
 
-from support.common.testcase.api_test_case import APITestCase
+from support.common.testcase.customer_api_test_case import CustomerAPITestCase
 
-class CustomerAccountTest(APITestCase):
+
+class CustomerAccountTest(CustomerAPITestCase):
 
     def setUp(self):
         self.customer_info = {
@@ -24,7 +23,7 @@ class CustomerAccountTest(APITestCase):
             "password": self.customer_info['password'],
             "code": '123456'
         }
-        result = self.access_customer_api(api = api, is_auth = False, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue('access_token' in result)
         self.assertTrue('renew_flag' in result)
         self.assertTrue('expire_time' in result)
@@ -37,7 +36,7 @@ class CustomerAccountTest(APITestCase):
             'renew_flag': result['renew_flag'],
         }
 
-        result = self.access_customer_api(api = api, is_auth = False, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue('access_token' in result)
         self.assertTrue('renew_flag' in result)
         self.assertTrue('expire_time' in result)
@@ -48,7 +47,7 @@ class CustomerAccountTest(APITestCase):
             'username': '15527703115',
             "password": hashlib.md5("123456".encode('utf8')).hexdigest(),
         }
-        result = self.access_customer_api(api = api, is_auth = False, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue('access_token' in result)
         self.assertTrue('renew_flag' in result)
         self.assertTrue('expire_time' in result)
@@ -57,7 +56,7 @@ class CustomerAccountTest(APITestCase):
     def test_account_logout(self):
         api = 'customer.account.logout'
         params = {}
-        self.access_customer_api(api = api, **params)
+        self.access_api(api=api, **params)
 
     def test_account_password_modify(self):
         api = 'customer.account.password.modify'
@@ -65,7 +64,7 @@ class CustomerAccountTest(APITestCase):
             "old_password": hashlib.md5("123456".encode('utf8')).hexdigest(),
             "new_password": hashlib.md5("123456".encode('utf8')).hexdigest(),
         }
-        self.access_customer_api(api = api, **params)
+        self.access_api(api=api, **params)
 
     def test_account_password_forget(self):
         api = 'customer.account.password.forget'
@@ -74,4 +73,4 @@ class CustomerAccountTest(APITestCase):
             "code": "123456",
             "phone": "15527703115",
         }
-        self.access_customer_api(api = api, **params)
+        self.access_api(api=api, **params)

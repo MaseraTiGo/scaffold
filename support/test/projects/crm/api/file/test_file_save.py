@@ -1,11 +1,10 @@
 # coding=UTF-8
 
 import os
-import json
+from support.common.testcase.file_api_test_case import FileAPITestCase
 
-from support.common.testcase.api_test_case import APITestCase
 
-class RegisterUpload(APITestCase):
+class FileUpload(FileAPITestCase):
 
     def setUp(self):
         pass
@@ -18,4 +17,11 @@ class RegisterUpload(APITestCase):
         file_path = os.path.join(cur_path, 'test-01.png')
         files = {'test-01.png': open(file_path, 'rb')}
         api = "file.upload"
-        result = self.access_file_api(api, files = files, role = "crm", store_type = "test")
+        result = self.access_api(
+            api,
+            files=files,
+            is_auth=False,
+            role="crm",
+            store_type="test"
+        )
+        self.assertTrue('file_paths' in result)

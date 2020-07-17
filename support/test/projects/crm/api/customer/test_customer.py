@@ -2,10 +2,10 @@
 
 import json
 
-from support.common.testcase.api_test_case import APITestCase
+from support.common.testcase.crm_api_test_case import CrmAPITestCase
 
 
-class CustomerTestCase(APITestCase):
+class CustomerTestCase(CrmAPITestCase):
 
     def setUp(self):
         self.customer_info = {
@@ -51,7 +51,7 @@ class CustomerTestCase(APITestCase):
 
     def test_create_customer(self):
         api = 'customer.add'
-        self.access_crm_api(
+        self.access_api(
             api=api,
             customer_info=json.dumps(self.customer_info)
         )
@@ -59,7 +59,7 @@ class CustomerTestCase(APITestCase):
     def test_search_customer(self):
         api = 'customer.search'
         current_page = 1
-        result = self.access_crm_api(
+        result = self.access_api(
             api=api,
             current_page=current_page,
             search_info=json.dumps({})
@@ -76,7 +76,7 @@ class CustomerTestCase(APITestCase):
         if customer_list:
             customer_id = customer_list[-1]['id']
             api = "customer.get"
-            result = self.access_crm_api(api=api, customer_id=customer_id)
+            result = self.access_api(api=api, customer_id=customer_id)
             self.assertTrue('customer_info' in result)
             self.assert_customer_fields(result['customer_info'])
         else:
@@ -87,7 +87,7 @@ class CustomerTestCase(APITestCase):
         if customer_list:
             customer_id = customer_list[-1]['id']
             api = "customer.update"
-            self.access_crm_api(
+            self.access_api(
                 api=api,
                 customer_id=customer_id,
                 customer_info=json.dumps(self.update_info)

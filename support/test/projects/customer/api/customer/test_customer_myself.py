@@ -2,14 +2,14 @@
 
 import json
 
-from support.common.testcase.api_test_case import APITestCase
+from support.common.testcase.customer_api_test_case import CustomerAPITestCase
 
 
-class CustomerTestCase(APITestCase):
+class CustomerTestCase(CustomerAPITestCase):
 
     def setUp(self):
         self.update_info = {
-            'nick': '蜡笔小新',
+            'nick': '蜡笔@@@小新',
             'head_url': 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2091711702,2468700162&fm=11&gp=0.jpg',
             'name': '王海东',
             'gender': 'woman',
@@ -38,13 +38,13 @@ class CustomerTestCase(APITestCase):
 
     def test_customer_myself_get(self):
         api = 'customer.myself.get'
-        result = self.access_customer_api(api)
+        result = self.access_api(api)
         self.assertTrue('customer_info' in result)
         self.assert_customer_fields(result['customer_info'])
 
     def test_customer_myself_update(self):
         api = "customer.myself.update"
-        self.access_customer_api(
+        self.access_api(
             api=api,
             myself_info=json.dumps(self.update_info)
         )
