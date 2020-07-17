@@ -12,9 +12,16 @@ from abs.services.crm.staff.models import Staff
 class StaffServer(object):
 
     @classmethod
+    def hung_permission(cls, staff_list):
+        for staff in staff_list:
+            staff.department_role_list = []
+        return staff_list
+
+    @classmethod
     def get(cls, staff_id):
         staff = Staff.get_byid(staff_id)
         PersonServer.hung_persons([staff])
+        cls.hung_permission([staff])
         return staff
 
     @classmethod
@@ -23,6 +30,7 @@ class StaffServer(object):
         staff_qs.order_by('-create_time')
         splitor = Splitor(current_page, staff_qs)
         PersonServer.hung_persons(splitor.get_list())
+        cls.hung_permission(splitor.get_list())
         return splitor
 
     @classmethod

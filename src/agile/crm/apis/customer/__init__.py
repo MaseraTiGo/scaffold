@@ -7,7 +7,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.crm.manager.api import StaffAuthorizedApi
-# from abs.service.customer.manager import CustomerServer
+from abs.services.customer.personal.manager import CustomerServer
 
 
 class Add(StaffAuthorizedApi):
@@ -16,6 +16,8 @@ class Add(StaffAuthorizedApi):
         DictField,
         desc="客户详情",
         conf={
+            'nick': CharField(desc="昵称", is_required=False),
+            'head_url': CharField(desc="头像", is_required=False),
             'name': CharField(desc="姓名", is_required=False),
             'gender': CharField(desc="性别", is_required=False),
             'birthday': CharField(desc="生日", is_required=False),
@@ -23,7 +25,6 @@ class Add(StaffAuthorizedApi):
             'email': CharField(desc="邮箱", is_required=False),
             'wechat': CharField(desc="微信", is_required=False),
             'qq': CharField(desc="qq", is_required=False),
-            'education': CharField(desc="学历", is_required=False),
         }
     )
 
@@ -62,6 +63,8 @@ class Search(StaffAuthorizedApi):
             desc="用户详情",
             conf={
                 'id': IntField(desc="客户编号"),
+                'nick': CharField(desc="昵称"),
+                'head_url': CharField(desc="头像"),
                 'name': CharField(desc="姓名"),
                 'gender': CharField(desc="性别"),
                 'birthday': CharField(desc="生日"),
@@ -69,7 +72,6 @@ class Search(StaffAuthorizedApi):
                 'email': CharField(desc="邮箱"),
                 'wechat': CharField(desc="微信"),
                 'qq': CharField(desc="qq"),
-                'education': CharField(desc="学历"),
             }
         )
     )
@@ -94,14 +96,15 @@ class Search(StaffAuthorizedApi):
     def fill(self, response, customer_spliter):
         data_list = [{
             'id': customer.id,
-            'name': customer.name,
-            'gender': customer.gender,
-            'birthday': customer.birthday,
-            'phone': customer.phone,
-            'email': customer.email,
-            'education': customer.education,
-            'wechat': customer.wechat,
-            'qq': customer.qq,
+            'nick': customer.nick,
+            'head_url': customer.head_url,
+            'name': customer.person.name,
+            'gender': customer.person.gender,
+            'birthday': customer.person.birthday,
+            'phone': customer.person.phone,
+            'email': customer.person.email,
+            'wechat': customer.person.wechat,
+            'qq': customer.person.qq,
         } for customer in customer_spliter.data]
         response.data_list = data_list
         response.total = customer_spliter.total
@@ -120,6 +123,8 @@ class Get(StaffAuthorizedApi):
         desc="用户详情",
         conf={
             'id': IntField(desc="客户编号"),
+            'nick': CharField(desc="昵称"),
+            'head_url': CharField(desc="头像"),
             'name': CharField(desc="姓名"),
             'gender': CharField(desc="性别"),
             'birthday': CharField(desc="生日"),
@@ -127,7 +132,6 @@ class Get(StaffAuthorizedApi):
             'email': CharField(desc="邮箱"),
             'wechat': CharField(desc="微信"),
             'qq': CharField(desc="qq"),
-            'education': CharField(desc="学历"),
         }
     )
 
@@ -140,19 +144,20 @@ class Get(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return CustomerServer.get_byid(request.customer_id)
+        return CustomerServer.get(request.customer_id)
 
     def fill(self, response, customer):
         response.customer_info = {
             'id': customer.id,
-            'name': customer.name,
-            'gender': customer.gender,
-            'birthday': customer.birthday,
-            'phone': customer.phone,
-            'email': customer.email,
-            'education': customer.education,
-            'wechat': customer.wechat,
-            'qq': customer.qq,
+            'nick': customer.nick,
+            'head_url': customer.head_url,
+            'name': customer.person.name,
+            'gender': customer.person.gender,
+            'birthday': customer.person.birthday,
+            'phone': customer.person.phone,
+            'email': customer.person.email,
+            'wechat': customer.person.wechat,
+            'qq': customer.person.qq,
         }
         return response
 
@@ -165,6 +170,8 @@ class Update(StaffAuthorizedApi):
         DictField,
         desc="客户修改详情",
         conf={
+            'nick': CharField(desc="昵称", is_required=False),
+            'head_url': CharField(desc="头像", is_required=False),
             'name': CharField(desc="姓名", is_required=False),
             'gender': CharField(desc="性别", is_required=False),
             'birthday': CharField(desc="生日", is_required=False),
@@ -172,7 +179,6 @@ class Update(StaffAuthorizedApi):
             'email': CharField(desc="邮箱", is_required=False),
             'wechat': CharField(desc="微信", is_required=False),
             'qq': CharField(desc="qq", is_required=False),
-            'education': CharField(desc="学历", is_required=False),
         }
     )
 

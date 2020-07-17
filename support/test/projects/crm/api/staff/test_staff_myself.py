@@ -1,6 +1,5 @@
 # coding=UTF-8
 
-import os
 import json
 
 from support.common.testcase.api_test_case import APITestCase
@@ -10,31 +9,31 @@ class StaffTestCase(APITestCase):
 
     def setUp(self):
         self.update_info = {
-            'name': '王海东',
-            'id_number': 'Bq0001',
+            'nick': '蜡笔小新',
+            'head_url': 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2091711702,2468700162&fm=11&gp=0.jpg',
+            'name': '马冬梅',
+            'work_number': 'Bq0003',
             'birthday': '1989-07-07',
             'phone': '15527703110',
             'email': '212838281@qq.com',
             'gender': 'woman',
-            'identification': '15212719890707001X',
-            'entiry_time': '2020-06-02',
-            'education': '2012-07-01',
             'is_admin': False,
         }
 
     def tearDown(self):
         pass
 
-    def assert_staff_fields(self, staff, need_id = False):
+    def assert_staff_fields(self, staff, need_id=False):
         if need_id:
             self.assertTrue('id' in staff)
+        self.assertTrue('nick' in staff)
+        self.assertTrue('head_url' in staff)
         self.assertTrue('name' in staff)
-        self.assertTrue('identification' in staff)
         self.assertTrue('gender' in staff)
         self.assertTrue('birthday' in staff)
         self.assertTrue('phone' in staff)
         self.assertTrue('email' in staff)
-        self.assertTrue('id_number' in staff)
+        self.assertTrue('work_number' in staff)
         self.assertTrue('is_admin' in staff)
         self.assertTrue('department_role_list' in staff)
         dr_list = staff['department_role_list']
@@ -53,5 +52,4 @@ class StaffTestCase(APITestCase):
 
     def test_update_staff(self):
         api = "staff.myself.update"
-        self.access_crm_api(api = api, myself_info = json.dumps(self.update_info))
-
+        self.access_crm_api(api=api, myself_info=json.dumps(self.update_info))

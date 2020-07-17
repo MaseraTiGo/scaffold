@@ -27,6 +27,8 @@ class Get(StaffAuthorizedApi):
         DictField,
         desc="用户详情",
         conf={
+            'nick': CharField(desc="昵称"),
+            'head_url': CharField(desc="头像"),
             'name': CharField(desc="姓名"),
             'gender': CharField(desc="性别"),
             'birthday': CharField(desc="生日"),
@@ -60,7 +62,7 @@ class Get(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return StaffServer.get(self.auth_user)
+        return StaffServer.get(self.auth_user.id)
 
     def fill(self, response, staff):
         department_role_list = [{
@@ -71,12 +73,14 @@ class Get(StaffAuthorizedApi):
             'department_role_id': department_role.id,
         } for department_role in staff.department_role_list]
         response.staff_info = {
-            'name': staff.name,
+            'nick': staff.nick,
+            'head_url': staff.head_url,
+            'name': staff.person.name,
             'work_number': staff.work_number,
-            'gender': staff.gender,
-            'birthday': staff.birthday,
-            'phone': staff.phone,
-            'email': staff.email,
+            'gender': staff.person.gender,
+            'birthday': staff.person.birthday,
+            'phone': staff.person.phone,
+            'email': staff.person.email,
             'is_admin': staff.is_admin,
             'department_role_list': department_role_list
         }
@@ -92,6 +96,8 @@ class Update(StaffAuthorizedApi):
         DictField,
         desc="员工修改详情",
         conf={
+            'nick': CharField(desc="昵称"),
+            'head_url': CharField(desc="头像"),
             'name': CharField(desc="姓名"),
             'gender': CharField(desc="性别"),
             'birthday': CharField(desc="生日"),

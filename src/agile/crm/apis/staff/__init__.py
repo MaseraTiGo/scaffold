@@ -17,12 +17,16 @@ from abs.services.crm.staff.manager import StaffServer
 
 
 class Add(StaffAuthorizedApi):
-    """添加员工"""
+    """
+    添加员工
+    """
     request = with_metaclass(RequestFieldSet)
     request.staff_info = RequestField(
         DictField,
         desc="员工详情",
         conf={
+            'nick': CharField(desc="昵称", is_required=False),
+            'head_url': CharField(desc="头像", is_required=False),
             'name': CharField(desc="姓名"),
             'birthday': DateField(desc="生日", is_required=False),
             'phone': CharField(desc="手机", is_required=False),
@@ -32,19 +36,17 @@ class Add(StaffAuthorizedApi):
                 is_required=False,
                 choices=[("男", "man"), ("女", "woman")]
             ),
-            'identification': CharField(desc="身份证", is_required=False),
-            'entry_time': DateField(desc="入职时间", is_required=False),
-            'education': CharField(desc="学历", is_required=False),
             'remark': CharField(desc="备注", is_required=False),
-            'role_ids': ListField(
-                desc='所属角色',
+            'department_role_ids': ListField(
+                desc='所属部门及角色',
                 is_required=False,
-                fmt=IntField(desc="角色ID")
-            ),
-            'department_ids': ListField(
-                desc='所属部门',
-                is_required=False,
-                fmt=IntField(desc="部门ID")
+                fmt=DictField(
+                    desc="部门ID",
+                    conf={
+                        'department_id': IntField(desc="部门id"),
+                        'role_id': IntField(desc="角色id"),
+                    }
+                )
             ),
         }
     )
@@ -67,7 +69,9 @@ class Add(StaffAuthorizedApi):
 
 
 class Search(StaffAuthorizedApi):
-    """搜索员工"""
+    """
+    搜索员工
+    """
     request = with_metaclass(RequestFieldSet)
     request.current_page = RequestField(
         IntField,
@@ -92,13 +96,14 @@ class Search(StaffAuthorizedApi):
             desc="用户详情",
             conf={
                 'id': IntField(desc="员工编号"),
+                'nick': CharField(desc="昵称"),
+                'head_url': CharField(desc="头像"),
                 'name': CharField(desc="姓名"),
-                'identification': CharField(desc="身份证"),
                 'gender': CharField(desc="性别"),
                 'birthday': CharField(desc="生日"),
                 'phone': CharField(desc="电话"),
                 'email': CharField(desc="邮箱"),
-                'id_number': CharField(desc="员工工号"),
+                'work_number': CharField(desc="员工工号"),
                 'is_admin': BooleanField(desc="是否是管理员"),
                 'department_role_list': ListField(
                     desc='所属部门',
@@ -108,7 +113,7 @@ class Search(StaffAuthorizedApi):
                             'department_role_id': IntField(desc="部门角色id"),
                             'department_id': IntField(desc="部门id"),
                             'department_name': CharField(desc="部门名称"),
-                            'role_id': IntField(desc="部门id"),
+                            'role_id': IntField(desc="角色id"),
                             'role_name': CharField(desc="角色名称"),
                         }
                     )
@@ -137,13 +142,14 @@ class Search(StaffAuthorizedApi):
     def fill(self, response, staff_spliter):
         data_list = [{
             'id': staff.id,
-            'name': staff.name,
-            'id_number': staff.id_number,
-            'identification': staff.certification.identification,
-            'gender': staff.gender,
-            'birthday': staff.birthday,
-            'phone': staff.phone,
-            'email': staff.email,
+            'nick': staff.nick,
+            'head_url': staff.head_url,
+            'name': staff.person.name,
+            'work_number': staff.work_number,
+            'gender': staff.person.gender,
+            'birthday': staff.person.birthday,
+            'phone': staff.person.phone,
+            'email': staff.person.email,
             'is_admin': staff.is_admin,
             'department_role_list': [{
                 'role_id': department_role.role.id,
@@ -160,7 +166,9 @@ class Search(StaffAuthorizedApi):
 
 
 class Get(StaffAuthorizedApi):
-    """获取员工详情接口"""
+    """
+    获取员工详情接口
+    """
     request = with_metaclass(RequestFieldSet)
     request.staff_id = RequestField(IntField, desc="员工id")
 
@@ -169,13 +177,15 @@ class Get(StaffAuthorizedApi):
         DictField,
         desc="用户详情",
         conf={
+            'id': IntField(desc="员工编号"),
+            'nick': CharField(desc="昵称"),
+            'head_url': CharField(desc="头像"),
             'name': CharField(desc="姓名"),
-            'identification': CharField(desc="身份证"),
             'gender': CharField(desc="性别"),
             'birthday': CharField(desc="生日"),
             'phone': CharField(desc="电话"),
             'email': CharField(desc="邮箱"),
-            'id_number': CharField(desc="员工工号"),
+            'work_number': CharField(desc="员工工号"),
             'is_admin': BooleanField(desc="是否是管理员"),
             'department_role_list': ListField(
                 desc='所属部门',
@@ -203,7 +213,7 @@ class Get(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return StaffServer.get_byid(request.staff_id)
+        return StaffServer.get(request.staff_id)
 
     def fill(self, response, staff):
         department_role_list = [{
@@ -214,13 +224,15 @@ class Get(StaffAuthorizedApi):
             'department_role_id': department_role.id,
         } for department_role in staff.department_role_list]
         response.staff_info = {
-            'name': staff.name,
-            'id_number': staff.id_number,
-            'identification': staff.certification.identification,
-            'gender': staff.gender,
-            'birthday': staff.birthday,
-            'phone': staff.phone,
-            'email': staff.email,
+            'id': staff.id,
+            'nick': staff.nick,
+            'head_url': staff.head_url,
+            'name': staff.person.name,
+            'work_number': staff.work_number,
+            'gender': staff.person.gender,
+            'birthday': staff.person.birthday,
+            'phone': staff.person.phone,
+            'email': staff.person.email,
             'is_admin': staff.is_admin,
             'department_role_list': department_role_list
         }
@@ -228,21 +240,25 @@ class Get(StaffAuthorizedApi):
 
 
 class Update(StaffAuthorizedApi):
-    """修改员工信息"""
+    """
+    修改员工信息
+    """
     request = with_metaclass(RequestFieldSet)
     request.staff_id = RequestField(IntField, desc="员工id")
     request.staff_info = RequestField(
         DictField,
         desc="员工修改详情",
         conf={
-            'name': CharField(desc="姓名"),
-            'identification': CharField(desc="身份证"),
-            'gender': CharField(desc="性别"),
-            'birthday': CharField(desc="生日"),
-            'phone': CharField(desc="电话"),
-            'email': CharField(desc="邮箱"),
-            'id_number': CharField(desc="员工工号"),
-            'is_admin': BooleanField(desc="是否是管理员"),
+            'nick': CharField(desc="昵称", is_required=False),
+            'head_url': CharField(desc="头像", is_required=False),
+            'name': CharField(desc="姓名", is_required=False),
+            'identification': CharField(desc="身份证", is_required=False),
+            'gender': CharField(desc="性别", is_required=False),
+            'birthday': CharField(desc="生日", is_required=False),
+            'phone': CharField(desc="电话", is_required=False),
+            'email': CharField(desc="邮箱", is_required=False),
+            'work_number': CharField(desc="员工工号", is_required=False),
+            'is_admin': BooleanField(desc="是否是管理员", is_required=False),
         }
     )
 

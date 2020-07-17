@@ -13,7 +13,9 @@ from abs.middleground.business.person.settings import DB_PREFIX
 
 
 class Person(BaseModel):
-    """个人信息表"""
+    """
+    个人信息表
+    """
     name = CharField(verbose_name="姓名", max_length=32)
     gender = CharField(
         verbose_name="性别",
@@ -40,7 +42,7 @@ class Person(BaseModel):
 
     @classmethod
     def is_exsited(cls, phone):
-        user_qs = cls.search(phone = phone)
+        user_qs = cls.search(phone=phone)
         if user_qs.count() > 0:
             return True, user_qs[0]
         return False, None

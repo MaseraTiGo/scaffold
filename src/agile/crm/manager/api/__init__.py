@@ -11,5 +11,5 @@ class StaffAuthorizedApi(AuthorizedApi):
         return TokenManager.get_token(auth_str)
 
     def load_auth_user(self):
-        staff = StaffServer.get_byid(self._user_id)
+        staff = StaffServer.get(self._user_id)
         return staff

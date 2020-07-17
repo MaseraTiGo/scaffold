@@ -23,6 +23,8 @@ class Get(CustomerAuthorizedApi):
 
     response = with_metaclass(ResponseFieldSet)
     response.customer_info = ResponseField(DictField, desc="用户详情", conf={
+        'nick': CharField(desc="昵称"),
+        'head_url': CharField(desc="头像"),
         'name': CharField(desc="姓名"),
         'gender': CharField(desc="性别"),
         'birthday': CharField(desc="生日"),
@@ -45,6 +47,8 @@ class Get(CustomerAuthorizedApi):
 
     def fill(self, response, customer):
         response.customer_info = {
+            'nick': customer.nick,
+            'head_url': customer.head_url,
             'name': customer.person.name,
             'gender': customer.person.gender,
             'birthday': customer.person.birthday,
@@ -62,6 +66,8 @@ class Update(CustomerAuthorizedApi):
     """
     request = with_metaclass(RequestFieldSet)
     request.myself_info = RequestField(DictField, desc="客户修改详情", conf={
+        'nick': CharField(desc="昵称", is_required=False),
+        'head_url': CharField(desc="头像", is_required=False),
         'name': CharField(desc="姓名", is_required=False),
         'gender': CharField(desc="性别", is_required=False),
         'birthday': CharField(desc="生日", is_required=False),

@@ -1,6 +1,5 @@
 # coding=UTF-8
 
-import os
 import json
 
 from support.common.testcase.api_test_case import APITestCase
@@ -10,6 +9,8 @@ class CustomerTestCase(APITestCase):
 
     def setUp(self):
         self.update_info = {
+            'nick': '蜡笔小新',
+            'head_url': 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2091711702,2468700162&fm=11&gp=0.jpg',
             'name': '王海东',
             'gender': 'woman',
             'birthday': '1987-07-07',
@@ -17,15 +18,16 @@ class CustomerTestCase(APITestCase):
             'email': '15527701001@qq.com',
             'wechat': '155277701001',
             'qq': '1522313132',
-            'education': 'high',
         }
 
     def tearDown(self):
         pass
 
-    def assert_customer_fields(self, customer, need_id = False):
+    def assert_customer_fields(self, customer, need_id=False):
         if need_id:
             self.assertTrue('id' in customer)
+        self.assertTrue('nick' in customer)
+        self.assertTrue('head_url' in customer)
         self.assertTrue('name' in customer)
         self.assertTrue('gender' in customer)
         self.assertTrue('birthday' in customer)
@@ -42,4 +44,7 @@ class CustomerTestCase(APITestCase):
 
     def test_customer_myself_update(self):
         api = "customer.myself.update"
-        self.access_customer_api(api = api, myself_info = json.dumps(self.update_info))
+        self.access_customer_api(
+            api=api,
+            myself_info=json.dumps(self.update_info)
+        )
