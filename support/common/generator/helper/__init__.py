@@ -18,3 +18,4 @@ from support.common.generator.helper.business.crm.account import StaffAccountGen
 # customer service generate
 from support.common.generator.helper.business.customer.customer import CustomerGenerator
 from support.common.generator.helper.business.customer.account import CustomerAccountGenerator
+from support.common.generator.helper.business.customer.finance.balance import CustomerBalanceGenerator

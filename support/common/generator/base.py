@@ -30,6 +30,9 @@ class BaseGenerator(object):
     def create(self, *args, **kwargs):
         raise NotImplementedError("please implement this interface!")
 
+    def callback(self, *args, **kwargs):
+        raise NotImplementedError("please implement this interface!")
+
     def delete(self):
         raise NotImplementedError("please implement this interface!")
 
