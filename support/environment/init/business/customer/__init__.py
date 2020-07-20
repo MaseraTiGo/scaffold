@@ -3,7 +3,7 @@
 from support.common.maker import BaseMaker
 from support.common.generator.helper import CustomerGenerator,\
         CustomerAccountGenerator
-from support.environment.init.customer.customer import CustomerLoader
+from support.environment.init.business.customer.customer import CustomerLoader
 
 
 class CustomerInitializeMaker(BaseMaker):
@@ -19,9 +19,6 @@ class CustomerInitializeMaker(BaseMaker):
 
     def generate_relate(self):
         self._customer.add_outputs(self._customer_account)
-
-    def generate(self):
-        self._customer.generate()
         return self._customer
 
 

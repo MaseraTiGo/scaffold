@@ -2,18 +2,15 @@
 
 import init_envt
 
-from Crypto.Cipher import AES
-
 from infrastructure.utils.common.single import Single
-from support.simulate.data.staff import StaffMaker
-from support.simulate.data.customer import CustomerMaker
+from support.environment.simulate import CrmSimulateMaker
 
 
 class TestDataManager(Single):
 
     def run(self):
         # generate staff
-        StaffMaker().run(10)
+        CrmSimulateMaker().run(10)
 
         # generate product
         # ProductMaker().run(1)
@@ -25,7 +22,8 @@ class TestDataManager(Single):
         # MobileDevicesMaker().run(10)
 
         # generate customer by staff
-        CustomerMaker().run(10)
+        # CustomerMaker().run(10)
+
 
 if __name__ == "__main__":
     TestDataManager().run()

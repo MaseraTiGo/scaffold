@@ -18,7 +18,7 @@ class BaseMaker(Single):
     def run(self, size=1):
         _generators = []
         for _ in range(size):
-            self.generate_relate()
-            _generator = self.generate()
-            _generators.append(_generator)
+            start_generate = self.generate_relate()
+            start_generate.generate()
+            _generators.append(start_generate)
         return _generators

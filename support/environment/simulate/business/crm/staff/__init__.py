@@ -1,17 +1,16 @@
 # coding=UTF-8
 
-from support.generator.field.normal import *
-from support.generator.field.model import *
+from support.common.maker import BaseLoader
+from support.common.generator.field.normal import *
+from support.common.generator.field.model import *
 
-from support.simulate.tool.template.base import BaseTemplate
 
-
-class StaffTemplate(BaseTemplate):
+class CrmStaffLoader(BaseLoader):
 
     def generate(self):
-        birthday  = DateHelper().generate(years = 30)
-        entry_time = DateHelper().generate(years = 4)
-        expire_time = DateHelper().generate(years = 2)
+        birthday  = DateHelper().generate(years=30)
+        entry_time = DateHelper().generate(years=4)
+        expire_time = DateHelper().generate(years=2)
         if entry_time > expire_time:
             entry_time, expire_time = expire_time, entry_time
 

@@ -3,8 +3,8 @@
 from support.common.maker import BaseMaker
 from support.common.generator.helper import EnterpriseGenerator,\
         StaffGenerator, StaffAccountGenerator
-from support.environment.init.crm.enterprise import EnterpriseLoader
-from support.environment.init.crm.staff import StaffLoader
+from support.environment.init.business.crm.enterprise import EnterpriseLoader
+from support.environment.init.business.crm.staff import StaffLoader
 
 
 class CrmInitializeMaker(BaseMaker):
@@ -26,10 +26,7 @@ class CrmInitializeMaker(BaseMaker):
     def generate_relate(self):
         self._staff.add_outputs(self._staff_account)
         self._staff.add_inputs(self._enterprise)
-
-    def generate(self):
-        self._enterprise.generate()
-        return self._enterprise
+        return self._staff
 
 
 if __name__ == "__main__":
