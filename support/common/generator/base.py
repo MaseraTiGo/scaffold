@@ -127,8 +127,8 @@ class BaseGenerator(object):
             except Exception as e:
                 print("error --> ", e)
                 logger.error(
-                    " create error! create_info = {}, error = {}"
-                    .format(create_info, e)
+                    " create error! create_info={}, error={}, cls={}"
+                    .format(create_info, e, self.__class__)
                 )
 
         logger.info(

@@ -1,16 +1,11 @@
 # coding=UTF-8
 
-from infrastructure.utils.common.single import Single
+# from infrastructure.utils.common.single import Single
 
 
-class BaseMaker(Single):
+class BaseMaker(object):
 
     def generate_relate(self):
-        raise NotImplementedError(
-            'Please imporlement this interface in subclass'
-        )
-
-    def generate(self):
         raise NotImplementedError(
             'Please imporlement this interface in subclass'
         )

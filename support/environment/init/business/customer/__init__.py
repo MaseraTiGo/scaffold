@@ -3,6 +3,7 @@
 from support.common.maker import BaseMaker
 from support.common.generator.helper import CustomerGenerator,\
         CustomerAccountGenerator
+from support.environment.common.middleground.person import PersonMaker
 from support.environment.init.business.customer.customer import CustomerLoader
 
 
@@ -14,13 +15,13 @@ class CustomerInitializeMaker(BaseMaker):
     """
 
     def __init__(self):
+        self._person = PersonMaker(
+            CustomerLoader().generate()
+        ).generate_relate()
         self._customer = CustomerGenerator(CustomerLoader().generate())
         self._customer_account = CustomerAccountGenerator()
 
     def generate_relate(self):
         self._customer.add_outputs(self._customer_account)
+        self._customer.add_inputs(self._person)
         return self._customer
-
-
-if __name__ == "__main__":
-    CustomerInitializeMaker().run()

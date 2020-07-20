@@ -1,27 +1,24 @@
 # coding=UTF-8
 
-import random
-import json
+from support.common.generator.field.normal import \
+        NameHelper, DateHelper, PhoneHelper, EmailHelper,\
+        QQHelper
+from support.common.generator.field.model import GenderConstant
+from support.common.maker import BaseLoader
 
-from support.generator.field.normal import *
-from support.generator.field.model import *
-from support.simulate.tool.template.base import BaseTemplate
 
-
-class CustomerTemplate(BaseTemplate):
+class CustomerLoader(BaseLoader):
 
     def generate(self):
-        birthday  = DateHelper().generate(years = 30)
+        birthday = DateHelper().generate(years=30)
         phone = PhoneHelper().generate()
 
         return {
             'name': NameHelper().generate(),
             'gender': GenderConstant().generate(),
             'birthday': birthday,
-            'id_number': WorkNumberHelper().generate(),
             'phone': phone,
             'email': EmailHelper().generate(),
             'wecaht': phone,
             'qq': QQHelper().generate(),
-            'education': EducationConstant().generate(),
         }

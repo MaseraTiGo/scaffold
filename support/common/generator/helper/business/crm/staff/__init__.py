@@ -3,7 +3,8 @@
 import random
 
 from support.common.generator.base import BaseGenerator
-from support.common.generator.helper import EnterpriseGenerator
+from support.common.generator.helper import EnterpriseGenerator,\
+        PersonGenerator
 from abs.middleground.business.person.models import Person,\
         PersonStatus, PersonStatistics
 from abs.services.crm.staff.models import Staff
@@ -23,19 +24,15 @@ class StaffGenerator(BaseGenerator):
         if staff_qs.count():
             staff = staff_qs[0]
         else:
-            is_exsitd, person = Person.is_exsited(staff_info.phone)
-            if not is_exsitd:
-                person = Person.create(**staff_info)
-                PersonStatus.create(person=person)
-                PersonStatistics.create(person=person)
-
+            person_list = result_mapping.get(PersonGenerator.get_key())
             enterprise_list = result_mapping.get(EnterpriseGenerator.get_key())
-            enterprise = random.choice(enterprise_list)
-            staff = Staff.create(
-                company_id=enterprise.id,
-                person_id=person.id,
-                **staff_info
-            )
+            for person in person_list:
+                for enterprise in enterprise_list:
+                    staff = Staff.create(
+                        company_id=enterprise.id,
+                        person_id=person.id,
+                        **staff_info
+                    )
         return staff
 
     def delete(self):

@@ -1,18 +1,14 @@
 # coding=UTF-8
 
 import random
-import json
 
-from support.generator.field.normal import *
-from support.generator.field.model import *
-from support.simulate.tool.template.base import BaseTemplate
+from support.common.generator.field.normal import \
+        AddressHelper, PhoneHelper, NameHelper
+from support.common.generator.field.model import GenderConstant
+from support.common.maker import BaseLoader
 
 
-class CustomerAddressTemplate(BaseTemplate):
-
-    def generate(self):
-        birthday  = DateHelper().generate(years = 30)
-        phone = PhoneHelper().generate()
+class AddressLoader(BaseLoader):
 
     def generate(self):
         times = random.randint(3, 10)

@@ -13,7 +13,7 @@ class CustomerLoader(BaseLoader):
             'name': '测试账户',
             'gender': GenderConstant().generate(),
             'birthday': datetime.datetime(2018, 6, 1),
-            'phone': '15527703115',
+            'phone': '15527700001',
             'email': '237818280@qq.com',
             'wechat': 'test_128481282_x',
             'qq': '237818280',

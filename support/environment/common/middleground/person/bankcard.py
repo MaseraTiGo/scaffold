@@ -1,14 +1,13 @@
 # coding=UTF-8
 
 import random
-import json
 
-from support.generator.field.normal import *
-from support.generator.field.model import *
-from support.simulate.tool.template.base import BaseTemplate
+from support.common.generator.field.normal import BankCardHelper,\
+        IdentificationHelper, PhoneHelper, NameHelper
+from support.common.maker import BaseLoader
 
 
-class CustomerBankcardTemplate(BaseTemplate):
+class BankcardLoader(BaseLoader):
 
     def generate(self):
         times = random.randint(3, 10)
