@@ -3,7 +3,7 @@
 import json
 import random
 
-from support.generator.field.model import PayTypeConstant
+from support.common.generator.field.model import PayTypeConstant
 from support.common.testcase.customer_api_test_case import CustomerAPITestCase
 
 
