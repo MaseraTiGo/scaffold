@@ -113,7 +113,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'data',  # crm_201812282
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'fsy007',
         'HOST': 'localhost',
         'PORT': '3306'
     },
@@ -121,7 +121,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'base_account',  # crm_201812282
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'fsy007',
         'HOST': 'localhost',
         'PORT': '3306'
     },
@@ -129,7 +129,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'base_person',  # crm_201812282
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'fsy007',
         'HOST': 'localhost',
         'PORT': '3306'
     },
@@ -137,7 +137,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'base_enterprise',  # crm_201812282
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'fsy007',
         'HOST': 'localhost',
         'PORT': '3306'
     },
@@ -145,7 +145,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'base_transaction',  # crm_201812282
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'fsy007',
         'HOST': 'localhost',
         'PORT': '3306'
     },
@@ -153,7 +153,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customer_account',  # crm_201812282
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'fsy007',
         'HOST': 'localhost',
         'PORT': '3306'
     },
@@ -161,7 +161,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customer_personal',  # crm_201812282
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'fsy007',
         'HOST': 'localhost',
         'PORT': '3306'
     },
@@ -169,7 +169,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customer_finance',  # crm_201812282
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'fsy007',
         'HOST': 'localhost',
         'PORT': '3306'
     },
@@ -177,7 +177,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crm_account',  # crm_201812282
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'fsy007',
         'HOST': 'localhost',
         'PORT': '3306'
     },
@@ -185,7 +185,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crm_staff',  # crm_201812282
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'fsy007',
         'HOST': 'localhost',
         'PORT': '3306'
     },
