@@ -2,11 +2,12 @@
 
 import random
 
+from abs.common.manager import BaseManager
 from abs.middleground.business.person.models import Person,\
         Address, BankCard, PersonStatus, PersonStatistics
 
 
-class PersonServer(object):
+class PersonServer(BaseManager):
 
     @classmethod
     def create(cls, **person_infos):

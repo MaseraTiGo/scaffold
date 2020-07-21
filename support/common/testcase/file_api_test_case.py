@@ -24,7 +24,7 @@ class FileAPITestCase(APITestCase):
     def renew_token(self):
         pass
 
-    def access_api(self, api, files, is_auth=True, **parms):
+    def access_api(self, api, files, **parms):
         access_parms = self._combination_parms(
             flag=self.ACCESS_FLAG,
             api=api,

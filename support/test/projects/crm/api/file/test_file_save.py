@@ -20,7 +20,7 @@ class FileUpload(FileAPITestCase):
         result = self.access_api(
             api,
             files=files,
-            is_auth=False,
+            auth="123456",
             role="crm",
             store_type="test"
         )

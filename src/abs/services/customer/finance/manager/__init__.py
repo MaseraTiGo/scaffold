@@ -3,6 +3,7 @@
 
 from infrastructure.core.exception.business_error import BusinessError
 
+from abs.common.manager import BaseManager
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.transaction.manager import TransactionServer
 from abs.middleground.business.transaction.utils.constant import \
@@ -11,7 +12,7 @@ from abs.services.customer.personal.manager import CustomerServer
 from abs.services.customer.finance.models import CustomerBalanceRecord
 
 
-class CustomerFinanceServer(object):
+class CustomerFinanceServer(BaseManager):
 
     @classmethod
     def get_balance(cls, customer_id):

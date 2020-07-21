@@ -4,13 +4,14 @@ import collections
 
 from infrastructure.utils.common.split_page import Splitor
 from abs.common.model import Sum
+from abs.common.manager import BaseManager
 from abs.middleground.business.transaction.utils.constant import OwnTypes,\
         BusinessTypes
 from abs.middleground.business.transaction.models import TransactionRecord,\
         TransactionInputRecord, TransactionOutputRecord
 
 
-class TransactionServer(object):
+class TransactionServer(BaseManager):
 
     @classmethod
     def search_transaction_record(cls, current_page, **search_info):

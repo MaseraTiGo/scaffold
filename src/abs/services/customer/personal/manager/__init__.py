@@ -4,11 +4,12 @@
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
+from abs.common.manager import BaseManager
 from abs.middleground.business.person.manager import PersonServer
 from abs.services.customer.personal.models import Customer
 
 
-class CustomerServer(object):
+class CustomerServer(BaseManager):
 
     @classmethod
     def get(cls, customer_id):

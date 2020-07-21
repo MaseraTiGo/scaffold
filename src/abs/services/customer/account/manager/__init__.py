@@ -3,12 +3,13 @@
 
 from infrastructure.core.exception.business_error import BusinessError
 
+from abs.common.manager import BaseManager
 from abs.middleware.token import TokenManager
 from abs.middleground.business.account.utils.constant import StatusTypes
 from abs.services.customer.account.models import CustomerAccount
 
 
-class CustomerAccountServer(object):
+class CustomerAccountServer(BaseManager):
 
     ACCOUNT_CLS = CustomerAccount
 
