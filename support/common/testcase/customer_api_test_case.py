@@ -21,7 +21,7 @@ class CustomerAPITestCase(APITestCase):
 
     def get_auth_token(self):
         api = "customer.account.login"
-        username = "15527703115"  # "15623937796"
+        username = "15527700001"  # "15623937796"
         password = hashlib.md5("123456".encode('utf8')).hexdigest()
         result = self.access_api(
             api=api,

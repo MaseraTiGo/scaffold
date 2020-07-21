@@ -8,7 +8,6 @@ Created on 2016年8月22日
 
 # import python standard package
 import os
-import sys
 import smtplib
 import unittest
 import importlib
@@ -37,7 +36,17 @@ def send_email(content):
 
     class EmailHelper(object):
 
-        def __init__(self, account, passwd, title, content, _to, _from, host='smtp.qq.com', port=465):
+        def __init__(
+            self,
+            account,
+            passwd,
+            title,
+            content,
+            _to,
+            _from,
+            host='smtp.qq.com',
+            port=465
+        ):
             self.account = account
             self.passwd = passwd
             self.host = host
@@ -50,13 +59,13 @@ def send_email(content):
         @property
         def _body(self):
             return '\r\n'.join([
-                                    'From: %s' % self._from,
-                                    'To: %s' % (';'.join(self._to)) + ";",
-    #                                 'To: %s' % self._to,
-                                    'Subject: %s' % self._title,
-                                    "",
-                                    self._content
-                                ])
+                'From: %s' % self._from,
+                'To: %s' % (';'.join(self._to)) + ";",
+                # 'To: %s' % self._to,
+                'Subject: %s' % self._title,
+                "",
+                self._content
+            ])
 
         def __call__(self):
             server = smtplib.SMTP_SSL(self.host, self.port)
@@ -76,7 +85,10 @@ def load():
             if file.startswith("test_") and file.endswith(".py"):
                 file_path = os.path.join(root, file)
                 file_path = os.path.splitext(file_path)[0]
-                module_name = file_path.replace(base_dir, "").replace(os.sep, '.')[1:]
+                module_name = file_path.replace(
+                    base_dir,
+                    ""
+                ).replace(os.sep, '.')[1:]
                 module_names.append(module_name)
 
 #     module_names = module_names[-1:]
@@ -90,15 +102,15 @@ class AutoTest(object):
     def _config(self):
         os.environ.setdefault("DJANGO_SETTINGS_MODULE", "test_settings")
 
-    def _sync_db_struct(self):
-        from django.core.management import execute_from_command_line
-        argv = [start_file, 'migrate']
-        execute_from_command_line(argv)
-
     def _runserver(self):
         from test_settings import TEST_PORT
         from django.core.management import execute_from_command_line
-        argv = [start_file, 'runserver', '0.0.0.0:{}'.format(TEST_PORT), '--noreload']
+        argv = [
+            start_file,
+            'runserver',
+            '0.0.0.0:{}'.format(TEST_PORT),
+            '--noreload'
+        ]
         execute_from_command_line(argv)
 
     def _start_server(self):
@@ -113,29 +125,52 @@ class AutoTest(object):
         errors = program.result.errors
         total = program.result.testsRun
 
-        result = ["自动化脚本检测错误报告: 总运行数= {total}, 失败数量={fail}, 脚本出错数量={error}"\
-                  .format(total=total, fail=len(failures), error=len(errors))]
+        result = [
+            "自动化脚本检测错误报告: 总运行数={total}, 失败数量={fail}, 脚本出错数量={error}".format(
+                total=total,
+                fail=len(failures),
+                error=len(errors)
+            )
+        ]
         split_line = '-' * 40
         if program.result.failures:
-            failures_list = ["/ ========================= api failures  ========================= \ "]
-            failures_list.append(('\n\n{line}\n\n'.format(line=split_line)).join([fail[1] for fail in failures]))
-            failures_list.append("\ =========================  end failures  ========================= / ")
+            failures_list = [
+                "/====================== api failures  =================== \ "
+            ]
+            failures_list.append(
+                ('\n\n{line}\n\n'.format(
+                    line=split_line
+                )).join([fail[1] for fail in failures])
+            )
+            failures_list.append(
+                "\======================  end failures  ================== / "
+            )
             result.extend(failures_list)
 
         result.append("")
         if errors:
-            error_list = ["/ =========================  test code error  ========================= \ "]
-            error_list.append(('\n\n{line}\n\n'.format(line=split_line)).join([error[1] for error in errors]))
-            error_list.append("\ =========================  end error  ========================= / ")
+            error_list = [
+                "/ ==================== test code error  ================== \ "
+            ]
+            error_list.append((
+                '\n\n{line}\n\n'.format(
+                    line=split_line)
+            ).join([error[1] for error in errors]))
+            error_list.append(
+                "\ ====================  end error ======================= / "
+            )
             result.extend(error_list)
 
         return '\n'.join(result)
 
-    def _execute_ddl_sql(self, sql):
+    def _execute_ddl_sql(self, sql, database):
         import pymysql
-        from test_settings import DATABASES
-        default_db = DATABASES['test']
-        conn = pymysql.connect(host=default_db['HOST'], port=int(default_db['PORT']), user=default_db['USER'], passwd=default_db['PASSWORD'])
+        conn = pymysql.connect(
+            host=database['HOST'],
+            port=int(database['PORT']),
+            user=database['USER'],
+            passwd=database['PASSWORD']
+        )
         cursor = conn.cursor()
         try:
             cursor.execute(sql)
@@ -146,14 +181,25 @@ class AutoTest(object):
     def _create_testdb(self):
         from test_settings import DATABASES
         self._delete_testdb()
-        default_db = DATABASES['test']
-        self._execute_ddl_sql("CREATE DATABASE {db_name} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"\
-                             .format(db_name=default_db['NAME']))
+        for _, database in DATABASES.items():
+            sql = "CREATE DATABASE {db_name} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"\
+                    .format(db_name=database['NAME'])
+            self._execute_ddl_sql(sql, database)
 
     def _delete_testdb(self):
         from test_settings import DATABASES
-        default_db = DATABASES['test']
-        self._execute_ddl_sql("DROP DATABASE IF EXISTS {db_name};".format(db_name=default_db['NAME']))
+        for _, database in DATABASES.items():
+            sql = "DROP DATABASE IF EXISTS {db_name};".format(
+                db_name=database['NAME']
+            )
+            self._execute_ddl_sql(sql, database)
+
+    def _sync_db_struct(self):
+        from django.core.management import execute_from_command_line
+        from test_settings import DATABASES
+        for label, database in DATABASES.items():
+            argv = [start_file, 'migrate', "--database={}".format(label)]
+            execute_from_command_line(argv)
 
     def _init_data(self):
         import init_manager
