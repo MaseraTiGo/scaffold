@@ -4,5 +4,6 @@
 class BaseLoader(object):
 
     def generate(self):
-        raise NotImplementedError('Please imporlement this interface in subclass')
-
+        raise NotImplementedError(
+            'Please imporlement this interface in subclass'
+        )

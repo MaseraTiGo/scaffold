@@ -22,7 +22,7 @@ server {
     }
 
     location /resource/ {
-        root   /nginx/resource/;
+        alias   /nginx/resource/;
     }
 
 }
