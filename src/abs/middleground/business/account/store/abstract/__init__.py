@@ -2,8 +2,9 @@
 
 
 from abs.common.model import BaseModel,\
-        CharField, DateTimeField, timezone
-from abs.middleground.business.account.utils.constant import StatusTypes
+        IntegerField, CharField, DateTimeField, timezone
+from abs.middleground.business.account.utils.constant import StatusTypes,\
+        PlatformTypes
 
 
 class BaseAccount(BaseModel):
@@ -21,21 +22,66 @@ class BaseAccount(BaseModel):
         choices=StatusTypes.CHOICES,
         default=StatusTypes.NOTACTIVE
     )
+    role_type = CharField(
+        verbose_name="角色",
+        choices=PlatformTypes.CHOICES,
+        max_length=24
+    )
+    role_id = IntegerField(verbose_name="角色id")
 
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)
 
     class Meta:
         abstract = True
+        unique_together = (
+            ('role_type', 'role_id'),
+        )
+
+    @classmethod
+    def create(cls, **account_info):
+        account_info.update({
+            'role_type': cls.get_role_type()
+        })
+        return super(BaseAccount, cls).create(
+            **account_info
+        )
+
+    def update(self, **account_info):
+        account_info.update({
+            'role_type': self.get_role_type()
+        })
+        return super(BaseAccount, self).update(
+            **account_info
+        )
+
+    @classmethod
+    def query(cls, **search_info):
+        return super(BaseAccount, cls).query().filter(
+            role_type=cls.get_role_type()
+        )
+
+    @classmethod
+    def get_role_type(cls):
+        return NotImplemented(
+            "this interface is need to implemented!"
+        )
 
     @classmethod
     def search(cls, **attrs):
-        account_qs = cls.query().filter(**attrs)
+        account_qs = cls.query().filter(
+            **attrs
+        )
         return account_qs
 
     @classmethod
     def is_exsited(cls, username, password):
-        account_qs = cls.search(username=username, password=password)
+        account_qs = cls.search(
+            username=username,
+            password=password
+        )
+        print('----------_>>>>>>>  ', username, password)
+        print('----------_>>>>>>>  ', account_qs)
         if account_qs.count():
             return True, account_qs[0]
         return False, None
@@ -43,6 +89,17 @@ class BaseAccount(BaseModel):
     @classmethod
     def get_byusername(cls, username):
         try:
-            return cls.objects.filter(username=username)[0]
+            return cls.search(
+                username=username
+            )[0]
+        except Exception as e:
+            return None
+
+    @classmethod
+    def get_byrole(cls, role_id):
+        try:
+            return cls.search(
+                role_id=role_id
+            )[0]
         except Exception as e:
             return None

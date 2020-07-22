@@ -5,7 +5,8 @@ from infrastructure.utils.common.dictwrapper import DictWrapper
 from support.common.generator.base import BaseGenerator
 from support.common.generator.helper import CustomerGenerator
 
-from abs.middleground.business.account.utils.constant import StatusTypes
+from abs.middleground.business.account.utils.constant import StatusTypes,\
+        PlatformTypes
 from abs.middleground.business.person.models import Person
 from abs.services.customer.account.models import CustomerAccount
 
@@ -22,18 +23,17 @@ class CustomerAccountGenerator(BaseGenerator):
                 "username": username,
                 "password": hashlib.md5("123456".encode('utf8')).hexdigest(),
                 "status": StatusTypes.ENABLE,
-                "customer_id": customer.id
+                "role_type": PlatformTypes.CUSTOMER,
+                "role_id": customer.id
             })
             account_list.append(account_info)
         return account_list
 
     def create(self, account_info, result_mapping):
-        account_qs = CustomerAccount.query().filter(
-            customer_id=account_info.customer_id
+        account = CustomerAccount.get_byrole(
+            account_info.role_id
         )
-        if account_qs.count():
-            account = account_qs[0]
-        else:
+        if account is None:
             account = CustomerAccount.create(**account_info)
         return account
 

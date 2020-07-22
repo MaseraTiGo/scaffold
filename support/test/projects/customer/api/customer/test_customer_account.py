@@ -71,6 +71,6 @@ class CustomerAccountTest(CustomerAPITestCase):
         params = {
             "password": hashlib.md5("123456".encode('utf8')).hexdigest(),
             "code": "123456",
-            "phone": "15527703115",
+            "phone": "15527700001",
         }
         self.access_api(api=api, **params)

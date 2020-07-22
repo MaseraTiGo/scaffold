@@ -69,7 +69,7 @@ class Modify(CustomerAuthorizedApi):
 
     def execute(self, request):
         CustomerAccountServer.modify_password(
-            customer_id=self.auth_user.id,
+            self.auth_user.id,
             old_password=request.old_password,
             new_password=request.new_password
         )

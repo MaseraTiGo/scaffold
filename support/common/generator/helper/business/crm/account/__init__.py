@@ -4,7 +4,8 @@ import hashlib
 from infrastructure.utils.common.dictwrapper import DictWrapper
 from support.common.generator.base import BaseGenerator
 from support.common.generator.helper import StaffGenerator
-from abs.middleground.business.account.utils.constant import StatusTypes
+from abs.middleground.business.account.utils.constant import StatusTypes,\
+        PlatformTypes
 from abs.middleground.business.person.models import Person
 from abs.services.crm.account.models import StaffAccount
 
@@ -24,16 +25,15 @@ class StaffAccountGenerator(BaseGenerator):
                 "username": username,
                 "password": hashlib.md5("123456".encode('utf8')).hexdigest(),
                 "status": StatusTypes.ENABLE,
-                "staff_id": staff.id
+                "role_type": PlatformTypes.CRM,
+                "role_id": staff.id
             })
             account_list.append(account_info)
         return account_list
 
     def create(self, account_info, result_mapping):
-        account_qs = StaffAccount.query().filter(staff_id=account_info.staff_id)
-        if account_qs.count():
-            account = account_qs[0]
-        else:
+        account = StaffAccount.get_byrole(account_info.role_id)
+        if account is None:
             account = StaffAccount.create(**account_info)
         return account
 
