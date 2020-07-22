@@ -9,8 +9,8 @@ class CustomerTestCase(CustomerAPITestCase):
 
     def setUp(self):
         self.certification_info = {
-            'name': '熊翼诚',
-            'identification': '420104199222222222',
+            'name': '张杰芳',
+            'identification': '422202199610021840',
             'id_front': 'http://bq-crm-resouce.oss-cn-beijing.aliyuncs.com/pos-install%2Fimage%2F202007%2F13184325740513.jpg',
             'id_back': 'http://bq-crm-resouce.oss-cn-beijing.aliyuncs.com/pos-install%2Fimage%2F202007%2F13184325740513.jpg',
             'id_in_hand': 'http://bq-crm-resouce.oss-cn-beijing.aliyuncs.com/pos-install%2Fimage%2F202007%2F13184325740513.jpg'
