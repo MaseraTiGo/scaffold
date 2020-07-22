@@ -36,3 +36,9 @@ crm_pc_service.add(Phone, Image)
 
 from agile.crm.apis.customer import Get, Search, Update, Add
 crm_pc_service.add(Get, Search, Update, Add)
+
+from agile.crm.apis.customer.bankcard import Search
+crm_pc_service.add(Search)
+
+from agile.crm.apis.customer.address import Search
+crm_pc_service.add(Search)

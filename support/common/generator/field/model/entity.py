@@ -1,5 +1,5 @@
 # coding=UTF-8
-
+import random
 
 from support.common.generator.field.base import BaseHelper
 
@@ -23,7 +23,7 @@ class CustomerEntity(BaseHelper):
 
     def calc(self):
         if not hasattr(self, '_enume'):
-            from model.store.model_customer import Customer
+            from abs.services.customer.personal.models import Customer
             self._enume = []
             for customer in Customer.query():
                 self._enume.append(customer)

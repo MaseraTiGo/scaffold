@@ -36,10 +36,10 @@ class CustomerServer(BaseManager):
         if is_person_exsited:
             raise BusinessError('客户已存在，不能创建')
 
-        person = PersonServer.create(phone=phone, **customer_info)
+        person = PersonServer.create(phone = phone, **customer_info)
         customer = Customer.create(
-            person_id=person.id,
-            phone=phone,
+            person_id = person.id,
+            phone = phone,
             **customer_info
         )
         return customer
@@ -50,3 +50,15 @@ class CustomerServer(BaseManager):
         PersonServer.update(customer.person_id, **update_info)
         customer.update(**update_info)
         return customer
+
+    @classmethod
+    def get_customer_bankcard(cls, customer_id):
+        customer = Customer.get_byid(customer_id)
+        bankcard_list = PersonServer.get_all_bankcard(customer.person_id)
+        return bankcard_list
+
+    @classmethod
+    def get_customer_address(cls, customer_id):
+        customer = Customer.get_byid(customer_id)
+        address_list = PersonServer.get_all_address(customer.person_id)
+        return address_list
