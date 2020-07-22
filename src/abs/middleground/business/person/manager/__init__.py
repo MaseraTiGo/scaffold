@@ -4,7 +4,8 @@ import random
 
 from abs.common.manager import BaseManager
 from abs.middleground.business.person.models import Person,\
-        Address, BankCard, PersonStatus, PersonStatistics
+        Address, BankCard, PersonStatus, PersonStatistics, Certification
+from infrastructure.core.exception.business_error import BusinessError
 
 
 class PersonServer(BaseManager):
@@ -138,3 +139,29 @@ class PersonServer(BaseManager):
     @classmethod
     def remove_bankcard(cls, bankcard_id):
         return cls.get_bankcard(bankcard_id).delete()
+
+    @classmethod
+    def add_certification(cls, person_id, **certification_info):
+        person = cls.get(person_id)
+        status = PersonStatus.get_byperson(person)
+        if status.certification:
+            raise BusinessError('您已实名认证')
+        certification = Certification.create(
+            person=person,
+            **certification_info
+        )
+        status.update(certification=certification)
+        return certification
+
+    @classmethod
+    def get_person_certification(cls, person_id):
+        person = cls.get(person_id)
+        status = PersonStatus.get_byperson(person)
+        if not status.certification:
+            raise BusinessError('用户未实名认证')
+        return status.certification
+
+    @classmethod
+    def get_person_status(cls, person_id):
+        person = cls.get(person_id)
+        return PersonStatus.get_byperson(person)
