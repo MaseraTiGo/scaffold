@@ -10,23 +10,23 @@ import hashlib
 import requests
 
 
-class YunaccountExtend(object):
+class YunaccountTransport(object):
 
 
     def __init__(self):
         self._url = 'https://api-jiesuan.yunzhanghu.com'
 
     def get_dealer_id(self):
-        return  # "22730335"  # 商户平台ID
+        return '22730335'  # 商户平台ID
 
     def get_broker_id(self):
-        return  # "27532644"  # 综合服务主体
+        return '27532644'  # 综合服务主体
 
     def get_des3key(self):
-        return  # "PlqlJ82Ennh02IpaudE3y8H0"  # 3DES Key
+        return "PlqlJ82Ennh02IpaudE3y8H0"  # 3DES Key
 
     def get_key(self):
-        return  # "BrD14dw7JV97NfNeG72tFqv509CDtudZ"  # App Key
+        return "BrD14dw7JV97NfNeG72tFqv509CDtudZ"  # App Key
 
     def get_notify_url(self):
         return  # "http://gk7s82.natappfree.cc"  # 回调地址
@@ -145,4 +145,4 @@ class YunaccountExtend(object):
         return result
 
 
-yunaccount_extend = YunaccountExtend()
+yunaccount_transport = YunaccountTransport()

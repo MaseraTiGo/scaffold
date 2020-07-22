@@ -40,6 +40,9 @@ customer_mobile_service.add(Add, Get, All, Update, Remove)
 from agile.customer.apis.customer.myself.bankcard import Get, All, Remove, Add
 customer_mobile_service.add(Add, Get, All, Remove)
 
+from agile.customer.apis.customer.myself.real import Authenticate, Get
+customer_mobile_service.add(Authenticate, Get)
+
 from agile.customer.apis.customer.finance.balance import Get, TopUp, Withdraw
 customer_mobile_service.add(Get, TopUp, Withdraw)
 

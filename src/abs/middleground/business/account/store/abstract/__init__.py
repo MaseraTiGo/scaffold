@@ -80,8 +80,6 @@ class BaseAccount(BaseModel):
             username=username,
             password=password
         )
-        print('----------_>>>>>>>  ', username, password)
-        print('----------_>>>>>>>  ', account_qs)
         if account_qs.count():
             return True, account_qs[0]
         return False, None

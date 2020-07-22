@@ -224,7 +224,7 @@ REDIS_CONF = {
     # 'host': 'localhost',
     # 'host': '192.168.3.250',
     'port': '6379',
-    'max_connections': 500 ,
+    'max_connections': 500,
 }
 
 LOGGING = {

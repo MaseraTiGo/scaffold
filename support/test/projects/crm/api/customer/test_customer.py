@@ -36,11 +36,11 @@ class CustomerTestCase(CrmAPITestCase):
     def tearDown(self):
         pass
 
-    def assert_customer_fields(self, customer, need_id=False):
+    def assert_customer_fields(self, customer, need_id = False):
         if need_id:
             self.assertTrue('id' in customer)
         self.assertTrue('nick' in customer)
-        self.assertTrue('name' in customer)
+        self.assertTrue('head_url' in customer)
         self.assertTrue('name' in customer)
         self.assertTrue('gender' in customer)
         self.assertTrue('birthday' in customer)
@@ -48,12 +48,15 @@ class CustomerTestCase(CrmAPITestCase):
         self.assertTrue('email' in customer)
         self.assertTrue('wechat' in customer)
         self.assertTrue('qq' in customer)
+        self.assertTrue('username' in customer)
+        self.assertTrue('status' in customer)
+        self.assertTrue('create_time' in customer)
 
     def test_create_customer(self):
         api = 'customer.add'
         self.access_api(
-            api=api,
-            customer_info=json.dumps(self.customer_info)
+            api = api,
+            customer_info = json.dumps(self.customer_info)
         )
 
     def test_search_customer(self):
@@ -76,7 +79,10 @@ class CustomerTestCase(CrmAPITestCase):
         if customer_list:
             customer_id = customer_list[-1]['id']
             api = "customer.get"
-            result = self.access_api(api=api, customer_id=customer_id)
+            result = self.access_api(
+                api=api,
+                customer_id=customer_id
+            )
             self.assertTrue('customer_info' in result)
             self.assert_customer_fields(result['customer_info'])
         else:

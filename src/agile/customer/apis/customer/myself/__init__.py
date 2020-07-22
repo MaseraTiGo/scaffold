@@ -6,13 +6,14 @@ Created on 2020年6月18日
 @author: Roy
 '''
 
-from infrastructure.core.field.base import CharField, DictField
+from infrastructure.core.field.base import CharField, DictField, BooleanField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.services.customer.personal.manager import CustomerServer
+from abs.middleground.business.person.manager import PersonServer
 
 
 class Get(CustomerAuthorizedApi):
@@ -32,6 +33,7 @@ class Get(CustomerAuthorizedApi):
         'email': CharField(desc="邮箱"),
         'wechat': CharField(desc="微信"),
         'qq': CharField(desc="qq"),
+        'is_certify': BooleanField(desc="是否认证")
     })
 
     @classmethod
@@ -43,7 +45,9 @@ class Get(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return CustomerServer.get(self.auth_user.id)
+        customer = CustomerServer.get(self.auth_user.id)
+        customer.person_status = PersonServer.get_person_status(customer.person_id)
+        return customer
 
     def fill(self, response, customer):
         response.customer_info = {
@@ -56,6 +60,7 @@ class Get(CustomerAuthorizedApi):
             'email': customer.person.email,
             'wechat': customer.person.wechat,
             'qq': customer.person.qq,
+            'is_certify': True if customer.person_status.certification else False
         }
         return response
 
