@@ -15,14 +15,28 @@ class YunaccountExtend(object):
 
     def verify_identity(self, name, identity):
         """姓名身份证号验证"""
-        result = yunaccount_transport.verify_identity(name, identity)
+        result = yunaccount_transport.verify_identity(
+            name,
+            identity
+        )
         if result['code'] != "0000":
             return False, result
         return True, result
 
-    def verify_bank_card(self, name, identity, card_no):
+    def verify_bankcard_three_factor(self, name, identity, card_no):
         """银行三要素"""
         pass
+
+    def verify_bankcard_four_factor(self, name, identity, card_no, phone):
+        result = yunaccount_transport.verify_bankcard_four_factor(
+            name,
+            identity,
+            card_no,
+            phone
+        )
+        if result['code'] != "0000":
+            return False, result
+        return True, result
 
 
 yunaccount_extend = YunaccountExtend()
