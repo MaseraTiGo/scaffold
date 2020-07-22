@@ -26,7 +26,7 @@ sys.path.insert(0, BASE_DIR)
 sys.path.insert(0, SRC_DIR)
 
 ALLOWED_HOSTS = ['*']
-TEST_PORT = 8011
+TEST_PORT = 3000
 
 # Application definition
 

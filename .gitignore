@@ -3,5 +3,5 @@ __pycache__/
 tags
 
 src/settings_local.py
-test/test_settings.py
+support/test_settings.py
 resource
