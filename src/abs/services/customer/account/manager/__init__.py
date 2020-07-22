@@ -17,15 +17,15 @@ class CustomerAccountServer(BaseManager):
 
     @classmethod
     def create(cls, customer_id, username, password):
-        account_qs = cls.ACCOUNT_CLS.search(customer_id=customer_id)
+        account_qs = cls.ACCOUNT_CLS.search(customer_id = customer_id)
         if account_qs.count() > 0:
             raise BusinessError('客户已存在，不能创建账号！')
 
         account = cls.ACCOUNT_CLS.create(
-            customer_id=customer_id,
-            username=username,
-            password=password,
-            status=StatusTypes.ENABLE
+            customer_id = customer_id,
+            username = username,
+            password = password,
+            status = StatusTypes.ENABLE
         )
         token = TokenManager.generate_token(cls.FLAG, account.customer_id)
         return token
@@ -54,7 +54,7 @@ class CustomerAccountServer(BaseManager):
         account = cls.ACCOUNT_CLS.get_bycustomer(customer_id)
         if account.password != old_password:
             raise BusinessError('老密码不正确，请重试！')
-        account.update(password=new_password)
+        account.update(password = new_password)
         return True
 
     @classmethod
@@ -66,7 +66,7 @@ class CustomerAccountServer(BaseManager):
         if account is None:
             raise BusinessError('账户不存在！')
 
-        account.update(password=new_password)
+        account.update(password = new_password)
         token = TokenManager.generate_token(cls.FLAG, account.customer_id)
         return token
 
@@ -93,3 +93,13 @@ class CustomerAccountServer(BaseManager):
         if code != "654321":
             return False
         return True
+
+    @classmethod
+    def hung_account(cls, customer_list):
+        customer_mapping = {customer.id: customer for customer in customer_list}
+        account_qs = cls.ACCOUNT_CLS.search(customer_id__in = customer_mapping.keys())
+        for account in account_qs:
+            customer_mapping[account.customer_id].account = None
+            if account.customer_id in customer_mapping:
+                customer_mapping[account.customer_id].account = account
+        return customer_list

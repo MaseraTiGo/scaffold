@@ -1,30 +1,31 @@
 # coding=UTF-8
 
 from infrastructure.core.field.base import CharField, DictField, \
-        IntField, ListField
+        IntField, ListField, DatetimeField, BooleanField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.customer.personal.manager import CustomerServer
+from abs.services.customer.account.manager import CustomerAccountServer
 
 
 class Add(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.customer_info = RequestField(
         DictField,
-        desc="客户详情",
-        conf={
-            'nick': CharField(desc="昵称", is_required=False),
-            'head_url': CharField(desc="头像", is_required=False),
-            'name': CharField(desc="姓名", is_required=False),
-            'gender': CharField(desc="性别", is_required=False),
-            'birthday': CharField(desc="生日", is_required=False),
-            'phone': CharField(desc="手机号"),
-            'email': CharField(desc="邮箱", is_required=False),
-            'wechat': CharField(desc="微信", is_required=False),
-            'qq': CharField(desc="qq", is_required=False),
+        desc = "客户详情",
+        conf = {
+            'nick': CharField(desc = "昵称", is_required = False),
+            'head_url': CharField(desc = "头像", is_required = False),
+            'name': CharField(desc = "姓名", is_required = False),
+            'gender': CharField(desc = "性别", is_required = False),
+            'birthday': CharField(desc = "生日", is_required = False),
+            'phone': CharField(desc = "手机号"),
+            'email': CharField(desc = "邮箱", is_required = False),
+            'wechat': CharField(desc = "微信", is_required = False),
+            'qq': CharField(desc = "qq", is_required = False),
         }
     )
 
@@ -47,36 +48,40 @@ class Add(StaffAuthorizedApi):
 
 class Search(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.current_page = RequestField(IntField, desc="当前页码")
-    request.search_info = RequestField(DictField, desc="搜索客户条件", conf={
-        'name': CharField(desc="姓名", is_required=False),
-        'phone': CharField(desc="手机", is_required=False),
+    request.current_page = RequestField(IntField, desc = "当前页码")
+    request.search_info = RequestField(DictField, desc = "搜索客户条件", conf = {
+        'nick': CharField(desc = "昵称", is_required = False),
+        'create_time__gte': DatetimeField(desc = "注册起始时间", is_required = False),
+        'create_time__lte': DatetimeField(desc = "注册结束时间", is_required = False),
     })
 
     response = with_metaclass(ResponseFieldSet)
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
     response.data_list = ResponseField(
         ListField,
-        desc="用户列表",
-        fmt=DictField(
-            desc="用户详情",
-            conf={
-                'id': IntField(desc="客户编号"),
-                'nick': CharField(desc="昵称"),
-                'head_url': CharField(desc="头像"),
-                'name': CharField(desc="姓名"),
-                'gender': CharField(desc="性别"),
-                'birthday': CharField(desc="生日"),
-                'phone': CharField(desc="手机号"),
-                'email': CharField(desc="邮箱"),
-                'wechat': CharField(desc="微信"),
-                'qq': CharField(desc="qq"),
+        desc = "用户列表",
+        fmt = DictField(
+            desc = "用户详情",
+            conf = {
+                'id': IntField(desc = "客户编号"),
+                'nick': CharField(desc = "昵称"),
+                'head_url': CharField(desc = "头像"),
+                'name': CharField(desc = "姓名"),
+                'gender': CharField(desc = "性别"),
+                'birthday': CharField(desc = "生日"),
+                'phone': CharField(desc = "手机号"),
+                'email': CharField(desc = "邮箱"),
+                'wechat': CharField(desc = "微信"),
+                'qq': CharField(desc = "qq"),
+                'username': CharField(desc = "账号"),
+                'status': CharField(desc = "账号状态"),
+                'create_time': DatetimeField(desc = "注册时间"),
             }
         )
     )
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
 
     @classmethod
     def get_desc(cls):
@@ -90,6 +95,9 @@ class Search(StaffAuthorizedApi):
         customer_spliter = CustomerServer.search(
             request.current_page,
             **request.search_info
+        )
+        customer_spliter.data = CustomerAccountServer.hung_account(
+            customer_spliter.data
         )
         return customer_spliter
 
@@ -105,6 +113,9 @@ class Search(StaffAuthorizedApi):
             'email': customer.person.email,
             'wechat': customer.person.wechat,
             'qq': customer.person.qq,
+            'username': customer.account.username,
+            'status':customer.account.status,
+            'create_time': customer.create_time
         } for customer in customer_spliter.data]
         response.data_list = data_list
         response.total = customer_spliter.total
@@ -115,23 +126,35 @@ class Search(StaffAuthorizedApi):
 class Get(StaffAuthorizedApi):
     """获取客户详情接口"""
     request = with_metaclass(RequestFieldSet)
-    request.customer_id = RequestField(IntField, desc="客户id")
+    request.customer_id = RequestField(IntField, desc = "客户id")
 
     response = with_metaclass(ResponseFieldSet)
     response.customer_info = ResponseField(
         DictField,
-        desc="用户详情",
-        conf={
-            'id': IntField(desc="客户编号"),
-            'nick': CharField(desc="昵称"),
-            'head_url': CharField(desc="头像"),
-            'name': CharField(desc="姓名"),
-            'gender': CharField(desc="性别"),
-            'birthday': CharField(desc="生日"),
-            'phone': CharField(desc="手机号"),
-            'email': CharField(desc="邮箱"),
-            'wechat': CharField(desc="微信"),
-            'qq': CharField(desc="qq"),
+        desc = "用户详情",
+        conf = {
+            'id': IntField(desc = "客户编号"),
+            'nick': CharField(desc = "昵称"),
+            'head_url': CharField(desc = "头像"),
+            'name': CharField(desc = "姓名"),
+            'gender': CharField(desc = "性别"),
+            'birthday': CharField(desc = "生日"),
+            'phone': CharField(desc = "手机号"),
+            'email': CharField(desc = "邮箱"),
+            'wechat': CharField(desc = "微信"),
+            'qq': CharField(desc = "qq"),
+            'create_time': DatetimeField(desc = "注册时间"),
+            'username': CharField(desc = "账号"),
+            'status': CharField(desc = "账号状态"),
+            'is_realname': BooleanField(desc = "是否实名"),
+            'realname_info':DictField(desc = '实名详情', conf = {
+                'name': IntField(desc = "姓名"),
+                'identification': CharField(desc = "身份证号"),
+                'id_front': CharField(desc = "身份证正面"),
+                'id_back': CharField(desc = "身份证反面"),
+                'id_in_band': CharField(desc = "手持身份证"),
+                'remark': CharField(desc = "备注"),
+             }),
         }
     )
 
@@ -144,9 +167,12 @@ class Get(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return CustomerServer.get(request.customer_id)
+        customer = CustomerServer.get(request.customer_id)
+        CustomerAccountServer.hung_account([customer])
+        return customer
 
     def fill(self, response, customer):
+        is_realname = True if customer.person_status.certification else False
         response.customer_info = {
             'id': customer.id,
             'nick': customer.nick,
@@ -158,6 +184,18 @@ class Get(StaffAuthorizedApi):
             'email': customer.person.email,
             'wechat': customer.person.wechat,
             'qq': customer.person.qq,
+            'create_time': customer.create_time,
+            'username': customer.account.username,
+            'status':customer.account.status,
+            'is_realname':is_realname,
+            'realname_info':{
+                'name': customer.person_status.name if is_realname else "",
+                'identification': customer.person_status.identification if is_realname else "",
+                'id_front':customer.person_status.id_front if is_realname else "",
+                'id_back': customer.person_status.id_back if is_realname else "",
+                'id_in_band':customer.person_status.id_in_band if is_realname else "",
+                'remark':customer.person_status.remark if is_realname else "",
+             },
         }
         return response
 
@@ -165,20 +203,20 @@ class Get(StaffAuthorizedApi):
 class Update(StaffAuthorizedApi):
     """修改客户信息"""
     request = with_metaclass(RequestFieldSet)
-    request.customer_id = RequestField(IntField, desc="客户id")
+    request.customer_id = RequestField(IntField, desc = "客户id")
     request.customer_info = RequestField(
         DictField,
-        desc="客户修改详情",
-        conf={
-            'nick': CharField(desc="昵称", is_required=False),
-            'head_url': CharField(desc="头像", is_required=False),
-            'name': CharField(desc="姓名", is_required=False),
-            'gender': CharField(desc="性别", is_required=False),
-            'birthday': CharField(desc="生日", is_required=False),
-            'phone': CharField(desc="电话", is_required=False),
-            'email': CharField(desc="邮箱", is_required=False),
-            'wechat': CharField(desc="微信", is_required=False),
-            'qq': CharField(desc="qq", is_required=False),
+        desc = "客户修改详情",
+        conf = {
+            'nick': CharField(desc = "昵称", is_required = False),
+            'head_url': CharField(desc = "头像", is_required = False),
+            'name': CharField(desc = "姓名", is_required = False),
+            'gender': CharField(desc = "性别", is_required = False),
+            'birthday': CharField(desc = "生日", is_required = False),
+            'phone': CharField(desc = "电话", is_required = False),
+            'email': CharField(desc = "邮箱", is_required = False),
+            'wechat': CharField(desc = "微信", is_required = False),
+            'qq': CharField(desc = "qq", is_required = False),
         }
     )
 
