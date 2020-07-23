@@ -48,5 +48,9 @@ class Redis(Single):
             return [ value.decode("utf-8") for value in values ]
         return []
 
+    def ttl(self, name, category = None):
+        name_key = self.generate_key(name, category)
+        return self.helper.ttl(name_key)
+
 
 redis = Redis()

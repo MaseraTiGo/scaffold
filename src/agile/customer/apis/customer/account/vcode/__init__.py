@@ -13,6 +13,7 @@ from infrastructure.core.field.base import CharField
 
 from agile.base.api import NoAuthorizedApi
 from abs.services.customer.account.manager import CustomerAccountServer
+from abs.services.crm.tool.manager import SmsServer
 
 
 class Phone(NoAuthorizedApi):
@@ -32,7 +33,8 @@ class Phone(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return CustomerAccountServer.get_phone_verification_code(request.number)
+        SmsServer.send_register_code(request.number)
+        return '123456'
 
     def fill(self, response, code):
         response.code = code

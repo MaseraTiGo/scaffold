@@ -80,16 +80,6 @@ class AccountServer(BaseManager):
         pass
 
     @classmethod
-    def get_phone_verification_code(cls, phone_number):
-        return "123456"
-
-    @classmethod
-    def check_phone_verification_code(cls, phone_number, code):
-        if code != "123456":
-            return False
-        return True
-
-    @classmethod
     def get_image_verification_code(cls):
         return "654321"
 

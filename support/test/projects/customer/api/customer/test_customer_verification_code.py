@@ -14,7 +14,7 @@ class CustomerAccountTest(CustomerAPITestCase):
     def test_account_phone_verification_code(self):
         api = 'customer.account.vcode.phone'
         params = {
-            "number": "15527703115",
+            "number": "15827054862",
         }
         result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue('code' in result)
