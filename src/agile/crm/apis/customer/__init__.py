@@ -196,12 +196,12 @@ class Get(StaffAuthorizedApi):
             'is_realname':is_realname,
             'balance':customer.balance,
             'realname_info':{
-                'name': customer.person_status.name if is_realname else "",
-                'identification': customer.person_status.identification if is_realname else "",
-                'id_front':customer.person_status.id_front if is_realname else "",
-                'id_back': customer.person_status.id_back if is_realname else "",
-                'id_in_band':customer.person_status.id_in_band if is_realname else "",
-                'remark':customer.person_status.remark if is_realname else "",
+                'name': customer.person_status.certification.name if is_realname else "",
+                'identification': customer.person_status.certification.identification if is_realname else "",
+                'id_front':customer.person_status.certification.id_front if is_realname else "",
+                'id_back': customer.person_status.certification.id_back if is_realname else "",
+                'id_in_band':customer.person_status.certification.id_in_band if is_realname else "",
+                'remark':customer.person_status.certification.remark if is_realname else "",
              },
         }
         return response
