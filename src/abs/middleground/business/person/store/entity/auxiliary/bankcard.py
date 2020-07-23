@@ -27,3 +27,10 @@ class BankCard(BaseModel):
     def search(cls, **attrs):
         bankcard_qs = cls.query().filter(**attrs)
         return bankcard_qs
+
+    @classmethod
+    def is_exsited(cls, person_id, bank_number):
+        bankcard_qs = cls.query(person_id=person_id, bank_number=bank_number)
+        if bankcard_qs.count():
+            return True
+        return False

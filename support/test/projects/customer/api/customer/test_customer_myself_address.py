@@ -9,7 +9,7 @@ class CustomerAddressTestCase(CustomerAPITestCase):
 
     def setUp(self):
         self.add_info = {
-            'contacts': '杨荣凯',
+            'contacts': '天天',
             'gender': 'man',
             'phone': '15527701100',
             'city': '湖北省-武汉市-青山区',

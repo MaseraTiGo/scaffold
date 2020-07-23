@@ -40,14 +40,6 @@ class Add(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        flag, result = yunaccount_extend.verify_bankcard_four_factor(
-            request.bankcard_info['name'],
-            request.bankcard_info['identification'],
-            request.bankcard_info['bank_number'],
-            request.bankcard_info['phone']
-        )
-        if not flag:
-            raise BusinessError('银行卡四要素不匹配')
         customer = self.auth_user
         PersonServer.add_bankcard(
             customer.person_id,

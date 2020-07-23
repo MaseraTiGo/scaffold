@@ -5,6 +5,7 @@ from support.common.generator.helper import StaffGenerator, \
         StaffAccountGenerator, EnterpriseGenerator
 
 from support.environment.common.middleground.person import PersonMaker
+from support.environment.common.middleground.production import ProductionMaker
 from support.environment.init.business.crm.enterprise import EnterpriseLoader
 from support.environment.simulate.business.crm.staff import CrmStaffLoader
 
@@ -23,10 +24,12 @@ class CrmSimulateMaker(BaseMaker):
     def generate_relate(self):
         staff_info = CrmStaffLoader().generate()
         enterprise = EnterpriseGenerator(EnterpriseLoader().generate())
+        production = ProductionMaker().generate_relate()
         staff = StaffGenerator(staff_info)
         staff_account = StaffAccountGenerator()
         person = PersonMaker(staff_info).generate_relate()
 
         staff.add_outputs(staff_account)
         staff.add_inputs(enterprise, person)
+        enterprise.add_outputs(production)
         return staff
