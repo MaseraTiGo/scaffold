@@ -8,7 +8,7 @@ from support.common.testcase.crm_api_test_case import CrmAPITestCase
 class CustomerTestCase(CrmAPITestCase):
 
     def setUp(self):
-        self.customer_info = {
+        self.customer_info={
             'nick': '蜡笔@小新',
             'head_url': 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2091711702,2468700162&fm=11&gp=0.jpg',
             'name': '杨荣凯',
@@ -20,7 +20,7 @@ class CustomerTestCase(CrmAPITestCase):
             'qq': '15527703115',
             'education': 'high',
         }
-        self.update_info = {
+        self.update_info={
             'nick': '蜡笔%小新',
             'head_url': 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2091711702,2468700162&fm=11&gp=0.jpg',
             'name': '王海东',
@@ -36,7 +36,7 @@ class CustomerTestCase(CrmAPITestCase):
     def tearDown(self):
         pass
 
-    def assert_customer_fields(self, customer, need_id = False):
+    def assert_customer_fields(self,customer,need_id=False):
         if need_id:
             self.assertTrue('id' in customer)
         self.assertTrue('nick' in customer)
@@ -51,18 +51,18 @@ class CustomerTestCase(CrmAPITestCase):
         self.assertTrue('username' in customer)
         self.assertTrue('status' in customer)
         self.assertTrue('create_time' in customer)
-
+    '''
     def test_create_customer(self):
         api = 'customer.add'
         self.access_api(
             api = api,
             customer_info = json.dumps(self.customer_info)
         )
-
+    '''
     def test_search_customer(self):
-        api = 'customer.search'
-        current_page = 1
-        result = self.access_api(
+        api='customer.search'
+        current_page=1
+        result=self.access_api(
             api=api,
             current_page=current_page,
             search_info=json.dumps({})
@@ -71,9 +71,11 @@ class CustomerTestCase(CrmAPITestCase):
         self.assertTrue("total" in result)
         self.assertTrue("total_page" in result)
         for customer in result['data_list']:
-            self.assert_customer_fields(customer, True)
+            self.assert_customer_fields(customer,True)
+        print("===>>>>",result['data_list'])
         return result['data_list']
 
+    '''
     def test_get_customer(self):
         customer_list = self.test_search_customer()
         if customer_list:
@@ -100,3 +102,4 @@ class CustomerTestCase(CrmAPITestCase):
             )
         else:
             self.assertTrue("the customer_id cann't acquired! " == "")
+    '''
