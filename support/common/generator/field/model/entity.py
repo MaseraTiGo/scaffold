@@ -4,14 +4,14 @@ import random
 from support.common.generator.field.base import BaseHelper
 
 
-class StaffEntity(BaseHelper):
+class BrandEntity(BaseHelper):
 
-    def calc(self, has_none = False):
+    def calc(self, has_none=False):
         if not hasattr(self, '_enume'):
-            from model.store.model_user import Staff
+            from abs.middleground.business.production.store import Brand
             self._enume = []
-            for staff in Staff.query().filter(id__gt = 1):
-                self._enume.append(staff)
+            for brand in Brand.query():
+                self._enume.append(brand)
 
         select_enum = self._enume.copy()
         if has_none:
@@ -21,10 +21,14 @@ class StaffEntity(BaseHelper):
 
 class CustomerEntity(BaseHelper):
 
-    def calc(self):
+    def calc(self, has_none=False):
         if not hasattr(self, '_enume'):
-            from abs.services.customer.personal.models import Customer
+            from abs.services.customer.personal.store import Customer
             self._enume = []
             for customer in Customer.query():
                 self._enume.append(customer)
-        return random.choice(self._enume)
+
+        select_enum = self._enume.copy()
+        if has_none:
+            select_enum.append(None)
+        return random.choice(select_enum)

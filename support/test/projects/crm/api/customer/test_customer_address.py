@@ -9,7 +9,7 @@ from support.common.generator.field.model.entity import CustomerEntity
 class CustomerAddressTestCase(CrmAPITestCase):
 
     def setUp(self):
-        self.customer = CustomerEntity().calc()
+        self.customer = CustomerEntity().generate()
 
     def tearDown(self):
         pass

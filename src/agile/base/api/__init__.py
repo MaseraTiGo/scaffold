@@ -20,12 +20,6 @@ class AuthorizedApi(BaseApi):
     _user_id = None
     _auth_flag = "auth"
 
-    def _check_IP(self, token):
-        print('check ip ......')
-
-    def _check_time(self, token):
-        print('check api timeout ...')
-
     @property
     def auth_user(self):
         if not hasattr(self, "_auth_user"):
@@ -35,6 +29,7 @@ class AuthorizedApi(BaseApi):
     def authorized(self, request, parms):
         auth_str = parms.pop(self._auth_flag)
         token = self.load_token(auth_str)
+        token.check(parms)
         self._user_id = token.user_id
         return parms
 

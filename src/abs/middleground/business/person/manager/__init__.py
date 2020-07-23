@@ -2,10 +2,11 @@
 
 import random
 
+from infrastructure.core.exception.business_error import BusinessError
 from abs.common.manager import BaseManager
 from abs.middleground.business.person.models import Person,\
         Address, BankCard, PersonStatus, PersonStatistics, Certification
-from infrastructure.core.exception.business_error import BusinessError
+from abs.middleware.extend.yunaccount import yunaccount_extend
 
 
 class PersonServer(BaseManager):
@@ -102,7 +103,30 @@ class PersonServer(BaseManager):
         return address
 
     @classmethod
-    def add_bankcard(cls, person_id, bank_number, **bankcard_info):
+    def check_bankcard_valid(cls, name, identification, bank_number, phone):
+        flag, result = yunaccount_extend.verify_bankcard_four_factor(
+            name,
+            identification,
+            bank_number,
+            phone
+        )
+        if not flag:
+            raise BusinessError('银行卡四要素不匹配')
+
+    @classmethod
+    def check_bankcard_unique(cls, person_id, bank_number):
+        if BankCard.is_exsited(person_id, bank_number):
+            raise BusinessError('银行卡重复')
+
+    @classmethod
+    def add_bankcard(
+        cls,
+        person_id,
+        bank_number,
+        phone,
+        identification,
+        **bankcard_info
+    ):
         person = cls.get(person_id)
 
         # todo: add card to verify
@@ -117,6 +141,13 @@ class PersonServer(BaseManager):
         )
         bank_name, bank_code = random.choice(bank_list)
 
+        cls.check_bankcard_unique(person_id, bank_number)
+        cls.check_bankcard_valid(
+            bank_name,
+            identification,
+            bank_number,
+            phone
+        )
         bankcard = BankCard.create(
             person=person,
             bank_name=bank_name,

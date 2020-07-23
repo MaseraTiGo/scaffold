@@ -154,7 +154,7 @@ class All(CustomerAuthorizedApi):
 
     def execute(self, request):
         customer = self.auth_user
-        address_qs = PersonServer.get_all_address(customer.id)
+        address_qs = PersonServer.get_all_address(customer.person_id)
         return address_qs
 
     def fill(self, response, address_qs):
