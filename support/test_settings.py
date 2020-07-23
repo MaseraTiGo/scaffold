@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'abs.middleground.business.person',
     'abs.middleground.business.enterprise',
     'abs.middleground.business.transaction',
+    'abs.middleground.business.production',
     'abs.services.customer.account',
     'abs.services.customer.personal',
     'abs.services.customer.finance',
@@ -149,6 +150,14 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '3306'
     },
+    'production': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'base_production',  # crm_201812282
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',
+        'PORT': '3306'
+    },
     'customer_account': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customer_account',  # crm_201812282
@@ -197,6 +206,7 @@ DATABASE_APPS_MAPPING = {
     'person': 'person',
     'enterprise': 'enterprise',
     'transaction': 'transaction',
+    'production': 'production',
     'customer_account': 'customer_account',
     'customer_personal': 'customer_personal',
     'customer_finance': 'customer_finance',

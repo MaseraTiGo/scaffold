@@ -42,3 +42,9 @@ crm_pc_service.add(Search)
 
 from agile.crm.apis.customer.address import Search
 crm_pc_service.add(Search)
+
+from agile.crm.apis.production.brand import Get, Search, Update, Add
+crm_pc_service.add(Search, Get, Update, Add)
+
+from agile.crm.apis.production import Get, Search, Update, Add
+crm_pc_service.add(Search, Get, Update, Add)

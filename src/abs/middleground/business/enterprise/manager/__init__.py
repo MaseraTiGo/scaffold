@@ -11,6 +11,10 @@ class EnterpriseServer(BaseManager):
 
     @classmethod
     def get_main_company(cls):
+        return cls.get_crm__company()
+
+    @classmethod
+    def get_crm__company(cls):
         company_qs = Enterprise.search(
             license_number="91420100MA4KM4XY1Y"
         )

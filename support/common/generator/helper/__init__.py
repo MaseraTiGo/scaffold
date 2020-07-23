@@ -7,10 +7,12 @@ from support.common.generator.helper.middleground.person.address import AddressG
 from support.common.generator.helper.middleground.person.bankcard import BankCardGenerator
 from support.common.generator.helper.middleground.person.status import StatusGenerator
 from support.common.generator.helper.middleground.person.statistics import StatisticsGenerator
+from support.common.generator.helper.middleground.enterprise import EnterpriseGenerator
+from support.common.generator.helper.middleground.production.brand import BrandGenerator
+from support.common.generator.helper.middleground.production import ProductionGenerator
 
 
 # crm service generator
-from support.common.generator.helper.business.crm.enterprise import EnterpriseGenerator
 from support.common.generator.helper.business.crm.staff import StaffGenerator
 from support.common.generator.helper.business.crm.account import StaffAccountGenerator
 
