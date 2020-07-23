@@ -8,7 +8,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 
 from agile.customer.manager.api import CustomerAuthorizedApi
-from src.abs.middleware.extend.yunaccount import yunaccount_extend
+from abs.middleware.extend.yunaccount import yunaccount_extend
 from abs.middleground.business.person.manager import PersonServer
 
 

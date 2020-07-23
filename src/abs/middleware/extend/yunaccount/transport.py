@@ -133,13 +133,25 @@ class YunaccountTransport(object):
         result = self._request_api(url, **param)
         return result
 
-    def verify_bank_card(self, name, identity, card_no):
+    def verify_bankcard_three_factor(self, name, identity, card_no):
         """银行三要素"""
         url = "/authentication/verify-bankcard-three-factor"
         param = {
             'card_no': card_no,
             'id_card': identity,
             'real_name': name
+        }
+        result = self._request_api(url, **param)
+        return result
+
+    def verify_bankcard_four_factor(self, name, identity, card_no, phone):
+        """银行卡四要素"""
+        url = '/authentication/verify-bankcard-four-factor'
+        param = {
+            'card_no': card_no,
+            'id_card': identity,
+            'real_name': name,
+            'mobile': phone
         }
         result = self._request_api(url, **param)
         return result

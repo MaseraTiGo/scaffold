@@ -18,29 +18,32 @@ class CrmPcService(BaseAPIService):
         return "crm-pc"
 
 
-crm_pc_service = CrmPcService()
-from agile.crm.apis.staff import Add, Get, Update, Search
-crm_pc_service.add(Add, Get, Update, Search)
+crm_pc_service=CrmPcService()
+from agile.crm.apis.staff import Add,Get,Update,Search
+crm_pc_service.add(Add,Get,Update,Search)
 
-from agile.crm.apis.staff.myself import Get, Update
-crm_pc_service.add(Get, Update)
+from agile.crm.apis.staff.myself import Get,Update
+crm_pc_service.add(Get,Update)
 
 # from agile.apis.staff.token import Renew
 # crm_pc_service.add(Renew)
 
-from agile.crm.apis.staff.account import Login, Logout
-crm_pc_service.add(Login, Logout)
+from agile.crm.apis.staff.account import Login,Logout
+crm_pc_service.add(Login,Logout)
 
-from agile.crm.apis.staff.account.vcode import Phone, Image
-crm_pc_service.add(Phone, Image)
+from agile.crm.apis.staff.account.vcode import Phone,Image
+crm_pc_service.add(Phone,Image)
 
-from agile.crm.apis.customer import Get, Search, Update, Add
-crm_pc_service.add(Get, Search, Update, Add)
+from agile.crm.apis.customer import Get,Search,Update,Add
+crm_pc_service.add(Get,Search,Update,Add)
 
 from agile.crm.apis.customer.bankcard import Search
 crm_pc_service.add(Search)
 
 from agile.crm.apis.customer.address import Search
+crm_pc_service.add(Search)
+
+from agile.crm.apis.customer.transaction import Search
 crm_pc_service.add(Search)
 
 from agile.crm.apis.production.brand import Get, Search, Update, Add

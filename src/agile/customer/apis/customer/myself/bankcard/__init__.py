@@ -12,8 +12,10 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
+from infrastructure.core.exception.business_error import BusinessError
 from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.middleground.business.person.manager import PersonServer
+from abs.middleware.extend.yunaccount import yunaccount_extend
 
 
 class Add(CustomerAuthorizedApi):
@@ -38,6 +40,14 @@ class Add(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        flag, result = yunaccount_extend.verify_bankcard_four_factor(
+            request.bankcard_info['name'],
+            request.bankcard_info['identification'],
+            request.bankcard_info['bank_number'],
+            request.bankcard_info['phone']
+        )
+        if not flag:
+            raise BusinessError('银行卡四要素不匹配')
         customer = self.auth_user
         PersonServer.add_bankcard(
             customer.person_id,
