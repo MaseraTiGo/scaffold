@@ -19,18 +19,18 @@ import pymysql
 pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC_DIR = os.path.join(BASE_DIR, "src")
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC_DIR=os.path.join(BASE_DIR,"src")
 
-sys.path.insert(0, BASE_DIR)
-sys.path.insert(0, SRC_DIR)
+sys.path.insert(0,BASE_DIR)
+sys.path.insert(0,SRC_DIR)
 
-ALLOWED_HOSTS = ['*']
-TEST_PORT = 8011
+ALLOWED_HOSTS=['*']
+TEST_PORT=8011
 
 # Application definition
 
-INSTALLED_APPS = [
+INSTALLED_APPS=[
     # 'django.contrib.admin',
     # 'django.contrib.auth',
     # 'django.contrib.contenttypes',
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'abs.services.crm.staff',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE_CLASSES=[
     # 'django.middleware.security.SecurityMiddleware',
     # 'django.contrib.sessions.middleware.SessionMiddleware',
     # 'django.middleware.common.CommonMiddleware',
@@ -61,15 +61,15 @@ MIDDLEWARE_CLASSES = [
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF='urls'
 
 
-API_TEMPLATE_DIR = os.path.join(SRC_DIR, "interface/template")
-FILE_TEMPLATE_DIR = os.path.join(SRC_DIR, "file/template")
-TEMPLATES = [
+API_TEMPLATE_DIR=os.path.join(SRC_DIR,"interface/template")
+FILE_TEMPLATE_DIR=os.path.join(SRC_DIR,"file/template")
+TEMPLATES=[
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [API_TEMPLATE_DIR, FILE_TEMPLATE_DIR],
+        'DIRS': [API_TEMPLATE_DIR,FILE_TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,34 +82,34 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'wsgi.application'
+WSGI_APPLICATION='wsgi.application'
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE='en-us'
 
-TIME_ZONE = 'Asia/Shanghai'
+TIME_ZONE='Asia/Shanghai'
 
-USE_I18N = True
+USE_I18N=True
 
-USE_L10N = True
+USE_L10N=True
 
-USE_TZ = False
+USE_TZ=False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-STATIC_URL = '/resource/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "resource"),
+STATIC_URL='/resource/'
+STATICFILES_DIRS=[
+    os.path.join(BASE_DIR,"resource"),
 ]
 
-DEBUG = True
-SECRET_KEY = 'n(ga_y0y4l&e8!tyt2)=f5q1=8(b=3&(cwvhfd*w8=0pm(0@00'
+DEBUG=True
+SECRET_KEY='n(ga_y0y4l&e8!tyt2)=f5q1=8(b=3&(cwvhfd*w8=0pm(0@00'
 
 # Postgresql数据库配置
-DATABASES = {
+DATABASES={
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'data',  # crm_201812282
@@ -200,8 +200,8 @@ DATABASES = {
     },
 }
 
-DATABASE_ROUTERS = ['src.database_router.DatabaseAppsRouter']
-DATABASE_APPS_MAPPING = {
+DATABASE_ROUTERS=['src.database_router.DatabaseAppsRouter']
+DATABASE_APPS_MAPPING={
     'account': 'account',
     'person': 'person',
     'enterprise': 'enterprise',
@@ -229,7 +229,7 @@ DATABASE_APPS_MAPPING = {
 # }
 
 
-REDIS_CONF = {
+REDIS_CONF={
     'host': 'localhost',
     # 'host': 'localhost',
     # 'host': '192.168.3.250',
@@ -237,7 +237,7 @@ REDIS_CONF = {
     'max_connections': 500,
 }
 
-LOGGING = {
+LOGGING={
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
@@ -249,7 +249,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'maxBytes': 1024 * 1024,
+            'maxBytes': 1024*1024,
             'backupCount': 5,
             'filename': '/tmp/app/run.log',
             'formatter': 'verbose'
@@ -262,7 +262,7 @@ LOGGING = {
     },
     'loggers': {
         'django_docker': {
-            'handlers': ['file', 'console'],
+            'handlers': ['file','console'],
             'level': 'DEBUG',
             'propagate': True,
         },
