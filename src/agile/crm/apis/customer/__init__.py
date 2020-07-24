@@ -82,8 +82,7 @@ class Search(StaffAuthorizedApi):
             }
         )
     )
-    response.total=ResponseField(IntField,desc="数据总数")
-    response.total_page=ResponseField(IntField,desc="总页码数")
+
 
     @classmethod
     def get_desc(cls):
@@ -200,7 +199,7 @@ class Get(StaffAuthorizedApi):
                 'identification': customer.person_status.certification.identification if is_realname else "",
                 'id_front':customer.person_status.certification.id_front if is_realname else "",
                 'id_back': customer.person_status.certification.id_back if is_realname else "",
-                'id_in_band':customer.person_status.certification.id_in_band if is_realname else "",
+                'id_in_band':customer.person_status.certification.id_in_hand if is_realname else "",
                 'remark':customer.person_status.certification.remark if is_realname else "",
              },
         }
