@@ -105,4 +105,4 @@ class TransactionServer(BaseManager):
 
     @classmethod
     def get_input_record_bynumber(cls, number):
-        return TransactionInputRecord.search(number=number).filter()
+        return TransactionInputRecord.search(number=number).first()

@@ -126,7 +126,7 @@ class CustomerFinanceServer(BaseManager):
     @classmethod
     def top_up_notify(cls, number, pay_time, transaction_id, price):
         input_record = TransactionServer.get_input_record_bynumber(number)
-        if input_record.amount != price:
+        if input_record.amount != int(price):
             raise BusinessError('金额不正确')
         if input_record:
             # 支付到账
