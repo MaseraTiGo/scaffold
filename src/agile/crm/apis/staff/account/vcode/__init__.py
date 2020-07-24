@@ -32,9 +32,7 @@ class Phone(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return StaffAccountServer.get_phone_verification_code(
-            request.number
-        )
+        return '123456'
 
     def fill(self, response, code):
         response.code = code

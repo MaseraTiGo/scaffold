@@ -62,7 +62,7 @@ class MiniMch(object):
 
     @property
     def notify_url(self):
-        return 'http://education.bq.com/interface/wechat_top_up_notify'
+        return 'http://education.bq.com'
 
     @property
     def key(self):
@@ -85,7 +85,7 @@ class MiniMch(object):
     def unifiedorder(self, out_trade_no, price, product_id='',
                      body='', trade_type='NATIVE', openid=''):
         url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
-        notify_url = self.notify_url + '/interface/pay_notify'
+        notify_url = self.notify_url + '/interface/wechat_top_up_notify'
         param = {
             'appid': self.appid,
             'mch_id': self.mchid,
