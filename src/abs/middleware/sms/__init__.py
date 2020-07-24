@@ -1,9 +1,7 @@
 # coding=UTF-8
-import json
 from infrastructure.utils.common.single import Single
 
-from .company.local import local_sms
-from .template.code import verify_code_sms
+from abs.middleware.extend.sms import local_sms, verify_code_sms
 from .helper import CodeHelper, MessageHelper
 from abs.services.crm.tool.utils.contact import SceneTypes
 

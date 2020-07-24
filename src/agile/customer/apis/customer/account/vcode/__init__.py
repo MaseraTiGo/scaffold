@@ -33,7 +33,7 @@ class Phone(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        if CustomerAccountServer.is_exsited(request.phone):
+        if CustomerAccountServer.is_exsited(request.number):
             raise BusinessError('账号已存在')
         SmsServer.send_register_code(request.number)
 
