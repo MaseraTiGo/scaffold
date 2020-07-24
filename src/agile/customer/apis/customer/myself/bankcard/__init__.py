@@ -130,7 +130,7 @@ class All(CustomerAuthorizedApi):
             'identification': bankcard.identification,
             'bank_number': bankcard.bank_number,
             'bank_name': bankcard.bank_name,
-            'bank_code': bankcard.bank_code,
+            'bank_code': len(bankcard.bank_code[0: -4]) * '*' + bankcard.bank_code[-4:],
             'phone': bankcard.phone,
         } for bankcard in bankcard_qs]
         return response

@@ -10,6 +10,7 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.field.base import CharField
+from infrastructure.core.exception.business_error import BusinessError
 
 from agile.base.api import NoAuthorizedApi
 from abs.services.customer.account.manager import CustomerAccountServer
@@ -32,6 +33,8 @@ class Phone(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        if CustomerAccountServer.is_exsited(request.phone):
+            raise BusinessError('账号已存在')
         SmsServer.send_register_code(request.number)
 
     def fill(self, response):

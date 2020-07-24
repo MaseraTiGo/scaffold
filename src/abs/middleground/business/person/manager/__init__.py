@@ -143,7 +143,7 @@ class PersonServer(BaseManager):
 
         cls.check_bankcard_unique(person_id, bank_number)
         cls.check_bankcard_valid(
-            bank_name,
+            bankcard_info.get('name', ''),
             identification,
             bank_number,
             phone
