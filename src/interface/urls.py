@@ -18,10 +18,12 @@ Including another URLconf
 
 from django.conf.urls import url
 from interface.main import router, api_doc, premise_doc, access_token
+from agile.customer.apis.customer.finance.balance.wechat_notify import wechat_top_up_notify
 
 urlpatterns = [
     url(r'api_doc', api_doc),
     url(r'premise_doc', premise_doc),
     url(r'access_token/[0-9]{10}', access_token),
     url(r'^$', router),
+    url(r'wechat_top_up_notify', wechat_top_up_notify)
 ]

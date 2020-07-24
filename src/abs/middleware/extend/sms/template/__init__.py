@@ -1,6 +1,5 @@
 # coding=UTF-8
 
-from tuoen.abs.middleware.config import config_middleware
 
 class TemplateBase(object):
 
@@ -26,7 +25,7 @@ class TemplateBase(object):
         raise NotImplementedError("server need to implement get_params function")
 
     def get_content(self):
-        return config_middleware.get_value('common_sms', self.label + '_content')
+        raise NotImplementedError("server need to implement get_content function")
 
     def verify_unique_no(self, *args, **kwargs):
         raise NotImplementedError("server need to implement get_params function")

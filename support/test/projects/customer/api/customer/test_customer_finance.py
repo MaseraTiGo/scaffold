@@ -38,12 +38,13 @@ class CustomerTransactionTestCase(CustomerAPITestCase):
 
     def test_customer_topup(self):
         api = 'customer.finance.balance.topup'
-        self.access_api(
+        result = self.access_api(
             api,
             amount=random.randint(1000000, 99999999),
             pay_type=PayTypeConstant().generate(),
             remark="测试余额充值",
         )
+        self.assertTrue('pay_info' in result)
 
     def test_customer_withdraw(self):
         self.test_customer_topup()

@@ -7,9 +7,10 @@ from abs.common.manager import BaseManager
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.transaction.manager import TransactionServer
 from abs.middleground.business.transaction.utils.constant import \
-        BusinessTypes, TransactionStatus
+        BusinessTypes, TransactionStatus, PayTypes
 from abs.services.customer.personal.manager import CustomerServer
 from abs.services.customer.finance.models import CustomerBalanceRecord
+from abs.middleware.wechat import wechat_middleware
 
 
 class CustomerFinanceServer(BaseManager):
@@ -82,9 +83,56 @@ class CustomerFinanceServer(BaseManager):
             business_id=balance_record.id,
         )
 
-        # 4. 模拟支付到账
-        TransactionServer.update_inputrecord(
-            input_record_id=input_record.id,
-            status=TransactionStatus.ACCOUNT_FINISH,
-        )
-        return balance_record
+        prepay_id = ''
+        if pay_type == PayTypes.WECHAT:
+            result = wechat_middleware.unifiedorder_app(
+                input_record.number,
+                input_record.amount,
+                '充值'
+            )
+            if result:
+                prepay_id = result['prepay_id']
+
+        else:
+            raise BusinessError('暂不支持其他交易方式')
+
+        if not prepay_id:
+            TransactionServer.update_inputrecord(
+                input_record_id=input_record.id,
+                status=TransactionStatus.ACCOUNT_FINISH,
+            )
+            raise BusinessError('调用支付失败')
+
+        return prepay_id
+
+    @classmethod
+    def parse_pay_info(cls, prepay_id, pay_type):
+        pay_info = {
+            'timestamp': '',
+            'prepayid': '',
+            'noncestr': '',
+            'sign': ''
+        }
+        if pay_type == PayTypes.WECHAT:
+            pay_info = wechat_middleware.get_app_sign(prepay_id)
+            pay_info.update({
+                'timestamp': pay_info.get('timestamp'),
+                'prepayid': pay_info.get('prepayid'),
+                'noncestr': pay_info.get('noncestr'),
+                'sign': pay_info.get('sign')
+            })
+        return pay_info
+
+    @classmethod
+    def top_up_notify(cls, number, pay_time, transaction_id, price):
+        input_record = TransactionServer.get_input_record_bynumber(number)
+        if input_record.amount != price:
+            raise BusinessError('金额不正确')
+        if input_record:
+            # 支付到账
+            TransactionServer.update_inputrecord(
+                input_record_id=input_record.id,
+                status=TransactionStatus.ACCOUNT_FINISH,
+            )
+            return True
+        raise BusinessError('单号不存在')

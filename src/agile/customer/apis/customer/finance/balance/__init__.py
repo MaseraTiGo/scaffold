@@ -9,7 +9,7 @@ Created on 2020年7月3日
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
-from infrastructure.core.field.base import CharField, IntField
+from infrastructure.core.field.base import CharField, IntField, DictField
 
 from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.services.customer.finance.manager import CustomerFinanceServer
@@ -58,6 +58,12 @@ class TopUp(CustomerAuthorizedApi):
     request.remark = RequestField(CharField, desc="充值说明")
 
     response = with_metaclass(ResponseFieldSet)
+    response.pay_info = ResponseField(DictField, desc='支付信息', conf={
+        'timestamp': CharField(desc="时间"),
+        'prepayid': CharField(desc="微信预支付id"),
+        'noncestr': CharField(desc="随机字符串"),
+        'sign': CharField(desc="签名")
+    })
 
     @classmethod
     def get_desc(cls):
@@ -68,14 +74,17 @@ class TopUp(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        CustomerFinanceServer.top_up(
+        prepay_id = CustomerFinanceServer.top_up(
             customer_id=self.auth_user.id,
             amount=request.amount,
             pay_type=request.pay_type,
             remark=request.remark,
         )
+        pay_info = CustomerFinanceServer.parse_pay_info(prepay_id, request.pay_type)
+        return pay_info
 
-    def fill(self, response, token):
+    def fill(self, response, pay_info):
+        response.pay_info = pay_info
         return response
 
 

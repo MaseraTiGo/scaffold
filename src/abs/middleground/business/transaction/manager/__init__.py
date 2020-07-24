@@ -102,3 +102,7 @@ class TransactionServer(BaseManager):
                 transaction.output_record_id
             )
         return transaction
+
+    @classmethod
+    def get_input_record_bynumber(cls, number):
+        return TransactionInputRecord.search(number=number).filter()
