@@ -20,9 +20,25 @@ class SmsServer(BaseManager):
 
     @classmethod
     def send_msg(cls, phone, scene, unique_no, source_type, **kwargs):
-        if sms_middleware.send_msg(phone, scene, unique_no, source_type, **kwargs):
+        if sms_middleware.send_msg(
+            phone,
+            scene,
+            unique_no,
+            source_type,
+            **kwargs
+        ):
             return True
         raise BusinessError('发送失败或该短信已发送过')
+
+    @classmethod
+    def check_code(cls, phone, scene, code):
+        if sms_middleware.check_code(phone, scene, code):
+            return True
+        raise BusinessError('验证码错误')
+
+    @classmethod
+    def check_register_code(cls, phone, code):
+        return cls.check_code(phone, SceneTypes.REGISTER, code)
 
     @classmethod
     def send_register_code(cls, phone):

@@ -41,7 +41,7 @@ class SmsMiddleware(Single):
         template = self.get_template(send_info['template_label'])
         template_id = send_info['template_id']
         sign_name = send_info['sign_name']
-        return CodeHelper(phone, scene, source_type).send(company, template, template_id, sign_name)
+        return CodeHelper(phone, scene).send(company, template, template_id, sign_name, source_type)
 
     def send_msg(self, phone, scene, unique_no, source_type, **kwargs):
         send_info = sms_middleware.get_send_info(scene)
@@ -49,7 +49,10 @@ class SmsMiddleware(Single):
         template = self.get_template(send_info['template_label'])
         template_id = send_info['template_id']
         sign_name = send_info['sign_name']
-        return MessageHelper(phone, scene, unique_no, source_type).send(company, template, template_id, sign_name, **kwargs)
+        return MessageHelper(phone, scene, unique_no).send(company, template, template_id, sign_name, source_type, **kwargs)
+
+    def check_code(self, phone, scene, code):
+        return CodeHelper(phone, scene).check(code)
 
     def get_label_is_open(cls, label):
         """短信平台开关"""

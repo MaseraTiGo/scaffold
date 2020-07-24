@@ -16,6 +16,7 @@ from agile.base.api import NoAuthorizedApi
 from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.services.customer.account.manager import CustomerAccountServer
 from abs.services.customer.personal.manager import CustomerServer
+from abs.services.crm.tool.manager import SmsServer
 
 
 class Register(NoAuthorizedApi):
@@ -39,7 +40,7 @@ class Register(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        if not CustomerAccountServer.check_phone_verification_code(
+        if not SmsServer.check_register_code(
             request.phone,
             request.code
         ):

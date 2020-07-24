@@ -16,8 +16,7 @@ class CustomerAccountTest(CustomerAPITestCase):
         params = {
             "number": "15827054862",
         }
-        result = self.access_api(api=api, is_auth=False, **params)
-        self.assertTrue('code' in result)
+        self.access_api(api=api, is_auth=False, **params)
 
     def test_account_image_verification_code(self):
         api = 'customer.account.vcode.image'

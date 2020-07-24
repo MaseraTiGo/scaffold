@@ -14,10 +14,9 @@ class CodeHelper(object):
 
     _verify_key = '{phone}_{scene}'
 
-    def __init__(self, phone, scene, source_type):
+    def __init__(self, phone, scene):
         self.phone = phone
         self.scene = scene
-        self.source_type = source_type
         self._key = self._verify_key.format(
             phone=self.phone,
             scene=self.scene
@@ -47,7 +46,7 @@ class CodeHelper(object):
         redis.delete(self._key)
         return True
 
-    def send(self, company, template, template_id, sign_name):
+    def send(self, company, template, template_id, sign_name, source_type):
         code = self.generate_code()
         self.set_verify_code(code)
         kwargs = {'code': code}
@@ -67,20 +66,19 @@ class CodeHelper(object):
             unique_no='',
             scene=self.scene,
             status=status,
-            source_type=self.source_type
+            source_type=source_type
         )
         return flag
 
 
 class MessageHelper(object):
 
-    def __init__(self, phone, scene, unique_no, source_type):
+    def __init__(self, phone, scene, unique_no):
         self.phone = phone
         self.unique_no = unique_no
-        self.source_type = source_type
         self.scene = scene
 
-    def send(self, company, template, template_id, sign_name, **kwargs):
+    def send(self, company, template, template_id, sign_name, source_type, **kwargs):
         if not template.verify_unique_no(self.phone, self.unique_no):
             return False
         result = company.send(self.phone, template_id, template, sign_name, **kwargs)
@@ -99,6 +97,6 @@ class MessageHelper(object):
             unique_no=self.unique_no,
             scene=self.scene,
             status=status,
-            source_type=self.source_type
+            source_type=source_type
         )
         return flag
