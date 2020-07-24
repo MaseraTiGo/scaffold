@@ -82,8 +82,7 @@ class Search(StaffAuthorizedApi):
             }
         )
     )
-    response.total=ResponseField(IntField,desc="数据总数")
-    response.total_page=ResponseField(IntField,desc="总页码数")
+
 
     @classmethod
     def get_desc(cls):
@@ -151,7 +150,7 @@ class Get(StaffAuthorizedApi):
             'is_realname': BooleanField(desc="是否实名"),
             'balance': IntField(desc="余额"),
             'realname_info':DictField(desc='实名详情',conf={
-                'name': IntField(desc="姓名"),
+                'name': CharField(desc="姓名"),
                 'identification': CharField(desc="身份证号"),
                 'id_front': CharField(desc="身份证正面"),
                 'id_back': CharField(desc="身份证反面"),
@@ -200,7 +199,7 @@ class Get(StaffAuthorizedApi):
                 'identification': customer.person_status.certification.identification if is_realname else "",
                 'id_front':customer.person_status.certification.id_front if is_realname else "",
                 'id_back': customer.person_status.certification.id_back if is_realname else "",
-                'id_in_band':customer.person_status.certification.id_in_band if is_realname else "",
+                'id_in_band':customer.person_status.certification.id_in_hand if is_realname else "",
                 'remark':customer.person_status.certification.remark if is_realname else "",
              },
         }

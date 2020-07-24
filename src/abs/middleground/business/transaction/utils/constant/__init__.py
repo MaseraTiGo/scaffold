@@ -45,8 +45,10 @@ class TransactionStatus(object):
     PAY_FINISH = "pay_finish"
     TRANSACTION_DEALING = "transaction_dealing"
     ACCOUNT_FINISH = "account_finish"
+    ACCOUNT_FAIL = 'account_fail'
     CHOICES = (
         (PAY_FINISH, '付款成功'),
         (TRANSACTION_DEALING, "交易处理中"),
-        (ACCOUNT_FINISH, "到账成功")
+        (ACCOUNT_FINISH, "到账成功"),
+        (ACCOUNT_FAIL, "交易失败")
     )

@@ -1,6 +1,6 @@
 # coding=UTF-8
 
-from tuoen.abs.middleware.extend.sms.template import TemplateBase
+from . import TemplateBase
 
 
 class VerifyCodeSMS(TemplateBase):
@@ -13,6 +13,9 @@ class VerifyCodeSMS(TemplateBase):
 
     def get_params(self, code):
         return {'code': code}
+
+    def get_content(self):
+        return '您的动态验证码为{code}，请在页面输入完成验证。如非本人操作请忽略。'
 
     def verify_unique_no(self, *args, **kwargs):
         return True
