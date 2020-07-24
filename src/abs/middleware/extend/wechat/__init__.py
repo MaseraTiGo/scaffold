@@ -62,7 +62,7 @@ class MiniMch(object):
 
     @property
     def notify_url(self):
-        return 'http://education.bq.com/'
+        return 'http://education.bq.com'
 
     @property
     def key(self):
