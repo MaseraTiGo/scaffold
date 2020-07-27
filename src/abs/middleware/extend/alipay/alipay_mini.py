@@ -9,9 +9,6 @@ import rsa
 from urllib.parse import quote_plus
 from urllib.request import urlopen
 from tuoen.sys.utils.common.utils import generate_sn
-from tuoen.sys.core.exception.business_error import BusinessError
-
-from tuoen.abs.middleware.config import config_middleware
 
 
 class AlipayMiniExtend(object):

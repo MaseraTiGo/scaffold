@@ -12,7 +12,6 @@ import requests
 
 class YunaccountTransport(object):
 
-
     def __init__(self):
         self._url = 'https://api-jiesuan.yunzhanghu.com'
 
@@ -29,7 +28,7 @@ class YunaccountTransport(object):
         return "BrD14dw7JV97NfNeG72tFqv509CDtudZ"  # App Key
 
     def get_notify_url(self):
-        return  # "http://gk7s82.natappfree.cc"  # 回调地址
+        return "http://9kr968.natappfree.cc"  # 回调地址
 
     def get_timestamp(self):
         return int(time.time())
@@ -60,17 +59,31 @@ class YunaccountTransport(object):
         result_encry = base64.b64decode(encry_data)
         des3key = self.get_des3key()
         iv = des3key[0:8]
-        k = pyDes.triple_des(des3key, pyDes.CBC, iv, pad = None, padmode = pyDes.PAD_PKCS5)
+        k = pyDes.triple_des(
+            des3key,
+            pyDes.CBC,
+            iv,
+            pad=None,
+            padmode=pyDes.PAD_PKCS5
+        )
         result_mampping = json.loads(k.decrypt(result_encry).decode())
         return result_mampping
 
     def get_sign(self, encry_data, mess, timestamp):
         key = self.get_key()
-        sign_str = "data={data}&mess={mess}&timestamp={timestamp}&key={key}".\
-                    format(data = encry_data, mess = mess, timestamp = timestamp, key = key)
-        sign_str = sign_str.encode(encoding = 'utf_8')
-        appkey = key.encode(encoding = 'utf_8')
-        signature = hmac.new(appkey, sign_str, digestmod = hashlib.sha256).hexdigest()
+        sign_str = "data={data}&mess={mess}&timestamp={timestamp}&key={key}".format(
+            data=encry_data,
+            mess=mess,
+            timestamp=timestamp,
+            key=key
+        )
+        sign_str = sign_str.encode(encoding='utf_8')
+        appkey = key.encode(encoding='utf_8')
+        signature = hmac.new(
+            appkey,
+            sign_str,
+            digestmod=hashlib.sha256
+        ).hexdigest()
         return signature
 
     def _pack(self, str_encry):
@@ -78,32 +91,46 @@ class YunaccountTransport(object):
         mess = self.get_mess()
         timestamp = self.get_timestamp()
         sign = self.get_sign(str_encry, mess, timestamp)
-        post_data.update({"data":str_encry, "mess":mess, "timestamp":timestamp, "sign":sign, "sign_type":"sha256"})
+        post_data.update({
+            "data": str_encry,
+            "mess": mess,
+            "timestamp": timestamp,
+            "sign": sign,
+            "sign_type": "sha256"
+        })
         return post_data
 
     def get_headers(self):
-        return {"dealer-id": self.get_dealer_id(), "request-id":self.get_request_id()}
+        return {
+            "dealer-id": self.get_dealer_id(),
+            "request-id": self.get_request_id()
+        }
 
     def _request_api(self, url, **param):
         str_encry = self.get_encryption(param).decode()
         post_data = self._pack(str_encry)
         url = "{baseurl}{url}".format(baseurl = self._url, url = url)
-        result = requests.post(url, data = post_data, headers = self.get_headers())
+        result = requests.post(
+            url,
+            data=post_data,
+            headers=self.get_headers()
+        )
         result_str = result.content
         result_data = json.loads(result_str.decode("utf-8"))
         return result_data
 
-    def transfers(self, dic_param):
+    def transfers(self, order_sn, real_name, card_no, phone_no, id_card, money):
         """打款"""
         url = "/api/payment/v1/order-realtime"
+        notify_path = '/interface/yunaccount_transfer_notify'
         param = {
-            "order_id": dic_param["order_id"],
-            "real_name": dic_param["real_name"],
-            "card_no": dic_param["card_no"],
-            "phone_no": dic_param["phone_no"],
-            "id_card": dic_param["id_card"],
-            "pay": dic_param["pay"],
-            "notify_url":self.get_notify_url(),
+            "order_id": order_sn,
+            "real_name": real_name,
+            "card_no": card_no,
+            "phone_no": phone_no,
+            "id_card": id_card,
+            "pay": money,
+            "notify_url": self.get_notify_url() + notify_path,
         }
         result = self._request_api(url, **param)
         return result
@@ -114,11 +141,11 @@ class YunaccountTransport(object):
         param = {
             "order_id": dic_param["order_id"],
             "real_name": dic_param["real_name"],
-            "id_card":dic_param["id_card"],
+            "id_card": dic_param["id_card"],
             "card_no": dic_param["card_no"],
             "pay": dic_param["pay"],
-            "check_name":"Check",
-            "notify_url":self.get_notify_url(),
+            "check_name": "Check",
+            "notify_url": self.get_notify_url(),
         }
         result = self._request_api(url, **param)
         return result

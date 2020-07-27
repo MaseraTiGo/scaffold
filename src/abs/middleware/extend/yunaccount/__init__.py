@@ -5,9 +5,20 @@ from .transport import yunaccount_transport
 
 class YunaccountExtend(object):
 
-    def transfers(self, dic_param):
+    def transfers(self, amount, bankcard, order_sn):
         """打款"""
-        pass
+        result = yunaccount_transport.transfers(
+            order_sn,
+            bankcard.name,
+            bankcard.bank_number,
+            bankcard.phone,
+            bankcard.identification,
+            str(amount/100)
+        )
+        if result['code'] != "0000":
+            print(result)
+            return False, result
+        return True, result
 
     def transfers_for_alipay(self, dic_param):
         """支付宝打款"""

@@ -103,6 +103,7 @@ class Withdraw(CustomerAuthorizedApi):
             ('balance', "余额")
         )
     )
+    request.bankcard_id = RequestField(IntField, desc='银行卡id')
 
     response = with_metaclass(ResponseFieldSet)
 
@@ -120,6 +121,7 @@ class Withdraw(CustomerAuthorizedApi):
             amount=request.amount,
             pay_type=request.pay_type,
             remark=request.remark,
+            bankcard_id=request.bankcard_id
         )
 
     def fill(self, response):
