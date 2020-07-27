@@ -10,12 +10,12 @@ from abs.services.customer.finance.manager import CustomerFinanceServer
 
 def yunaccount_transfer_notify(request):
     back_mapping = request.POST
-    verify_sign = yunaccount_extend.get_sign(
+    if yunaccount_extend.check_sign(
         back_mapping["data"],
         back_mapping["mess"],
-        back_mapping["timestamp"]
-    )
-    if verify_sign == back_mapping["sign"]:
+        back_mapping["timestamp"],
+        back_mapping["sign"]
+    ):
         result = yunaccount_extend.get_decrypt(back_mapping["data"])
         data = result['data']
         if data['status'] == '1':

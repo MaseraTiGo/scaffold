@@ -5,6 +5,13 @@ from .transport import yunaccount_transport
 
 class YunaccountExtend(object):
 
+    def check_sign(self, encry_data, mess, timestamp, check_sign):
+        sign = yunaccount_transport.get_sign(encry_data, mess, timestamp)
+        return True if sign == check_sign else False
+
+    def get_decrypt(self, encry_data):
+        return yunaccount_transport.get_decrypt(encry_data)
+
     def transfers(self, amount, bankcard, order_sn):
         """打款"""
         result = yunaccount_transport.transfers(

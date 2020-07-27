@@ -28,7 +28,7 @@ class YunaccountTransport(object):
         return "BrD14dw7JV97NfNeG72tFqv509CDtudZ"  # App Key
 
     def get_notify_url(self):
-        return "http://9kr968.natappfree.cc"  # 回调地址
+        return "http://education.bq.com"  # 回调地址
 
     def get_timestamp(self):
         return int(time.time())
