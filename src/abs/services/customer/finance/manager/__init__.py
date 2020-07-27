@@ -6,11 +6,13 @@ from infrastructure.core.exception.business_error import BusinessError
 from abs.common.manager import BaseManager
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.transaction.manager import TransactionServer
+from abs.middleground.business.person.manager import PersonServer
 from abs.middleground.business.transaction.utils.constant import \
         BusinessTypes, TransactionStatus, PayTypes
 from abs.services.customer.personal.manager import CustomerServer
 from abs.services.customer.finance.models import CustomerBalanceRecord
 from abs.middleware.wechat import wechat_middleware
+from abs.middleware.extend.yunaccount import yunaccount_extend
 
 
 class CustomerFinanceServer(BaseManager):
@@ -22,7 +24,7 @@ class CustomerFinanceServer(BaseManager):
         return balance
 
     @classmethod
-    def withdraw(cls, customer_id, amount, pay_type, remark):
+    def withdraw(cls, customer_id, amount, pay_type, remark, bankcard_id):
         customer = CustomerServer.get(customer_id)
         balance = TransactionServer.get_person_balance(customer.person_id)
         if amount > balance:
@@ -46,12 +48,29 @@ class CustomerFinanceServer(BaseManager):
             remark=balance_record.remark,
             business_type=BusinessTypes.BALANCE,
             business_id=balance_record.id,
+            status=TransactionStatus.TRANSACTION_DEALING
         )
 
         # 3. 绑定出账单到余额凭证中
         balance_record.update(
             output_record_id=output_record.id,
         )
+        flag = False
+        if pay_type == PayTypes.BANK:
+            bankcard = PersonServer.get_bankcard(bankcard_id)
+            if bankcard:
+                flag, result = yunaccount_extend.transfers(
+                    amount,
+                    bankcard,
+                    output_record.number
+                )
+
+        if not flag:
+            TransactionServer.update_outputrecord(
+                output_record_id=output_record.id,
+                status=TransactionStatus.ACCOUNT_FAIL
+            )
+
         return balance_record
 
     @classmethod
@@ -81,6 +100,7 @@ class CustomerFinanceServer(BaseManager):
         TransactionServer.update_inputrecord(
             input_record_id=input_record.id,
             business_id=balance_record.id,
+            status=TransactionStatus.TRANSACTION_DEALING
         )
 
         prepay_id = ''
@@ -93,13 +113,10 @@ class CustomerFinanceServer(BaseManager):
             if result:
                 prepay_id = result['prepay_id']
 
-        else:
-            raise BusinessError('暂不支持其他交易方式')
-
         if not prepay_id:
             TransactionServer.update_inputrecord(
                 input_record_id=input_record.id,
-                status=TransactionStatus.ACCOUNT_FINISH,
+                status=TransactionStatus.ACCOUNT_FAIL,
             )
             raise BusinessError('调用支付失败')
 
@@ -136,3 +153,21 @@ class CustomerFinanceServer(BaseManager):
             )
             return True
         raise BusinessError('单号不存在')
+
+    @classmethod
+    def withdraw_success_notify(cls, record_number):
+        record = TransactionServer.get_output_record_bynumber(record_number)
+        if record:
+            record.update(status=TransactionStatus.ACCOUNT_FINISH)
+
+    @classmethod
+    def withdraw_wait_notify(cls, record_number):
+        # todo 待打款暂停处理逻辑
+        record = TransactionServer.get_output_record_bynumber(record_number)
+        pass
+
+    @classmethod
+    def withdraw_fail_notify(cls, record_number):
+        record = TransactionServer.get_output_record_bynumber(record_number)
+        if record:
+            record.update(status=TransactionStatus.ACCOUNT_FAIL)

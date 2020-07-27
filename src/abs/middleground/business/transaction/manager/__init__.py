@@ -58,6 +58,12 @@ class TransactionServer(BaseManager):
         return input_record
 
     @classmethod
+    def update_outputrecord(cls, output_record_id, **output_infos):
+        output_record = TransactionOutputRecord.get_byid(output_record_id)
+        output_record.update(**output_infos)
+        return output_record
+
+    @classmethod
     def statistics_person_bymonth(cls, person_id):
         transaction_record_qs = TransactionRecord.search(
             own_type=OwnTypes.PERSON,
@@ -106,3 +112,7 @@ class TransactionServer(BaseManager):
     @classmethod
     def get_input_record_bynumber(cls, number):
         return TransactionInputRecord.search(number=number).first()
+
+    @classmethod
+    def get_output_record_bynumber(cls, number):
+        return TransactionOutputRecord.search(number=number).first()
