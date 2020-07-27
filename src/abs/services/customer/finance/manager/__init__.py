@@ -13,6 +13,7 @@ from abs.services.customer.personal.manager import CustomerServer
 from abs.services.customer.finance.models import CustomerBalanceRecord
 from abs.middleware.wechat import wechat_middleware
 from abs.middleware.extend.yunaccount import yunaccount_extend
+from abs.middleware.alipay import alipay_middleware
 
 
 class CustomerFinanceServer(BaseManager):
@@ -112,6 +113,8 @@ class CustomerFinanceServer(BaseManager):
             )
             if result:
                 prepay_id = result['prepay_id']
+        elif pay_type == PayTypes.ALIPAY:
+            prepay_id = alipay_middleware.get_app_top_up_info(input_record)
 
         if not prepay_id:
             TransactionServer.update_inputrecord(
@@ -137,6 +140,10 @@ class CustomerFinanceServer(BaseManager):
                 'prepayid': pay_info.get('prepayid'),
                 'noncestr': pay_info.get('noncestr'),
                 'sign': pay_info.get('sign')
+            })
+        elif pay_type == PayTypes.ALIPAY:
+            pay_info.update({
+                'prepayid': prepay_id
             })
         return pay_info
 
