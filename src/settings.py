@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'abs.middleground.business.transaction',
     'abs.middleground.business.production',
     'abs.middleground.business.merchandise',
+    'abs.middleground.business.order',
+    'abs.middleground.support.logistics',
     'abs.services.customer.account',
     'abs.services.customer.personal',
     'abs.services.customer.finance',

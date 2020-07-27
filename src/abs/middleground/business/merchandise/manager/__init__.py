@@ -156,6 +156,14 @@ class MerchandiseServer(BaseManager):
         return specification
 
     @classmethod
+    def get_specification_list(cls, specification_id_list):
+        specification = Specification.query().filter(
+            id__in=specification_id_list
+        )
+        cls._hung_specification_value([specification])
+        return specification
+
+    @classmethod
     def get_specification(cls, specification_id):
         specification = Specification.get_byid(
             specification_id

@@ -31,11 +31,29 @@ class TransactionServer(BaseManager):
 
     @classmethod
     def generate_p2c_outputrecord(cls, person_id, company_id, **output_record):
-        output_record = TransactionOutputRecord.create(
+        output_record = cls.generate_outputrecord(
             own_type=OwnTypes.PERSON,
             own_id=person_id,
             trader_type=OwnTypes.COMPANY,
             trader_id=company_id,
+            **output_record
+        )
+        return output_record
+
+    @classmethod
+    def generate_outputrecord(
+        cls,
+        own_type,
+        own_id,
+        trader_type,
+        trader_id,
+        **output_record
+    ):
+        output_record = TransactionOutputRecord.create(
+            own_type=own_type,
+            own_id=own_id,
+            trader_type=trader_type,
+            trader_id=trader_id,
             **output_record
         )
         return output_record

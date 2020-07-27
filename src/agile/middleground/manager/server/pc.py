@@ -24,3 +24,6 @@ middleground_service.add(Add, Search, Get, Update, Remove)
 
 from agile.middleground.apis.merchandise.specification import Add, Get, Update, Remove
 middleground_service.add(Add, Get, Update, Remove)
+
+from agile.middleground.apis.order import Place, Pay, Delivery, Finish, Close, Get, Search
+middleground_service.add(Place, Pay, Delivery, Finish, Close, Get, Search)

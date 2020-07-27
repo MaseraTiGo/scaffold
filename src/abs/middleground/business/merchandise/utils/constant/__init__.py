@@ -3,12 +3,23 @@
 
 class DespatchService(object):
     LOGISTICS = "logistics"
-    OFFLINE = "offline"
-    ONLINE = "online"
+    TOP_UP_PHONE = "phone_top_up"
+    EDUCTION_CONTRACT = "eduction_contract"
     CHOICES = (
         (LOGISTICS, '物流交付'),
-        (OFFLINE, "线下交付"),
-        (ONLINE, "线上交付"),
+        (TOP_UP_PHONE, "手机充值"),
+        (EDUCTION_CONTRACT, "教育合同"),
+    )
+
+
+class DespatchInformation(object):
+    LOGISTICS = ('name', 'address', 'phone')
+    TOP_UP_PHONE = ('phone',)
+    EDUCTION_CONTRACT = ('name', 'phone', 'identification')
+    CHOICES = (
+        (LOGISTICS, '物流交付基础属性'),
+        (TOP_UP_PHONE, "手机充值基础属性"),
+        (EDUCTION_CONTRACT, "教育合同基础属性"),
     )
 
 
