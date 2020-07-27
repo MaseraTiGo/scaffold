@@ -7,7 +7,7 @@ Created on 2020年6月30日
 '''
 
 from infrastructure.core.field.base import CharField,IntField,\
-        DictField,ListField
+        DictField,ListField,HideField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField,RequestFieldSet
 from infrastructure.core.api.response import ResponseField,ResponseFieldSet
@@ -16,6 +16,7 @@ from infrastructure.core.exception.business_error import BusinessError
 from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.middleground.business.person.manager import PersonServer
 from abs.middleware.extend.yunaccount import yunaccount_extend
+from abs.services.crm.tool.manager import SmsServer
 
 
 class Add(CustomerAuthorizedApi):
@@ -40,6 +41,12 @@ class Add(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self,request):
+        if not SmsServer.check_code(
+            request.bankcard_info["phone"],
+            "bindcard",
+            request.bankcard_info["code"]
+        ):
+            raise BusinessError('验证码错误')
         customer=self.auth_user
         PersonServer.add_bankcard(
             customer.person_id,
@@ -105,9 +112,9 @@ class All(CustomerAuthorizedApi):
                 'name': CharField(desc="姓名"),
                 'bank_code': CharField(desc="银行编码"),
                 'bank_name': CharField(desc="银行名称"),
-                'bank_number': CharField(desc="银行卡号"),
+                'bank_number': HideField(desc="银行卡号"),
                 'phone': CharField(desc="手机号"),
-                'identification': CharField(desc="身份证"),
+                'identification': HideField(desc="身份证"),
             }))
 
     @classmethod

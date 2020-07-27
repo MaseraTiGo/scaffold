@@ -13,7 +13,6 @@ from abs.services.customer.personal.manager import CustomerServer
 from abs.services.customer.finance.models import CustomerBalanceRecord
 from abs.middleware.wechat import wechat_middleware
 from abs.middleware.extend.yunaccount import yunaccount_extend
-from abs.middleware.alipay import alipay_middleware
 
 
 class CustomerFinanceServer(BaseManager):
@@ -178,3 +177,16 @@ class CustomerFinanceServer(BaseManager):
         record = TransactionServer.get_output_record_bynumber(record_number)
         if record:
             record.update(status=TransactionStatus.ACCOUNT_FAIL)
+
+    @classmethod
+    def check_withdraw(cls,customer,amount,pay_type,bankcard_id):
+        if pay_type!=PayTypes.BANK:
+            raise BusinessError('此提现渠道暂未开放！')
+        if amount<=0:
+            raise BusinessError('提现金额异常！')
+        bankcard=PersonServer.get_bankcard(bankcard_id)
+        if bankcard.person.id!=customer.person_id:
+            raise BusinessError('提现银行卡与用户不匹配！')
+        balance=TransactionServer.get_person_balance(customer.person_id)
+        if amount>balance:
+            raise BusinessError('账号余额不足！')

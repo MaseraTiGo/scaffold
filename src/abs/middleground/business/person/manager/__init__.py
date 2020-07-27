@@ -54,8 +54,12 @@ class PersonServer(BaseManager):
     @classmethod
     def update_default_address(cls,person,address):
         status=PersonStatus.get_byperson(person)
-        if not status.default_address or status.default_address.id!=address.id:
-            status.update(default_address=address)
+        if address is None:
+            if status.default_address:
+                status.update(default_address=None)
+        else:
+            if not status.default_address or status.default_address.id!=address.id:
+                 status.update(default_address=address)
         return True
 
     @classmethod
@@ -80,7 +84,8 @@ class PersonServer(BaseManager):
 
     @classmethod
     def get_all_address(cls,person_id):
-        address_qs=Address.search(person=person_id)
+        address_qs=Address.search(person=person_id).\
+                           order_by("-create_time")
         status=PersonStatus.get_byperson(person_id)
         address_list=[]
         for address in address_qs:
@@ -92,13 +97,21 @@ class PersonServer(BaseManager):
 
     @classmethod
     def remove_address(cls,address_id):
-        return cls.get_address(address_id).delete()
+        address=Address.get_byid(address_id)
+        if address is None:
+            raise BusinessError('地址不存在')
+        PersonStatus.search(default_address=address,person=address.person).\
+        update(default_address=None)
+        address.delete()
+        return True
 
     @classmethod
     def update_address(cls,address_id,is_default,**address_info):
         address=cls.get_address(address_id)
         address.update(**address_info)
-        if is_default:
+        if address.is_default and not is_default:
+            cls.update_default_address(address.person,None)
+        if not address.is_default and is_default:
             cls.update_default_address(address.person,address)
         return address
 
@@ -111,7 +124,7 @@ class PersonServer(BaseManager):
             phone
         )
         if not flag:
-            raise BusinessError('银行卡四要素不匹配')
+            raise BusinessError(result["message"])
 
     @classmethod
     def check_bankcard_unique(cls,person_id,bank_number):
@@ -167,7 +180,8 @@ class PersonServer(BaseManager):
 
     @classmethod
     def get_all_bankcard(cls,person_id):
-        bankcard=BankCard.search(person=person_id)
+        bankcard=BankCard.search(person=person_id).\
+                 order_by("-create_time")
         return bankcard
 
     @classmethod

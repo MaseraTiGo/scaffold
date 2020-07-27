@@ -53,9 +53,6 @@ class AccountServer(BaseManager):
 
     @classmethod
     def forget_password(cls,phone,code,new_password):
-        # todo: 需要获取验证码
-        if code!="123456":
-            raise BusinessError('验证码错误，请重新输入！')
         account=cls.APPLY_CLS.get_byusername(phone)
         if account is None:
             raise BusinessError('账户不存在！')

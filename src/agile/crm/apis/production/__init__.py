@@ -325,7 +325,7 @@ class Update(StaffAuthorizedApi):
 class Remove(StaffAuthorizedApi):
     """删除产品信息"""
     request=with_metaclass(RequestFieldSet)
-    request.brand_id=RequestField(IntField,desc="产品id")
+    request.production_id=RequestField(IntField,desc="产品id")
 
 
     response=with_metaclass(ResponseFieldSet)
@@ -339,8 +339,8 @@ class Remove(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self,request):
-        ProductionServer.delete_brand(
-            request.brand_id,
+        ProductionServer.delete(
+            request.production_id,
         )
 
     def fill(self,response):
