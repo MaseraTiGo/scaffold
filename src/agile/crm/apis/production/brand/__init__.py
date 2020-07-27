@@ -125,6 +125,58 @@ class Search(StaffAuthorizedApi):
         return response
 
 
+class SearchAll(StaffAuthorizedApi):
+    request=with_metaclass(RequestFieldSet)
+
+    response=with_metaclass(ResponseFieldSet)
+    response.data_list=ResponseField(
+        ListField,
+        desc="品牌列表",
+        fmt=DictField(
+            desc="品牌内容",
+            conf={
+                'id': IntField(desc="品牌id"),
+                'name': CharField(desc="品牌名称"),
+                'industry': CharField(
+                    desc="所处行业",
+                    choices=IndustryTypes.CHOICES
+                ),
+                'description': CharField(desc="品牌描述"),
+                'company_id': IntField(desc="所属公司"),
+                'create_time': DatetimeField(desc="创建时间"),
+            }
+        )
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "品牌搜索"
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self,request):
+        company=EnterpriseServer.get_crm__company()
+        brand_qs=ProductionServer.search_all_brand(
+            company.id,
+            **{}
+        )
+        return brand_qs
+
+    def fill(self,response,brand_qs):
+        data_list=[{
+            'id': brand.id,
+            'name': brand.name,
+            'industry': brand.industry,
+            'description': brand.description,
+            'company_id': brand.company_id,
+            'create_time': brand.create_time,
+        } for brand in brand_qs]
+        response.data_list=data_list
+        return response
+
+
 class Add(StaffAuthorizedApi):
     request=with_metaclass(RequestFieldSet)
     request.brand_info=RequestField(

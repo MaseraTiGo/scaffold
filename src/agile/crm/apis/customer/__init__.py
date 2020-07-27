@@ -150,7 +150,7 @@ class Get(StaffAuthorizedApi):
             'is_realname': BooleanField(desc="是否实名"),
             'balance': IntField(desc="余额"),
             'realname_info':DictField(desc='实名详情',conf={
-                'name': IntField(desc="姓名"),
+                'name': CharField(desc="姓名"),
                 'identification': CharField(desc="身份证号"),
                 'id_front': CharField(desc="身份证正面"),
                 'id_back': CharField(desc="身份证反面"),

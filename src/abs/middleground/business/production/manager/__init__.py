@@ -78,6 +78,15 @@ class ProductionServer(BaseManager):
         return splitor
 
     @classmethod
+    def search_all_brand(cls,company_id,**search_info):
+        brand_qs=Brand.query(
+            **search_info
+        ).filter(
+            company_id=company_id
+        ).order_by("-create_time")
+        return brand_qs
+
+    @classmethod
     def update_brand(cls,brand_id,**brand_info):
         brand=cls.get_brand(brand_id)
         if brand is None:
