@@ -16,6 +16,7 @@ from infrastructure.core.exception.business_error import BusinessError
 from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.middleground.business.person.manager import PersonServer
 from abs.middleware.extend.yunaccount import yunaccount_extend
+from abs.services.crm.tool.manager import SmsServer
 
 
 class Add(CustomerAuthorizedApi):
@@ -40,6 +41,12 @@ class Add(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self,request):
+        if not SmsServer.check_code(
+            request.bankcard_info["phone"],
+            "bindcard",
+            request.bankcard_info["code"]
+        ):
+            raise BusinessError('验证码错误')
         customer=self.auth_user
         PersonServer.add_bankcard(
             customer.person_id,

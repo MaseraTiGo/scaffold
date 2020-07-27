@@ -2,18 +2,21 @@
 
 
 class StatusTypes(object):
-    SUCCESS = 'success'
-    FAIL = 'fail'
-    RESEND = 'resend'
-    CHOICES = ((SUCCESS, '成功'), (FAIL, "失败"), (RESEND, "已重发"))
+    SUCCESS='success'
+    FAIL='fail'
+    RESEND='resend'
+    CHOICES=((SUCCESS,'成功'),(FAIL,"失败"),(RESEND,"已重发"))
 
 
 class SourceTypes(object):
-    CRM = 'crm'
-    CUSTOMER = 'customer'
-    CHOICES = ((CRM, 'crm'), (CUSTOMER, '客户端'))
+    CRM='crm'
+    CUSTOMER='customer'
+    CHOICES=((CRM,'crm'),(CUSTOMER,'客户端'))
 
 
 class SceneTypes(object):
-    REGISTER = 'register'
-    CHOICES = ((REGISTER, '注册验证码'), )
+    REGISTER='register'
+    FORGET='forget'
+    BINDCARD='bindcard'
+    CHOICES=((REGISTER,'注册验证码'),(FORGET,'找回密码验证码'),
+             (BINDCARD,'绑定银行卡'))
