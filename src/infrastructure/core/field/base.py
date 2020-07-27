@@ -299,3 +299,16 @@ class MobileField(BaseField):
             p=re.compile(r'(\d{3})(\d{4})(\d{4})')
             value=p.sub(r'\1****\3',value)
         return value
+
+
+class HideField(BaseField):
+
+    def parsing(self,value):
+        return str(value)
+
+    def formatting(self,value):
+        if value:
+            hide_str=value[3:-4]
+            value=re.sub(hide_str,len(hide_str)*'*',value)
+        return value
+

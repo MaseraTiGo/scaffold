@@ -84,7 +84,8 @@ class PersonServer(BaseManager):
 
     @classmethod
     def get_all_address(cls,person_id):
-        address_qs=Address.search(person=person_id)
+        address_qs=Address.search(person=person_id).\
+                           order_by("-create_time")
         status=PersonStatus.get_byperson(person_id)
         address_list=[]
         for address in address_qs:
@@ -179,7 +180,8 @@ class PersonServer(BaseManager):
 
     @classmethod
     def get_all_bankcard(cls,person_id):
-        bankcard=BankCard.search(person=person_id)
+        bankcard=BankCard.search(person=person_id).\
+                 order_by("-create_time")
         return bankcard
 
     @classmethod

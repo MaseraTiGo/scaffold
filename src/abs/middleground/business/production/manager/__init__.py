@@ -49,7 +49,7 @@ class ProductionServer(BaseManager):
 
     @classmethod
     def is_exsited(cls,company_id,brand,name,production=None):
-        production_qs=Production.query(
+        production_qs=Production.query().filter(
             company_id=company_id,
             brand=brand,
             name=name
@@ -114,7 +114,7 @@ class ProductionServer(BaseManager):
 
     @classmethod
     def is_brand_exsited(cls,company_id,name,brand=None):
-        brand_qs=Brand.query(
+        brand_qs=Brand.query().filter(
             company_id=company_id,
             name=name
         )

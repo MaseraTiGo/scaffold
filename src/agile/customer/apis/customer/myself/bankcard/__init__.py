@@ -7,7 +7,7 @@ Created on 2020年6月30日
 '''
 
 from infrastructure.core.field.base import CharField,IntField,\
-        DictField,ListField
+        DictField,ListField,HideField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField,RequestFieldSet
 from infrastructure.core.api.response import ResponseField,ResponseFieldSet
@@ -105,9 +105,9 @@ class All(CustomerAuthorizedApi):
                 'name': CharField(desc="姓名"),
                 'bank_code': CharField(desc="银行编码"),
                 'bank_name': CharField(desc="银行名称"),
-                'bank_number': CharField(desc="银行卡号"),
+                'bank_number': HideField(desc="银行卡号"),
                 'phone': CharField(desc="手机号"),
-                'identification': CharField(desc="身份证"),
+                'identification': HideField(desc="身份证"),
             }))
 
     @classmethod
