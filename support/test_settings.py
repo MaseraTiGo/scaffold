@@ -26,7 +26,7 @@ sys.path.insert(0,BASE_DIR)
 sys.path.insert(0,SRC_DIR)
 
 ALLOWED_HOSTS=['*']
-TEST_PORT=8011
+TEST_PORT=8000
 
 # Application definition
 
@@ -198,6 +198,14 @@ DATABASES={
         'HOST': 'localhost',
         'PORT': '3306'
     },
+    'crm_tool': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'crm_tool',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',
+        'PORT': '3306'
+    }
 }
 
 DATABASE_ROUTERS=['src.database_router.DatabaseAppsRouter']
@@ -212,6 +220,7 @@ DATABASE_APPS_MAPPING={
     'customer_finance': 'customer_finance',
     'crm_account': 'crm_account',
     'crm_staff': 'crm_staff',
+    'crm_tool': 'crm_tool'
 }
 
 

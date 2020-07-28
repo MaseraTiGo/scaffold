@@ -7,7 +7,7 @@ Created on 2020年6月30日
 '''
 
 from infrastructure.core.field.base import CharField, DictField, \
-        IntField, ListField, BooleanField
+        IntField, ListField, BooleanField, MobileCheckField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -23,7 +23,7 @@ class Add(CustomerAuthorizedApi):
     request.address_info = RequestField(DictField, desc="客户修改详情", conf={
         'contacts': CharField(desc="联系人"),
         'gender': CharField(desc="性别"),
-        'phone': CharField(desc="手机号"),
+        'phone': MobileCheckField(desc="手机号"),
         'city': CharField(desc="城市"),
         'address': CharField(desc="详细地址"),
     })
@@ -98,7 +98,7 @@ class Update(CustomerAuthorizedApi):
     request.update_info = RequestField(DictField, desc="客户修改详情", conf={
         'contacts': CharField(desc="联系人", is_required=False),
         'gender': CharField(desc="性别", is_required=False),
-        'phone': CharField(desc="手机号", is_required=False),
+        'phone': MobileCheckField(desc="手机号", is_required=False),
         'city': CharField(desc="城市", is_required=False),
         'address': CharField(desc="详细地址", is_required=False),
     })

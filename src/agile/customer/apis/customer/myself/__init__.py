@@ -6,7 +6,7 @@ Created on 2020年6月18日
 @author: Roy
 '''
 
-from infrastructure.core.field.base import CharField, DictField, BooleanField
+from infrastructure.core.field.base import CharField, DictField, BooleanField, MobileCheckField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -76,7 +76,7 @@ class Update(CustomerAuthorizedApi):
         'name': CharField(desc="姓名", is_required=False),
         'gender': CharField(desc="性别", is_required=False),
         'birthday': CharField(desc="生日", is_required=False),
-        'phone': CharField(desc="电话", is_required=False),
+        'phone': MobileCheckField(desc="电话", is_required=False),
         'email': CharField(desc="邮箱", is_required=False),
         'wechat': CharField(desc="微信", is_required=False),
         'qq': CharField(desc="qq", is_required=False),

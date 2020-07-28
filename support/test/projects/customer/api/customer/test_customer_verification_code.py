@@ -15,6 +15,7 @@ class CustomerAccountTest(CustomerAPITestCase):
         api = 'customer.account.vcode.phone'
         params = {
             "number": "15827054862",
+            'sms_type': 'register'
         }
         self.access_api(api=api, is_auth=False, **params)
 

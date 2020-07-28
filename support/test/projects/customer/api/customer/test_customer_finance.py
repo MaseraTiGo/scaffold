@@ -54,6 +54,7 @@ class CustomerTransactionTestCase(CustomerAPITestCase):
             amount=0-random.randint(1,100),
             pay_type=PayTypeConstant().generate(),
             remark="测试余额提现",
+            bankcard_id=0
         )
 
     def test_customer_transaction_search(self):

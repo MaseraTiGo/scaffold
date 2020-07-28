@@ -7,7 +7,7 @@ Created on 2016年7月23日
 '''
 
 from infrastructure.core.field.base import CharField, DictField, \
-        IntField, ListField, DateField, BooleanField
+        IntField, ListField, DateField, BooleanField, MobileCheckField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -29,7 +29,7 @@ class Add(StaffAuthorizedApi):
             'head_url': CharField(desc="头像", is_required=False),
             'name': CharField(desc="姓名"),
             'birthday': DateField(desc="生日", is_required=False),
-            'phone': CharField(desc="手机", is_required=False),
+            'phone': MobileCheckField(desc="手机", is_required=False),
             'email': CharField(desc="邮箱", is_required=False),
             'gender': CharField(
                 desc="性别",
@@ -255,7 +255,7 @@ class Update(StaffAuthorizedApi):
             'identification': CharField(desc="身份证", is_required=False),
             'gender': CharField(desc="性别", is_required=False),
             'birthday': CharField(desc="生日", is_required=False),
-            'phone': CharField(desc="电话", is_required=False),
+            'phone': MobileCheckField(desc="电话", is_required=False),
             'email': CharField(desc="邮箱", is_required=False),
             'work_number': CharField(desc="员工工号", is_required=False),
             'is_admin': BooleanField(desc="是否是管理员", is_required=False),
