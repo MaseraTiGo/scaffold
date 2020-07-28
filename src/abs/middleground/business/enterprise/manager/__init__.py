@@ -20,7 +20,7 @@ class EnterpriseServer(BaseManager):
         )
         if company_qs.count() > 0:
             return company_qs[0]
-        raise BusinessError('缺少客户的打款公司信息！')
+        raise BusinessError('crm总控公司不存在！')
 
     @classmethod
     def create(cls, **enterprise_infos):
@@ -30,6 +30,8 @@ class EnterpriseServer(BaseManager):
     @classmethod
     def get(cls, enterprise_id):
         enterprise = Enterprise.get_byid(enterprise_id)
+        if enterprise is None:
+            raise BusinessError('公司不存在！')
         return enterprise
 
     @classmethod
