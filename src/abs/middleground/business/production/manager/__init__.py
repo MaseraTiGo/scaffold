@@ -22,13 +22,14 @@ class ProductionServer(BaseManager):
             **search_info
         ).filter(
             company_id=company_id
-        )
+        ).order_by("-create_time")
         splitor=Splitor(current_page,production_qs)
         return splitor
 
     @classmethod
     def generate(cls,company_id,brand_id,**production_info):
         brand=cls.get_brand(brand_id)
+        cls.is_exsited(company_id,brand,production_info["name"])
         production=Production.create(
             company_id=company_id,
             brand=brand,
@@ -39,14 +40,28 @@ class ProductionServer(BaseManager):
     @classmethod
     def update(cls,production_id,**production_info):
         production=cls.get(production_id)
+        cls.is_exsited(production.company_id,production.brand,
+                       production_info["name"],production)
         production.update(
             **production_info
         )
         return True
 
     @classmethod
+    def is_exsited(cls,company_id,brand,name,production=None):
+        production_qs=Production.query().filter(
+            company_id=company_id,
+            brand=brand,
+            name=name
+        )
+        if production is not None:
+            production_qs=production_qs.exclude(id=production.id)
+        if production_qs.count()>0:
+            raise BusinessError("产品名称重复")
+
+    @classmethod
     def delete(cls,product_id):
-        product=cls.get(brand_id)
+        product=cls.get(product_id)
         # 未添加判断是否可删除的条件
         product.delete()
         return True
@@ -99,7 +114,7 @@ class ProductionServer(BaseManager):
 
     @classmethod
     def is_brand_exsited(cls,company_id,name,brand=None):
-        brand_qs=Brand.query(
+        brand_qs=Brand.query().filter(
             company_id=company_id,
             name=name
         )
