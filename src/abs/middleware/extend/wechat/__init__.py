@@ -62,7 +62,7 @@ class MiniMch(object):
 
     @property
     def notify_url(self):
-        return 'http://tuabrb.natappfree.cc'
+        return 'http://yxjcch.natappfree.cc'
 
     @property
     def key(self):
@@ -73,7 +73,7 @@ class MiniMch(object):
         url_str = utils.get_urlparam(param)
         stringSignTemp = url_str + '&key=' + self.key
         hl = hashlib.md5()
-        hl.update(stringSignTemp.encode(encoding='utf-8'))
+        hl.update(stringSignTemp.encode(encoding = 'utf-8'))
         return hl.hexdigest().upper()
 
     def check_sign(self, kwargs):
@@ -82,8 +82,8 @@ class MiniMch(object):
         return bool(check_sign == sign)
 
     # 统一下单
-    def unifiedorder(self, out_trade_no, price, product_id='',
-                     body='', trade_type='NATIVE', openid=''):
+    def unifiedorder(self, out_trade_no, price, product_id = '',
+                     body = '', trade_type = 'NATIVE', openid = ''):
         url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
         notify_url = self.notify_url + '/interface/wechat_top_up_notify'
         param = {
@@ -110,8 +110,8 @@ class MiniMch(object):
         xml_str = xmltodict.unparse(param)
         resp = requests.post(
             url,
-            data=xml_str.encode('utf-8'),
-            headers={'Content-Type': 'text/xml'}
+            data = xml_str.encode('utf-8'),
+            headers = {'Content-Type': 'text/xml'}
         )
         data = resp.text.encode('ISO-8859-1').decode('utf-8')
         data = xmltodict.parse(data)['xml']
@@ -123,7 +123,7 @@ class MiniMch(object):
             'appId': self.appid,
             'timeStamp': int(time.time()),
             'nonceStr': utils.get_nonce_str(),
-            'package': 'prepay_id={prepay_id}'.format(prepay_id=prepay_id),
+            'package': 'prepay_id={prepay_id}'.format(prepay_id = prepay_id),
             'signType': 'MD5'
         }
         sign = self.get_sign(param)
@@ -218,9 +218,9 @@ class MiniMchKey(MiniMch):
         xml = xmltodict.unparse(params)
         res = requests.post(
             url,
-            data=xml.encode('utf-8'),
-            headers={'Content-Type': 'text/xml'},
-            cert=(self.cert_pem, self.key_pem)
+            data = xml.encode('utf-8'),
+            headers = {'Content-Type': 'text/xml'},
+            cert = (self.cert_pem, self.key_pem)
         )
         msg = res.text
         data = xmltodict.parse(msg)['xml']

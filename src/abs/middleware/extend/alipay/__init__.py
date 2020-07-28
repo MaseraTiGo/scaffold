@@ -17,7 +17,7 @@ class AlipayExtend(object):
         return "2014072300007148"
 
     def _get_notify_url(self):
-        return 'http://tuabrb.natappfree.cc'
+        return 'http://yxjcch.natappfree.cc'
 
     def _get_priv_key(self):
         cur_path = os.path.dirname(os.path.abspath(__file__))
@@ -64,8 +64,8 @@ class AlipayExtend(object):
             out_trade_no,
             total_amount,
             notify_path,
-            timeout_express='15d',
-            goods_type='0'
+            timeout_express = '15d',
+            goods_type = '0'
     ):
         method = 'alipay.trade.app.pay'
         params = {
