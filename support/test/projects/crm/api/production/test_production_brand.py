@@ -49,12 +49,28 @@ class ProductionBrandTestCase(CrmAPITestCase):
         self.assertTrue("data_list" in result)
         self.assertTrue("total" in result)
         self.assertTrue("total_page" in result)
-        if len(result['data_list']):
+        if not len(result['data_list']):
             self.test_create_brand()
             result = self.access_api(
                 api=api,
                 current_page=current_page,
                 search_info=json.dumps({})
+            )
+
+        for brand in result['data_list']:
+            self.assert_brand_fields(brand, True)
+        return result['data_list']
+
+    def test_search_all_brand(self):
+        api = 'production.brand.searchall'
+        result = self.access_api(
+            api=api,
+        )
+        self.assertTrue("data_list" in result)
+        if not len(result['data_list']):
+            self.test_create_brand()
+            result = self.access_api(
+                api=api,
             )
 
         for brand in result['data_list']:
@@ -80,4 +96,13 @@ class ProductionBrandTestCase(CrmAPITestCase):
             api=api,
             brand_id=brand_id,
             update_info=json.dumps(self.update_info)
+        )
+
+    def test_remove_brand(self):
+        brand_list = self.test_search_brand()
+        brand_id = brand_list[0]['id']
+        api = 'production.brand.remove'
+        result = self.access_api(
+            api=api,
+            brand_id=brand_id
         )

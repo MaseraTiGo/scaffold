@@ -308,7 +308,7 @@ class HideField(BaseField):
 
     def formatting(self,value):
         if value:
-            hide_str=value[3:-4]
+            hide_str=value[6:-4]
             value=re.sub(hide_str,len(hide_str)*'*',value)
         return value
 

@@ -1,7 +1,7 @@
 # coding=UTF-8
 
 from infrastructure.core.field.base import CharField,DictField,\
-        IntField,ListField,DatetimeField,BooleanField
+        IntField,ListField,DatetimeField,BooleanField,HideField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField,RequestFieldSet
 from infrastructure.core.api.response import ResponseField,ResponseFieldSet
@@ -151,7 +151,7 @@ class Get(StaffAuthorizedApi):
             'balance': IntField(desc="余额"),
             'realname_info':DictField(desc='实名详情',conf={
                 'name': CharField(desc="姓名"),
-                'identification': CharField(desc="身份证号"),
+                'identification': HideField(desc="身份证号"),
                 'id_front': CharField(desc="身份证正面"),
                 'id_back': CharField(desc="身份证反面"),
                 'id_in_band': CharField(desc="手持身份证"),
