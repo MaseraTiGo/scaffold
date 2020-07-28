@@ -18,7 +18,21 @@ class PayTypes(object):
     ALIPAY = "alipay"
     WECHAT = "wechat"
     BALANCE = "balance"
-    CHOICES = ((BANK, '银行'), (ALIPAY, "支付宝"), (WECHAT, "微信"), (BALANCE, "余额"))
+    CHOICES = (
+        (BANK, '银行'),
+        (ALIPAY, "支付宝"),
+        (WECHAT, "微信"),
+        (BALANCE, "余额")
+    )
+
+
+class PayService(object):
+    FULL_PAYMENT = "full_payment"
+    INSTALLMENT = "installment"
+    CHOICES = (
+        (FULL_PAYMENT, '全额支付'),
+        (INSTALLMENT, "分期支付"),
+    )
 
 
 class BusinessTypes(object):

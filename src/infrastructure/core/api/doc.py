@@ -49,6 +49,7 @@ class TextApiDoc(ApiDocBuilder):
         choices = field.get_choices()
         if choices:
             tmp_str += " 例：" + ' 、 '.join(" -> ".join(map(str, [key, value])) for key, value in choices)
+
         return tmp_str
 
     def generate_param_desc(self, field):
@@ -78,7 +79,6 @@ class TextApiDoc(ApiDocBuilder):
             for sub_name, sub_field in field.get_fields().items():
                 fmt_str = next_flag + "{} : {}"
                 tmp_str = fmt_str.format(sub_name, self.generate_param_desc(sub_field))
-                # tmp_str = fmt_str.format(sub_name, sub_field.get_type(), sub_field.get_desc())
                 fields.append(tmp_str)
                 self.generate_field(sub_field, fields, level + 1)
             fields.append(cur_flag + '}')
@@ -87,8 +87,7 @@ class TextApiDoc(ApiDocBuilder):
             fields.append(cur_flag + '[')
             sub_field = field.get_fmt()
             if not isinstance(sub_field, DictField) and not isinstance(sub_field, ListField):
-                fmt_str = next_flag + "{} # {}"
-                tmp_str = fmt_str.format(sub_field.get_type(), sub_field.get_desc())
+                tmp_str = next_flag + self.generate_param_desc(sub_field)
                 fields.append(tmp_str)
             else:
                 self.generate_field(sub_field, fields, level + 1)

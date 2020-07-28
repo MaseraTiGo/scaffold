@@ -28,7 +28,7 @@ class YunaccountTransport(object):
         return "BrD14dw7JV97NfNeG72tFqv509CDtudZ"  # App Key
 
     def get_notify_url(self):
-        return "http://tuabrb.natappfree.cc"  # 回调地址
+        return " http://3tzeva.natappfree.cc"  # 回调地址
 
     def get_timestamp(self):
         return int(time.time())
@@ -63,8 +63,8 @@ class YunaccountTransport(object):
             des3key,
             pyDes.CBC,
             iv,
-            pad=None,
-            padmode=pyDes.PAD_PKCS5
+            pad = None,
+            padmode = pyDes.PAD_PKCS5
         )
         result_mampping = json.loads(k.decrypt(result_encry).decode())
         return result_mampping
@@ -72,17 +72,17 @@ class YunaccountTransport(object):
     def get_sign(self, encry_data, mess, timestamp):
         key = self.get_key()
         sign_str = "data={data}&mess={mess}&timestamp={timestamp}&key={key}".format(
-            data=encry_data,
-            mess=mess,
-            timestamp=timestamp,
-            key=key
+            data = encry_data,
+            mess = mess,
+            timestamp = timestamp,
+            key = key
         )
-        sign_str = sign_str.encode(encoding='utf_8')
-        appkey = key.encode(encoding='utf_8')
+        sign_str = sign_str.encode(encoding = 'utf_8')
+        appkey = key.encode(encoding = 'utf_8')
         signature = hmac.new(
             appkey,
             sign_str,
-            digestmod=hashlib.sha256
+            digestmod = hashlib.sha256
         ).hexdigest()
         return signature
 
@@ -112,8 +112,8 @@ class YunaccountTransport(object):
         url = "{baseurl}{url}".format(baseurl = self._url, url = url)
         result = requests.post(
             url,
-            data=post_data,
-            headers=self.get_headers()
+            data = post_data,
+            headers = self.get_headers()
         )
         result_str = result.content
         result_data = json.loads(result_str.decode("utf-8"))
