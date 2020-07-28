@@ -9,7 +9,7 @@ Created on 2020年7月10日
 from abs.common.model import BaseModel, CASCADE,\
         IntegerField, CharField, DateTimeField, TextField,\
         ForeignKey, timezone
-from abs.middleground.business.production.settings import DB_PREFIX
+from abs.middleground.business.order.settings import DB_PREFIX
 from abs.middleground.business.merchandise.utils.constant import \
         DespatchService
 from abs.middleground.support.logistics.models import \

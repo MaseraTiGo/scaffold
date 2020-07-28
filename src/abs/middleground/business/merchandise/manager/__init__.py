@@ -13,6 +13,7 @@ class MerchandiseServer(BaseManager):
     @classmethod
     def _hung_specification_value(cls, specification_list):
         specification_mapping = {}
+        print('~~~~>>>>>    ', specification_list)
         for specification in specification_list:
             specification.specification_value_list = []
             specification_mapping.update({
@@ -157,17 +158,21 @@ class MerchandiseServer(BaseManager):
 
     @classmethod
     def get_specification_list(cls, specification_id_list):
-        specification = Specification.query().filter(
-            id__in=specification_id_list
+        specification_list = list(
+            Specification.query().filter(
+                id__in=specification_id_list
+            )
         )
-        cls._hung_specification_value([specification])
-        return specification
+        cls._hung_specification_value(specification_list)
+        return specification_list
 
     @classmethod
     def get_specification(cls, specification_id):
         specification = Specification.get_byid(
             specification_id
         )
+        if specification is None:
+            raise BusinessError("系统不存在该规格")
         cls._hung_specification_value([specification])
         return specification
 

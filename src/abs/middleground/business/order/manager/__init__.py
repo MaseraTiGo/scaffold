@@ -81,7 +81,7 @@ class OrderServer(BaseManager):
             cls._hung_requirement(spliter.get_list())
             cls._hung_payment(spliter.get_list())
             cls._hung_delivery_record(spliter.get_list())
-        return order
+        return spliter
 
     @classmethod
     def _generate_requirement(cls, specification_list, strike_price):
@@ -99,6 +99,7 @@ class OrderServer(BaseManager):
                 count=specification.order_count,
                 total_price=specification.total_price,
                 requirement=requirement,
+                unique_number=MerchandiseSnapShoot.generate_unique_number(),
                 remark=','.join([
                     (sv.category + '|' + sv.attribute)
                     for sv in specification.specification_value_list
@@ -131,7 +132,7 @@ class OrderServer(BaseManager):
             strike_price
         )
         payment = Payment.create(
-            actual_amount=requirement.requirement.sale_price
+            actual_amount=requirement.sale_price
         )
         invoice = Invoice.create(
             requirement=requirement,
@@ -220,6 +221,7 @@ class OrderServer(BaseManager):
                 delivery_count=snapshoot_mapping[snapshoot.id],
                 snapshoot=snapshoot,
                 delivery_record=delivery_record,
+                unique_number=DeliveryRecordList.generate_unique_number(),
             )
             for snapshoot in MerchandiseSnapShoot.query().filter(
                 id__in=snapshoot_mapping.keys()

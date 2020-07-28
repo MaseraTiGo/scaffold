@@ -4,8 +4,7 @@ import json
 
 from support.common.testcase.middleground_api_test_case import \
         MiddlegroundAPITestCase
-from support.common.generator.field.model.entity import ProductionEntity,\
-        SpecificationEntity
+from support.common.generator.field.model.entity import ProductionEntity
 
 
 class MerchandiseTestCase(MiddlegroundAPITestCase):
@@ -70,18 +69,38 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
             'use_status': 'enable',
         }
 
-        self.specification_info = {
-            'show_image': "https://wwww.baidu.com",
-            'sale_price': 15000,
-            'stock': 150,
-            'remark': "临时产品",
-            'attribute_list': [
-                {
-                    'category': "课程",
-                    'attribute': "vip",
-                }
-            ],
-        }
+        self.specification_info_list = [
+            {
+                'show_image': "https://wwww.baidu.com",
+                'sale_price': 15000,
+                'stock': 150,
+                'remark': "临时产品",
+                'attribute_list': [
+                    {
+                        'category': "课程",
+                        'attribute': "vip",
+                    }
+                ],
+            },
+            {
+                'show_image': "https://wwww.baidu.com",
+                'sale_price': 15000,
+                'stock': 180,
+                'remark': "临时产品-2",
+                'attribute_list': [
+                    {
+                        'category': "颜色",
+                        'attribute': "红色",
+                    },
+                    {
+                        'category': "颜色",
+                        'attribute': "白色",
+                    },
+                ],
+            },
+
+        ]
+
         self.specification_update_info = {
             'show_image': "https://wwww.xinlang.com",
             'sale_price': 18000,
@@ -130,15 +149,60 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         for specification in specification_list:
             self.assert_merchandise_specifaction_fields(specification)
 
-    def test_create_merchandise(self):
+    def test_merchandise_normal_workflow(self):
+        # 1. 添加商品
         api = 'merchandise.add'
         result = self.access_api(
             api=api,
             merchandise_info=json.dumps(self.merchandise_info)
         )
         self.assertTrue('merchandise_id' in result)
+        merchandise_id = result['merchandise_id']
 
-    def test_search_merchandise(self):
+        # 2. 获取商品信息
+        api = "merchandise.get"
+        result = self.access_api(
+            api=api,
+            merchandise_id=merchandise_id
+        )
+        self.assertTrue('merchandise_info' in result)
+        self.assert_merchandise_fields(result['merchandise_info'])
+
+        # 3. 更新商品信息
+        api = "merchandise.update"
+        self.access_api(
+            api=api,
+            merchandise_id=merchandise_id,
+            update_info=json.dumps(self.update_info)
+        )
+
+        # 4. 添加规格
+        api = "merchandise.specification.add"
+        result = self.access_api(
+            api=api,
+            merchandise_id=merchandise_id,
+            specification_info=json.dumps(self.specification_info_list[0])
+        )
+        self.assertTrue('specification_id' in result)
+        specification_id = result['specification_id']
+
+        # 5. 更新规格
+        api = "merchandise.specification.update"
+        self.access_api(
+            api=api,
+            specification_id=specification_id,
+            update_info=json.dumps(self.specification_update_info)
+        )
+
+        # 6. 获取规格
+        api = "merchandise.specification.get"
+        self.access_api(
+            api=api,
+            specification_id=specification_id,
+            update_info=json.dumps(self.update_info)
+        )
+
+        # 7. 搜索商品
         api = 'merchandise.search'
         current_page = 1
         result = self.access_api(
@@ -150,23 +214,44 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         self.assertTrue("data_list" in result)
         self.assertTrue("total" in result)
         self.assertTrue("total_page" in result)
-        merchandise_list = result['data_list']
-        if len(merchandise_list) == 0:
-            self.test_create_merchandise()
-            result = self.access_api(
-                api=api,
-                copany_id=self.company_id,
-                current_page=current_page,
-                search_info=json.dumps({})
-            )
-
         for merchandise in result['data_list']:
             self.assert_merchandise_fields(merchandise, True)
-        return result['data_list']
 
-    def test_get_merchandise(self):
-        merchandise_list = self.test_search_merchandise()
-        merchandise_id = merchandise_list[-1]['id']
+        # 8. 移除规格
+        api = "merchandise.specification.remove"
+        self.access_api(
+            api=api,
+            specification_id=specification_id,
+        )
+
+        # 9. 移除商品
+        api = "merchandise.remove"
+        self.access_api(
+            api=api,
+            merchandise_id=merchandise_id,
+        )
+
+    def test_multiple_spacification_list(self):
+        # 1. 添加商品
+        api = 'merchandise.add'
+        result = self.access_api(
+            api=api,
+            merchandise_info=json.dumps(self.merchandise_info)
+        )
+        self.assertTrue('merchandise_id' in result)
+        merchandise_id = result['merchandise_id']
+
+        # 2. 添加规格
+        for specification_info in self.specification_info_list:
+            api = "merchandise.specification.add"
+            result = self.access_api(
+                api=api,
+                merchandise_id=merchandise_id,
+                specification_info=json.dumps(specification_info)
+            )
+            self.assertTrue('specification_id' in result)
+
+        # 3. 获取商品信息
         api = "merchandise.get"
         result = self.access_api(
             api=api,
@@ -175,52 +260,17 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         self.assertTrue('merchandise_info' in result)
         self.assert_merchandise_fields(result['merchandise_info'])
 
-    def test_update_merchandise(self):
-        merchandise_list = self.test_search_merchandise()
-        merchandise_id = merchandise_list[-1]['id']
-        api = "merchandise.update"
-        self.access_api(
-            api=api,
-            merchandise_id=merchandise_id,
-            update_info=json.dumps(self.update_info)
-        )
-
-    def test_get_specification_specification(self):
-        self.test_add_specification_specification()
-        specification_id = SpecificationEntity().generate().id
-        api = "merchandise.specification.get"
-        self.access_api(
-            api=api,
-            specification_id=specification_id,
-            update_info=json.dumps(self.update_info)
-        )
-
-    def test_add_specification_specification(self):
-        merchandise_id = self.test_search_merchandise()[-1]['id']
-        api = "merchandise.specification.add"
+        # 4. 搜索商品
+        api = 'merchandise.search'
+        current_page = 1
         result = self.access_api(
             api=api,
-            merchandise_id=merchandise_id,
-            specification_info=json.dumps(self.specification_info)
+            company_id=self.company_id,
+            current_page=current_page,
+            search_info=json.dumps({})
         )
-        self.assertTrue('specification_id' in result)
-        return result['specification_id']
-
-    def test_update_specification_specification(self):
-        self.test_add_specification_specification()
-        specification_id = SpecificationEntity().generate().id
-        api = "merchandise.specification.update"
-        self.access_api(
-            api=api,
-            specification_id=specification_id,
-            update_info=json.dumps(self.specification_update_info)
-        )
-
-    def test_remove_specification_specification(self):
-        self.test_add_specification_specification()
-        specification_id = SpecificationEntity().generate().id
-        api = "merchandise.specification.remove"
-        self.access_api(
-            api=api,
-            specification_id=specification_id,
-        )
+        self.assertTrue("data_list" in result)
+        self.assertTrue("total" in result)
+        self.assertTrue("total_page" in result)
+        for merchandise in result['data_list']:
+            self.assert_merchandise_fields(merchandise, True)

@@ -14,7 +14,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.base.api import NoAuthorizedApi
 from abs.middleground.business.transaction.utils.constant import \
-        PayTypes
+        PayTypes, OwnTypes
 from abs.middleground.business.merchandise.utils.constant import \
         DespatchService
 from abs.middleground.business.order.utils.constant import OrderStatus
@@ -123,7 +123,7 @@ class Search(NoAuthorizedApi):
     def execute(self, request):
         order_spliter = OrderServer.search(
             request.current_page,
-            is_hug=True,
+            is_hung=True,
             **request.search_info
         )
         return order_spliter
@@ -320,9 +320,15 @@ class Place(NoAuthorizedApi):
         desc="下单信息",
         conf={
             'remark': CharField(desc="备注"),
-            'launch_type': CharField(desc="发起者类型"),
+            'launch_type': CharField(
+                desc="发起者类型",
+                choices=OwnTypes.CHOICES
+            ),
             'launch_id': CharField(desc="发起者id"),
-            'server_type': CharField(desc="接收者类型"),
+            'server_type': CharField(
+                desc="接收者类型",
+                choices=OwnTypes.CHOICES
+            ),
             'server_id': CharField(desc="接收者id"),
             'invoice_baseinfos': DictField(
                 desc="收货基本信息",
@@ -338,7 +344,7 @@ class Place(NoAuthorizedApi):
                 fmt=DictField(
                     desc="购买信息",
                     conf={
-                        'specification_id': IntField(desc="规格id"),
+                        'id': IntField(desc="规格id"),
                         'count': IntField(desc="购买数量"),
                     }
                 )
@@ -485,7 +491,7 @@ class Delivery(NoAuthorizedApi):
             request.order_id,
             request.delivery_info.despatch_type,
             despatch_id,
-            request.remark,
+            request.delivery_info.remark,
             snapshoot_mapping,
             **request.delivery_info.invoice_baseinfos
         )

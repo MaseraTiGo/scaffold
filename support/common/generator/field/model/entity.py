@@ -66,6 +66,15 @@ class SpecificationEntity(BaseHelper):
         return random.choice(select_enum)
 
 
+class CrnCompanyEntitry(BaseHelper):
+    def calc(self, has_none=False):
+        from abs.middleground.business.enterprise.models import Enterprise
+        company_qs = Enterprise.search(
+            license_number="91420100MA4KM4XY1Y"
+        )
+        return company_qs[0]
+
+
 class CustomerEntity(BaseHelper):
 
     def calc(self, has_none=False):

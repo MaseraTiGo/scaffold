@@ -11,7 +11,7 @@ from abs.common.model import BaseModel, CASCADE,\
         ForeignKey, timezone
 from abs.middleground.business.transaction.utils.constant import PayTypes,\
         PayService
-from abs.middleground.business.production.settings import DB_PREFIX
+from abs.middleground.business.order.settings import DB_PREFIX
 
 
 class Payment(BaseModel):
