@@ -1,7 +1,7 @@
 # coding=UTF-8
 
 from infrastructure.core.field.base import CharField,DictField,\
-        IntField,ListField,DatetimeField,BooleanField
+        IntField,ListField,DatetimeField,BooleanField,HideField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField,RequestFieldSet
 from infrastructure.core.api.response import ResponseField,ResponseFieldSet
@@ -24,10 +24,10 @@ class Search(StaffAuthorizedApi):
                 'id': IntField(desc="银行卡id"),
                 'bank_name': CharField(desc="银行名称"),
                 'bank_code': CharField(desc="银行编码"),
-                'bank_number': CharField(desc="银行卡号"),
+                'bank_number': HideField(desc="银行卡号"),
                 'name': CharField(desc="开户人姓名"),
                 'phone': CharField(desc="开户人手机号"),
-                'identification': CharField(desc="开户人身份证"),
+                'identification': HideField(desc="开户人身份证"),
                 'create_time': DatetimeField(desc="添加时间"),
             }
         )

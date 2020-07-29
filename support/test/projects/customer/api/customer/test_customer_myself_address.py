@@ -8,14 +8,14 @@ from support.common.testcase.customer_api_test_case import CustomerAPITestCase
 class CustomerAddressTestCase(CustomerAPITestCase):
 
     def setUp(self):
-        self.add_info={
+        self.add_info = {
             'contacts': '天天',
             'gender': 'man',
             'phone': '15527701100',
             'city': '湖北省-武汉市-青山区',
             'address': '光谷软件园展示中心C做3楼',
         }
-        self.update_info={
+        self.update_info = {
             'contacts': '胡世刚',
             'gender': 'woman',
             'phone': '15527701111',
@@ -26,7 +26,7 @@ class CustomerAddressTestCase(CustomerAPITestCase):
     def tearDown(self):
         pass
 
-    def assert_address_fields(self,address):
+    def assert_address_fields(self, address):
         self.assertTrue('id' in address)
         self.assertTrue('contacts' in address)
         self.assertTrue('gender' in address)
@@ -36,7 +36,7 @@ class CustomerAddressTestCase(CustomerAPITestCase):
         self.assertTrue('is_default' in address)
 
     def test_customer_myself_address_add(self):
-        api='customer.myself.address.add'
+        api = 'customer.myself.address.add'
         self.access_api(
             api,
             is_default=1,
@@ -44,27 +44,27 @@ class CustomerAddressTestCase(CustomerAPITestCase):
         )
 
     def test_customer_myself_address_all(self):
-        api='customer.myself.address.all'
-        result=self.access_api(api)
+        api = 'customer.myself.address.all'
+        result = self.access_api(api)
         self.assertTrue("address_list" in result)
         if not result['address_list']:
             self.test_customer_myself_address_add()
-            result=self.access_api(api)
+            result = self.access_api(api)
 
         for address in result['address_list']:
             self.assert_address_fields(address)
         return result['address_list']
 
     def test_customer_myself_address_get(self):
-        api="customer.myself.address.get"
-        address_id=self.test_customer_myself_address_all()[-1]['id']
-        result=self.access_api(api=api,address_id=address_id)
+        api = "customer.myself.address.get"
+        address_id = self.test_customer_myself_address_all()[-1]['id']
+        result = self.access_api(api=api, address_id=address_id)
         self.assertTrue('address_info' in result)
         self.assert_address_fields(result['address_info'])
 
     def test_customer_myself_address_update(self):
-        api="customer.myself.address.update"
-        address_id=self.test_customer_myself_address_all()[-1]['id']
+        api = "customer.myself.address.update"
+        address_id = self.test_customer_myself_address_all()[-1]['id']
         self.access_api(
             api=api,
             is_default=1,
@@ -73,6 +73,6 @@ class CustomerAddressTestCase(CustomerAPITestCase):
         )
 
     def test_customer_myself_address_remove(self):
-        api="customer.myself.address.remove"
-        address_id=self.test_customer_myself_address_all()[-1]['id']
-        self.access_api(api=api,address_id=address_id)
+        api = "customer.myself.address.remove"
+        address_id = self.test_customer_myself_address_all()[-1]['id']
+        self.access_api(api=api, address_id=address_id)
