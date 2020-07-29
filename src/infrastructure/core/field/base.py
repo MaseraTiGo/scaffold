@@ -312,3 +312,15 @@ class HideField(BaseField):
             value=re.sub(hide_str,len(hide_str)*'*',value)
         return value
 
+
+class MobileCheckField(BaseField):
+
+    def parsing(self, value):
+        value = str(value)
+        if value[0:1] != '1' or len(value) != 11:
+            raise Exception('手机号格式不正确')
+        return value
+
+    def formatting(self, value):
+        return value
+
