@@ -7,6 +7,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.customer.manager.api import CustomerAuthorizedApi
+from abs.services.crm.university.manager import UniversityServer
 
 
 class HotSearch(CustomerAuthorizedApi):
@@ -44,11 +45,18 @@ class HotSearch(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        school_list = []
+        school_list = UniversityServer.search_hot_school(
+            **request.search_info
+        )
         return school_list
 
     def fill(self, response, school_list):
-        data_list = []
+        data_list = [{
+            'id': school.id,
+            'logo_url': school.logo_url,
+            'name': school.name,
+            'content': school.content
+        } for school in school_list]
         response.data_list = data_list
         return response
 
@@ -103,14 +111,24 @@ class Search(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        page_list = []
+        page_list = UniversityServer.search_school(
+            request.current_page,
+            **request.search_info
+        )
+        UniversityServer.hung_production_list(page_list.data)
         return page_list
 
     def fill(self, response, page_list):
-        data_list = []
+        data_list = [{
+            'id': school.id,
+            'logo_url': school.id,
+            'name': school.id,
+            'content': school.id,
+            'production_list': school.production_list
+        } for school in page_list.data]
         response.data_list = data_list
-        response.total = 0
-        response.total_page = 1
+        response.total = page_list.total
+        response.total_page = page_list.total_page
         return response
 
 
@@ -147,10 +165,13 @@ class All(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        school_list = []
+        school_list = UniversityServer.search_all_school(**request.search_info)
         return school_list
 
     def fill(self, response, school_list):
-        data_list = []
+        data_list = [{
+            'id': school.id,
+            'name': school.name
+        } for school in school_list]
         response.data_list = data_list
         return response

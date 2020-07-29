@@ -3,9 +3,14 @@
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
+from abs.common.model import Count
 from abs.common.manager import BaseManager
+from abs.middleground.business.enterprise.manager import EnterpriseServer
+from abs.middleground.business.production.manager import ProductionServer
+from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.models import School
 from abs.services.crm.university.models import Major
+from abs.services.crm.production.models import Goods
 
 
 class UniversityServer(BaseManager):
@@ -24,6 +29,10 @@ class UniversityServer(BaseManager):
 
     @classmethod
     def search_school(cls, current_page, **search_info):
+        if 'name' in search_info:
+            search_info.update({
+                'name__contains': search_info.pop('name')
+            })
         school_qs = cls.search_all_school(**search_info).\
                     order_by("-is_hot", "-create_time")
         splitor = Splitor(current_page, school_qs)
@@ -33,6 +42,10 @@ class UniversityServer(BaseManager):
     def search_all_school(cls, **search_info):
         school_qs = School.search(**search_info)
         return school_qs
+
+    @classmethod
+    def search_hot_school(cls, **search_info):
+        return cls.search_all_school(**search_info).order_by('-is_hot', '-create_time')[0:4]
 
     @classmethod
     def is_exsited_school(cls, name, school=None):
@@ -49,6 +62,43 @@ class UniversityServer(BaseManager):
             raise BusinessError("学校名字已存在")
         school.update(**update_info)
         return school
+
+    @classmethod
+    def hung_production_list(cls, school_list):
+        company = EnterpriseServer.get_crm__company()
+        all_production_qs = ProductionServer.search_all(company.id)
+        school_id_list = [school.id for school in school_list]
+        goods_qs = Goods.search(
+            school_id__in=school_id_list
+        )
+        merchandise_school_mapping = {}
+        for goods in goods_qs:
+            merchandise_school_mapping.update({
+                goods.merchandise_id: goods.school_id
+            })
+        merchandise_qs = MerchandiseServer.search_all(company.id, id__in=merchandise_school_mapping.keys())
+        school_production_quantity_mapping = {}
+        for merchandise in merchandise_qs:
+            school_id = merchandise_school_mapping.get(
+                merchandise.id
+            )
+            cur_quantity = school_production_quantity_mapping.get(
+                (school_id, merchandise.product_id), 0
+            )
+            school_production_quantity_mapping.update({
+                (school_id, merchandise.product_id), cur_quantity+1
+            })
+        for school in school_list:
+            school.production_list = []
+            for production in all_production_qs:
+                cur_quantity = school_production_quantity_mapping.get(
+                    (school.id, production.id), 0
+                )
+                school.production_list.append({
+                    'id': production.id,
+                    'name': production.name,
+                    'quantity': cur_quantity
+                })
 
     @classmethod
     def create_major(cls, **search_info):
