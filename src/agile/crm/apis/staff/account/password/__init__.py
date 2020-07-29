@@ -39,7 +39,7 @@ class Modify(StaffAuthorizedApi):
         if request.new_password != request.repeat_password:
             raise BusinessError("两次输入密码不一致")
         StaffAccountServer.modify_password(
-            self.staff.id,
+            staff.id,
             old_password=request.old_password,
             new_password=request.new_password
         )
