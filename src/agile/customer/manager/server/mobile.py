@@ -51,3 +51,12 @@ customer_mobile_service.add(Get, Search)
 
 from agile.customer.apis.customer.finance.transaction.statistics import Monthly
 customer_mobile_service.add(Monthly)
+
+from agile.customer.apis.university.school import HotSearch, Search, All
+customer_mobile_service.add(HotSearch, Search, All)
+
+from agile.customer.apis.university.major import All
+customer_mobile_service.add(All)
+
+from agile.customer.apis.production.goods import Search
+customer_mobile_service.add(Search)

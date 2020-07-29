@@ -292,7 +292,10 @@ class FileField(BaseField):
 class MobileField(BaseField):
 
     def parsing(self,value):
-        return str(value)
+        value = str(value)
+        if value[0:1] != '1' or len(value) != 11:
+            raise Exception('手机号格式不正确')
+        return value
 
     def formatting(self,value):
         if value:
@@ -310,17 +313,5 @@ class HideField(BaseField):
         if value:
             hide_str=value[6:-4]
             value=re.sub(hide_str,len(hide_str)*'*',value)
-        return value
-
-
-class MobileCheckField(BaseField):
-
-    def parsing(self, value):
-        value = str(value)
-        if value[0:1] != '1' or len(value) != 11:
-            raise Exception('手机号格式不正确')
-        return value
-
-    def formatting(self, value):
         return value
 

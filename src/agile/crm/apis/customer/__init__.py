@@ -1,7 +1,7 @@
 # coding=UTF-8
 
 from infrastructure.core.field.base import CharField, DictField, \
-     IntField, ListField, DatetimeField, BooleanField, MobileCheckField, \
+     IntField, ListField, DatetimeField, BooleanField, MobileField, \
      HideField
 
 from infrastructure.core.api.utils import with_metaclass
@@ -26,7 +26,7 @@ class Add(StaffAuthorizedApi):
             'name': CharField(desc="姓名", is_required=False),
             'gender': CharField(desc="性别", is_required=False),
             'birthday': CharField(desc="生日", is_required=False),
-            'phone': MobileCheckField(desc="手机号"),
+            'phone': MobileField(desc="手机号"),
             'email': CharField(desc="邮箱", is_required=False),
             'wechat': CharField(desc="微信", is_required=False),
             'qq': CharField(desc="qq", is_required=False),
@@ -221,7 +221,7 @@ class Update(StaffAuthorizedApi):
             'name': CharField(desc="姓名", is_required=False),
             'gender': CharField(desc="性别", is_required=False),
             'birthday': CharField(desc="生日", is_required=False),
-            'phone': MobileCheckField(desc="电话", is_required=False),
+            'phone': MobileField(desc="电话", is_required=False),
             'email': CharField(desc="邮箱", is_required=False),
             'wechat': CharField(desc="微信", is_required=False),
             'qq': CharField(desc="qq", is_required=False),
