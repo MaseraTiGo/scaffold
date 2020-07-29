@@ -156,7 +156,7 @@ class ProductionproductionTestCase(CrmAPITestCase):
         self.assertTrue("data_list" in result)
         self.assertTrue("total" in result)
         self.assertTrue("total_page" in result)
-        if len(result['data_list']):
+        if not len(result['data_list']):
             self.test_create_production()
             result=self.access_api(
                 api=api,
@@ -187,4 +187,13 @@ class ProductionproductionTestCase(CrmAPITestCase):
             api=api,
             production_id=production_id,
             update_info=json.dumps(self.update_info)
+        )
+
+    def test_remove_production(self):
+        production_list=self.test_search_production()
+        production_id=production_list[0]['id']
+        api="production.remove"
+        self.access_api(
+            api=api,
+            production_id=production_id,
         )
