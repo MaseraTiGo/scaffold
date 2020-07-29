@@ -12,7 +12,7 @@ class School(BaseModel):
     content = TextField(verbose_name="学校描述")
     province = CharField(verbose_name="学校所在省", max_length=16)
     city = CharField(verbose_name="学校所在市", max_length=16)
-    sort = IntegerField(verbose_name="排序", default="")
+    sort = IntegerField(verbose_name="排序", default=0)
     is_hot = BooleanField(verbose_name="是否热门", default=False)
 
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)

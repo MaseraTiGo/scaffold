@@ -1,7 +1,8 @@
 # coding=UTF-8
 
 from infrastructure.core.field.base import CharField, DictField, \
-     IntField, ListField, DatetimeField, BooleanField, MobileCheckField
+     IntField, ListField, DatetimeField, BooleanField, MobileCheckField, \
+     HideField
 
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
