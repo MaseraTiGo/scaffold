@@ -153,9 +153,15 @@ class All(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        address_sort_list = []
         customer = self.auth_user
-        address_qs = PersonServer.get_all_address(customer.person_id)
-        return address_qs
+        address_list = list(PersonServer.get_all_address(customer.person_id))
+        for address in address_list:
+            if address.is_default:
+                address_sort_list.append(address)
+                address_list.remove(address)
+        address_sort_list.extend(address_list)
+        return address_sort_list
 
     def fill(self, response, address_qs):
         response.address_list = [{
