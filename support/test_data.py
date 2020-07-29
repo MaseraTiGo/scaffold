@@ -3,7 +3,7 @@
 import init_envt
 
 from infrastructure.utils.common.single import Single
-from support.environment.simulate import CrmSimulateMaker,\
+from support.environment.simulate import CrmSimulateMaker, \
         CustomerSimulateMaker
 
 
