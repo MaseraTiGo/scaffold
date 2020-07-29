@@ -1,7 +1,6 @@
 # coding=UTF-8
 
 from infrastructure.core.exception.business_error import BusinessError
-
 from abs.common.manager import BaseManager
 from abs.middleware.token import TokenManager
 from abs.middleground.business.account.utils.constant import StatusTypes
@@ -43,6 +42,17 @@ class AccountServer(BaseManager):
             )
             return token
         raise BusinessError('账号或密码错误！')
+
+    @classmethod
+    def user_login(cls, username):
+        account = cls.APPLY_CLS.get_byusername(username)
+        if account is None:
+            raise BusinessError('账户不存在！')
+        token = TokenManager.generate_token(
+            account.role_type,
+            account.role_id
+        )
+        return token
 
     @classmethod
     def is_exsited(cls,username):
