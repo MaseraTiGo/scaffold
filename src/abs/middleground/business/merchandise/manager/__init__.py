@@ -54,6 +54,22 @@ class MerchandiseServer(BaseManager):
         return merchandise_list
 
     @classmethod
+    def hung_merchandise(cls, obj_list):
+        merchandise_list = Merchandise.query().filter(
+            id__in=[obj.merchandise_id for obj in obj_list]
+        )
+        mapping = {}
+        for merchandise in merchandise_list:
+            mapping.update({
+                merchandise.id: merchandise
+            })
+        for obj in obj_list:
+            merchandise = mapping.get(obj.merchandise_id)
+            obj.merchandise = merchandise
+        cls._hung_specification(merchandise_list)
+        return obj_list
+
+    @classmethod
     def get(cls, merchandise_id):
         merchandise = Merchandise.get_byid(merchandise_id)
         if merchandise is None:

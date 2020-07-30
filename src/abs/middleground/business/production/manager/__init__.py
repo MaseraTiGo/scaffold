@@ -76,6 +76,22 @@ class ProductionServer(BaseManager):
         return True
 
     @classmethod
+    def hung_production(cls, obj_list):
+        production_id_list = [obj.production_id for obj in obj_list]
+        production_list = Production.query().filter(
+            id__in=production_id_list
+        )
+        mapping = {}
+        for production in production_list:
+            mapping.update({
+                production.id: production
+            })
+        for obj in obj_list:
+            production = mapping.get(obj.production_id)
+            obj.production = production
+        return obj_list
+
+    @classmethod
     def generate_brand(cls,company_id,**brand_info):
         cls.is_brand_exsited(company_id,brand_info["name"])
         brand=Brand.create(

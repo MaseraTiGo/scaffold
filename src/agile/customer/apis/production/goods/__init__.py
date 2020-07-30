@@ -1,5 +1,5 @@
 # coding=UTF-8
-
+import json
 from infrastructure.core.field.base import CharField, DictField, \
         IntField, ListField, BooleanField
 from infrastructure.core.api.utils import with_metaclass
@@ -7,10 +7,12 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.customer.manager.api import CustomerAuthorizedApi
+from abs.services.crm.production.manager import GoodsServer
 
 
 class Search(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
+    request.current_page = RequestField(IntField, desc="当前页码")
     request.search_info = RequestField(
         DictField,
         desc="搜索商品",
@@ -43,20 +45,41 @@ class Search(CustomerAuthorizedApi):
             }
         )
     )
+    response.total = ResponseField(IntField, desc="数据总数")
+    response.total_page = ResponseField(IntField, desc="总页码数")
 
     @classmethod
     def get_desc(cls):
-        return "专业列表"
+        return "商品列表"
 
     @classmethod
     def get_author(cls):
         return "xyc"
 
     def execute(self, request):
-        major_list = []
-        return major_list
+        page_list = GoodsServer.search_goods(
+            request.current_page,
+            **request.search_info
+        )
+        return page_list
 
-    def fill(self, response, major_list):
+    def fill(self, response, page_list):
         data_list = []
+        for goods in page_list:
+            slideshow = json.loads(goods.merchandise.slideshow)
+            data_list.append({
+                'id': goods.id,
+                'thumbnail': slideshow[0] if slideshow else '',
+                'title': goods.merchandise.title,
+                'school_name': goods.school.name,
+                'major_name': goods.major.name,
+                'duration': goods.duration,
+                'school_city': goods.school.city,
+                'production_name': goods.merchandise.production.name,
+                'sale_price': min([
+                    specification.sale_price
+                    for specification in goods.merchandise.specification_list
+                ])
+            })
         response.data_list = data_list
         return response

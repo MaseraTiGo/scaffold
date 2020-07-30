@@ -7,6 +7,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.customer.manager.api import CustomerAuthorizedApi
+from abs.services.crm.university.manager import UniversityServer
 
 
 class All(CustomerAuthorizedApi):
@@ -40,10 +41,13 @@ class All(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        major_list = []
+        major_list = UniversityServer.search_all_major(**request.search_info)
         return major_list
 
     def fill(self, response, major_list):
-        data_list = []
+        data_list = [{
+            'id': major.id,
+            'name': major.name
+        } for major in major_list]
         response.data_list = data_list
         return response

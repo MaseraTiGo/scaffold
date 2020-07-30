@@ -101,6 +101,32 @@ class UniversityServer(BaseManager):
                 })
 
     @classmethod
+    def hung_school(cls, obj_list):
+        school_id_list = [obj.school_id for obj in obj_list]
+        school_list = School.search(id__in=school_id_list)
+        mapping = {}
+        for school in school_list:
+            mapping.update({
+                school.id: school
+            })
+        for obj in obj_list:
+            school = mapping.get(obj.school_id)
+            obj.school = school
+
+    @classmethod
+    def hung_major(cls, obj_list):
+        major_id_list = [obj.major_id for obj in obj_list]
+        major_list = Major.search(id__in=major_id_list)
+        mapping = {}
+        for major in major_list:
+            mapping.update({
+                major.id: major
+            })
+        for obj in obj_list:
+            major = mapping.get(obj.major_id)
+            obj.major = major
+
+    @classmethod
     def create_major(cls, **search_info):
         major = Major.create(**search_info)
         return major
