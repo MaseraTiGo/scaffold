@@ -18,5 +18,6 @@ class SceneTypes(object):
     REGISTER='register'
     FORGET='forget'
     BINDCARD='bindcard'
+    LOGIN = 'login'
     CHOICES=((REGISTER,'注册验证码'),(FORGET,'找回密码验证码'),
-             (BINDCARD,'绑定银行卡'))
+             (BINDCARD,'绑定银行卡'),(LOGIN, '登陆'))

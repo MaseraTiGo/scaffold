@@ -15,7 +15,8 @@ from support.common.generator.helper.middleground.production import ProductionGe
 # crm service generator
 from support.common.generator.helper.business.crm.staff import StaffGenerator
 from support.common.generator.helper.business.crm.account import StaffAccountGenerator
-
+from support.common.generator.helper.business.crm.university.school import SchoolGenerator
+from support.common.generator.helper.business.crm.university.major import MajorGenerator
 
 # customer service generate
 from support.common.generator.helper.business.customer.customer import CustomerGenerator

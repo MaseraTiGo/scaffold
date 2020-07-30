@@ -7,7 +7,7 @@ Created on 2020年6月18日
 '''
 
 from infrastructure.core.field.base import CharField, DictField,\
-        IntField, ListField, BooleanField, MobileCheckField
+        IntField, ListField, BooleanField, MobileField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -101,7 +101,7 @@ class Update(StaffAuthorizedApi):
             'name': CharField(desc="姓名"),
             'gender': CharField(desc="性别"),
             'birthday': CharField(desc="生日"),
-            'phone': MobileCheckField(desc="电话"),
+            'phone': MobileField(desc="电话"),
             'email': CharField(desc="邮箱"),
             'work_number': CharField(desc="员工工号"),
             'is_admin': BooleanField(desc="是否是管理员"),

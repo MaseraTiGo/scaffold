@@ -2,8 +2,7 @@
 
 from abs.common.model import BaseModel, BooleanField, \
         IntegerField, CharField, TextField, DateTimeField, timezone
-from abs.services.crm.tool.settings import DB_PREFIX
-from abs.services.crm.tool.utils.contact import StatusTypes, SourceTypes, SceneTypes
+from abs.services.crm.university.settings import DB_PREFIX
 
 
 class Major(BaseModel):

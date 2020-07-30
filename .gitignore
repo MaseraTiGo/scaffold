@@ -5,3 +5,4 @@ tags
 src/settings_local.py
 support/test_settings.py
 resource
+.idea/

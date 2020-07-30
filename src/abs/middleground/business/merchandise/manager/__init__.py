@@ -54,6 +54,36 @@ class MerchandiseServer(BaseManager):
         return merchandise_list
 
     @classmethod
+    def hung_merchandise(cls, obj_list):
+        merchandise_list = Merchandise.query().filter(
+            id__in=[obj.merchandise_id for obj in obj_list]
+        )
+        mapping = {}
+        for merchandise in merchandise_list:
+            mapping.update({
+                merchandise.id: merchandise
+            })
+        for obj in obj_list:
+            merchandise = mapping.get(obj.merchandise_id)
+            obj.merchandise = merchandise
+        cls._hung_specification(merchandise_list)
+        return obj_list
+
+    @classmethod
+    def search_id_list(cls, company_id, **search_info):
+        if 'title' in search_info:
+            title = search_info.pop('title')
+            search_info.update({'title__contains': title})
+        return Merchandise.query(
+            company_id=company_id
+        ).filter(
+            **search_info
+        ).values_list(
+            'id',
+            flat=True
+        )
+
+    @classmethod
     def get(cls, merchandise_id):
         merchandise = Merchandise.get_byid(merchandise_id)
         if merchandise is None:
@@ -71,6 +101,15 @@ class MerchandiseServer(BaseManager):
         spliter = Splitor(current_page, merchandise_qs)
         cls._hung_specification(spliter.get_list())
         return spliter
+
+    @classmethod
+    def search_all(cls, company_id, **search_info):
+        merchandise_qs = Merchandise.query(
+            company_id=company_id
+        ).filter(
+            **search_info
+        )
+        return merchandise_qs
 
     @classmethod
     def generate(

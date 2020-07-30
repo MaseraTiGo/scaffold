@@ -27,6 +27,15 @@ class ProductionServer(BaseManager):
         return splitor
 
     @classmethod
+    def search_all(cls, company_id, **search_info):
+        production_qs = Production.query().filter(
+            **search_info
+        ).filter(
+            company_id=company_id
+        )
+        return production_qs
+
+    @classmethod
     def generate(cls,company_id,brand_id,**production_info):
         brand=cls.get_brand(brand_id)
         cls.is_exsited(company_id,brand,production_info["name"])
@@ -65,6 +74,22 @@ class ProductionServer(BaseManager):
         # 未添加判断是否可删除的条件
         product.delete()
         return True
+
+    @classmethod
+    def hung_production(cls, obj_list):
+        production_id_list = [obj.production_id for obj in obj_list]
+        production_list = Production.query().filter(
+            id__in=production_id_list
+        )
+        mapping = {}
+        for production in production_list:
+            mapping.update({
+                production.id: production
+            })
+        for obj in obj_list:
+            production = mapping.get(obj.production_id)
+            obj.production = production
+        return obj_list
 
     @classmethod
     def generate_brand(cls,company_id,**brand_info):

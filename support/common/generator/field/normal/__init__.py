@@ -6,6 +6,8 @@ from infrastructure.utils.common.single import Single
 from support.common.generator.field.base import BaseHelper, BaseDateHelper
 from support.common.generator.field.data.address import ADDRES_TEMPLATES
 from support.common.generator.field.data.name import NAME_LIST
+from support.common.generator.field.data.school import SHOOL_LIST
+from support.common.generator.field.data.major import MAJOR_LIST
 
 
 class NameHelper(BaseHelper):
@@ -50,9 +52,9 @@ class PhoneHelper(BaseHelper):
     _count = 0
 
     def get_enume(self):
-        return [134,135,136,137,138,139,150,151, \
-            152,158,159,157,182,187,188,130,131, \
-                132,155,156,185,186,133,153,180,189]
+        return [134, 135, 136, 137, 138, 139, 150, 151, \
+            152, 158, 159, 157, 182, 187, 188, 130, 131, \
+                132, 155, 156, 185, 186, 133, 153, 180, 189]
 
     def calc(self):
         return str(random.choice(self.get_enume()) * 100000000 + self.get_count())
@@ -72,7 +74,7 @@ class AmountHelper(BaseHelper):
 
 class DateHelper(BaseDateHelper):
 
-    def calc(self, is_direction = False, years = 0, days = 0):
+    def calc(self, is_direction=False, years=0, days=0):
         year, month, date = self.calc_attrs(is_direction, years, days)
         fmt_time = datetime.date(
             year,
@@ -85,8 +87,8 @@ class DateHelper(BaseDateHelper):
 
 class DateTimeHelper(BaseDateHelper):
 
-    def calc(self, is_direction = False, years = 0, days = 0):
-        year, month, date = self.calc_attrs(is_direction, years, days )
+    def calc(self, is_direction=False, years=0, days=0):
+        year, month, date = self.calc_attrs(is_direction, years, days)
         hour = random.randint(0, 23)
         minute = random.randint(0, 59)
         second = random.randint(0, 59)
@@ -136,9 +138,9 @@ class LogisticsNumberHelper(BaseHelper):
 class EmailHelper(BaseHelper):
 
     def calc(self):
-        return str(random.randint(100000,99999999)) + "@" \
+        return str(random.randint(100000, 99999999)) + "@" \
                + random.choice(["163", "qq", "google", "wangyi"]) + "."\
-                    + random.choice(['cn','com'])
+                    + random.choice(['cn', 'com'])
 
 
 class ContractHelper(BaseHelper):
@@ -150,11 +152,11 @@ class ContractHelper(BaseHelper):
 class IdentificationHelper(BaseHelper):
 
     def calc(self):
-        return str(random.randint(100000,999999)) \
-                + str(random.randint(1950,2018)) \
-                    + str(random.randint(1,12)).rjust(2, "0") \
-                        + str(random.randint(1,12)).rjust(2, "0") \
-                            + str(self.get_count())[:4].rjust(4,'0')
+        return str(random.randint(100000, 999999)) \
+                + str(random.randint(1950, 2018)) \
+                    + str(random.randint(1, 12)).rjust(2, "0") \
+                        + str(random.randint(1, 12)).rjust(2, "0") \
+                            + str(self.get_count())[:4].rjust(4, '0')
 
 
 class CityHelper(BaseHelper):
@@ -171,3 +173,24 @@ class AddressHelper(BaseHelper):
         if not hasattr(self, '_enume'):
             self._enume = [ ('-'.join([data[0], data[1]]), data[3]) for data in ADDRES_TEMPLATES]
         return random.choice(self._enume)
+
+
+class SchoolHelper(BaseHelper):
+
+    def calc(self):
+        school = random.choice(SHOOL_LIST)
+        name = school[0]
+        content = school[1]
+        province = school[2]
+        city = school[3]
+        return name, content, province, city
+
+
+class MajorHelper(BaseHelper):
+
+    def calc(self):
+        major = random.choice(MAJOR_LIST)
+        name = major[0]
+        content = major[1]
+        return name, content
+

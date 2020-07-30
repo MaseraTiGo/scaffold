@@ -19,4 +19,4 @@ except Exception as e:
     pass
 
 ALLOWED_HOSTS = ['*']
-TEST_PORT = 8011
+TEST_PORT = 8000
