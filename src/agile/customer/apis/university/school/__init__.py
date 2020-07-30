@@ -158,7 +158,7 @@ class All(CustomerAuthorizedApi):
 
     @classmethod
     def get_desc(cls):
-        return "热门学校列表"
+        return "所有学校列表"
 
     @classmethod
     def get_author(cls):

@@ -57,6 +57,10 @@ class UniversityServer(BaseManager):
         return False
 
     @classmethod
+    def search_school_id_list(cls, **search_info):
+        return cls.search_all_school(**search_info).values_list('id', flat=True)
+
+    @classmethod
     def update_school(cls, school, **update_info):
         if cls.is_exsited_school(update_info["name"], school):
             raise BusinessError("学校名字已存在")

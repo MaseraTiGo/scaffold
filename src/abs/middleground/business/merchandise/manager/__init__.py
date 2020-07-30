@@ -70,6 +70,20 @@ class MerchandiseServer(BaseManager):
         return obj_list
 
     @classmethod
+    def search_id_list(cls, company_id, **search_info):
+        if 'title' in search_info:
+            title = search_info.pop('title')
+            search_info.update({'title__contains': title})
+        return Merchandise.query(
+            company_id=company_id
+        ).filter(
+            **search_info
+        ).values_list(
+            'id',
+            flat=True
+        )
+
+    @classmethod
     def get(cls, merchandise_id):
         merchandise = Merchandise.get_byid(merchandise_id)
         if merchandise is None:

@@ -58,5 +58,5 @@ customer_mobile_service.add(HotSearch, Search, All)
 from agile.customer.apis.university.major import All
 customer_mobile_service.add(All)
 
-from agile.customer.apis.production.goods import Search
-customer_mobile_service.add(Search)
+from agile.customer.apis.production.goods import Search, Get
+customer_mobile_service.add(Search, Get)
