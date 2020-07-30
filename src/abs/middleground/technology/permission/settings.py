@@ -1,4 +1,4 @@
 # coding=UTF-8
 
 
-DB_PREFIX = "moddleground_permission_"
+DB_PREFIX = "middleground_permission_"
