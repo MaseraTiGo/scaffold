@@ -86,7 +86,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
 
     def test_order_finished_workflow(self):
         # 1. 下单测试
-        api = 'order.place'
+        api = 'business.order.place'
         result = self.access_api(
             api=api,
             order_info=json.dumps(self.order_info)
@@ -95,7 +95,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         order_id = result['order_id']
 
         # 2. 支付测试
-        api = 'order.pay'
+        api = 'business.order.pay'
         result = self.access_api(
             api=api,
             order_id=order_id,
@@ -107,7 +107,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         )
 
         # 3. 获取订单测试
-        api = 'order.get'
+        api = 'business.order.get'
         result = self.access_api(
             api=api,
             order_id=order_id,
@@ -117,7 +117,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         self.assert_order_fields(order_info)
 
         # 4. 发货测试
-        api = 'order.delivery'
+        api = 'business.order.delivery'
         snapshoot_list = [
             {
                 'id': snapshoot['id'],
@@ -141,14 +141,14 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         )
 
         # 5、 完成测试
-        api = 'order.finish'
+        api = 'business.order.finish'
         result = self.access_api(
             api=api,
             order_id=order_id,
         )
 
         # 6、 搜索测试
-        api = 'order.search'
+        api = 'business.order.search'
         result = self.access_api(
             api=api,
             current_page=1,
@@ -162,7 +162,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
 
     def test_order_closed_workflow(self):
         # 1. 下单测试
-        api = 'order.place'
+        api = 'business.order.place'
         result = self.access_api(
             api=api,
             order_info=json.dumps(self.order_info)
@@ -171,14 +171,14 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         order_id = result['order_id']
 
         # 2、 完成测试
-        api = 'order.close'
+        api = 'business.order.close'
         result = self.access_api(
             api=api,
             order_id=order_id,
         )
 
         # 3、 搜索测试
-        api = 'order.search'
+        api = 'business.order.search'
         result = self.access_api(
             api=api,
             current_page=1,

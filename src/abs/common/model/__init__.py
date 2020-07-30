@@ -6,8 +6,9 @@ Created on 2016年7月23日
 @author: Administrator
 '''
 
+import uuid
+import random
 import time
-import hashlib
 import datetime
 
 from django.utils import *
@@ -23,8 +24,10 @@ class BaseModel(Model):
 
     @classmethod
     def generate_unique_number(cls):
-        unque_str = cls.__name__ + str(time.time())
-        return hashlib.md5(unque_str.encode(encoding='UTF-8')).hexdigest()
+        return uuid.uuid3(
+            uuid.NAMESPACE_DNS,
+            str(time.time()) + str(random.randint(1000,9999))
+        )
 
     @classmethod
     def create(cls, **kwargs):
