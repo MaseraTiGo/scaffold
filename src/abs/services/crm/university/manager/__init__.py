@@ -87,10 +87,10 @@ class UniversityServer(BaseManager):
                 merchandise.id
             )
             cur_quantity = school_production_quantity_mapping.get(
-                (school_id, merchandise.product_id), 0
+                (school_id, merchandise.production_id), 0
             )
             school_production_quantity_mapping.update({
-                (school_id, merchandise.product_id), cur_quantity+1
+                (school_id, merchandise.production_id): cur_quantity+1
             })
         for school in school_list:
             school.production_list = []

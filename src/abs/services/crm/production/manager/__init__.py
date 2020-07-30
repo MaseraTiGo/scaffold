@@ -7,7 +7,6 @@ from infrastructure.utils.common.split_page import Splitor
 from abs.common.manager import BaseManager
 from abs.services.crm.production.store.goods import Goods
 from abs.middleground.business.enterprise.manager import EnterpriseServer
-from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.merchandise.utils.constant import UseStatus
 
@@ -39,7 +38,7 @@ class GoodsServer(BaseManager):
                 **merchandise_info
             )
             search_info.update({
-                'merchandise_id__in': merchandise_id_list
+                'merchandise_id__in': list(merchandise_id_list)
             })
         return Goods.search(**search_info)
 

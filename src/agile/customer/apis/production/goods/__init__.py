@@ -92,7 +92,7 @@ class Search(CustomerAuthorizedApi):
 
     def fill(self, response, page_list):
         data_list = []
-        for goods in page_list:
+        for goods in page_list.data:
             slideshow = json.loads(goods.merchandise.slideshow)
             data_list.append({
                 'id': goods.id,
@@ -109,18 +109,20 @@ class Search(CustomerAuthorizedApi):
                 ])
             })
         response.data_list = data_list
+        response.total = page_list.total
+        response.total_page = page_list.total_page
         return response
 
 
 class Get(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.goods_id = IntField(desc="商品id")
+    request.goods_id = RequestField(IntField, desc="商品id")
 
     response = with_metaclass(ResponseFieldSet)
     response.goods_info = ResponseField(DictField, desc="商品信息", conf={
         'slideshow': ListField(desc="轮播图", fmt=CharField(desc="url")),
         'video_display': CharField(desc="展示视频"),
-        'detail': CharField(desc="商品详情"),
+        'detail': ListField(desc="商品详情", fmt=CharField(desc="url")),
         'min_price': IntField(desc="价格"),
         'title': CharField(desc="标题"),
         'despatch_type': CharField(desc="发货方式"),

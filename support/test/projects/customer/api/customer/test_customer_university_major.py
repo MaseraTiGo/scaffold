@@ -3,7 +3,7 @@ import json
 from support.common.testcase.customer_api_test_case import CustomerAPITestCase
 
 
-class CustomerProductionGoodsTest(CustomerAPITestCase):
+class CustomerUniversityMajorTest(CustomerAPITestCase):
     def setUp(self):
         pass
 
@@ -11,18 +11,10 @@ class CustomerProductionGoodsTest(CustomerAPITestCase):
         pass
 
     def test_product_goods_search(self):
-        api = 'production.goods.search'
+        api = 'university.major.all'
         params = {
             "current_page": 1,
             'search_info': json.dumps({})
         }
         result = self.access_api(api=api, **params)
         self.assertTrue("data_list" in result)
-
-    def test_product_goods_get(self):
-        api = 'production.goods.get'
-        params = {
-            'goods_id': 1
-        }
-        result = self.access_api(api=api, **params)
-        self.assertTrue("goods_info" in result)
