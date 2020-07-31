@@ -102,3 +102,31 @@ class CustomerEntity(BaseHelper):
         if has_none:
             select_enum.append(None)
         return random.choice(select_enum)
+
+class SchoolEntity(BaseHelper):
+
+    def calc(self, has_none=False):
+        if not hasattr(self, '_enume'):
+            from abs.services.crm.university.store import School
+            self._enume = []
+            for school in School.query():
+                self._enume.append(school)
+
+        select_enum = self._enume.copy()
+        if has_none:
+            select_enum.append(None)
+        return random.choice(select_enum)
+
+class MajorEntity(BaseHelper):
+
+    def calc(self, has_none=False):
+        if not hasattr(self, '_enume'):
+            from abs.services.customer.university.store import Major
+            self._enume = []
+            for major in school.query():
+                self._enume.append(major)
+
+        select_enum = self._enume.copy()
+        if has_none:
+            select_enum.append(None)
+        return random.choice(select_enum)

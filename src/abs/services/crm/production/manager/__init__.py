@@ -57,9 +57,18 @@ class GoodsServer(BaseManager):
         search_info.update({'use_status': UseStatus.ENABLE})
         return list(cls.search_all_goods(**search_info)[0:3])
 
-    @classmethod
     def get_goods(cls, goods_id):
         goods = Goods.get_byid(goods_id)
-        if goods:
-            return goods
-        raise BusinessError('商品不存在')
+        if goods is None:
+            raise BusinessError("此商品不存在")
+        return goods
+
+    @classmethod
+    def update_goods(cls, goods, **update_info):
+        goods.update(**update_info)
+        return goods
+
+    @classmethod
+    def create_goods(cls, **goods_info):
+        goods = Goods.create(**goods_info)
+        return goods
