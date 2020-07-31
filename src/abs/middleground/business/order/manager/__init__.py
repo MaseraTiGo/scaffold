@@ -248,3 +248,35 @@ class OrderServer(BaseManager):
         order.update(
             status=OrderStatus.ORDER_CLOSED
         )
+
+    @classmethod
+    def hung_order(cls, obj_list):
+        mg_order_mapping = {}
+        for obj in obj_list:
+            obj.mg_order = None
+            mg_order_mapping[obj.mg_order_id] = obj
+
+        mg_order_list = list(Order.query().filter(
+            id__in=mg_order_mapping.keys()
+        ))
+        cls._hung_payment(mg_order_list)
+        cls._hung_delivery_record(mg_order_list)
+        for mg_order in mg_order_list:
+            if mg_order.id in mg_order_mapping:
+                mg_order_mapping[mg_order.id] = mg_order
+        return obj_list
+
+    @classmethod
+    def hung_snapshoot(cls, obj_list):
+        snapshoot_mapping = {}
+        for obj in obj_list:
+            obj.napshoot = None
+            snapshoot_mapping[obj.merchandise_snapshoot_id] = obj
+
+        snapshoot_qs = MerchandiseSnapShoot.query().filter(
+            id__in=snapshoot_mapping.keys()
+         )
+        for snapshoot in snapshoot_qs:
+            if snapshoot.id in snapshoot_mapping:
+                snapshoot_mapping[snapshoot.id] = snapshoot
+        return obj_list

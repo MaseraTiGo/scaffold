@@ -69,3 +69,6 @@ crm_pc_service.add(Search)
 
 from agile.crm.apis.production.goods import Search, Add, Get, Update, Remove, Setuse
 crm_pc_service.add(Search, Add, Get, Update, Remove, Setuse)
+
+from agile.crm.apis.order import Get
+crm_pc_service.add(Get)
