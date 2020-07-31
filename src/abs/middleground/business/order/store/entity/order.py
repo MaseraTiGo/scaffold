@@ -58,3 +58,10 @@ class Order(BaseModel):
     def generate_number(cls):
         import time
         return "OD" + str(int(time.time()))
+
+    @classmethod
+    def create(cls, **order_info):
+        order_info.update({
+            "number": cls.generate_number(),
+        })
+        return super(Order, cls).create(**order_info)

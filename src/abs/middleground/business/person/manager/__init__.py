@@ -76,6 +76,8 @@ class PersonServer(BaseManager):
     @classmethod
     def get_address(cls,address_id):
         address=Address.get_byid(address_id)
+        if not address:
+            raise BusinessError('地址不存在')
         status=PersonStatus.get_byperson(address.person)
         address.is_default=False
         if status and status.default_address:

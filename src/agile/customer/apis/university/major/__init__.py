@@ -63,8 +63,8 @@ class Duration(CustomerAuthorizedApi):
         fmt=DictField(
             desc="专业信息",
             conf={
-                'key': CharField(desc="key"),
-                'value': CharField(desc="值")
+                'id': CharField(desc="key"),
+                'name': CharField(desc="值")
             }
         )
     )
@@ -83,8 +83,8 @@ class Duration(CustomerAuthorizedApi):
 
     def fill(self, response, duration_mapping):
         data_list = [{
-            'key': key,
-            'value': value
+            'id': key,
+            'name': value
         } for key, value in duration_mapping.items()]
         response.data_list = data_list
         return response
