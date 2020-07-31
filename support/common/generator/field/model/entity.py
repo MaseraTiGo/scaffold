@@ -75,6 +75,20 @@ class CrnCompanyEntitry(BaseHelper):
         return company_qs[0]
 
 
+class CrnStaffEntitry(BaseHelper):
+    def calc(self, has_none=False):
+        if not hasattr(self, '_enume'):
+            from abs.services.crm.staff.models import Staff
+            self._enume = []
+            for staff in Staff.query():
+                self._enume.append(staff)
+
+        select_enum = self._enume.copy()
+        if has_none:
+            select_enum.append(None)
+        return random.choice(select_enum)
+
+
 class CustomerEntity(BaseHelper):
 
     def calc(self, has_none=False):

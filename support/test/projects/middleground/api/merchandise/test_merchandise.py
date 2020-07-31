@@ -151,7 +151,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
 
     def test_merchandise_normal_workflow(self):
         # 1. 添加商品
-        api = 'merchandise.add'
+        api = 'business.merchandise.add'
         result = self.access_api(
             api=api,
             merchandise_info=json.dumps(self.merchandise_info)
@@ -160,7 +160,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         merchandise_id = result['merchandise_id']
 
         # 2. 获取商品信息
-        api = "merchandise.get"
+        api = "business.merchandise.get"
         result = self.access_api(
             api=api,
             merchandise_id=merchandise_id
@@ -169,7 +169,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         self.assert_merchandise_fields(result['merchandise_info'])
 
         # 3. 更新商品信息
-        api = "merchandise.update"
+        api = "business.merchandise.update"
         self.access_api(
             api=api,
             merchandise_id=merchandise_id,
@@ -177,7 +177,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         )
 
         # 4. 添加规格
-        api = "merchandise.specification.add"
+        api = "business.merchandise.specification.add"
         result = self.access_api(
             api=api,
             merchandise_id=merchandise_id,
@@ -187,7 +187,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         specification_id = result['specification_id']
 
         # 5. 更新规格
-        api = "merchandise.specification.update"
+        api = "business.merchandise.specification.update"
         self.access_api(
             api=api,
             specification_id=specification_id,
@@ -195,7 +195,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         )
 
         # 6. 获取规格
-        api = "merchandise.specification.get"
+        api = "business.merchandise.specification.get"
         self.access_api(
             api=api,
             specification_id=specification_id,
@@ -203,7 +203,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         )
 
         # 7. 搜索商品
-        api = 'merchandise.search'
+        api = 'business.merchandise.search'
         current_page = 1
         result = self.access_api(
             api=api,
@@ -218,14 +218,14 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
             self.assert_merchandise_fields(merchandise, True)
 
         # 8. 移除规格
-        api = "merchandise.specification.remove"
+        api = "business.merchandise.specification.remove"
         self.access_api(
             api=api,
             specification_id=specification_id,
         )
 
         # 9. 移除商品
-        api = "merchandise.remove"
+        api = "business.merchandise.remove"
         self.access_api(
             api=api,
             merchandise_id=merchandise_id,
@@ -233,7 +233,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
 
     def test_multiple_spacification_list(self):
         # 1. 添加商品
-        api = 'merchandise.add'
+        api = 'business.merchandise.add'
         result = self.access_api(
             api=api,
             merchandise_info=json.dumps(self.merchandise_info)
@@ -243,7 +243,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
 
         # 2. 添加规格
         for specification_info in self.specification_info_list:
-            api = "merchandise.specification.add"
+            api = "business.merchandise.specification.add"
             result = self.access_api(
                 api=api,
                 merchandise_id=merchandise_id,
@@ -252,7 +252,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
             self.assertTrue('specification_id' in result)
 
         # 3. 获取商品信息
-        api = "merchandise.get"
+        api = "business.merchandise.get"
         result = self.access_api(
             api=api,
             merchandise_id=merchandise_id
@@ -261,7 +261,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         self.assert_merchandise_fields(result['merchandise_info'])
 
         # 4. 搜索商品
-        api = 'merchandise.search'
+        api = 'business.merchandise.search'
         current_page = 1
         result = self.access_api(
             api=api,

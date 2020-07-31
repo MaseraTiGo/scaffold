@@ -1,4 +1,4 @@
 # coding=UTF-8
 
 
-DB_PREFIX = "moddleground_logistics_"
+DB_PREFIX = "middleground_logistics_"

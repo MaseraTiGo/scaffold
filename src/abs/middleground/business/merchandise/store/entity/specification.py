@@ -8,7 +8,7 @@ Created on 2020年7月10日
 from abs.common.model import BaseModel, IntegerField, CASCADE,\
         CharField, DateTimeField, TextField, ForeignKey, timezone
 from abs.middleground.business.merchandise.settings import DB_PREFIX
-from abs.middleground.business.merchandise.store.entity.merchanise import \
+from abs.middleground.business.merchandise.store.entity.merchandise import \
         Merchandise
 
 

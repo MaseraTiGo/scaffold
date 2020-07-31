@@ -17,6 +17,7 @@ class Merchandise(BaseModel):
     商品信息表
     """
     title = CharField(verbose_name="商品标题", max_length=256)
+    description = CharField(verbose_name="商品描述", max_length=256)
     slideshow = TextField(verbose_name="商品轮播图")
     video_display = TextField(verbose_name="展示视频")
     detail = TextField(verbose_name="商品详情")
