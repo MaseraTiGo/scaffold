@@ -42,7 +42,7 @@ class OrderItemServer(BaseManager):
         return orderitem_qs
 
     @classmethod
-    def hung_order_item(self, order_list):
+    def hung_order_item(cls, order_list):
         order_mapping = {}
         for order in order_list:
             order.orderitem_list = []
