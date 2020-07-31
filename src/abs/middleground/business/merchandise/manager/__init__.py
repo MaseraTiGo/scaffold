@@ -74,14 +74,14 @@ class MerchandiseServer(BaseManager):
         if 'title' in search_info:
             title = search_info.pop('title')
             search_info.update({'title__contains': title})
-        return Merchandise.query(
+        return list(Merchandise.query(
             company_id=company_id
         ).filter(
             **search_info
         ).values_list(
             'id',
             flat=True
-        )
+        ))
 
     @classmethod
     def get(cls, merchandise_id):
