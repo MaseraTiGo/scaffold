@@ -73,3 +73,16 @@ class GoodsServer(BaseManager):
     def create_goods(cls, **goods_info):
         goods = Goods.create(**goods_info)
         return goods
+
+    @classmethod
+    def hung_goods(cls, merchandise_list):
+        mapping = {}
+        for merchandise in merchandise_list:
+            merchandise.goods = None
+            mapping.update({
+                merchandise.id: merchandise
+            })
+        goods_list = Goods.search(merchandise_id__in=mapping.keys())
+        for goods in goods_list:
+            merchandise = mapping.get(goods.merchandise_id)
+            merchandise.goods = goods
