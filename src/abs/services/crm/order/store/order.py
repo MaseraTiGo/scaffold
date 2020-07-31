@@ -7,6 +7,7 @@ from abs.services.crm.order.utils.constant import OrderSource
 
 
 class Order(BaseModel):
+    customer_id = IntegerField(verbose_name="客户id")
     mg_order_id = CharField(verbose_name="订单id", max_length=32)
     source = CharField(
         verbose_name="订单来源",
