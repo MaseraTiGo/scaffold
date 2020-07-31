@@ -43,7 +43,7 @@ class GoodsServer(BaseManager):
                 **merchandise_info
             )
             search_info.update({
-                'merchandise_id__in': list(merchandise_id_list)
+                'merchandise_id__in': merchandise_id_list
             })
         return Goods.search(**search_info)
 
@@ -55,7 +55,7 @@ class GoodsServer(BaseManager):
     @classmethod
     def search_hot_goods(cls, **search_info):
         search_info.update({'use_status': UseStatus.ENABLE})
-        return cls.search_all_goods(**search_info)[0:3]
+        return list(cls.search_all_goods(**search_info)[0:3])
 
     @classmethod
     def get_goods(cls, goods_id):

@@ -45,6 +45,7 @@ class Search(CustomerAuthorizedApi):
                 'duration': CharField(desc="学年"),
                 'school_city': CharField(desc="学校所在城市"),
                 'production_name': CharField(desc="产品名称"),
+                'brand_name': CharField(desc="品牌名"),
                 'sale_price': IntField(desc="售价")
             }
         )
@@ -104,10 +105,11 @@ class Search(CustomerAuthorizedApi):
                 'duration': goods.duration,
                 'school_city': goods.school.city,
                 'production_name': goods.merchandise.production.name,
+                'brand_name': goods.merchandise.production.brand.name,
                 'sale_price': min([
                     specification.sale_price
                     for specification in goods.merchandise.specification_list
-                ])
+                ]) if goods.merchandise.specification_list else 0
             })
         response.data_list = data_list
         response.total = page_list.total
@@ -141,6 +143,7 @@ class HotSearch(CustomerAuthorizedApi):
                 'duration': CharField(desc="学年"),
                 'school_city': CharField(desc="学校所在城市"),
                 'production_name': CharField(desc="产品名称"),
+                'brand_name': CharField(desc="品牌名称"),
                 'sale_price': IntField(desc="售价")
             }
         )
@@ -174,21 +177,21 @@ class HotSearch(CustomerAuthorizedApi):
             search_info.update({
                 'school_id__in': school_id_list
             })
-        page_list = GoodsServer.search_hot_goods(
+        data_list = GoodsServer.search_hot_goods(
             **search_info
         )
-        UniversityServer.hung_major(page_list.data)
-        UniversityServer.hung_school(page_list.data)
-        MerchandiseServer.hung_merchandise(page_list.data)
-        merchandise_list = [goods.merchandise for goods in page_list.data]
+        UniversityServer.hung_major(data_list)
+        UniversityServer.hung_school(data_list)
+        MerchandiseServer.hung_merchandise(data_list)
+        merchandise_list = [goods.merchandise for goods in data_list]
         ProductionServer.hung_production(merchandise_list)
-        return page_list
+        return data_list
 
-    def fill(self, response, page_list):
-        data_list = []
-        for goods in page_list.data:
+    def fill(self, response, data_list):
+        result_list = []
+        for goods in data_list:
             slideshow = json.loads(goods.merchandise.slideshow)
-            data_list.append({
+            result_list.append({
                 'id': goods.id,
                 'thumbnail': slideshow[0] if slideshow else '',
                 'title': goods.merchandise.title,
@@ -197,12 +200,13 @@ class HotSearch(CustomerAuthorizedApi):
                 'duration': goods.duration,
                 'school_city': goods.school.city,
                 'production_name': goods.merchandise.production.name,
+                'brand_name': goods.merchandise.production.brand.name,
                 'sale_price': min([
                     specification.sale_price
                     for specification in goods.merchandise.specification_list
-                ])
+                ]) if goods.merchandise.specification_list else 0
             })
-        response.data_list = data_list
+        response.data_list = result_list
         return response
 
 
@@ -272,7 +276,7 @@ class Get(CustomerAuthorizedApi):
             'min_price': min([
                 specification.sale_price
                 for specification in goods.merchandise.specification_list
-            ]),
+            ]) if goods.merchandise.specification_list else 0,
             'title': goods.merchandise.title,
             'despatch_type': goods.merchandise.despatch_type,
             'school_city': goods.school.city,

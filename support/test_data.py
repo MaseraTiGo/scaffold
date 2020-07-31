@@ -11,10 +11,10 @@ class TestDataManager(Single):
 
     def run(self):
         # generate staff
-        CrmSimulateMaker().run(10)
+        CrmSimulateMaker().run(1)
 
         # generate customer by staff
-        CustomerSimulateMaker().run(10)
+        CustomerSimulateMaker().run(1)
 
 
 if __name__ == "__main__":

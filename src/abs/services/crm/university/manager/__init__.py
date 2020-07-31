@@ -58,7 +58,7 @@ class UniversityServer(BaseManager):
 
     @classmethod
     def search_school_id_list(cls, **search_info):
-        return cls.search_all_school(**search_info).values_list('id', flat=True)
+        return list(cls.search_all_school(**search_info).values_list('id', flat=True))
 
     @classmethod
     def update_school(cls, school, **update_info):

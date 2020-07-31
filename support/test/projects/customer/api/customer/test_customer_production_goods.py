@@ -26,3 +26,14 @@ class CustomerProductionGoodsTest(CustomerAPITestCase):
         }
         result = self.access_api(api=api, **params)
         self.assertTrue("goods_info" in result)
+
+    def test_product_goods_hotsearch(self):
+        api = 'production.goods.hotsearch'
+        params = {
+            "current_page": 1,
+            'search_info': json.dumps({
+                'city': '武汉'
+            })
+        }
+        result = self.access_api(api=api, **params)
+        self.assertTrue("data_list" in result)
