@@ -55,8 +55,8 @@ customer_mobile_service.add(Monthly)
 from agile.customer.apis.university.school import HotSearch, Search, All
 customer_mobile_service.add(HotSearch, Search, All)
 
-from agile.customer.apis.university.major import All
-customer_mobile_service.add(All)
+from agile.customer.apis.university.major import All, Duration
+customer_mobile_service.add(All, Duration)
 
-from agile.customer.apis.production.goods import Search, Get
-customer_mobile_service.add(Search, Get)
+from agile.customer.apis.production.goods import Search, Get, HotSearch
+customer_mobile_service.add(Search, Get, HotSearch)

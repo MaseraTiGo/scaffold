@@ -3,7 +3,6 @@
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
-from abs.common.model import Count
 from abs.common.manager import BaseManager
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.production.manager import ProductionServer
@@ -11,6 +10,7 @@ from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.models import School
 from abs.services.crm.university.models import Major
 from abs.services.crm.production.models import Goods
+from abs.services.crm.production.utils.contact import DurationTypes
 
 
 class UniversityServer(BaseManager):
@@ -169,3 +169,7 @@ class UniversityServer(BaseManager):
             raise BusinessError("学校名字已存在")
         major.update(**update_info)
         return major
+
+    @classmethod
+    def get_duration(cls):
+        return dict(DurationTypes.CHOICES)

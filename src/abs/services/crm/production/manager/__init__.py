@@ -24,12 +24,17 @@ class GoodsServer(BaseManager):
         if 'title' in search_info:
             title = search_info.pop('title')
             merchandise_info.update({
-                'title': title
+                'title__contains': title
             })
         if 'use_status' in search_info:
             use_status = search_info.pop('use_status')
             merchandise_info.update({
                 'use_status': use_status
+            })
+        if 'production_id' in search_info:
+            production_id = search_info.pop('production_id')
+            merchandise_info.update({
+                'production_id': production_id
             })
         if merchandise_info:
             company = EnterpriseServer.get_crm__company()
@@ -46,6 +51,11 @@ class GoodsServer(BaseManager):
     def search_enable_goods(cls, current_page, **search_info):
         search_info.update({'use_status': UseStatus.ENABLE})
         return cls.search_goods(current_page, **search_info)
+
+    @classmethod
+    def search_hot_goods(cls, **search_info):
+        search_info.update({'use_status': UseStatus.ENABLE})
+        return cls.search_all_goods(**search_info)[0:3]
 
     @classmethod
     def get_goods(cls, goods_id):

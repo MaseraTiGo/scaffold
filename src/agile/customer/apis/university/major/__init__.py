@@ -51,3 +51,40 @@ class All(CustomerAuthorizedApi):
         } for major in major_list]
         response.data_list = data_list
         return response
+
+
+class Duration(CustomerAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+
+    response = with_metaclass(ResponseFieldSet)
+    response.data_list = ResponseField(
+        ListField,
+        desc="学年列表",
+        fmt=DictField(
+            desc="专业信息",
+            conf={
+                'key': CharField(desc="key"),
+                'value': CharField(desc="值")
+            }
+        )
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "学年列表"
+
+    @classmethod
+    def get_author(cls):
+        return "xyc"
+
+    def execute(self, request):
+        duration_mapping = UniversityServer.get_duration()
+        return duration_mapping
+
+    def fill(self, response, duration_mapping):
+        data_list = [{
+            'key': key,
+            'value': value
+        } for key, value in duration_mapping.items()]
+        response.data_list = data_list
+        return response
