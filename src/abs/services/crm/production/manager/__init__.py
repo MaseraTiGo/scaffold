@@ -27,3 +27,20 @@ class GoodsServer(BaseManager):
     @classmethod
     def search_all_goods(cls, **search_info):
         return Goods.search(**search_info)
+
+    @classmethod
+    def get_goods(cls, goods_id):
+        goods = Goods.get_byid(goods_id)
+        if goods is None:
+            raise BusinessError("此商品不存在")
+        return goods
+
+    @classmethod
+    def update_goods(cls, goods, **update_info):
+        goods.update(**update_info)
+        return goods
+
+    @classmethod
+    def create_goods(cls, **goods_info):
+        goods = Goods.create(**goods_info)
+        return goods

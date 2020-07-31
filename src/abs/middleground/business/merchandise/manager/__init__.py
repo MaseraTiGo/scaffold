@@ -4,7 +4,7 @@ from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
-from abs.middleground.business.merchandise.models import Merchandise,\
+from abs.middleground.business.merchandise.models import Merchandise, \
         Specification, SpecificationValue
 
 
@@ -13,7 +13,6 @@ class MerchandiseServer(BaseManager):
     @classmethod
     def _hung_specification_value(cls, specification_list):
         specification_mapping = {}
-        print('~~~~>>>>>    ', specification_list)
         for specification in specification_list:
             specification.specification_value_list = []
             specification_mapping.update({

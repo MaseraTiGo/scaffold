@@ -5,7 +5,7 @@ Created on 2020年7月10日
 @author: Administrator
 '''
 
-from abs.common.model import BaseModel, IntegerField,\
+from abs.common.model import BaseModel, IntegerField, \
         CharField, DateTimeField, TextField, timezone
 from abs.middleground.business.merchandise.utils.constant import \
         DespatchService, UseStatus
@@ -56,10 +56,16 @@ class Merchandise(BaseModel):
 
     @classmethod
     def get_bytitle(cls, company_id, title):
-        merchandise_qs = cls.query(
+        merchandise_qs = cls.search(
             company_id=company_id,
             title=title
         )
         if merchandise_qs.count():
             return merchandise_qs[0]
         return None
+
+    @classmethod
+    def search(cls, **attrs):
+        merchandise_qs = cls.query().filter(**attrs)
+        return merchandise_qs
+
