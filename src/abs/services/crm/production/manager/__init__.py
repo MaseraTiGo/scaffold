@@ -57,6 +57,7 @@ class GoodsServer(BaseManager):
         search_info.update({'use_status': UseStatus.ENABLE})
         return cls.search_all_goods(**search_info)[0:3]
 
+    @classmethod
     def get_goods(cls, goods_id):
         goods = Goods.get_byid(goods_id)
         if goods is None:

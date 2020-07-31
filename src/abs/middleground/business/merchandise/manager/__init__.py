@@ -124,6 +124,7 @@ class MerchandiseServer(BaseManager):
         market_price,
         despatch_type,
         remark,
+        description,
     ):
         merchandise = Merchandise.get_bytitle(
             company_id,
@@ -144,6 +145,7 @@ class MerchandiseServer(BaseManager):
             market_price=market_price,
             despatch_type=despatch_type,
             remark=remark,
+            description=description,
         )
         return merchandise
 

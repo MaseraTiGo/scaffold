@@ -50,6 +50,7 @@ class Get(StaffAuthorizedApi):
             'school_name': CharField(desc="学校名称"),
             'major_id': IntField(desc="专业ID"),
             'major_name': CharField(desc="专业名称"),
+            'description': CharField(desc="商品描述"),
             'duration':CharField(
                 desc="时长",
                 choices=DurationTypes.CHOICES
@@ -115,6 +116,7 @@ class Get(StaffAuthorizedApi):
             'school_name': goods.school.name,
             'major_id':goods.major.id,
             'major_name': goods.major.name,
+            'description': goods.merchandise.description,
             'duration':goods.duration,
             'use_status': goods.merchandise.use_status,
             'remark': goods.merchandise.remark,
@@ -212,6 +214,11 @@ class Search(StaffAuthorizedApi):
             request.current_page,
             **request.search_info
         )
+        UniversityServer.hung_major(spliter.data)
+        UniversityServer.hung_school(spliter.data)
+        MerchandiseServer.hung_merchandise(spliter.data)
+        merchandise_list = [goods.merchandise for goods in spliter.data]
+        ProductionServer.hung_production(merchandise_list)
         return spliter
 
     def fill(self, response, spliter):
@@ -269,6 +276,7 @@ class Add(StaffAuthorizedApi):
             'production_id': IntField(desc="产品ID"),
             'school_id': IntField(desc="学校ID"),
             'major_id': IntField(desc="专业ID"),
+            'description':CharField(desc="商品描述"),
             'duration':CharField(
                 desc="时长",
                 choices=DurationTypes.CHOICES
@@ -330,6 +338,7 @@ class Add(StaffAuthorizedApi):
             "despatch_type":request.goods_info.pop('despatch_type'),
             "production_id":production.id,
             "remark":request.goods_info.pop('remark'),
+            'description':request.goods_info.pop('description'),
             "pay_types":"[]",
             "pay_services":"[]",
         }
@@ -386,6 +395,7 @@ class Update(StaffAuthorizedApi):
             'production_id': IntField(desc="产品ID"),
             'school_id': IntField(desc="学校ID"),
             'major_id': IntField(desc="专业ID"),
+            "description":CharField(desc="商品描述"),
             'duration':CharField(
                 desc="时长",
                 choices=DurationTypes.CHOICES
@@ -457,6 +467,7 @@ class Update(StaffAuthorizedApi):
             "use_status":request.goods_info.pop('use_status'),
             "production_id":production.id,
             "remark":request.goods_info.pop('remark'),
+            "description":request.goods_info.pop('description'),
         }
         MerchandiseServer.update(goods.merchandise_id,
                                  **merchandise_update_info)

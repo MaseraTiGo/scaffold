@@ -24,6 +24,7 @@ class ProductionGoodsTestCase(CrmAPITestCase):
             'major_id':self.major.id if self.major else 0,
             "duration":"two_half_year",
             "remark":"这事一个测试商品",
+            "description":"这事一个测试商品描述",
             "specification_list":[{
               "show_image":"/1231/1.png",
               "sale_price":10200,
@@ -50,6 +51,7 @@ class ProductionGoodsTestCase(CrmAPITestCase):
             'major_id':self.major.id if self.major else 0,
             "duration":"one_half_year",
             "remark":"这事一个测试商品22",
+            "description":"这事一个测试商品描述22",
             "use_status":"enable",
             "specification_list":[{
               "show_image":"/1231/1.png",
