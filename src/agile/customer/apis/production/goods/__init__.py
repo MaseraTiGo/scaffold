@@ -235,6 +235,7 @@ class Get(CustomerAuthorizedApi):
             fmt=DictField(
                 desc="规格",
                 conf={
+                    'id': IntField(desc="id"),
                     'sale_price': IntField(desc="价格"),
                     'stock': IntField(desc="库存"),
                     'show_image': CharField(desc="展示图片"),
@@ -289,6 +290,7 @@ class Get(CustomerAuthorizedApi):
             'brand_name': goods.merchandise.production.brand.name,
             'production_name': goods.merchandise.production.name,
             'specification_list': [{
+                'id': specification.id,
                 'sale_price': specification.sale_price,
                 'stock': specification.stock,
                 'show_image': specification.show_image,

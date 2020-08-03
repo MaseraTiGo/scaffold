@@ -287,4 +287,4 @@ class OrderServer(BaseManager):
 
     @classmethod
     def search_order_id_list(cls, **search_info):
-        return Order.query().filter(**search_info).values_list('id', flat=True)
+        return list(Order.query().filter(**search_info).values_list('id', flat=True))

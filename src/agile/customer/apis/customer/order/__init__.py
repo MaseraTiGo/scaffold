@@ -252,7 +252,7 @@ class Search(CustomerAuthorizedApi):
         OrderItemServer.hung_order_item(page_list.data)
         all_order_item_list = []
         for order in page_list.data:
-            all_order_item_list.extend(order.order_item_list)
+            all_order_item_list.extend(order.orderitem_list)
         mg_OrderServer.hung_snapshoot(all_order_item_list)
         MerchandiseServer.hung_specification([
             order_item.snapshoot
@@ -291,7 +291,7 @@ class Search(CustomerAuthorizedApi):
                     'attribute': specification_value.attribute
                 } for specification_value
                     in order_item.specification.specification_value_list]
-            } for order_item in order.order_item_list]
+            } for order_item in order.orderitem_list]
         } for order in page_list.data]
         response.total = page_list.total
         response.total_page = page_list.total_page
