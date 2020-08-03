@@ -177,6 +177,7 @@ class Search(StaffAuthorizedApi):
                     desc="时长",
                     choices=DurationTypes.CHOICES
                 ),
+                'create_time': DatetimeField(desc="创建时间"),
                 'specification_list': ListField(
                     desc="规格列表",
                     fmt=DictField(
@@ -237,6 +238,7 @@ class Search(StaffAuthorizedApi):
             'major_name': goods.major.name,
             'is_hot':goods.is_hot,
             'duration':goods.duration,
+            'create_time':goods.create_time,
             'specification_list':[{
                 "id": specification.id,
                 "sale_price":specification.sale_price,
