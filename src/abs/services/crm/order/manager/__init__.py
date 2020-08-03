@@ -83,7 +83,7 @@ class OrderServer(BaseManager):
                 major_name=specification.merchandise.goods.major.name,
                 duration=specification.merchandise.goods.duration
             )
-        return mg_order.number
+        return order
 
 
 class OrderItemServer(BaseManager):

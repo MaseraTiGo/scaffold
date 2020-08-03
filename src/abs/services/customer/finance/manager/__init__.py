@@ -13,6 +13,7 @@ from abs.services.customer.personal.manager import CustomerServer
 from abs.services.customer.finance.models import CustomerBalanceRecord
 from abs.middleware.wechat import wechat_middleware
 from abs.middleware.extend.yunaccount import yunaccount_extend
+from abs.middleware.alipay import alipay_middleware
 
 
 class CustomerFinanceServer(BaseManager):
