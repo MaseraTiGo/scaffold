@@ -263,7 +263,7 @@ class OrderServer(BaseManager):
         cls._hung_delivery_record(mg_order_list)
         for mg_order in mg_order_list:
             if mg_order.id in mg_order_mapping:
-                mg_order_mapping[mg_order.id] = mg_order
+                mg_order_mapping[mg_order.id].mg_order = mg_order
         return obj_list
 
     @classmethod
@@ -288,3 +288,4 @@ class OrderServer(BaseManager):
     @classmethod
     def search_order_id_list(cls, **search_info):
         return list(Order.query().filter(**search_info).values_list('id', flat=True))
+

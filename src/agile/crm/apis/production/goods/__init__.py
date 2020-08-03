@@ -538,3 +538,28 @@ class Setuse(StaffAuthorizedApi):
 
     def fill(self, response):
         return response
+
+
+class Settop(StaffAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.goods_id = RequestField(IntField, desc="商品id")
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_desc(cls):
+        return "商品置顶接口"
+
+    @classmethod
+    def get_author(cls):
+        return "Fsy"
+
+    def execute(self, request):
+        goods = GoodsServer.get_goods(request.goods_id)
+        is_hot = True
+        if goods.is_hot:
+            is_hot = False
+        goods.update(is_hot=is_hot)
+
+    def fill(self, response):
+        return response

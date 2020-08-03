@@ -100,9 +100,9 @@ class Get(StaffAuthorizedApi):
             'id': order.id,
             'name':customer.person.name,
             'phone':customer.person.phone,
-            'identification':customer.person.person_status.\
+            'identification':customer.person_status.\
                              certification.identification if \
-                             customer.person.person_status.\
+                             customer.person_status.\
                              certification else "",
             'register_time':customer.create_time,
 
@@ -244,7 +244,7 @@ class Search(StaffAuthorizedApi):
             'strike_price': order.mg_order.strike_price,
             'actual_amount': order.mg_order.payment.actual_amount if \
                              order.mg_order.payment else 0,
-            'staus': order.mg_order.create_time,
+            'status': order.mg_order.status,
 
             're_name': order.mg_order.invoice.name if \
                        order.mg_order.invoice else "",
