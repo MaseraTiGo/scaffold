@@ -1,9 +1,9 @@
 # coding=UTF-8
 
-from abs.common.model import BaseModel, BooleanField, ForeignKey,\
+from abs.common.model import BaseModel, BooleanField, ForeignKey, \
         IntegerField, CharField, TextField, DateTimeField, timezone
 from abs.services.crm.production.settings import DB_PREFIX
-from abs.services.crm.production.utils.contact import DurationTypes
+from abs.services.crm.production.utils.constant import DurationTypes
 
 
 class Goods(BaseModel):

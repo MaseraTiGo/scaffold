@@ -14,7 +14,7 @@ from abs.middleground.business.transaction.utils.constant import \
         PayTypes, OwnTypes
 from abs.middleground.business.merchandise.utils.constant import \
         DespatchService
-from abs.services.crm.production.utils.contact import DurationTypes
+from abs.services.crm.production.utils.constant import DurationTypes
 from abs.services.crm.order.manager import OrderServer, OrderItemServer
 from abs.services.customer.personal.manager import CustomerServer
 

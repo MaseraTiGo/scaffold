@@ -4,7 +4,7 @@ from abs.common.model import BaseModel, BooleanField, \
         IntegerField, CharField, TextField, DateTimeField, timezone, \
         ForeignKey, CASCADE
 from abs.services.crm.order.settings import DB_PREFIX
-from abs.services.crm.production.utils.contact import DurationTypes
+from abs.services.crm.production.utils.constant import DurationTypes
 from abs.services.crm.order.store.order import Order
 
 

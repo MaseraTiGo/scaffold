@@ -7,7 +7,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.crm.manager.api import StaffAuthorizedApi
-from abs.services.crm.production.utils.contact import DurationTypes
+from abs.services.crm.production.utils.constant import DurationTypes
 from abs.middleground.business.merchandise.utils.constant import\
      DespatchService, UseStatus
 

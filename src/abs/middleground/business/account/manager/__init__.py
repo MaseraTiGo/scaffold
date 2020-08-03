@@ -44,11 +44,11 @@ class AccountServer(BaseManager):
         raise BusinessError('账号或密码错误！')
 
     @classmethod
-    def user_login(cls, username):
-        account = cls.APPLY_CLS.get_byusername(username)
+    def user_login(cls,username):
+        account=cls.APPLY_CLS.get_byusername(username)
         if account is None:
             raise BusinessError('账户不存在！')
-        token = TokenManager.generate_token(
+        token=TokenManager.generate_token(
             account.role_type,
             account.role_id
         )
@@ -78,7 +78,7 @@ class AccountServer(BaseManager):
     def modify_password(cls,role_id,old_password,new_password):
         account=cls.APPLY_CLS.get_byrole(role_id)
         if account.password!=old_password:
-            raise BusinessError('老密码不正确，请重试！')
+            raise BusinessError('原密码不正确，请重试！')
         account.update(password=new_password)
         return True
 
