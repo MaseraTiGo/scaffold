@@ -175,3 +175,55 @@ class All(CustomerAuthorizedApi):
         } for school in school_list]
         response.data_list = data_list
         return response
+
+
+class Get(CustomerAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.school_id = IntField(desc="学校id")
+
+    response = with_metaclass(ResponseFieldSet)
+    response.school_info = ResponseField(
+        DictField,
+        desc="学校",
+        conf={
+            'id': IntField(desc="学校id"),
+            'logo_url': CharField(desc="学校logo"),
+            'name': CharField(desc="名称"),
+            'content': CharField(desc="描述"),
+            'production_list': ListField(
+                desc="产品列表",
+                fmt=DictField(
+                    desc="产品信息",
+                    conf={
+                        'id': IntField(desc="产品id"),
+                        'name': CharField(desc='产品名称'),
+                        'quantity': IntField(desc="商品数量")
+                    }
+                )
+            )
+        }
+
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "所有学校列表"
+
+    @classmethod
+    def get_author(cls):
+        return "xyc"
+
+    def execute(self, request):
+        school = UniversityServer.get_school(request.school_id)
+        UniversityServer.hung_production_list([school])
+        return school
+
+    def fill(self, response, school):
+        response.school_info = {
+            'id': school.id,
+            'logo_url': school.id,
+            'name': school.id,
+            'content': school.id,
+            'production_list': school.production_list
+        }
+        return response

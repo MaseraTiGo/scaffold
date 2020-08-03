@@ -3,6 +3,7 @@
 
 from abs.middleground.business.account.manager import AccountServer
 from abs.services.customer.account.store import CustomerAccount
+from infrastructure.core.exception.business_error import BusinessError
 
 
 class CustomerAccountServer(AccountServer):
@@ -23,3 +24,10 @@ class CustomerAccountServer(AccountServer):
             if account.role_id in customer_mapping:
                 customer_mapping[account.role_id].account = account
         return customer_list
+
+    @classmethod
+    def get_customer_account_byusername(cls, username):
+        account = cls.APPLY_CLS.get_byusername(username)
+        if account:
+            return account
+        return None

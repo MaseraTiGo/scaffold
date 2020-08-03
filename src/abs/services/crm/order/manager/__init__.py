@@ -8,6 +8,7 @@ from abs.middleground.business.order.manager import \
      OrderServer as mg_OrderServer
 from abs.services.crm.order.models import Order
 from abs.services.crm.order.models import OrderItem
+from abs.middleground.business.enterprise.manager import EnterpriseServer
 
 
 class OrderServer(BaseManager):
@@ -32,8 +33,57 @@ class OrderServer(BaseManager):
 
     @classmethod
     def search_all(cls, **search_info):
+        if 'status' in search_info:
+            order_id_list = mg_OrderServer.search_order_id_list(
+                status=search_info.pop('status')
+            )
+            search_info.update({
+                'mg_order_id__in': order_id_list
+            })
         order_qs = Order.search(**search_info)
         return order_qs
+
+    @classmethod
+    def add(cls, customer, address, source, strike_price, specification_list):
+        company = EnterpriseServer.get_crm__company()
+        mg_order = mg_OrderServer.place(
+            specification_list,
+            strike_price,
+            '',
+            'person',
+            customer.person_id,
+            'company',
+            company.id,
+            name=address.contacts,
+            phone=address.phone,
+            address='-'.join([address.city, address.address])
+        )
+
+        order = Order.create(
+            customer_id=customer.id,
+            mg_order_id=mg_order.id,
+            source=source
+        )
+        mapping = {}
+        for specification in specification_list:
+            mapping.update({
+                specification.id: specification
+            })
+        snapshoot_list = mg_OrderServer.search_all_snapshoot(
+            specification_id__in=mapping.keys()
+        )
+        for snapshoot in snapshoot_list:
+            specification = mapping.get(snapshoot.specification_id)
+            OrderItem.create(
+                order=order,
+                goods_id=specification.merchandise.goods.id,
+                merchandise_snapshoot_id=snapshoot.id,
+                school_name=specification.merchandise.goods.school.name,
+                school_city=specification.merchandise.goods.school.city,
+                major_name=specification.merchandise.goods.major.name,
+                duration=specification.merchandise.goods.duration
+            )
+        return order
 
 
 class OrderItemServer(BaseManager):

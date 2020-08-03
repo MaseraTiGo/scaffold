@@ -35,7 +35,7 @@ class AccountServer(BaseManager):
     @classmethod
     def login(cls,username,password):
         is_exsited,account=cls.APPLY_CLS.is_exsited(username,password)
-        if is_exsited:
+        if is_exsited and password:
             token=TokenManager.generate_token(
                 account.role_type,
                 account.role_id
@@ -44,11 +44,8 @@ class AccountServer(BaseManager):
         raise BusinessError('账号或密码错误！')
 
     @classmethod
-    def user_login(cls,username):
-        account=cls.APPLY_CLS.get_byusername(username)
-        if account is None:
-            raise BusinessError('账户不存在！')
-        token=TokenManager.generate_token(
+    def account_login(cls, account):
+        token = TokenManager.generate_token(
             account.role_type,
             account.role_id
         )

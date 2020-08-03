@@ -26,8 +26,8 @@ class CustomerServer(BaseManager):
 
     @classmethod
     def is_exsited(cls,phone):
-        is_exsited,customer=Customer.is_exsited(phone)
-        return is_exsited,customer
+        is_exsited,person=PersonServer.is_exsited(phone)
+        return is_exsited,person
 
     @classmethod
     def create(cls,phone,**customer_info):
