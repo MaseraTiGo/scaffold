@@ -121,9 +121,9 @@ class Search(CustomerAuthorizedApi):
     def fill(self, response, page_list):
         data_list = [{
             'id': school.id,
-            'logo_url': school.id,
-            'name': school.id,
-            'content': school.id,
+            'logo_url': school.logo_url,
+            'name': school.name,
+            'content': school.content,
             'production_list': school.production_list
         } for school in page_list.data]
         response.data_list = data_list
