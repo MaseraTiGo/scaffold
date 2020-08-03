@@ -35,6 +35,7 @@ class Add(NoAuthorizedApi):
         conf={
             'title': CharField(desc="标题"),
             'video_display': CharField(desc="宣传视频"),
+            'description': CharField(desc="描述"),
             'slideshow': ListField(
                 desc='轮播图',
                 fmt=CharField(desc="图片地址")
@@ -125,6 +126,7 @@ class Search(NoAuthorizedApi):
                 'id': IntField(desc="编号"),
                 'title': CharField(desc="标题"),
                 'video_display': CharField(desc="宣传视频"),
+                'description': CharField(desc="描述"),
                 'slideshow': ListField(
                     desc='轮播图',
                     fmt=CharField(desc="图片地址")
@@ -203,6 +205,7 @@ class Search(NoAuthorizedApi):
             'id': merchandise.id,
             'title': merchandise.title,
             'video_display': merchandise.video_display,
+            'description': merchandise.description,
             'slideshow': json.loads(merchandise.slideshow),
             'detail': json.loads(merchandise.detail),
             'pay_types': json.loads(merchandise.pay_types),
@@ -249,6 +252,7 @@ class Get(NoAuthorizedApi):
             'id': IntField(desc="编号"),
             'title': CharField(desc="标题"),
             'video_display': CharField(desc="宣传视频"),
+            'description': CharField(desc="描述"),
             'slideshow': ListField(
                 desc='轮播图',
                 fmt=CharField(desc="图片地址")
@@ -319,6 +323,7 @@ class Get(NoAuthorizedApi):
             'id': merchandise.id,
             'title': merchandise.title,
             'video_display': merchandise.video_display,
+            'description': merchandise.description,
             'slideshow': json.loads(merchandise.slideshow),
             'detail': json.loads(merchandise.detail),
             'pay_types': json.loads(merchandise.pay_types),
