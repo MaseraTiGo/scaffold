@@ -70,7 +70,7 @@ class OrderServer(BaseManager):
                 specification.id: specification
             })
         snapshoot_list = mg_OrderServer.search_all_snapshoot(
-            specification_id__in=mapping.keys()
+            requirement=mg_order.requirement
         )
         for snapshoot in snapshoot_list:
             specification = mapping.get(snapshoot.specification_id)
@@ -83,7 +83,7 @@ class OrderServer(BaseManager):
                 major_name=specification.merchandise.goods.major.name,
                 duration=specification.merchandise.goods.duration
             )
-        return order
+        return mg_order.number
 
 
 class OrderItemServer(BaseManager):

@@ -36,6 +36,7 @@ class Add(CustomerAuthorizedApi):
     })
 
     response = with_metaclass(ResponseFieldSet)
+    response.number = ResponseField(CharField, desc="订单号")
 
     @classmethod
     def get_desc(cls):
@@ -71,9 +72,11 @@ class Add(CustomerAuthorizedApi):
             specification.merchandise.goods
             for specification in specification_list]
         )
-        OrderServer.add(customer, address, 'app', order_info['strike_price'], specification_list)
+        number = OrderServer.add(customer, address, 'app', order_info['strike_price'], specification_list)
+        return number
 
-    def fill(self, response):
+    def fill(self, response, number):
+        response.number = number
         return response
 
 
@@ -131,7 +134,7 @@ class Get(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        order = OrderServer.get(request.goods_id)
+        order = OrderServer.get(request.order_id)
         if order.customer_id != self.auth_user.id:
             raise BusinessError('订单异常')
         order.order_item_list = OrderItemServer.search_all(order=order)
@@ -153,8 +156,8 @@ class Get(CustomerAuthorizedApi):
             'status': order.mg_order.status,
             'strike_price': order.mg_order.strike_price,
             'create_time': order.mg_order.create_time,
-            'last_payment_type': order.mg_order.last_payment_type,
-            'last_payment_time': order.mg_order.last_payment_time,
+            'last_payment_type': order.mg_order.payment.last_payment_type,
+            'last_payment_time': order.mg_order.payment.last_payment_time,
             'last_payment_number': '',
             'order_item_list': [{
                 'sale_price': order_item.snapshoot.sale_price,
@@ -172,7 +175,7 @@ class Get(CustomerAuthorizedApi):
                     'category': specification_value.category,
                     'attribute': specification_value.attribute
                 } for specification_value
-                    in order_item.specification.specification_value_list]
+                    in order_item.snapshoot.specification.specification_value_list]
             } for order_item in order.order_item_list]
         }
         return response
@@ -271,8 +274,8 @@ class Search(CustomerAuthorizedApi):
             'status': order.mg_order.status,
             'strike_price': order.mg_order.strike_price,
             'create_time': order.mg_order.create_time,
-            'last_payment_type': order.mg_order.last_payment_type,
-            'last_payment_time': order.mg_order.last_payment_time,
+            'last_payment_type': order.mg_order.payment.last_payment_type,
+            'last_payment_time': order.mg_order.payment.last_payment_time,
             'last_payment_number': '',
             'order_item_list': [{
                 'sale_price': order_item.snapshoot.sale_price,
@@ -290,7 +293,7 @@ class Search(CustomerAuthorizedApi):
                     'category': specification_value.category,
                     'attribute': specification_value.attribute
                 } for specification_value
-                    in order_item.specification.specification_value_list]
+                    in order_item.snapshoot.specification.specification_value_list]
             } for order_item in order.orderitem_list]
         } for order in page_list.data]
         response.total = page_list.total
