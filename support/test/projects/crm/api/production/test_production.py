@@ -9,8 +9,8 @@ from support.common.generator.field.model.entity import BrandEntity
 class ProductionproductionTestCase(CrmAPITestCase):
 
     def setUp(self):
-        self._brand=BrandEntity().generate()
-        self.production_info={
+        self._brand = BrandEntity().generate()
+        self.production_info = {
             'name': '专升本',
             'description': '专科升级到本科',
             'attribute_list': [
@@ -68,7 +68,7 @@ class ProductionproductionTestCase(CrmAPITestCase):
                 },
             ],
         }
-        self.update_info={
+        self.update_info = {
             'name': '高升本',
             'description': '高中升级到本科',
             'attribute_list': [
@@ -125,7 +125,7 @@ class ProductionproductionTestCase(CrmAPITestCase):
     def tearDown(self):
         pass
 
-    def assert_production_fields(self,production,need_id=False):
+    def assert_production_fields(self, production, need_id=False):
         if need_id:
             self.assertTrue('id' in production)
         self.assertTrue('name' in production)
@@ -138,7 +138,7 @@ class ProductionproductionTestCase(CrmAPITestCase):
         self.assertTrue('create_time' in production)
 
     def test_create_production(self):
-        api='production.add'
+        api = 'production.add'
         self.access_api(
             api=api,
             brand_id=self._brand.id,
@@ -146,9 +146,9 @@ class ProductionproductionTestCase(CrmAPITestCase):
         )
 
     def test_search_production(self):
-        api='production.search'
-        current_page=1
-        result=self.access_api(
+        api = 'production.search'
+        current_page = 1
+        result = self.access_api(
             api=api,
             current_page=current_page,
             search_info=json.dumps({})
@@ -158,21 +158,21 @@ class ProductionproductionTestCase(CrmAPITestCase):
         self.assertTrue("total_page" in result)
         if not len(result['data_list']):
             self.test_create_production()
-            result=self.access_api(
+            result = self.access_api(
                 api=api,
                 current_page=current_page,
                 search_info=json.dumps({})
             )
 
         for production in result['data_list']:
-            self.assert_production_fields(production,True)
+            self.assert_production_fields(production, True)
         return result['data_list']
 
     def test_get_production(self):
-        production_list=self.test_search_production()
-        production_id=production_list[-1]['id']
-        api="production.get"
-        result=self.access_api(
+        production_list = self.test_search_production()
+        production_id = production_list[-1]['id']
+        api = "production.get"
+        result = self.access_api(
             api=api,
             production_id=production_id
         )
@@ -180,9 +180,9 @@ class ProductionproductionTestCase(CrmAPITestCase):
         self.assert_production_fields(result['production_info'])
 
     def test_update_production(self):
-        production_list=self.test_search_production()
-        production_id=production_list[-1]['id']
-        api="production.update"
+        production_list = self.test_search_production()
+        production_id = production_list[-1]['id']
+        api = "production.update"
         self.access_api(
             api=api,
             production_id=production_id,
@@ -190,10 +190,29 @@ class ProductionproductionTestCase(CrmAPITestCase):
         )
 
     def test_remove_production(self):
-        production_list=self.test_search_production()
-        production_id=production_list[0]['id']
-        api="production.remove"
+        production_list = self.test_search_production()
+        production_id = production_list[0]['id']
+        api = "production.remove"
         self.access_api(
             api=api,
             production_id=production_id,
         )
+
+    def test_searchall_production(self):
+        api = 'production.searchall'
+        result = self.access_api(
+            api=api,
+            search_info=json.dumps({})
+        )
+        self.assertTrue("data_list" in result)
+        if not len(result['data_list']):
+            self.test_create_production()
+            result = self.access_api(
+                api=api,
+                current_page=current_page,
+                search_info=json.dumps({})
+            )
+
+        for production in result['data_list']:
+            self.assert_production_fields(production, True)
+        return result['data_list']
