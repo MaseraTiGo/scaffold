@@ -221,6 +221,7 @@ class Get(CustomerAuthorizedApi):
         'detail': ListField(desc="商品详情", fmt=CharField(desc="url")),
         'min_price': IntField(desc="价格"),
         'title': CharField(desc="标题"),
+        'description': CharField(desc="描述"),
         'despatch_type': CharField(desc="发货方式"),
         'school_city': CharField(desc="学校城市"),
         'month_quantity': IntField(desc="月销数量"),
@@ -278,6 +279,7 @@ class Get(CustomerAuthorizedApi):
                 for specification in goods.merchandise.specification_list
             ]) if goods.merchandise.specification_list else 0,
             'title': goods.merchandise.title,
+            'description': goods.merchandise.description,
             'despatch_type': goods.merchandise.despatch_type,
             'school_city': goods.school.city,
             'month_quantity': 0,

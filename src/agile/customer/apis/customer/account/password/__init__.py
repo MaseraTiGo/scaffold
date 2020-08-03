@@ -84,3 +84,29 @@ class Modify(CustomerAuthorizedApi):
 
     def fill(self,response,token):
         return response
+
+
+class SetUp(CustomerAuthorizedApi):
+
+    request=with_metaclass(RequestFieldSet)
+    request.new_password=RequestField(CharField,desc="新密码")
+
+    response=with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_desc(cls):
+        return "客户设置密码接口"
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self,request):
+        CustomerAccountServer.modify_password(
+            self.auth_user.id,
+            old_password='',
+            new_password=request.new_password
+        )
+
+    def fill(self,response,token):
+        return response

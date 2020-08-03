@@ -270,7 +270,7 @@ class OrderServer(BaseManager):
     def hung_snapshoot(cls, obj_list):
         snapshoot_mapping = {}
         for obj in obj_list:
-            obj.napshoot = None
+            obj.snapshoot = None
             snapshoot_mapping[obj.merchandise_snapshoot_id] = obj
 
         snapshoot_qs = MerchandiseSnapShoot.query().filter(
@@ -278,5 +278,13 @@ class OrderServer(BaseManager):
          )
         for snapshoot in snapshoot_qs:
             if snapshoot.id in snapshoot_mapping:
-                snapshoot_mapping[snapshoot.id] = snapshoot
+                snapshoot_mapping[snapshoot.id].snapshoot = snapshoot
         return obj_list
+
+    @classmethod
+    def search_all_snapshoot(cls, **search_info):
+        return MerchandiseSnapShoot.query().filter(**search_info)
+
+    @classmethod
+    def search_order_id_list(cls, **search_info):
+        return Order.query().filter(**search_info).values_list('id', flat=True)

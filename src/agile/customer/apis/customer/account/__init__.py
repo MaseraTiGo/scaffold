@@ -10,7 +10,7 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
-from infrastructure.core.field.base import CharField
+from infrastructure.core.field.base import CharField, BooleanField
 
 from agile.base.api import NoAuthorizedApi
 from agile.customer.manager.api import CustomerAuthorizedApi
@@ -109,6 +109,7 @@ class CodeLogin(NoAuthorizedApi):
     response.access_token = ResponseField(CharField, desc="访问凭证")
     response.renew_flag = ResponseField(CharField, desc="续签标识")
     response.expire_time = ResponseField(CharField, desc="到期时间")
+    response.is_password = ResponseField(BooleanField, desc="是否有密码")
 
     @classmethod
     def get_desc(cls):
@@ -125,12 +126,28 @@ class CodeLogin(NoAuthorizedApi):
                 request.verify_code
         ):
             raise BusinessError('验证码错误')
-        token = CustomerAccountServer.user_login(
+        account = CustomerAccountServer.get_customer_account_byusername(
             request.username
         )
-        return token
+        password = ''
+        if account:
+            token = CustomerAccountServer.account_login(
+                account
+            )
+            password = account.password
+        else:
+            customer = CustomerServer.create(
+                request.username,
+            )
+            token = CustomerAccountServer.create(
+                customer.id,
+                request.username,
+                password,
+            )
+        return token, password
 
-    def fill(self, response, token):
+    def fill(self, response, token, password):
+        response.is_password = True if password else False
         response.access_token = token.auth_token
         response.renew_flag = token.renew_flag
         response.expire_time = token.expire_time
