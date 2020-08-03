@@ -263,7 +263,7 @@ class OrderServer(BaseManager):
         cls._hung_delivery_record(mg_order_list)
         for mg_order in mg_order_list:
             if mg_order.id in mg_order_mapping:
-                mg_order_mapping[mg_order.id] = mg_order
+                mg_order_mapping[mg_order.id].mg_order = mg_order
         return obj_list
 
     @classmethod
@@ -278,5 +278,5 @@ class OrderServer(BaseManager):
          )
         for snapshoot in snapshoot_qs:
             if snapshoot.id in snapshoot_mapping:
-                snapshoot_mapping[snapshoot.id] = snapshoot
+                snapshoot_mapping[snapshoot.id].napshoot = snapshoot
         return obj_list

@@ -27,7 +27,7 @@ class OrderServer(BaseManager):
         order_qs = cls.search_all(**search_info).\
                     order_by("-create_time")
         splitor = Splitor(current_page, order_qs)
-        mg_OrderServer.hung_order(splitor.get_list())
+        splitor.data = mg_OrderServer.hung_order(splitor.get_list())
         return splitor
 
     @classmethod

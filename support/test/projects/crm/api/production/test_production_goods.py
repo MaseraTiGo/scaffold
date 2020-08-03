@@ -111,7 +111,7 @@ class ProductionGoodsTestCase(CrmAPITestCase):
         for goods in result['data_list']:
             self.assert_goods_fields(goods, True)
         return result['data_list']
-
+    '''
     def test_get_goods(self):
         goods_list = self.test_search_goods()
         goods_id = goods_list[0]['id']
@@ -149,6 +149,15 @@ class ProductionGoodsTestCase(CrmAPITestCase):
         goods_list = self.test_search_goods()
         goods_id = goods_list[0]['id']
         api = 'production.goods.remove'
+        result = self.access_api(
+            api=api,
+            goods_id=goods_id
+        )
+    '''
+    def test_settop_goods(self):
+        goods_list = self.test_search_goods()
+        goods_id = goods_list[0]['id']
+        api = 'production.goods.settop'
         result = self.access_api(
             api=api,
             goods_id=goods_id
