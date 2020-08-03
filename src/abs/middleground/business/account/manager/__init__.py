@@ -75,7 +75,7 @@ class AccountServer(BaseManager):
     def modify_password(cls,role_id,old_password,new_password):
         account=cls.APPLY_CLS.get_byrole(role_id)
         if account.password!=old_password:
-            raise BusinessError('老密码不正确，请重试！')
+            raise BusinessError('原密码不正确，请重试！')
         account.update(password=new_password)
         return True
 

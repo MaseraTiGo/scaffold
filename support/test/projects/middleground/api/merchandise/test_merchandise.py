@@ -15,6 +15,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         self.merchandise_info = {
             'title': self.production.name + '商品',
             'video_display': 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2091711702,2468700162&fm=11&gp=0.jpg',
+            'description': "这是一个描述",
             'slideshow': [
                 "https://www.baidu.com",
                 "https://www.baidu.com",
@@ -133,6 +134,7 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
         if need_id:
             self.assertTrue('id' in merchandise)
         self.assertTrue('title' in merchandise)
+        self.assertTrue('description' in merchandise)
         self.assertTrue('video_display' in merchandise)
         self.assertTrue('slideshow' in merchandise)
         self.assertTrue('detail' in merchandise)

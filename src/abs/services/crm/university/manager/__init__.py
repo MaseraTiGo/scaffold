@@ -10,7 +10,7 @@ from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.models import School
 from abs.services.crm.university.models import Major
 from abs.services.crm.production.models import Goods
-from abs.services.crm.production.utils.contact import DurationTypes
+from abs.services.crm.production.utils.constant import DurationTypes
 
 
 class UniversityServer(BaseManager):
@@ -90,7 +90,7 @@ class UniversityServer(BaseManager):
                 (school_id, merchandise.production_id), 0
             )
             school_production_quantity_mapping.update({
-                (school_id, merchandise.production_id): cur_quantity+1
+                (school_id, merchandise.production_id): cur_quantity + 1
             })
         for school in school_list:
             school.production_list = []
@@ -151,7 +151,7 @@ class UniversityServer(BaseManager):
 
     @classmethod
     def search_all_major(cls, **search_info):
-        major_qs = Major.search(**search_info)
+        major_qs = Major.query(**search_info)
         return major_qs
 
     @classmethod

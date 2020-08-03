@@ -42,3 +42,26 @@ class TransactionStatusConstant(BaseHelper):
         from abs.middleground.business.transaction.utils.constant import \
                 TransactionStatus
         return random.choice(TransactionStatus.CHOICES)[0]
+
+
+class DespatchServiceConstant(BaseHelper):
+
+    def calc(self):
+        from abs.middleground.business.merchandise.utils.constant import \
+                DespatchService
+        return random.choice(DespatchService.CHOICES)[0]
+
+
+class UseStatusConstant(BaseHelper):
+
+    def calc(self):
+        from abs.middleground.business.merchandise.utils.constant import \
+                UseStatus
+        return random.choice(UseStatus.CHOICES)[0]
+
+class DurationTypesConstant(BaseHelper):
+
+    def calc(self):
+        from abs.services.crm.production.utils.constant import \
+                DurationTypes
+        return random.choice(DurationTypes.CHOICES)[0]
