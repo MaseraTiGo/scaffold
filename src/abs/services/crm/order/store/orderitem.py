@@ -14,6 +14,7 @@ class OrderItem(BaseModel):
     merchandise_snapshoot_id = IntegerField(verbose_name="商品快照id")
 
     school_name = CharField(verbose_name="学校名称", max_length=32, default="")
+    school_city = CharField(verbose_name="学校城市", max_length=32, default='')
     major_name = CharField(verbose_name="专业名称", max_length=64, default="")
     duration = CharField(
         verbose_name="时长",
