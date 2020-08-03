@@ -17,7 +17,9 @@ class OrderServer(BaseManager):
         order = Order.get_byid(order_id)
         if order is None:
             raise BusinessError("此订单不存在")
-        order.mg_order = mg_OrderServer.get(order.mg_order_id, is_hung=True)
+        order.mg_order = mg_OrderServer.get(
+                            order.mg_order_id, is_hung=True
+                         )
         return order
 
     @classmethod

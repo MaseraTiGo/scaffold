@@ -53,8 +53,8 @@ from agile.crm.apis.production.brand import Get, Search, SearchAll, Update, \
                                             Add, Remove
 crm_pc_service.add(Search, SearchAll, Get, Update, Add, Remove)
 
-from agile.crm.apis.production import Get, Search, Update, Add, Remove
-crm_pc_service.add(Search, Get, Update, Add, Remove)
+from agile.crm.apis.production import Get, Search, Update, Add, Remove, SearchAll
+crm_pc_service.add(Search, Get, Update, Add, Remove, SearchAll)
 
 from agile.crm.apis.university.major import Search, SearchAll, Add, Update, \
                                             Remove, Settop
