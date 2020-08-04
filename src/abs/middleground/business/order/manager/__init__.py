@@ -206,7 +206,7 @@ class OrderServer(BaseManager):
             last_payment_time=payment_record.create_time,
         )
 
-        order = Order.get_bypayment(payment)
+        order = Order.get_bypayment(payment.id)
         if order is None:
             raise BusinessError("订单信息不存在")
         order.update(

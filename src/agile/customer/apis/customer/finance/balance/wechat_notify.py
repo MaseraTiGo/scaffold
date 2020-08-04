@@ -27,7 +27,7 @@ def wechat_top_up_notify(request):
                     err_code_des=data['err_code_des']
                 )
             )
-        if not pay_middleware.check_sign(data):
+        if not pay_middleware.wechant_check_sign(data):
             raise BusinessError('支付回调签名错误，订单号（{out_trade_no}）'.format(
                 out_trade_no=data['out_trade_no']
             ))
@@ -65,7 +65,7 @@ def wechat_order_pay_notify(request):
                     err_code_des=data['err_code_des']
                 )
             )
-        if not pay_middleware.check_sign(data):
+        if not pay_middleware.wechant_check_sign(data):
             raise BusinessError('支付回调签名错误，订单号（{out_trade_no}）'.format(
                 out_trade_no=data['out_trade_no']
             ))

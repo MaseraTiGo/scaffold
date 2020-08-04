@@ -69,7 +69,7 @@ class Order(BaseModel):
 
     @classmethod
     def get_bypayment(cls, payment_id):
-        order_qs = cls.query(
+        order_qs = cls.query().filter(
             payment_id=payment_id
         )
         if order_qs.count() > 0:
