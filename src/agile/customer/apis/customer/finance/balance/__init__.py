@@ -13,6 +13,7 @@ from infrastructure.core.field.base import CharField,IntField,DictField
 
 from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.services.customer.finance.manager import CustomerFinanceServer
+from abs.middleware.pay import pay_middleware
 
 
 class Get(CustomerAuthorizedApi):
@@ -74,16 +75,16 @@ class TopUp(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self,request):
-        prepay_id=CustomerFinanceServer.top_up(
+        prepay_id = CustomerFinanceServer.top_up(
             customer_id=self.auth_user.id,
             amount=request.amount,
             pay_type=request.pay_type,
             remark=request.remark,
         )
-        pay_info=CustomerFinanceServer.parse_pay_info(prepay_id,request.pay_type)
+        pay_info = pay_middleware.parse_pay_info(prepay_id, request.pay_type)
         return pay_info
 
-    def fill(self,response,pay_info):
+    def fill(self, response, pay_info):
         response.pay_info=pay_info
         return response
 

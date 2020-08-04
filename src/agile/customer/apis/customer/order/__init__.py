@@ -16,6 +16,7 @@ from abs.services.crm.order.manager import OrderServer, OrderItemServer
 from abs.middleground.business.order.manager import OrderServer as mg_OrderServer
 from abs.services.crm.university.manager import UniversityServer
 from abs.middleground.business.production.manager import ProductionServer
+from abs.middleware.pay import pay_middleware
 
 
 class Add(CustomerAuthorizedApi):
@@ -303,7 +304,7 @@ class Search(CustomerAuthorizedApi):
 
 class Pay(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.number = RequestField(IntField, desc="订单号")
+    request.order_id = RequestField(IntField, desc="订单id")
     request.pay_type = RequestField(
         CharField,
         desc="交易方式",
@@ -316,8 +317,11 @@ class Pay(CustomerAuthorizedApi):
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.order_info = ResponseField(DictField, desc="订单信息", conf={
-
+    response.pay_info = ResponseField(DictField, desc='支付信息', conf={
+        'timestamp': CharField(desc="时间"),
+        'prepayid': CharField(desc="微信预支付id"),
+        'noncestr': CharField(desc="随机字符串"),
+        'sign': CharField(desc="签名")
     })
 
     @classmethod
@@ -330,8 +334,10 @@ class Pay(CustomerAuthorizedApi):
 
     def execute(self, request):
         order = OrderServer.get(request.order_id)
+        prepay_id = OrderServer.pay(order, request.pay_type)
+        pay_info = pay_middleware.parse_pay_info(prepay_id, request.pay_type)
+        return pay_info
 
-        return order
-
-    def fill(self, response):
+    def fill(self, response, pay_info):
+        response.pay_info = pay_info
         return response
