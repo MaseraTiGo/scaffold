@@ -141,7 +141,11 @@ class Search(StaffAuthorizedApi):
         DictField,
         desc="搜索商品",
         conf={
-
+            'title': CharField(desc="标题", is_required=False),
+            'province': CharField(desc="学校所在省", is_required=False),
+            'city': CharField(desc="学校所在市", is_required=False),
+            'school_id': IntField(desc="学校id", is_required=False),
+            'major_id': IntField(desc="专业id", is_required=False),
         }
     )
 
@@ -211,6 +215,24 @@ class Search(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
+        school_info = {}
+        if 'province' in request.search_info:
+            province = request.search_info.pop('province')
+            school_info.update({
+                'province': province
+            })
+        if 'city' in request.search_info:
+            city = request.search_info.pop('city')
+            school_info.update({
+                'city': city
+            })
+        if len(school_info) > 0:
+            school_id_list = UniversityServer.search_school_id_list(
+                **school_info
+            )
+            request.search_info.update({
+                'school_id__in': school_id_list
+            })
         spliter = GoodsServer.search_goods(
             request.current_page,
             **request.search_info

@@ -34,9 +34,16 @@ class OrderServer(BaseManager):
 
     @classmethod
     def search_all(cls, **search_info):
+        mg_search_info = {}
+        if 'number' in search_info:
+            number = search_info.pop('number')
+            mg_search_info.update({"number":number})
         if 'status' in search_info:
+            status = search_info.pop('status')
+            mg_search_info.update({"status":status})
+        if len(mg_search_info) > 0:
             order_id_list = mg_OrderServer.search_order_id_list(
-                status=search_info.pop('status')
+                **mg_search_info
             )
             search_info.update({
                 'mg_order_id__in': order_id_list
@@ -113,9 +120,7 @@ class OrderItemServer(BaseManager):
                                  order_id__in=order_mapping.keys())
                               )
         mg_OrderServer.hung_snapshoot(orderitem_list)
-        orderitem_mapping = {}
         for orderitem in orderitem_list:
-            orderitem_mapping[orderitem.id] = orderitem
             if orderitem.order_id in order_mapping:
                 order_mapping[orderitem.order_id].orderitem_list.\
                 append(orderitem)
