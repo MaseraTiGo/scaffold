@@ -62,7 +62,7 @@ class PaymentRecord(BaseModel):
     )
     status = CharField(
         verbose_name="交易状态",
-        max_length=16,
+        max_length=64,
         choices=TransactionStatus.CHOICES,
         null=True,
         default=None,
