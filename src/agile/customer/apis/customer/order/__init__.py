@@ -136,10 +136,6 @@ class Get(CustomerAuthorizedApi):
             raise BusinessError('订单异常')
         order.order_item_list = OrderItemServer.search_all(order=order)
         mg_OrderServer.hung_snapshoot(order.order_item_list)
-        MerchandiseServer.hung_specification([
-            order_item.snapshoot
-            for order_item in order.order_item_list
-        ])
         return order
 
     def fill(self, response, order):
@@ -189,7 +185,7 @@ class Search(CustomerAuthorizedApi):
             desc="订单信息",
             conf={
                 'id': IntField(desc="订单id"),
-                'number': IntField(desc="订单编号"),
+                'number': CharField(desc="订单编号"),
                 'status': CharField(desc="订单状态"),
                 'strike_price': IntField(desc="价格"),
                 'create_time': DatetimeField(desc="下单时间"),
@@ -239,10 +235,6 @@ class Search(CustomerAuthorizedApi):
         for order in page_list.data:
             all_order_item_list.extend(order.orderitem_list)
         mg_OrderServer.hung_snapshoot(all_order_item_list)
-        MerchandiseServer.hung_specification([
-            order_item.snapshoot
-            for order_item in all_order_item_list
-        ])
         return page_list
 
     def fill(self, response, page_list):
