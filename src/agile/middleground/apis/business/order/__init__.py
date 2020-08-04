@@ -18,6 +18,7 @@ from abs.middleground.business.transaction.utils.constant import \
 from abs.middleground.business.merchandise.utils.constant import \
         DespatchService
 from abs.middleground.business.order.utils.constant import OrderStatus
+from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.order.manager import OrderServer
 
@@ -369,6 +370,7 @@ class Place(NoAuthorizedApi):
             for specification in request.order_info.specification_list
         }
         specification_list = []
+        production_list = []
         order_total = 0
         for specification in MerchandiseServer.get_specification_list(
             specification_mapping.keys()
@@ -378,6 +380,20 @@ class Place(NoAuthorizedApi):
             specification.total_price = count * specification.sale_price
             order_total += specification.total_price
             specification_list.append(specification)
+            production_list.append(specification.merchandise.production_id)
+
+        production_mapping = {
+            production.id: production
+            for production in ProductionServer.search_all(
+                request.order_info.server_id,
+                id__in=production_list
+            )
+        }
+
+        for specification in specification_list:
+            specification.production = production_mapping[
+                specification.merchandise.production_id
+            ]
 
         order = OrderServer.place(
             specification_list,

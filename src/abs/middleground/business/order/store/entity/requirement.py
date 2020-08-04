@@ -30,11 +30,22 @@ class MerchandiseSnapShoot(BaseModel):
     """
     production_id = IntegerField(verbose_name="产品ID")
     merchandise_id = IntegerField(verbose_name="商品ID")
-    specification_id = IntegerField(verbose_name="商品g规格ID")
+    specification_id = IntegerField(verbose_name="商品规格ID")
+
+    production_name = CharField(
+        verbose_name="产品名称",
+        max_length=256,
+        default=""
+    )
+    brand_name = CharField(
+        verbose_name="品牌名称",
+        max_length=256,
+        default=""
+    )
 
     title = CharField(verbose_name="商品标题", max_length=256)
     show_image = CharField(verbose_name="展示图片", max_length=256)
-    remark = TextField(verbose_name="快照备注")
+    remark = TextField(verbose_name="快照备注,包含规格属性")
 
     sale_price = IntegerField(verbose_name="销售单价，单位：分")
     count = IntegerField(verbose_name="商品购买数量")
