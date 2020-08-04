@@ -60,6 +60,7 @@ class Add(CustomerAuthorizedApi):
                 raise BusinessError('商品已下架')
             specification.order_count = goods_info['quantity']
             specification.total_price = goods_info['quantity'] * specification.sale_price
+            specification.production_id = specification.merchandise.production_id
             specification_list.append(specification)
         GoodsServer.hung_goods([
             specification.merchandise
@@ -73,6 +74,10 @@ class Add(CustomerAuthorizedApi):
             specification.merchandise.goods
             for specification in specification_list]
         )
+        ProductionServer.hung_production([
+            specification
+            for specification in specification_list
+        ])
         order = OrderServer.add(customer, address, 'app', order_info['strike_price'], specification_list)
         return order
 
@@ -144,10 +149,6 @@ class Get(CustomerAuthorizedApi):
             order_item.snapshoot
             for order_item in order.order_item_list
         ])
-        ProductionServer.hung_production([
-            order_item.snapshoot
-            for order_item in order.order_item_list
-        ])
         return order
 
     def fill(self, response, order):
@@ -170,8 +171,8 @@ class Get(CustomerAuthorizedApi):
                 'major_name': order_item.major_name,
                 'duration': order_item.get_duration_display(),
                 'school_city': order_item.school_city,
-                'brand_name': order_item.snapshoot.production.brand.name,
-                'production_name': order_item.snapshoot.production.name,
+                'brand_name': order_item.snapshoot.brand_name,
+                'production_name': order_item.snapshoot.production_name,
                 'specification_value_list': [{
                     'category': specification_value.category,
                     'attribute': specification_value.attribute
@@ -262,10 +263,6 @@ class Search(CustomerAuthorizedApi):
             order_item.snapshoot
             for order_item in all_order_item_list
         ])
-        ProductionServer.hung_production([
-            order_item.snapshoot
-            for order_item in all_order_item_list
-        ])
         return page_list
 
     def fill(self, response, page_list):
@@ -288,8 +285,8 @@ class Search(CustomerAuthorizedApi):
                 'major_name': order_item.major_name,
                 'duration': order_item.get_duration_display(),
                 'school_city': order_item.school_city,
-                'brand_name': order_item.snapshoot.production.brand.name,
-                'production_name': order_item.snapshoot.production.name,
+                'brand_name': order_item.snapshoot.brand_name,
+                'production_name': order_item.snapshoot.production_name,
                 'specification_value_list': [{
                     'category': specification_value.category,
                     'attribute': specification_value.attribute
