@@ -6,7 +6,7 @@ from infrastructure.utils.common.split_page import Splitor
 from abs.common.model import Sum
 from abs.common.manager import BaseManager
 from abs.middleground.business.transaction.utils.constant import OwnTypes,\
-        BusinessTypes
+        BusinessTypes, TransactionStatus
 from abs.middleground.business.transaction.models import TransactionRecord,\
         TransactionInputRecord, TransactionOutputRecord
 
@@ -134,3 +134,19 @@ class TransactionServer(BaseManager):
     @classmethod
     def get_output_record_bynumber(cls, number):
         return TransactionOutputRecord.search(number=number).first()
+
+    @classmethod
+    def finished_output_record_bynumber(cls, number):
+        output_record = cls.get_output_record_bynumber(number)
+        output_record.update(
+            status=TransactionStatus.ACCOUNT_FINISH
+        )
+        return output_record
+
+    @classmethod
+    def failure_output_record_bynumber(cls, number):
+        output_record = cls.get_output_record_bynumber(number)
+        output_record.update(
+            status=TransactionStatus.ACCOUNT_FAIL
+        )
+        return output_record

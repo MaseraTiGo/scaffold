@@ -163,15 +163,6 @@ class OrderServer(BaseManager):
             pay_type=pay_type,
             payment=order.payment
         )
-        order.payment.update(
-            actual_amount=order.payment.actual_amount + amount,
-            last_payment_amount=amount,
-            last_payment_type=pay_type,
-            last_payment_time=payment_record.create_time,
-        )
-        order.update(
-            status=OrderStatus.PAYMENT_FINISHED
-        )
 
         # 2. 生成出账单
         output_record = TransactionServer.generate_outputrecord(
@@ -190,7 +181,51 @@ class OrderServer(BaseManager):
         payment_record.update(
             output_record_id=output_record.id,
         )
-        return payment_record
+        return output_record.number
+
+    @classmethod
+    def pay_success_callback(cls, output_record_number):
+        output_record = TransactionServer.finished_output_record_bynumber(
+            output_record_number
+        )
+        payment_record = PaymentRecord.get_byoutputrecord(
+            output_record_id=output_record.id
+        )
+        if payment_record is None:
+            raise BusinessError("支付信息不存在")
+        payment_record.update(
+            status=output_record.status
+        )
+
+        payment = payment_record.payment
+        amount = 0 - payment_record.amount
+        payment.update(
+            actual_amount=payment.actual_amount + amount,
+            last_payment_amount=amount,
+            last_payment_type=payment_record.pay_type,
+            last_payment_time=payment_record.create_time,
+        )
+
+        order = Order.get_bypayment(payment)
+        if order is None:
+            raise BusinessError("订单信息不存在")
+        order.update(
+            status=OrderStatus.PAYMENT_FINISHED
+        )
+
+    @classmethod
+    def pay_fail_callback(cls, output_record_number):
+        output_record = TransactionServer.failure_output_record_bynumber(
+            output_record_number
+        )
+        payment_record = PaymentRecord.get_byoutputrecord(
+            output_record_id=output_record.id
+        )
+        if payment_record is None:
+            raise BusinessError("支付信息不存在")
+        payment_record.update(
+            status=output_record.status
+        )
 
     @classmethod
     def delivery(
