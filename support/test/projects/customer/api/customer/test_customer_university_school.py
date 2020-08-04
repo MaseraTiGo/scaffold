@@ -34,3 +34,11 @@ class CustomerUniversitySchoolTest(CustomerAPITestCase):
         }
         result = self.access_api(api=api, **params)
         self.assertTrue("data_list" in result)
+
+    def test_product_goods_get(self):
+        api = 'university.school.get'
+        params = {
+            'school_id': 1
+        }
+        result = self.access_api(api=api, **params)
+        self.assertTrue("school_info" in result)
