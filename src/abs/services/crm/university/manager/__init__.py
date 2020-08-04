@@ -80,7 +80,11 @@ class UniversityServer(BaseManager):
             merchandise_school_mapping.update({
                 goods.merchandise_id: goods.school_id
             })
-        merchandise_qs = MerchandiseServer.search_all(company.id, id__in=merchandise_school_mapping.keys())
+        merchandise_qs = MerchandiseServer.search_all(
+            company.id,
+            use_status='enable',
+            id__in=merchandise_school_mapping.keys()
+        )
         school_production_quantity_mapping = {}
         for merchandise in merchandise_qs:
             school_id = merchandise_school_mapping.get(

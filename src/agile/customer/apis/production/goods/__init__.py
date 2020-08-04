@@ -197,7 +197,7 @@ class HotSearch(CustomerAuthorizedApi):
                 'title': goods.merchandise.title,
                 'school_name': goods.school.name,
                 'major_name': goods.major.name,
-                'duration': goods.duration,
+                'duration': goods.get_duration_display(),
                 'school_city': goods.school.city,
                 'production_name': goods.merchandise.production.name,
                 'brand_name': goods.merchandise.production.brand.name,
