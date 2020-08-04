@@ -26,6 +26,7 @@ from agile.base.protocol.django import DjangoProtocol
 from agile.crm.manager.server import crm_pc_service
 from agile.customer.manager.server import customer_mobile_service
 from agile.file.manager.server import file_service
+from agile.controller.manager.server import controller_pc_service
 from agile.middleground.manager.server import middleground_service
 from abs.middleware.rule import rule_register
 from abs.middleware.xml import XMLHandler
@@ -35,6 +36,7 @@ protocol.add(crm_pc_service)
 protocol.add(file_service)
 protocol.add(customer_mobile_service)
 protocol.add(middleground_service)
+protocol.add(controller_pc_service)
 
 
 def router(request):
