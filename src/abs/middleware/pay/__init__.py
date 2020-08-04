@@ -61,9 +61,9 @@ class PayMiddleware(object):
     def pay_order(self, pay_type, number, amount, trade_type='APP'):
         notify_path = ''
         if pay_type == 'wechat':
-            notify_path = '/interface/wechat_pay_order_notify'
+            notify_path = '/interface/wechat_order_pay_notify'
         elif pay_type == 'alipay':
-            notify_path = '/interface/alipay_pay_order_notify'
+            notify_path = '/interface/alipay_order_pay_notify'
 
         prepay_id = self.get_prepay_id(
             pay_type,
