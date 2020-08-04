@@ -127,16 +127,16 @@ class Get(StaffAuthorizedApi):
             'snapshoot_list': [
                 {
                     'id': orderitem.id,
-                    'show_image':orderitem.napshoot.show_image,
-                    'title': orderitem.napshoot.title,
+                    'show_image':orderitem.snapshoot.show_image,
+                    'title': orderitem.snapshoot.title,
                     'brand_name':'',
                     'production_name':'',
-                    'count': orderitem.napshoot.count,
+                    'count': orderitem.snapshoot.count,
                     'school_name':orderitem.school_name,
                     'major_name':orderitem.major_name,
-                    'sale_price': orderitem.napshoot.count,
+                    'sale_price': orderitem.snapshoot.count,
                     'duration':orderitem.duration,
-                    'total_price': orderitem.napshoot.total_price,
+                    'total_price': orderitem.snapshoot.total_price,
                 }
                 for orderitem in order.orderitem_list
             ],
@@ -157,6 +157,7 @@ class Search(StaffAuthorizedApi):
         DictField,
         desc="搜索订单条件",
         conf={
+          'number': CharField(desc="订单号", is_required=False),
         }
     )
 
@@ -254,16 +255,16 @@ class Search(StaffAuthorizedApi):
             'snapshoot_list': [
                 {
                     'id': orderitem.id,
-                    'show_image':orderitem.napshoot.show_image,
-                    'title': orderitem.napshoot.title,
+                    'show_image':orderitem.snapshoot.show_image,
+                    'title': orderitem.snapshoot.title,
                     'brand_name':'',
                     'production_name':'',
-                    'count': orderitem.napshoot.count,
+                    'count': orderitem.snapshoot.count,
                     'school_name':orderitem.school_name,
                     'major_name':orderitem.major_name,
-                    'sale_price': orderitem.napshoot.count,
+                    'sale_price': orderitem.snapshoot.count,
                     'duration':orderitem.duration,
-                    'total_price': orderitem.napshoot.total_price,
+                    'total_price': orderitem.snapshoot.total_price,
                 }
                 for orderitem in order.orderitem_list
             ],

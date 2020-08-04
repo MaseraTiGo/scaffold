@@ -9,6 +9,7 @@ from infrastructure.core.exception.business_error import BusinessError
 
 from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.crm.university.manager import UniversityServer
+from abs.services.crm.production.manager import GoodsServer
 
 
 class Search(StaffAuthorizedApi):
@@ -193,6 +194,9 @@ class Remove(StaffAuthorizedApi):
 
     def execute(self, request):
         major = UniversityServer.get_major(request.major_id)
+        goods_qs = GoodsServer.search_all_goods(major_id=major.id)
+        if goods_qs.count() > 0:
+            raise BusinessError("专业已绑定商品禁止删除")
         major.delete()
 
     def fill(self, response):

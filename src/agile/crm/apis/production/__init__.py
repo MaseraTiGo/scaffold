@@ -6,10 +6,11 @@ from infrastructure.core.field.base import CharField, DictField, \
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
-
+from infrastructure.core.exception.business_error import BusinessError
 from agile.crm.manager.api import StaffAuthorizedApi
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.enterprise.manager import EnterpriseServer
+from abs.middleground.business.merchandise.manager import MerchandiseServer
 
 
 class Get(StaffAuthorizedApi):
@@ -339,9 +340,13 @@ class Remove(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        ProductionServer.delete(
-            request.production_id,
+        production = ProductionServer.get(request.production_id)
+        merchandise_qs = MerchandiseServer.search_all(
+            production.company_id, production_id=production.id
         )
+        if merchandise_qs.count() > 0:
+            raise BusinessError("产品已绑定商品禁止删除")
+        production.delete()
 
     def fill(self, response):
         return response
