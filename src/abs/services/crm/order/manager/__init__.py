@@ -95,9 +95,15 @@ class OrderServer(BaseManager):
 
     @classmethod
     def pay(cls, order, pay_type):
+        number = mg_OrderServer.pay(
+            order.mg_order.id,
+            order.mg_order.strike_price,
+            pay_type,
+            ''
+        )
         prepay_id = pay_middleware.pay_order(
             pay_type,
-            order.mg_order.number,
+            number,
             order.mg_order.strike_price
         )
         return prepay_id
