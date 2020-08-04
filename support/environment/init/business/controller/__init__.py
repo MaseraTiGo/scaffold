@@ -2,14 +2,14 @@
 
 from support.common.maker import BaseMaker
 from support.common.generator.helper import EnterpriseGenerator,\
-        StaffGenerator, StaffAccountGenerator
+        ControllerStaffGenerator, ControllerStaffAccountGenerator
 from support.environment.common.middleground.person import PersonMaker
 from support.environment.common.middleground.production import ProductionMaker
 from support.environment.init.business.controller.enterprise import EnterpriseLoader
-from support.environment.init.business.crm.staff import StaffLoader
+from support.environment.init.business.controller.staff import StaffLoader
 
 
-class CrmInitializeMaker(BaseMaker):
+class ControllerInitializeMaker(BaseMaker):
     """
     仅仅管理crm初始化的数据
     1、企业数据
@@ -22,17 +22,15 @@ class CrmInitializeMaker(BaseMaker):
 
     def __init__(self):
         self._person = PersonMaker(StaffLoader().generate()).generate_relate()
-        self._production = ProductionMaker().generate_relate()
         self._enterprise = EnterpriseGenerator(EnterpriseLoader().generate())
-        self._staff = StaffGenerator(StaffLoader().generate())
-        self._staff_account = StaffAccountGenerator()
+        self._staff = ControllerStaffGenerator(StaffLoader().generate())
+        self._staff_account = ControllerStaffAccountGenerator()
 
     def generate_relate(self):
         self._staff.add_outputs(self._staff_account)
         self._staff.add_inputs(self._enterprise, self._person)
-        self._enterprise.add_outputs(self._production)
         return self._staff
 
 
 if __name__ == "__main__":
-    CrmInitializeMaker().run()
+    ControllerInitializeMaker().run()

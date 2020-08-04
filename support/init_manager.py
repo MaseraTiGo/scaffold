@@ -4,12 +4,13 @@ import init_envt
 
 from infrastructure.utils.common.single import Single
 from support.environment.init import CustomerInitializeMaker,\
-        CrmInitializeMaker
+        CrmInitializeMaker, ControllerInitializeMaker
 
 
 class InitManager(Single):
 
     def run(self):
+        ControllerInitializeMaker().run()
         CrmInitializeMaker().run()
         CustomerInitializeMaker().run()
 

@@ -24,3 +24,7 @@ from support.common.generator.helper.business.crm.production import GoodsGenerat
 from support.common.generator.helper.business.customer.customer import CustomerGenerator
 from support.common.generator.helper.business.customer.account import CustomerAccountGenerator
 from support.common.generator.helper.business.customer.finance.balance import CustomerBalanceGenerator
+
+# controller service generator
+from support.common.generator.helper.business.controller.staff import ControllerStaffGenerator
+from support.common.generator.helper.business.controller.account import ControllerStaffAccountGenerator
