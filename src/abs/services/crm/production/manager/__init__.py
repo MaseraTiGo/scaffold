@@ -45,7 +45,7 @@ class GoodsServer(BaseManager):
             search_info.update({
                 'merchandise_id__in': merchandise_id_list
             })
-        return Goods.search(**search_info)
+        return Goods.search(**search_info).order_by("-create_time")
 
     @classmethod
     def search_enable_goods(cls, current_page, **search_info):

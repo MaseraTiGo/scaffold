@@ -74,6 +74,7 @@ class Get(StaffAuthorizedApi):
                             choices=DurationTypes.CHOICES
                         ),
                         'total_price': IntField(desc="总价"),
+                        'remark': CharField(desc="属性"),
                     }
                 )
             ),
@@ -137,6 +138,7 @@ class Get(StaffAuthorizedApi):
                     'sale_price': orderitem.snapshoot.count,
                     'duration':orderitem.duration,
                     'total_price': orderitem.snapshoot.total_price,
+                    'remark': orderitem.snapshoot.remark,
                 }
                 for orderitem in order.orderitem_list
             ],
