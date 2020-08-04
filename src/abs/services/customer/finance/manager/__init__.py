@@ -11,8 +11,8 @@ from abs.middleground.business.transaction.utils.constant import \
         BusinessTypes, TransactionStatus, PayTypes
 from abs.services.customer.personal.manager import CustomerServer
 from abs.services.customer.finance.models import CustomerBalanceRecord
-from abs.middleware.wechat import wechat_middleware
 from abs.middleware.extend.yunaccount import yunaccount_extend
+from abs.middleware.pay import pay_middleware
 
 
 class CustomerFinanceServer(BaseManager):
@@ -101,17 +101,11 @@ class CustomerFinanceServer(BaseManager):
             status = TransactionStatus.TRANSACTION_DEALING
         )
 
-        prepay_id = ''
-        if pay_type == PayTypes.WECHAT:
-            result = wechat_middleware.unifiedorder_app(
-                input_record.number,
-                input_record.amount,
-                '充值'
-            )
-            if result:
-                prepay_id = result['prepay_id']
-        elif pay_type == PayTypes.ALIPAY:
-            prepay_id = alipay_middleware.get_app_top_up_info(input_record)
+        prepay_id = pay_middleware.top_up(
+            pay_type,
+            balance_record.number,
+            amount
+        )
 
         if not prepay_id:
             TransactionServer.update_inputrecord(
@@ -121,28 +115,6 @@ class CustomerFinanceServer(BaseManager):
             raise BusinessError('调用支付失败')
 
         return prepay_id
-
-    @classmethod
-    def parse_pay_info(cls, prepay_id, pay_type):
-        pay_info = {
-            'timestamp': '',
-            'prepayid': '',
-            'noncestr': '',
-            'sign': ''
-        }
-        if pay_type == PayTypes.WECHAT:
-            pay_info = wechat_middleware.get_app_sign(prepay_id)
-            pay_info.update({
-                'timestamp': pay_info.get('timestamp'),
-                'prepayid': pay_info.get('prepayid'),
-                'noncestr': pay_info.get('noncestr'),
-                'sign': pay_info.get('sign')
-            })
-        elif pay_type == PayTypes.ALIPAY:
-            pay_info.update({
-                'prepayid': prepay_id
-            })
-        return pay_info
 
     @classmethod
     def top_up_notify(cls, number, pay_time, transaction_id, price):

@@ -54,17 +54,16 @@ class MerchandiseServer(BaseManager):
 
     @classmethod
     def hung_specification(cls, obj_list):
-        mapping = {}
-        for obj in obj_list:
-            mapping.update({
-                obj.specification_id: obj
-            })
-
         specification_list = Specification.query().filter(
-                id__in=mapping.keys()
+                id__in=[obj.specification_id for obj in obj_list]
         )
+        mapping = {}
         for specification in specification_list:
-            obj = mapping[specification.id]
+            mapping.update({
+                specification.id: specification
+            })
+        for obj in obj_list:
+            specification = mapping.get(obj.specification_id)
             obj.specification = specification
 
         cls._hung_specification_value(specification_list)

@@ -2,11 +2,13 @@ version: '3'
 
 services:
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
-    container_name: elasticsearch
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+    container_name: es01
     environment:
+      - node.name=es01
       - cluster.name=docker-cluster
+      - cluster.initial_master_nodes=es01
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
@@ -17,23 +19,6 @@ services:
       - /tmp/data/cache/elasticsearch/1:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
-    networks:
-      - app_net
-
-  elasticsearch2:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
-    container_name: elasticsearch2
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "discovery.zen.ping.unicast.hosts=elasticsearch"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - /tmp/data/cache/elasticsearch/2:/usr/share/elasticsearch/data
     networks:
       - app_net
 

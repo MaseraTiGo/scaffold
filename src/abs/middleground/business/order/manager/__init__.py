@@ -96,6 +96,8 @@ class OrderServer(BaseManager):
                 title=specification.merchandise.title,
                 show_image=specification.show_image,
                 sale_price=specification.sale_price,
+                production_name=specification.production.name,
+                brand_name=specification.production.brand.name,
                 count=specification.order_count,
                 total_price=specification.total_price,
                 requirement=requirement,
@@ -124,7 +126,7 @@ class OrderServer(BaseManager):
     ):
         """
         下单接口，注意该接口用时需要进行转换，将
-        specification对象挂载 order_count, total_price属性
+        specification对象挂载 order_count, total_price, production属性
         strike_price 是总成交价
         """
         requirement = cls._generate_requirement(
@@ -287,5 +289,6 @@ class OrderServer(BaseManager):
 
     @classmethod
     def search_order_id_list(cls, **search_info):
-        return list(Order.query().filter(**search_info).values_list('id', flat=True))
-
+        return list(Order.query().filter(
+            **search_info
+        ).values_list('id', flat=True))

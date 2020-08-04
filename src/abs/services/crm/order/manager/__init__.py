@@ -9,6 +9,7 @@ from abs.middleground.business.order.manager import \
 from abs.services.crm.order.models import Order
 from abs.services.crm.order.models import OrderItem
 from abs.middleground.business.enterprise.manager import EnterpriseServer
+from abs.middleware.pay import pay_middleware
 
 
 class OrderServer(BaseManager):
@@ -90,7 +91,16 @@ class OrderServer(BaseManager):
                 major_name=specification.merchandise.goods.major.name,
                 duration=specification.merchandise.goods.duration
             )
-        return mg_order.number
+        return order
+
+    @classmethod
+    def pay(cls, order, pay_type):
+        prepay_id = pay_middleware.pay_order(
+            pay_type,
+            order.mg_order.number,
+            order.mg_order.strike_price
+        )
+        return prepay_id
 
 
 class OrderItemServer(BaseManager):

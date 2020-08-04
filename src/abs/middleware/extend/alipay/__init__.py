@@ -59,11 +59,11 @@ class AlipayExtend(object):
     # 获取app支付信息
     def get_order_info(
             self,
-            body,
-            subject,
             out_trade_no,
             total_amount,
             notify_path,
+            body,
+            subject,
             timeout_express = '15d',
             goods_type = '0'
     ):

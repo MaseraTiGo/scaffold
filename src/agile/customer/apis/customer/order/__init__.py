@@ -16,6 +16,7 @@ from abs.services.crm.order.manager import OrderServer, OrderItemServer
 from abs.middleground.business.order.manager import OrderServer as mg_OrderServer
 from abs.services.crm.university.manager import UniversityServer
 from abs.middleground.business.production.manager import ProductionServer
+from abs.middleware.pay import pay_middleware
 
 
 class Add(CustomerAuthorizedApi):
@@ -36,7 +37,7 @@ class Add(CustomerAuthorizedApi):
     })
 
     response = with_metaclass(ResponseFieldSet)
-    response.number = ResponseField(CharField, desc="订单号")
+    response.order_id = ResponseField(IntField, desc="订单id")
 
     @classmethod
     def get_desc(cls):
@@ -72,11 +73,11 @@ class Add(CustomerAuthorizedApi):
             specification.merchandise.goods
             for specification in specification_list]
         )
-        number = OrderServer.add(customer, address, 'app', order_info['strike_price'], specification_list)
-        return number
+        order = OrderServer.add(customer, address, 'app', order_info['strike_price'], specification_list)
+        return order
 
-    def fill(self, response, number):
-        response.number = number
+    def fill(self, response, order):
+        response.order_id = order.id
         return response
 
 
@@ -298,4 +299,45 @@ class Search(CustomerAuthorizedApi):
         } for order in page_list.data]
         response.total = page_list.total
         response.total_page = page_list.total_page
+        return response
+
+
+class Pay(CustomerAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.order_id = RequestField(IntField, desc="订单id")
+    request.pay_type = RequestField(
+        CharField,
+        desc="交易方式",
+        choices=(
+            ('bank', '银行'),
+            ('alipay', "支付宝"),
+            ('wechat', "微信"),
+            ('balance', "余额")
+        )
+    )
+
+    response = with_metaclass(ResponseFieldSet)
+    response.pay_info = ResponseField(DictField, desc='支付信息', conf={
+        'timestamp': CharField(desc="时间"),
+        'prepayid': CharField(desc="微信预支付id"),
+        'noncestr': CharField(desc="随机字符串"),
+        'sign': CharField(desc="签名")
+    })
+
+    @classmethod
+    def get_desc(cls):
+        return "付款"
+
+    @classmethod
+    def get_author(cls):
+        return "xyc"
+
+    def execute(self, request):
+        order = OrderServer.get(request.order_id)
+        prepay_id = OrderServer.pay(order, request.pay_type)
+        pay_info = pay_middleware.parse_pay_info(prepay_id, request.pay_type)
+        return pay_info
+
+    def fill(self, response, pay_info):
+        response.pay_info = pay_info
         return response
