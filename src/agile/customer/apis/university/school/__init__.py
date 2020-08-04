@@ -179,7 +179,7 @@ class All(CustomerAuthorizedApi):
 
 class Get(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.school_id = IntField(desc="学校id")
+    request.school_id = RequestField(IntField, desc="学校id")
 
     response = with_metaclass(ResponseFieldSet)
     response.school_info = ResponseField(
@@ -207,7 +207,7 @@ class Get(CustomerAuthorizedApi):
 
     @classmethod
     def get_desc(cls):
-        return "所有学校列表"
+        return "学校详情"
 
     @classmethod
     def get_author(cls):

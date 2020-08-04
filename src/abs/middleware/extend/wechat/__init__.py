@@ -30,7 +30,10 @@ class Mini(object):
             'js_code': code,
             'grant_type': 'authorization_code'
         }
-        res = requests.get('https://api.weixin.qq.com/sns/jscode2session', params = params).json()
+        res = requests.get(
+            'https://api.weixin.qq.com/sns/jscode2session',
+            params=params
+        ).json()
         return res
         # if res.get('openid'):
         #     return res
@@ -82,10 +85,18 @@ class MiniMch(object):
         return bool(check_sign == sign)
 
     # 统一下单
-    def unifiedorder(self, out_trade_no, price, product_id = '',
-                     body = '', trade_type = 'NATIVE', openid = ''):
+    def unifiedorder(
+            self,
+            out_trade_no,
+            price,
+            notify_path,
+            product_id='',
+            body='',
+            trade_type='NATIVE',
+            openid=''
+    ):
         url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
-        notify_url = self.notify_url + '/interface/wechat_top_up_notify'
+        notify_url = self.notify_url + notify_path
         param = {
             'appid': self.appid,
             'mch_id': self.mchid,
