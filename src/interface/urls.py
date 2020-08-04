@@ -18,7 +18,8 @@ Including another URLconf
 
 from django.conf.urls import url
 from interface.main import router, api_doc, premise_doc, access_token
-from agile.customer.apis.customer.finance.balance.wechat_notify import wechat_top_up_notify
+from agile.customer.apis.customer.finance.balance.wechat_notify import wechat_top_up_notify, \
+    wechat_order_pay_notify
 from agile.customer.apis.customer.finance.balance.yunaccount_notify import yunaccount_transfer_notify
 from agile.customer.apis.customer.finance.balance.alipay_notify import alipay_top_up_notify
 
@@ -29,5 +30,6 @@ urlpatterns = [
     url(r'^$', router),
     url(r'wechat_top_up_notify', wechat_top_up_notify),
     url(r'alipay_top_up_notify', alipay_top_up_notify),
-    url(r'yunaccount_transfer_notify', yunaccount_transfer_notify)
+    url(r'yunaccount_transfer_notify', yunaccount_transfer_notify),
+    url(r'wechat_order_pay_notify', wechat_order_pay_notify)
 ]
