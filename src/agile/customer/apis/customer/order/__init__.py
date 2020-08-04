@@ -93,7 +93,7 @@ class Get(CustomerAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.order_info = ResponseField(DictField, desc="订单信息", conf={
         'id': IntField(desc="订单id"),
-        'number': IntField(desc="订单编号"),
+        'number': CharField(desc="订单编号"),
         'status': CharField(desc="订单状态"),
         'strike_price': IntField(desc="价格"),
         'create_time': DatetimeField(desc="下单时间"),
@@ -116,16 +116,7 @@ class Get(CustomerAuthorizedApi):
                     'school_city': CharField(desc="学校城市"),
                     'brand_name': CharField(desc="品牌"),
                     'production_name': CharField(desc="产品名"),
-                    'specification_value_list': ListField(
-                        desc="商品规格值",
-                        fmt=DictField(
-                            desc='规格值',
-                            conf={
-                                'category': CharField(desc="属性分类"),
-                                'attribute': CharField(desc="属性值")
-                            }
-                        )
-                    )
+                    'remark': CharField(desc="备注")
                 }
             )
         )
@@ -145,10 +136,6 @@ class Get(CustomerAuthorizedApi):
             raise BusinessError('订单异常')
         order.order_item_list = OrderItemServer.search_all(order=order)
         mg_OrderServer.hung_snapshoot(order.order_item_list)
-        MerchandiseServer.hung_specification([
-            order_item.snapshoot
-            for order_item in order.order_item_list
-        ])
         return order
 
     def fill(self, response, order):
@@ -173,11 +160,7 @@ class Get(CustomerAuthorizedApi):
                 'school_city': order_item.school_city,
                 'brand_name': order_item.snapshoot.brand_name,
                 'production_name': order_item.snapshoot.production_name,
-                'specification_value_list': [{
-                    'category': specification_value.category,
-                    'attribute': specification_value.attribute
-                } for specification_value
-                    in order_item.snapshoot.specification.specification_value_list]
+                'remark': order_item.snapshoot.remark
             } for order_item in order.order_item_list]
         }
         return response
@@ -202,7 +185,7 @@ class Search(CustomerAuthorizedApi):
             desc="订单信息",
             conf={
                 'id': IntField(desc="订单id"),
-                'number': IntField(desc="订单编号"),
+                'number': CharField(desc="订单编号"),
                 'status': CharField(desc="订单状态"),
                 'strike_price': IntField(desc="价格"),
                 'create_time': DatetimeField(desc="下单时间"),
@@ -224,17 +207,7 @@ class Search(CustomerAuthorizedApi):
                             'duration': CharField(desc="学年"),
                             'school_city': CharField(desc="学校城市"),
                             'brand_name': CharField(desc="品牌"),
-                            'production_name': CharField(desc="产品名"),
-                            'specification_value_list': ListField(
-                                desc="商品规格值",
-                                fmt=DictField(
-                                    desc='规格值',
-                                    conf={
-                                        'category': CharField(desc="属性分类"),
-                                        'attribute': CharField(desc="属性值")
-                                    }
-                                )
-                            )
+                            'production_name': CharField(desc="产品名")
                         }
                     )
                 )
@@ -253,16 +226,15 @@ class Search(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        page_list = OrderServer.search(request.current_page, **request.search_info)
+        page_list = OrderServer.search(
+            request.current_page,
+            customer_id=self.auth_user.id,
+            **request.search_info)
         OrderItemServer.hung_order_item(page_list.data)
         all_order_item_list = []
         for order in page_list.data:
             all_order_item_list.extend(order.orderitem_list)
         mg_OrderServer.hung_snapshoot(all_order_item_list)
-        MerchandiseServer.hung_specification([
-            order_item.snapshoot
-            for order_item in all_order_item_list
-        ])
         return page_list
 
     def fill(self, response, page_list):
@@ -286,12 +258,7 @@ class Search(CustomerAuthorizedApi):
                 'duration': order_item.get_duration_display(),
                 'school_city': order_item.school_city,
                 'brand_name': order_item.snapshoot.brand_name,
-                'production_name': order_item.snapshoot.production_name,
-                'specification_value_list': [{
-                    'category': specification_value.category,
-                    'attribute': specification_value.attribute
-                } for specification_value
-                    in order_item.snapshoot.specification.specification_value_list]
+                'production_name': order_item.snapshoot.production_name
             } for order_item in order.orderitem_list]
         } for order in page_list.data]
         response.total = page_list.total
