@@ -9,7 +9,7 @@ from support.common.generator.field.model.entity import CrnCompanyEntitry,\
         CustomerEntity, SpecificationEntity
 
 
-class MerchandiseTestCase(MiddlegroundAPITestCase):
+class OrderTestCase(MiddlegroundAPITestCase):
 
     def setUp(self):
         crm = CrnCompanyEntitry().generate()
@@ -104,6 +104,14 @@ class MerchandiseTestCase(MiddlegroundAPITestCase):
                 'pay_type': 'bank',
                 'remark': '测试支付',
             })
+        )
+        self.assertTrue('number' in result)
+        number = result['number']
+
+        api = 'business.order.paycallback'
+        result = self.access_api(
+            api=api,
+            number=number,
         )
 
         # 3. 获取订单测试
