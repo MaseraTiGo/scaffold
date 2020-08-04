@@ -93,7 +93,7 @@ class Get(CustomerAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.order_info = ResponseField(DictField, desc="订单信息", conf={
         'id': IntField(desc="订单id"),
-        'number': IntField(desc="订单编号"),
+        'number': CharField(desc="订单编号"),
         'status': CharField(desc="订单状态"),
         'strike_price': IntField(desc="价格"),
         'create_time': DatetimeField(desc="下单时间"),
