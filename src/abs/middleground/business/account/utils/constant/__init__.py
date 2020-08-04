@@ -5,10 +5,12 @@ class PlatformTypes(object):
 
     CRM = 'crm'
     CUSTOMER = 'customer'
+    CONTROLLER = 'controller'
 
     CHOICES = (
         (CRM, '客户管理系统'),
         (CUSTOMER, '客户端'),
+        (CONTROLLER, '中台管控端'),
     )
 
 
