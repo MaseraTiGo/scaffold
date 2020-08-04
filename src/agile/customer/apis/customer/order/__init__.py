@@ -253,7 +253,10 @@ class Search(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        page_list = OrderServer.search(request.current_page, **request.search_info)
+        page_list = OrderServer.search(
+            request.current_page,
+            customer_id=self.auth_user.id,
+            **request.search_info)
         OrderItemServer.hung_order_item(page_list.data)
         all_order_item_list = []
         for order in page_list.data:
