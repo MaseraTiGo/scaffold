@@ -129,8 +129,8 @@ class Get(StaffAuthorizedApi):
                     'id': orderitem.id,
                     'show_image':orderitem.snapshoot.show_image,
                     'title': orderitem.snapshoot.title,
-                    'brand_name':'',
-                    'production_name':'',
+                    'brand_name':orderitem.snapshoot.brand_name,
+                    'production_name':orderitem.snapshoot.production_name,
                     'count': orderitem.snapshoot.count,
                     'school_name':orderitem.school_name,
                     'major_name':orderitem.major_name,
@@ -208,6 +208,7 @@ class Search(StaffAuthorizedApi):
                                 choices=DurationTypes.CHOICES
                             ),
                             'total_price': IntField(desc="总价"),
+                            'remark': CharField(desc="属性"),
                         }
                     )
                 ),
@@ -257,14 +258,15 @@ class Search(StaffAuthorizedApi):
                     'id': orderitem.id,
                     'show_image':orderitem.snapshoot.show_image,
                     'title': orderitem.snapshoot.title,
-                    'brand_name':'',
-                    'production_name':'',
+                    'brand_name':orderitem.snapshoot.brand_name,
+                    'production_name':orderitem.snapshoot.production_name,
                     'count': orderitem.snapshoot.count,
                     'school_name':orderitem.school_name,
                     'major_name':orderitem.major_name,
                     'sale_price': orderitem.snapshoot.count,
                     'duration':orderitem.duration,
                     'total_price': orderitem.snapshoot.total_price,
+                    'remark': orderitem.snapshoot.remark,
                 }
                 for orderitem in order.orderitem_list
             ],
