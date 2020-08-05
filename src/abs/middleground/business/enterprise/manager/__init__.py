@@ -23,8 +23,12 @@ class EnterpriseServer(BaseManager):
         raise BusinessError('crm总控公司不存在！')
 
     @classmethod
-    def create(cls, **enterprise_infos):
-        enterprise = Enterprise.create(**enterprise_infos)
+    def create(cls, license_number, **enterprise_infos):
+        is_exsited, enterprise = Enterprise.is_exsited(license_number)
+        if is_exsited:
+            return enterprise
+        else:
+            enterprise = Enterprise.create(**enterprise_infos)
         return enterprise
 
     @classmethod
@@ -41,7 +45,21 @@ class EnterpriseServer(BaseManager):
         return splitor
 
     @classmethod
+    def get_byids(cls, id_list, limit=100):
+        if len(id_list) > limit:
+            raise BusinessError('搜索id超过上限！')
+        enterprise_qs = Enterprise.search(
+            id__in=id_list
+        )
+        return enterprise_qs
+
+    @classmethod
     def update(cls, enterprise_id, **enterprise_infos):
+        if 'license_number' in enterprise_infos:
+            license_number = enterprise_infos['license_number']
+            is_exsited, _ = Enterprise.is_exsited(license_number)
+            if is_exsited:
+                raise BusinessError('该营业执照已存在，不能更新！')
         enterprise = cls.get(enterprise_id)
         enterprise.update(**enterprise_infos)
         return enterprise

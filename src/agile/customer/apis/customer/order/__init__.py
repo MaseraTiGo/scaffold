@@ -64,7 +64,7 @@ class Add(CustomerAuthorizedApi):
                 raise BusinessError('库存不足')
             if specification.merchandise.use_status != 'enable':
                 raise BusinessError('商品已下架')
-            if specification.merchandise.despatch_type != 'phone_top_up' and not address:
+            if specification.merchandise.despatch_type == 'logistics' and not address:
                 raise BusinessError('请填写物流地址')
             specification.order_count = goods_info['quantity']
             specification.total_price = goods_info['quantity'] * specification.sale_price

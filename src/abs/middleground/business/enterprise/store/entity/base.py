@@ -25,7 +25,9 @@ class Enterprise(BaseModel):
 
     class Meta:
         db_table = DB_PREFIX + "base"
-        unique_together = ("license_number",)
+        unique_together = (
+            "license_number",
+        )
 
     @classmethod
     def search(cls, **attrs):
