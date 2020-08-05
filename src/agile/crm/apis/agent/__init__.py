@@ -54,7 +54,7 @@ class Search(StaffAuthorizedApi):
         DictField,
         desc = "搜索代理商",
         conf = {
-              'name': CharField(desc = "代理商名称", is_required = False),
+              # 'name': CharField(desc = "代理商名称", is_required = False),
         }
     )
 
