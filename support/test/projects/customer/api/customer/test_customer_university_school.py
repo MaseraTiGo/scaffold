@@ -15,7 +15,7 @@ class CustomerUniversitySchoolTest(CustomerAPITestCase):
         params = {
             'search_info': json.dumps({})
         }
-        result = self.access_api(api=api, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue("data_list" in result)
 
     def test_product_goods_search(self):
@@ -24,7 +24,7 @@ class CustomerUniversitySchoolTest(CustomerAPITestCase):
             "current_page": 1,
             'search_info': json.dumps({})
         }
-        result = self.access_api(api=api, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue("data_list" in result)
 
     def test_product_goods_hotsearch(self):
@@ -32,7 +32,7 @@ class CustomerUniversitySchoolTest(CustomerAPITestCase):
         params = {
             'search_info': json.dumps({})
         }
-        result = self.access_api(api=api, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue("data_list" in result)
 
     def test_product_goods_get(self):
@@ -40,5 +40,5 @@ class CustomerUniversitySchoolTest(CustomerAPITestCase):
         params = {
             'school_id': 1
         }
-        result = self.access_api(api=api, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue("school_info" in result)

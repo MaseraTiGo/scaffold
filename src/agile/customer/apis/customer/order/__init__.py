@@ -21,20 +21,24 @@ from abs.middleware.pay import pay_middleware
 
 class Add(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.order_info = RequestField(DictField, desc="订单详情", conf={
-        'strike_price': IntField(desc="金额"),
-        'address_id': IntField(desc="收货地址id"),
-        'goods_list': ListField(
-            desc='商品列表',
-            fmt=DictField(
-                desc='商品信息',
-                conf={
-                    'quantity': IntField(desc="购买数量"),
-                    'specification_id': IntField(desc="规格id")
-                }
+    request.order_info = RequestField(
+        DictField,
+        desc="订单详情",
+        conf={
+            'strike_price': IntField(desc="金额"),
+            'address_id': IntField(desc="收货地址id", is_required=False),
+            'goods_list': ListField(
+                desc='商品列表',
+                fmt=DictField(
+                    desc='商品信息',
+                    conf={
+                        'quantity': IntField(desc="购买数量"),
+                        'specification_id': IntField(desc="规格id")
+                    }
+                )
             )
-        )
-    })
+        }
+    )
 
     response = with_metaclass(ResponseFieldSet)
     response.order_id = ResponseField(IntField, desc="订单id")
@@ -50,7 +54,9 @@ class Add(CustomerAuthorizedApi):
     def execute(self, request):
         order_info = request.order_info
         customer = self.auth_user
-        address = PersonServer.get_address(order_info.pop('address_id'))
+        address = None
+        if 'address_id' in order_info:
+            address = PersonServer.get_address(order_info.pop('address_id'))
         specification_list = []
         for goods_info in order_info['goods_list']:
             specification = MerchandiseServer.get_specification(goods_info['specification_id'])
@@ -58,6 +64,8 @@ class Add(CustomerAuthorizedApi):
                 raise BusinessError('库存不足')
             if specification.merchandise.use_status != 'enable':
                 raise BusinessError('商品已下架')
+            if specification.merchandise.despatch_type == 'logistics' and not address:
+                raise BusinessError('请填写物流地址')
             specification.order_count = goods_info['quantity']
             specification.total_price = goods_info['quantity'] * specification.sale_price
             specification.production_id = specification.merchandise.production_id
@@ -304,4 +312,26 @@ class Pay(CustomerAuthorizedApi):
 
     def fill(self, response, pay_info):
         response.pay_info = pay_info
+        return response
+
+
+class Cancel(CustomerAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.order_id = RequestField(IntField, desc="订单id")
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_desc(cls):
+        return "付款"
+
+    @classmethod
+    def get_author(cls):
+        return "xyc"
+
+    def execute(self, request):
+        order = OrderServer.get(request.order_id)
+        OrderServer.cancel(order)
+
+    def fill(self, response):
         return response
