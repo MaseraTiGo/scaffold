@@ -10,7 +10,7 @@ from abs.common.model import BaseModel, CASCADE,\
         IntegerField, CharField, DateTimeField, TextField,\
         ForeignKey, timezone
 from abs.middleground.business.transaction.utils.constant import PayTypes,\
-        PayService
+        PayService, TransactionStatus
 from abs.middleground.business.order.settings import DB_PREFIX
 
 
@@ -60,6 +60,13 @@ class PaymentRecord(BaseModel):
         null=True,
         default=None,
     )
+    status = CharField(
+        verbose_name="交易状态",
+        max_length=64,
+        choices=TransactionStatus.CHOICES,
+        null=True,
+        default=None,
+    )
 
     payment = ForeignKey(Payment, on_delete=CASCADE)
     output_record_id = IntegerField(verbose_name="出账凭证id", null=True)
@@ -74,4 +81,11 @@ class PaymentRecord(BaseModel):
     @classmethod
     def generate_number(cls):
         import time
-        return "OPR" + str(int(time.time()))
+        return "OPR" + str(time.time()).replace('.', '')
+
+    @classmethod
+    def get_byoutputrecord(cls, output_record_id):
+        payment_qs = cls.query(output_record_id=output_record_id)
+        if payment_qs.count():
+            return payment_qs[0]
+        return None

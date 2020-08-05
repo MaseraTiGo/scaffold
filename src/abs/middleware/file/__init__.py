@@ -2,6 +2,7 @@
 
 import os
 import time
+import random
 from infrastructure.utils.common.single import Single
 from settings import STATIC_URL, STATICFILES_DIRS
 
@@ -10,7 +11,11 @@ class FileMiddleware(Single):
 
     def get_save_file_name(self, name):
         names = name.split('.')
-        name = "{}_{}.{}".format(names[0], int(time.time()), names[-1])
+        name = "{}_{}.{}".format(
+            str(random.randint(1000, 9999)),
+            int(time.time()),
+            names[-1]
+        )
         return name
 
     def save(self, name, f_io, store_type = 'default'):

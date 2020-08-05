@@ -16,7 +16,7 @@ class CustomerProductionGoodsTest(CustomerAPITestCase):
             "current_page": 1,
             'search_info': json.dumps({})
         }
-        result = self.access_api(api=api, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue("data_list" in result)
 
     def test_product_goods_get(self):
@@ -24,7 +24,7 @@ class CustomerProductionGoodsTest(CustomerAPITestCase):
         params = {
             'goods_id': 1
         }
-        result = self.access_api(api=api, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue("goods_info" in result)
 
     def test_product_goods_hotsearch(self):
@@ -35,5 +35,5 @@ class CustomerProductionGoodsTest(CustomerAPITestCase):
                 'city': '武汉'
             })
         }
-        result = self.access_api(api=api, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue("data_list" in result)

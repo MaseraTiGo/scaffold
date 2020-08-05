@@ -6,7 +6,7 @@ from infrastructure.log.base import logger
 from infrastructure.core.exception.business_error import BusinessError
 from abs.services.customer.finance.manager import CustomerFinanceServer
 from abs.middleware.pay import pay_middleware
-from abs.services.crm.order.manager import OrderServer
+from abs.middleground.business.order.manager import OrderServer as mg_OrderServer
 
 
 def wechat_top_up_notify(request):
@@ -27,7 +27,7 @@ def wechat_top_up_notify(request):
                     err_code_des=data['err_code_des']
                 )
             )
-        if not pay_middleware.check_sign(data):
+        if not pay_middleware.wechant_check_sign(data):
             raise BusinessError('支付回调签名错误，订单号（{out_trade_no}）'.format(
                 out_trade_no=data['out_trade_no']
             ))
@@ -65,20 +65,15 @@ def wechat_order_pay_notify(request):
                     err_code_des=data['err_code_des']
                 )
             )
-        if not pay_middleware.check_sign(data):
+        if not pay_middleware.wechant_check_sign(data):
             raise BusinessError('支付回调签名错误，订单号（{out_trade_no}）'.format(
                 out_trade_no=data['out_trade_no']
             ))
 
         pay_time = datetime.datetime.strptime(data['time_end'], '%Y%m%d%H%M%S')
         order_sn = data['out_trade_no']
+        mg_OrderServer.pay_success_callback(order_sn)
 
-        OrderServer.pay_notify(
-            order_sn,
-            pay_time,
-            data['transaction_id'],
-            data['total_fee']
-        )
         return success_response()
     except Exception as e:
         logger.error(e.get_msg())

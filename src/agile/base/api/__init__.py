@@ -2,7 +2,7 @@
 
 
 from infrastructure.core.api.base import BaseApi
-from infrastructure.core.exception.debug_error import DebugError
+from infrastructure.core.exception.api_error import ApiCodes, api_errors
 
 
 class NoAuthorizedApi(BaseApi):
@@ -27,6 +27,8 @@ class AuthorizedApi(BaseApi):
         return self._auth_user
 
     def authorized(self, request, parms):
+        if self._auth_flag not in parms:
+            raise api_errors(ApiCodes.INTERFACE_TOKEN_INVALIED)
         auth_str = parms.pop(self._auth_flag)
         token = self.load_token(auth_str)
         token.check(parms)
@@ -34,7 +36,11 @@ class AuthorizedApi(BaseApi):
         return parms
 
     def load_token(self, auth_str):
-        raise NotImplementedError('Please imporlement this interface in subclass')
+        raise NotImplementedError(
+            'Please imporlement this interface in subclass'
+        )
 
     def load_auth_user(self):
-        raise NotImplementedError('Please imporlement this interface in subclass')
+        raise NotImplementedError(
+            'Please imporlement this interface in subclass'
+        )

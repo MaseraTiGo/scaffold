@@ -6,11 +6,11 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
-from agile.customer.manager.api import CustomerAuthorizedApi
+from agile.base.api import NoAuthorizedApi
 from abs.services.crm.university.manager import UniversityServer
 
 
-class All(CustomerAuthorizedApi):
+class All(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.search_info = RequestField(
         DictField,
@@ -53,7 +53,7 @@ class All(CustomerAuthorizedApi):
         return response
 
 
-class Duration(CustomerAuthorizedApi):
+class Duration(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
 
     response = with_metaclass(ResponseFieldSet)

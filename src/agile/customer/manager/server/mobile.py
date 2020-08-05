@@ -61,5 +61,5 @@ customer_mobile_service.add(All, Duration)
 from agile.customer.apis.production.goods import Search, Get, HotSearch
 customer_mobile_service.add(Search, Get, HotSearch)
 
-from agile.customer.apis.customer.order import Add, Get, Search, Pay
-customer_mobile_service.add(Add, Get, Search, Pay)
+from agile.customer.apis.customer.order import Add, Get, Search, Pay, Cancel
+customer_mobile_service.add(Add, Get, Search, Pay, Cancel)

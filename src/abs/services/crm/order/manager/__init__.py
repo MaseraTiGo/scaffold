@@ -10,6 +10,7 @@ from abs.services.crm.order.models import Order
 from abs.services.crm.order.models import OrderItem
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleware.pay import pay_middleware
+from abs.middleground.business.order.utils.constant import OrderStatus
 
 
 class OrderServer(BaseManager):
@@ -52,8 +53,21 @@ class OrderServer(BaseManager):
         return order_qs
 
     @classmethod
+    def cancel(cls, order):
+        if order.mg_order.status != OrderStatus.ORDER_LAUNCHED:
+            raise BusinessError('待付款订单才能取消')
+        order.mg_order.update(status=OrderStatus.ORDER_CLOSED)
+
+    @classmethod
     def add(cls, customer, address, source, strike_price, specification_list):
         company = EnterpriseServer.get_crm__company()
+        invoice_baseinfos = {}
+        if address:
+            invoice_baseinfos = {
+                'name': address.contacts,
+                'phone': address.phone,
+                'address': '-'.join([address.city, address.address])
+            }
         mg_order = mg_OrderServer.place(
             specification_list,
             strike_price,
@@ -62,9 +76,7 @@ class OrderServer(BaseManager):
             customer.person_id,
             'company',
             company.id,
-            name=address.contacts,
-            phone=address.phone,
-            address='-'.join([address.city, address.address])
+            **invoice_baseinfos
         )
 
         order = Order.create(
@@ -95,9 +107,15 @@ class OrderServer(BaseManager):
 
     @classmethod
     def pay(cls, order, pay_type):
+        number = mg_OrderServer.pay(
+            order.mg_order.id,
+            order.mg_order.strike_price,
+            pay_type,
+            ''
+        )
         prepay_id = pay_middleware.pay_order(
             pay_type,
-            order.mg_order.number,
+            number,
             order.mg_order.strike_price
         )
         return prepay_id

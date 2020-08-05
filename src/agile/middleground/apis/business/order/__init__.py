@@ -429,6 +429,7 @@ class Pay(NoAuthorizedApi):
     )
 
     response = with_metaclass(ResponseFieldSet)
+    response.number = ResponseField(CharField, desc="交易编号")
 
     @classmethod
     def get_desc(cls):
@@ -439,11 +440,39 @@ class Pay(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        OrderServer.pay(
+        number = OrderServer.pay(
             request.order_id,
             amount=request.pay_info.amount,
             pay_type=request.pay_info.pay_type,
             remark=request.pay_info.remark,
+        )
+        return number
+
+    def fill(self, response, number):
+        response.number = number
+        return response
+
+
+class PayCallback(NoAuthorizedApi):
+    """
+    订单回调
+    """
+    request = with_metaclass(RequestFieldSet)
+    request.number = RequestField(CharField, desc="交易编号")
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_desc(cls):
+        return "订单回调"
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self, request):
+        OrderServer.pay_success_callback(
+            request.number,
         )
 
     def fill(self, response):

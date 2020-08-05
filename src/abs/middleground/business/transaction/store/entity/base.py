@@ -65,7 +65,7 @@ class TransactionRecord(BaseTransaction):
     @classmethod
     def generate_number(cls):
         import time
-        return "TR" + str(int(time.time()))
+        return "TR" + str(time.time()).replace('.', '')
 
     @classmethod
     def search(cls, **attrs):
@@ -99,7 +99,7 @@ class TransactionInputRecord(BaseTransaction):
     @classmethod
     def generate_number(cls):
         import time
-        return "TRI" + str(int(time.time()))
+        return "TRI" + str(time.time()).replace('.', '')
 
     @classmethod
     def create(cls, **input_infos):
@@ -154,7 +154,7 @@ class TransactionOutputRecord(BaseTransaction):
     @classmethod
     def generate_number(cls):
         import time
-        return "TRO" + str(int(time.time()))
+        return "TRO" + str(time.time()).replace('.', '')
 
     @classmethod
     def search(cls, **attrs):

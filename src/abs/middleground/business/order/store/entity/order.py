@@ -10,7 +10,8 @@ from abs.common.model import BaseModel, CASCADE, ForeignKey,\
         IntegerField, CharField, TextField, DateTimeField, timezone
 from abs.middleground.business.order.settings import DB_PREFIX
 from abs.middleground.business.transaction.utils.constant import OwnTypes
-from abs.middleground.business.order.store.entity.requirement import Requirement
+from abs.middleground.business.order.store.entity.requirement import \
+        Requirement
 from abs.middleground.business.order.store.entity.payment import Payment
 from abs.middleground.business.order.store.entity.invoice import Invoice
 from abs.middleground.business.order.utils.constant import OrderStatus
@@ -57,7 +58,7 @@ class Order(BaseModel):
     @classmethod
     def generate_number(cls):
         import time
-        return "OD" + str(int(time.time()))
+        return "OD" + str(time.time()).replace('.', '')
 
     @classmethod
     def create(cls, **order_info):
@@ -65,3 +66,12 @@ class Order(BaseModel):
             "number": cls.generate_number(),
         })
         return super(Order, cls).create(**order_info)
+
+    @classmethod
+    def get_bypayment(cls, payment_id):
+        order_qs = cls.query().filter(
+            payment_id=payment_id
+        )
+        if order_qs.count() > 0:
+            return order_qs[0]
+        return None

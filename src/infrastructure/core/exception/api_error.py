@@ -9,6 +9,7 @@ Created on 2016-7-4
 
 from infrastructure.core.exception.base import BaseError, BaseErrorManager
 
+
 class ApiCodes(object):
     INTERFACE_NOT_EXIST = 30001
     INTERFACE_FREQUENTLY = 30002
@@ -29,7 +30,7 @@ class ApiCodes(object):
         (INTERFACE_TOKEN_INVALIED, 'auth_token不存在'),
         (INTERFACE_TOKEN_DUE, 'auth_token已过期,请重新获取'),
         (INTERFACE_TOKEN_RENEW_ERROR, 'auth_token续签失败,请重新获取'),
-        (INTERFACE_PARATERS_TYPE_ERROR , "参数({})值非法，请参考API文档"),
+        (INTERFACE_PARATERS_TYPE_ERROR, "参数({})值非法，请参考API文档"),
     )
 
 
@@ -52,7 +53,7 @@ def bind_error(**config):
 
 class ApiErrorManager(BaseErrorManager):
 
-    _valid_errors = [ key for key, _ in ApiCodes.CHOICES]
+    _valid_errors = [key for key, _ in ApiCodes.CHOICES]
 
     def __init__(self):
         self._error = {}

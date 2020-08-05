@@ -6,14 +6,14 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
-from agile.customer.manager.api import CustomerAuthorizedApi
+from agile.base.api import NoAuthorizedApi
 from abs.services.crm.production.manager import GoodsServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.manager import UniversityServer
 
 
-class Search(CustomerAuthorizedApi):
+class Search(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.current_page = RequestField(IntField, desc="当前页码")
     request.search_info = RequestField(
@@ -117,7 +117,7 @@ class Search(CustomerAuthorizedApi):
         return response
 
 
-class HotSearch(CustomerAuthorizedApi):
+class HotSearch(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.search_info = RequestField(
         DictField,
@@ -210,7 +210,7 @@ class HotSearch(CustomerAuthorizedApi):
         return response
 
 
-class Get(CustomerAuthorizedApi):
+class Get(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.goods_id = RequestField(IntField, desc="商品id")
 
