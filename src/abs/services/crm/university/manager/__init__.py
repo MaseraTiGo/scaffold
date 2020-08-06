@@ -155,8 +155,12 @@ class UniversityServer(BaseManager):
 
     @classmethod
     def search_all_major(cls, **search_info):
-        major_qs = Major.query(**search_info)
+        major_qs = Major.query().filter(**search_info)
         return major_qs
+
+    @classmethod
+    def search_hot_major(cls, **search_info):
+        return cls.search_all_major(**search_info)[0:3]
 
     @classmethod
     def is_exsited_major(cls, name, major=None):

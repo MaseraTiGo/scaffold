@@ -113,6 +113,7 @@ class Get(CustomerAuthorizedApi):
             fmt=DictField(
                 desc="商品",
                 conf={
+                    'id': IntField(desc="订单商品详情id"),
                     'sale_price': IntField(desc="单价"),
                     'total_price': IntField(desc="总价"),
                     'quantity': IntField(desc="数量"),
@@ -157,6 +158,7 @@ class Get(CustomerAuthorizedApi):
             'last_payment_time': order.mg_order.payment.last_payment_time,
             'last_payment_number': '',
             'order_item_list': [{
+                'id': order_item.id,
                 'sale_price': order_item.snapshoot.sale_price,
                 'total_price': order_item.snapshoot.total_price,
                 'quantity': order_item.snapshoot.count,
