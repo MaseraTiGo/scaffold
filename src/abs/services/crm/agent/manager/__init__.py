@@ -18,7 +18,9 @@ class AgentServer(BaseManager):
             "license_number":agent_info.pop("license_code"),
             "license_url":agent_info.pop("license_picture"),
         }
-        enterprise = EnterpriseServer.create(**enterprise_infos)
+        enterprise = EnterpriseServer.create(
+            **enterprise_infos
+        )
         if enterprise:
             if cls.is_exist(enterprise.id):
                 agent_info.update({"company_id":enterprise.id})
@@ -62,7 +64,7 @@ class AgentServer(BaseManager):
     def is_exist(cls, company_id):
         agent_qs = cls.search_all(company_id = company_id)
         if agent_qs.count() > 0:
-            raise BusinessError("此代理商已存在")
+            raise BusinessError("此代理商信用编码重复")
         return True
 
     @classmethod

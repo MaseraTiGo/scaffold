@@ -14,29 +14,30 @@ from abs.services.crm.production.manager import GoodsServer
 
 class Search(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.current_page = RequestField(IntField, desc="当前页面")
+    request.current_page = RequestField(IntField, desc = "当前页面")
     request.search_info = RequestField(
         DictField,
-        desc="搜索专业",
-        conf={
-              'name': CharField(desc="专业名称", is_required=False),
+        desc = "搜索专业",
+        conf = {
+              'name': CharField(desc = "专业名称", is_required = False),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
     response.data_list = ResponseField(
         ListField,
-        desc="专业列表",
-        fmt=DictField(
-            desc="专业内容",
-            conf={
-                'id': IntField(desc="专业id"),
-                'name': CharField(desc="专业名称"),
-                'content': CharField(desc="专业描述"),
-                'is_hot': BooleanField(desc="是否热门"),
-                'create_time': DatetimeField(desc="创建时间"),
+        desc = "专业列表",
+        fmt = DictField(
+            desc = "专业内容",
+            conf = {
+                'id': IntField(desc = "专业id"),
+                'name': CharField(desc = "专业名称"),
+                'content': CharField(desc = "专业描述"),
+                'is_hot': BooleanField(desc = "是否热门"),
+                'icons': CharField(desc = "专业图标"),
+                'create_time': DatetimeField(desc = "创建时间"),
             }
         )
     )
@@ -62,6 +63,7 @@ class Search(StaffAuthorizedApi):
                 "name":major.name,
                 "content":major.content,
                 "is_hot":major.is_hot,
+                "icons":major.icons,
                 "create_time":major.create_time,
               }  for major in major_spliter.data]
         response.data_list = data_list
@@ -76,15 +78,15 @@ class SearchAll(StaffAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="专业列表",
-        fmt=DictField(
-            desc="专业内容",
-            conf={
-                'id': IntField(desc="专业id"),
-                'name': CharField(desc="专业名称"),
-                'content': CharField(desc="专业描述"),
-                'is_hot': BooleanField(desc="是否热门"),
-                'create_time': DatetimeField(desc="创建时间"),
+        desc = "专业列表",
+        fmt = DictField(
+            desc = "专业内容",
+            conf = {
+                'id': IntField(desc = "专业id"),
+                'name': CharField(desc = "专业名称"),
+                'content': CharField(desc = "专业描述"),
+                'is_hot': BooleanField(desc = "是否热门"),
+                'create_time': DatetimeField(desc = "创建时间"),
             }
         )
     )
@@ -117,16 +119,17 @@ class Add(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.major_info = RequestField(
         DictField,
-        desc="专业信息",
-        conf={
-            'name': CharField(desc="专业名称"),
-            'content': CharField(desc="专业描述"),
-            'is_hot': BooleanField(desc="是否热门"),
+        desc = "专业信息",
+        conf = {
+            'name': CharField(desc = "专业名称"),
+            'content': CharField(desc = "专业描述"),
+            'is_hot': BooleanField(desc = "是否热门"),
+            'icons':CharField(desc = "专业图标"),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.major_id = ResponseField(IntField, desc="品牌ID")
+    response.major_id = ResponseField(IntField, desc = "品牌ID")
 
     @classmethod
     def get_desc(cls):
@@ -149,14 +152,15 @@ class Add(StaffAuthorizedApi):
 
 class Update(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.major_id = RequestField(IntField, desc="专业id")
+    request.major_id = RequestField(IntField, desc = "专业id")
     request.major_info = RequestField(
         DictField,
-        desc="需要更新的专业信息",
-        conf={
-            'name': CharField(desc="专业名称"),
-            'content': CharField(desc="专业描述"),
-            'is_hot': BooleanField(desc="是否热门"),
+        desc = "需要更新的专业信息",
+        conf = {
+            'name': CharField(desc = "专业名称"),
+            'content': CharField(desc = "专业描述"),
+            'is_hot': BooleanField(desc = "是否热门"),
+            'icons':CharField(desc = "专业图标"),
         }
     )
 
@@ -180,7 +184,7 @@ class Update(StaffAuthorizedApi):
 
 class Remove(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.major_id = RequestField(IntField, desc="品牌id")
+    request.major_id = RequestField(IntField, desc = "品牌id")
 
     response = with_metaclass(ResponseFieldSet)
 
@@ -194,7 +198,7 @@ class Remove(StaffAuthorizedApi):
 
     def execute(self, request):
         major = UniversityServer.get_major(request.major_id)
-        goods_qs = GoodsServer.search_all_goods(major_id=major.id)
+        goods_qs = GoodsServer.search_all_goods(major_id = major.id)
         if goods_qs.count() > 0:
             raise BusinessError("专业已绑定商品禁止删除")
         major.delete()
@@ -205,7 +209,7 @@ class Remove(StaffAuthorizedApi):
 
 class Settop(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.major_id = RequestField(IntField, desc="专业id")
+    request.major_id = RequestField(IntField, desc = "专业id")
 
     response = with_metaclass(ResponseFieldSet)
 
@@ -222,7 +226,7 @@ class Settop(StaffAuthorizedApi):
         is_hot = True
         if major.is_hot:
             is_hot = False
-        major.update(is_hot=is_hot)
+        major.update(is_hot = is_hot)
 
     def fill(self, response):
         return response
