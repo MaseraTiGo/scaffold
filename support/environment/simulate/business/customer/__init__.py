@@ -5,7 +5,7 @@ from support.common.generator.helper import CustomerGenerator,\
         CustomerAccountGenerator, CustomerBalanceGenerator,\
         EnterpriseGenerator
 from support.environment.common.middleground.person import PersonMaker
-from support.environment.init.business.crm.enterprise import EnterpriseLoader
+from support.environment.init.business.controller.enterprise import EnterpriseLoader
 from support.environment.simulate.business.customer.customer import \
         CustomerLoader
 from support.environment.simulate.business.customer.finance import \
