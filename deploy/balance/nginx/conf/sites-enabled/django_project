@@ -27,6 +27,8 @@ server {
     
     location /a/ {
         alias   /nginx/agent/;
+        try_files $uri /index.html;
+        index  index.html index.htm;
     }
 
 }
