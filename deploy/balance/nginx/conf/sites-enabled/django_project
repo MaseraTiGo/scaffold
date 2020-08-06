@@ -24,5 +24,9 @@ server {
     location /resource/ {
         alias   /nginx/resource/;
     }
+    
+    location /a/ {
+        alias   /nginx/agent/;
+    }
 
 }
