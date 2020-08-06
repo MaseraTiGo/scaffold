@@ -14,15 +14,15 @@ from infrastructure.core.exception.business_error import BusinessError
 
 from agile.base.api import NoAuthorizedApi
 from agile.crm.manager.api import StaffAuthorizedApi
-from abs.services.crm.account.manager import StaffAccountServer
+from abs.services.agent.account.manager import AgentStaffAccountServer
 
 
 class Modify(StaffAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.old_password = RequestField(CharField, desc="老密码")
-    request.new_password = RequestField(CharField, desc="新密码")
-    request.repeat_password = RequestField(CharField, desc="重复新密码")
+    request.old_password = RequestField(CharField, desc = "老密码")
+    request.new_password = RequestField(CharField, desc = "新密码")
+    request.repeat_password = RequestField(CharField, desc = "重复新密码")
 
     response = with_metaclass(ResponseFieldSet)
 
@@ -38,10 +38,10 @@ class Modify(StaffAuthorizedApi):
         staff = self.auth_user
         if request.new_password != request.repeat_password:
             raise BusinessError("两次输入密码不一致")
-        StaffAccountServer.modify_password(
+        AgentStaffAccountServer.modify_password(
             staff.id,
-            old_password=request.old_password,
-            new_password=request.new_password
+            old_password = request.old_password,
+            new_password = request.new_password
         )
 
     def fill(self, response, token):

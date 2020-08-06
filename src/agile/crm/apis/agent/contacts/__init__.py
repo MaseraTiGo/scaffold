@@ -162,7 +162,7 @@ class Update(StaffAuthorizedApi):
         return response
 
 
-class UpdateAccount(StaffAuthorizedApi):
+class AddAccount(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.contacts_id = RequestField(IntField, desc = "代理商id")
     request.contacts_info = RequestField(
@@ -170,15 +170,14 @@ class UpdateAccount(StaffAuthorizedApi):
         desc = "联系人账号信息",
         conf = {
             'account': CharField(desc = "账号"),
-            'password': CharField(desc = "密码", is_required = False),
-            'account_status': CharField(desc = "状态"),
+            'password': CharField(desc = "密码"),
         }
     )
     response = with_metaclass(ResponseFieldSet)
 
     @classmethod
     def get_desc(cls):
-        return "代理商联系人账号更新接口"
+        return "代理商联系人账号生成接口"
 
     @classmethod
     def get_author(cls):
@@ -187,41 +186,27 @@ class UpdateAccount(StaffAuthorizedApi):
     def execute(self, request):
         contacts = AgentServer.get_contacts(request.contacts_id)
         if contacts.account:
-            update_account_info = {
-                "status":request.contacts_info["account_status"],
-            }
-            if "password" in request.contacts_info:
-                update_account_info.update({
-                    "password":request.contacts_info["account_status"],
-                })
-                AgentStaffAccountServer.update(**update_account_info)
-            contacts.account_status(
-                account = request.contacts_info["account_status"]
-            )
-        else:
-            add_staff_info = {
-                "name":contacts.contacts,
-                "email":contacts.email,
-                "gender":contacts.gender,
-                "is_admin":True,
-            }
-            agent_staff = AgentStaffServer.create(
-                contacts.phone,
-                contacts.agent.company_id,
-                **add_staff_info
-            )
-            add_account_info = {
-                "username":request.contacts_info["account"],
-                "password":contacts.phone[-6:],
-                "role_id":agent_staff.id
-            }
-            AgentStaffAccountServer.create(**add_account_info)
-            contacts.update(
-                account = request.contacts_info["account"],
-                account_status = request.contacts_info["account_status"]
-            )
+            raise BusinessError("请不要重复生成账号")
+        add_staff_info = {
+            "name":contacts.contacts,
+            "email":contacts.email,
+            "gender":contacts.gender,
+            "is_admin":True,
+        }
+        agent_staff = AgentStaffServer.create(
+            contacts.phone,
+            contacts.agent.company_id,
+            **add_staff_info
+        )
+        add_account_info = {
+            "username":request.contacts_info["account"],
+            "password":request.contacts_info["password"],
+            "role_id":agent_staff.id
+        }
+        AgentStaffAccountServer.create(**add_account_info)
+        contacts.update(
+            account = request.contacts_info["account"],
+        )
 
     def fill(self, response):
         return response
-
-
