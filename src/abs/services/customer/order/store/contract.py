@@ -20,7 +20,7 @@ class Contract(BaseModel):
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)
 
     class Meta:
-        db_table = DB_PREFIX + "base"
+        db_table = DB_PREFIX + "contract"
 
     @classmethod
     def search(cls, **attrs):
