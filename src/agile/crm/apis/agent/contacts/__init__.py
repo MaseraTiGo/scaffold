@@ -195,7 +195,7 @@ class AddAccount(StaffAuthorizedApi):
         }
         agent_staff = AgentStaffServer.create(
             contacts.phone,
-            contacts.agent.company_id,
+            contacts.agent,
             **add_staff_info
         )
         add_account_info = {

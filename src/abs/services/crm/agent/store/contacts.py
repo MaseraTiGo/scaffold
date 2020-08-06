@@ -5,7 +5,7 @@ from abs.common.model import BaseModel, BooleanField, \
         ForeignKey, CASCADE
 from abs.middleground.business.person.utils.constant import GenderTypes
 from abs.middleground.business.account.utils.constant import StatusTypes
-from abs.services.crm.university.settings import DB_PREFIX
+from abs.services.crm.agent.settings import DB_PREFIX
 from abs.services.crm.agent.store import Agent
 
 

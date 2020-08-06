@@ -7,7 +7,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.base.api import NoAuthorizedApi
-from abs.services.crm.production.manager import GoodsServer
+from abs.services.agent.goods.manager import GoodsServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.manager import UniversityServer
@@ -15,43 +15,43 @@ from abs.services.crm.university.manager import UniversityServer
 
 class Search(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.current_page = RequestField(IntField, desc="当前页码")
+    request.current_page = RequestField(IntField, desc = "当前页码")
     request.search_info = RequestField(
         DictField,
-        desc="搜索商品",
-        conf={
-            'title': CharField(desc="标题", is_required=False),
-            'province': CharField(desc="学校所在省", is_required=False),
-            'city': CharField(desc="学校所在市", is_required=False),
-            'school_id': IntField(desc="学校id", is_required=False),
-            'major_id': IntField(desc="专业id", is_required=False),
-            'duration': CharField(desc="学年", is_required=False),
-            'production_id': IntField(desc="产品id", is_required=False)
+        desc = "搜索商品",
+        conf = {
+            'title': CharField(desc = "标题", is_required = False),
+            'province': CharField(desc = "学校所在省", is_required = False),
+            'city': CharField(desc = "学校所在市", is_required = False),
+            'school_id': IntField(desc = "学校id", is_required = False),
+            'major_id': IntField(desc = "专业id", is_required = False),
+            'duration': CharField(desc = "学年", is_required = False),
+            'production_id': IntField(desc = "产品id", is_required = False)
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="商品列表",
-        fmt=DictField(
-            desc="商品信息",
-            conf={
-                'id': IntField(desc="商品id"),
-                'thumbnail': CharField(desc="缩略图"),
-                'title': CharField(desc="标题"),
-                'school_name': CharField(desc="学校名称"),
-                'major_name': CharField(desc="专业名称"),
-                'duration': CharField(desc="学年"),
-                'school_city': CharField(desc="学校所在城市"),
-                'production_name': CharField(desc="产品名称"),
-                'brand_name': CharField(desc="品牌名"),
-                'sale_price': IntField(desc="售价")
+        desc = "商品列表",
+        fmt = DictField(
+            desc = "商品信息",
+            conf = {
+                'id': IntField(desc = "商品id"),
+                'thumbnail': CharField(desc = "缩略图"),
+                'title': CharField(desc = "标题"),
+                'school_name': CharField(desc = "学校名称"),
+                'major_name': CharField(desc = "专业名称"),
+                'duration': CharField(desc = "学年"),
+                'school_city': CharField(desc = "学校所在城市"),
+                'production_name': CharField(desc = "产品名称"),
+                'brand_name': CharField(desc = "品牌名"),
+                'sale_price': IntField(desc = "售价")
             }
         )
     )
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
 
     @classmethod
     def get_desc(cls):
@@ -121,30 +121,30 @@ class HotSearch(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.search_info = RequestField(
         DictField,
-        desc="搜索商品",
-        conf={
-            'province': CharField(desc="学校所在省", is_required=False),
-            'city': CharField(desc="学校所在市", is_required=False),
+        desc = "搜索商品",
+        conf = {
+            'province': CharField(desc = "学校所在省", is_required = False),
+            'city': CharField(desc = "学校所在市", is_required = False),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="商品列表",
-        fmt=DictField(
-            desc="商品信息",
-            conf={
-                'id': IntField(desc="商品id"),
-                'thumbnail': CharField(desc="缩略图"),
-                'title': CharField(desc="标题"),
-                'school_name': CharField(desc="学校名称"),
-                'major_name': CharField(desc="专业名称"),
-                'duration': CharField(desc="学年"),
-                'school_city': CharField(desc="学校所在城市"),
-                'production_name': CharField(desc="产品名称"),
-                'brand_name': CharField(desc="品牌名称"),
-                'sale_price': IntField(desc="售价")
+        desc = "商品列表",
+        fmt = DictField(
+            desc = "商品信息",
+            conf = {
+                'id': IntField(desc = "商品id"),
+                'thumbnail': CharField(desc = "缩略图"),
+                'title': CharField(desc = "标题"),
+                'school_name': CharField(desc = "学校名称"),
+                'major_name': CharField(desc = "专业名称"),
+                'duration': CharField(desc = "学年"),
+                'school_city': CharField(desc = "学校所在城市"),
+                'production_name': CharField(desc = "产品名称"),
+                'brand_name': CharField(desc = "品牌名称"),
+                'sale_price': IntField(desc = "售价")
             }
         )
     )
@@ -212,40 +212,40 @@ class HotSearch(NoAuthorizedApi):
 
 class Get(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.goods_id = RequestField(IntField, desc="商品id")
+    request.goods_id = RequestField(IntField, desc = "商品id")
 
     response = with_metaclass(ResponseFieldSet)
-    response.goods_info = ResponseField(DictField, desc="商品信息", conf={
-        'slideshow': ListField(desc="轮播图", fmt=CharField(desc="url")),
-        'video_display': CharField(desc="展示视频"),
-        'detail': ListField(desc="商品详情", fmt=CharField(desc="url")),
-        'min_price': IntField(desc="价格"),
-        'title': CharField(desc="标题"),
-        'description': CharField(desc="描述"),
-        'despatch_type': CharField(desc="发货方式"),
-        'school_city': CharField(desc="学校城市"),
-        'month_quantity': IntField(desc="月销数量"),
-        'school_name': CharField(desc="学校名称"),
-        'major_name': CharField(desc="专业名称"),
-        'duration': CharField(desc="学年"),
-        'brand_name': CharField(desc="品牌"),
-        'production_name': CharField(desc="产品名"),
+    response.goods_info = ResponseField(DictField, desc = "商品信息", conf = {
+        'slideshow': ListField(desc = "轮播图", fmt = CharField(desc = "url")),
+        'video_display': CharField(desc = "展示视频"),
+        'detail': ListField(desc = "商品详情", fmt = CharField(desc = "url")),
+        'min_price': IntField(desc = "价格"),
+        'title': CharField(desc = "标题"),
+        'description': CharField(desc = "描述"),
+        'despatch_type': CharField(desc = "发货方式"),
+        'school_city': CharField(desc = "学校城市"),
+        'month_quantity': IntField(desc = "月销数量"),
+        'school_name': CharField(desc = "学校名称"),
+        'major_name': CharField(desc = "专业名称"),
+        'duration': CharField(desc = "学年"),
+        'brand_name': CharField(desc = "品牌"),
+        'production_name': CharField(desc = "产品名"),
         'specification_list': ListField(
-            desc="规格列表",
-            fmt=DictField(
-                desc="规格",
-                conf={
-                    'id': IntField(desc="id"),
-                    'sale_price': IntField(desc="价格"),
-                    'stock': IntField(desc="库存"),
-                    'show_image': CharField(desc="展示图片"),
+            desc = "规格列表",
+            fmt = DictField(
+                desc = "规格",
+                conf = {
+                    'id': IntField(desc = "id"),
+                    'sale_price': IntField(desc = "价格"),
+                    'stock': IntField(desc = "库存"),
+                    'show_image': CharField(desc = "展示图片"),
                     'specification_value_list': ListField(
-                        desc="商品规格值",
-                        fmt=DictField(
-                            desc='规格值',
-                            conf={
-                                'category': CharField(desc="属性分类"),
-                                'attribute': CharField(desc="属性值")
+                        desc = "商品规格值",
+                        fmt = DictField(
+                            desc = '规格值',
+                            conf = {
+                                'category': CharField(desc = "属性分类"),
+                                'attribute': CharField(desc = "属性值")
                             }
                         )
                     )

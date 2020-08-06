@@ -14,7 +14,7 @@ from abs.middleground.business.transaction.utils.constant import \
         PayTypes, OwnTypes
 from abs.middleground.business.merchandise.utils.constant import \
         DespatchService
-from abs.services.crm.production.utils.constant import DurationTypes
+from abs.services.agent.goods.utils.constant import DurationTypes
 from abs.services.crm.order.manager import OrderServer, OrderItemServer
 from abs.services.customer.personal.manager import CustomerServer
 
@@ -22,59 +22,59 @@ from abs.services.customer.personal.manager import CustomerServer
 class Get(StaffAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.order_id = RequestField(IntField, desc="订单id")
+    request.order_id = RequestField(IntField, desc = "订单id")
 
     response = with_metaclass(ResponseFieldSet)
     response.order_info = ResponseField(
         DictField,
-        desc="订单详情",
-        conf={
-            'id': IntField(desc="订单id"),
-            'name': CharField(desc="客户姓名"),
-            'phone': CharField(desc="客户手机号"),
-            'identification': CharField(desc="客户身份证号"),
-            'register_time': DatetimeField(desc="客户注册时间"),
+        desc = "订单详情",
+        conf = {
+            'id': IntField(desc = "订单id"),
+            'name': CharField(desc = "客户姓名"),
+            'phone': CharField(desc = "客户手机号"),
+            'identification': CharField(desc = "客户身份证号"),
+            'register_time': DatetimeField(desc = "客户注册时间"),
 
-            're_name': CharField(desc="收货人姓名"),
-            're_phone': CharField(desc="收货人手机号"),
-            're_address': CharField(desc="收货人地址"),
+            're_name': CharField(desc = "收货人姓名"),
+            're_phone': CharField(desc = "收货人手机号"),
+            're_address': CharField(desc = "收货人地址"),
 
-            'mg_order_id':IntField(desc="中台订单id"),
-            'number': CharField(desc="订单编号"),
-            'strike_price': IntField(desc="成交金额，单位：分"),
-            'actual_amount': CharField(desc="实付金额,单位：分"),
+            'mg_order_id':IntField(desc = "中台订单id"),
+            'number': CharField(desc = "订单编号"),
+            'strike_price': IntField(desc = "成交金额，单位：分"),
+            'actual_amount': CharField(desc = "实付金额,单位：分"),
             'source':CharField(
-                            desc="订单来源类型",
-                            choices=OrderSource.CHOICES
+                            desc = "订单来源类型",
+                            choices = OrderSource.CHOICES
                         ),
-            'description': CharField(desc="订单描述"),
+            'description': CharField(desc = "订单描述"),
             'status': CharField(
-                desc="订单状态",
-                choices=OrderStatus.CHOICES
+                desc = "订单状态",
+                choices = OrderStatus.CHOICES
             ),
-            'remark': CharField(desc="订单备注"),
-            'create_time': DatetimeField(desc="订单创建时间"),
+            'remark': CharField(desc = "订单备注"),
+            'create_time': DatetimeField(desc = "订单创建时间"),
 
             'snapshoot_list': ListField(
-                desc='商品列表',
-                fmt=DictField(
-                    desc="商品详情",
-                    conf={
-                        'id': CharField(desc="商品快照id"),
-                        'show_image': CharField(desc="商品图片"),
-                        'title': CharField(desc="商品标题"),
-                        'brand_name': CharField(desc="品牌名称"),
-                        'production_name': CharField(desc="产品名称"),
-                        'count': IntField(desc="商品数量"),
-                        'school_name': CharField(desc="学校名称"),
-                        'major_name': CharField(desc="专业名称"),
-                        'sale_price': IntField(desc="商品单价"),
+                desc = '商品列表',
+                fmt = DictField(
+                    desc = "商品详情",
+                    conf = {
+                        'id': CharField(desc = "商品快照id"),
+                        'show_image': CharField(desc = "商品图片"),
+                        'title': CharField(desc = "商品标题"),
+                        'brand_name': CharField(desc = "品牌名称"),
+                        'production_name': CharField(desc = "产品名称"),
+                        'count': IntField(desc = "商品数量"),
+                        'school_name': CharField(desc = "学校名称"),
+                        'major_name': CharField(desc = "专业名称"),
+                        'sale_price': IntField(desc = "商品单价"),
                         'duration':CharField(
-                            desc="学制",
-                            choices=DurationTypes.CHOICES
+                            desc = "学制",
+                            choices = DurationTypes.CHOICES
                         ),
-                        'total_price': IntField(desc="总价"),
-                        'remark': CharField(desc="属性"),
+                        'total_price': IntField(desc = "总价"),
+                        'remark': CharField(desc = "属性"),
                     }
                 )
             ),
@@ -153,72 +153,72 @@ class Search(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.current_page = RequestField(
         IntField,
-        desc="当前页码"
+        desc = "当前页码"
     )
     request.search_info = RequestField(
         DictField,
-        desc="搜索订单条件",
-        conf={
-          'number': CharField(desc="订单号", is_required=False),
+        desc = "搜索订单条件",
+        conf = {
+          'number': CharField(desc = "订单号", is_required = False),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
     response.data_list = ResponseField(
         ListField,
-        desc="订单列表",
-        fmt=DictField(
-            desc="订单详情",
-            conf={
-                'id': IntField(desc="订单id"),
-                'number': CharField(desc="订单编号"),
-                'last_payment_time': DatetimeField(desc="最后支付时间"),
+        desc = "订单列表",
+        fmt = DictField(
+            desc = "订单详情",
+            conf = {
+                'id': IntField(desc = "订单id"),
+                'number': CharField(desc = "订单编号"),
+                'last_payment_time': DatetimeField(desc = "最后支付时间"),
                 'source':CharField(
-                            desc="订单来源类型",
-                            choices=OrderSource.CHOICES
+                            desc = "订单来源类型",
+                            choices = OrderSource.CHOICES
                         ),
-                'create_time': DatetimeField(desc="订单创建时间"),
+                'create_time': DatetimeField(desc = "订单创建时间"),
 
-                'strike_price': IntField(desc="成交金额，单位：分"),
-                'actual_amount': CharField(desc="实付金额,单位：分"),
+                'strike_price': IntField(desc = "成交金额，单位：分"),
+                'actual_amount': CharField(desc = "实付金额,单位：分"),
                 'status': CharField(
-                    desc="订单状态",
-                    choices=OrderStatus.CHOICES
+                    desc = "订单状态",
+                    choices = OrderStatus.CHOICES
                 ),
 
-                're_name': CharField(desc="收货人姓名"),
-                're_phone': CharField(desc="收货人手机号"),
+                're_name': CharField(desc = "收货人姓名"),
+                're_phone': CharField(desc = "收货人手机号"),
 
                 'snapshoot_list': ListField(
-                    desc='商品列表',
-                    fmt=DictField(
-                        desc="商品详情",
-                        conf={
-                            'id': CharField(desc="商品快照id"),
-                            'show_image': CharField(desc="商品图片"),
-                            'title': CharField(desc="商品标题"),
-                            'brand_name': CharField(desc="品牌名称"),
-                            'production_name': CharField(desc="产品名称"),
-                            'count': IntField(desc="商品数量"),
-                            'school_name': CharField(desc="学校名称"),
-                            'major_name': CharField(desc="专业名称"),
-                            'sale_price': IntField(desc="商品单价"),
+                    desc = '商品列表',
+                    fmt = DictField(
+                        desc = "商品详情",
+                        conf = {
+                            'id': CharField(desc = "商品快照id"),
+                            'show_image': CharField(desc = "商品图片"),
+                            'title': CharField(desc = "商品标题"),
+                            'brand_name': CharField(desc = "品牌名称"),
+                            'production_name': CharField(desc = "产品名称"),
+                            'count': IntField(desc = "商品数量"),
+                            'school_name': CharField(desc = "学校名称"),
+                            'major_name': CharField(desc = "专业名称"),
+                            'sale_price': IntField(desc = "商品单价"),
                             'duration':CharField(
-                                desc="学制",
-                                choices=DurationTypes.CHOICES
+                                desc = "学制",
+                                choices = DurationTypes.CHOICES
                             ),
-                            'total_price': IntField(desc="总价"),
-                            'remark': CharField(desc="属性"),
+                            'total_price': IntField(desc = "总价"),
+                            'remark': CharField(desc = "属性"),
                         }
                     )
                 ),
             }
         )
     )
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
 
     @classmethod
     def get_desc(cls):

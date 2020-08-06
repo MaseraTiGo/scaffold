@@ -15,6 +15,7 @@ class Staff(BaseModel):
 
     person_id = IntegerField(verbose_name = "用户id")
     company_id = IntegerField(verbose_name = "企业id")
+    agent_id = IntegerField(verbose_name = "代理商id", default = 0)
 
     remark = TextField(verbose_name = "备注")
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)

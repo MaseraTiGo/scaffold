@@ -11,7 +11,7 @@ from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.middleground.business.person.manager import PersonServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from infrastructure.core.exception.business_error import BusinessError
-from abs.services.crm.production.manager import GoodsServer
+from abs.services.agent.goods.manager import GoodsServer
 from abs.services.crm.order.manager import OrderServer, OrderItemServer
 from abs.middleground.business.order.manager import OrderServer as mg_OrderServer
 from abs.services.crm.university.manager import UniversityServer
@@ -23,17 +23,17 @@ class Add(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.order_info = RequestField(
         DictField,
-        desc="订单详情",
-        conf={
-            'strike_price': IntField(desc="金额"),
-            'address_id': IntField(desc="收货地址id", is_required=False),
+        desc = "订单详情",
+        conf = {
+            'strike_price': IntField(desc = "金额"),
+            'address_id': IntField(desc = "收货地址id", is_required = False),
             'goods_list': ListField(
-                desc='商品列表',
-                fmt=DictField(
-                    desc='商品信息',
-                    conf={
-                        'quantity': IntField(desc="购买数量"),
-                        'specification_id': IntField(desc="规格id")
+                desc = '商品列表',
+                fmt = DictField(
+                    desc = '商品信息',
+                    conf = {
+                        'quantity': IntField(desc = "购买数量"),
+                        'specification_id': IntField(desc = "规格id")
                     }
                 )
             )
@@ -41,7 +41,7 @@ class Add(CustomerAuthorizedApi):
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.order_id = ResponseField(IntField, desc="订单id")
+    response.order_id = ResponseField(IntField, desc = "订单id")
 
     @classmethod
     def get_desc(cls):
@@ -104,37 +104,37 @@ class Add(CustomerAuthorizedApi):
 
 class Get(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.order_id = RequestField(IntField, desc="订单id")
+    request.order_id = RequestField(IntField, desc = "订单id")
 
     response = with_metaclass(ResponseFieldSet)
-    response.order_info = ResponseField(DictField, desc="订单信息", conf={
-        'id': IntField(desc="订单id"),
-        'number': CharField(desc="订单编号"),
-        'status': CharField(desc="订单状态"),
-        'strike_price': IntField(desc="价格"),
-        'create_time': DatetimeField(desc="下单时间"),
-        'last_payment_type': CharField(desc='付款方式'),
-        'last_payment_time': CharField(desc="付款时间"),
-        'last_payment_number': CharField(desc="最后付款单号"),
+    response.order_info = ResponseField(DictField, desc = "订单信息", conf = {
+        'id': IntField(desc = "订单id"),
+        'number': CharField(desc = "订单编号"),
+        'status': CharField(desc = "订单状态"),
+        'strike_price': IntField(desc = "价格"),
+        'create_time': DatetimeField(desc = "下单时间"),
+        'last_payment_type': CharField(desc = '付款方式'),
+        'last_payment_time': CharField(desc = "付款时间"),
+        'last_payment_number': CharField(desc = "最后付款单号"),
         'order_item_list': ListField(
-            desc="商品列表",
-            fmt=DictField(
-                desc="商品",
-                conf={
-                    'id': IntField(desc="订单商品详情id"),
-                    'despatch_type': CharField(desc="发货方式"),
-                    'sale_price': IntField(desc="单价"),
-                    'total_price': IntField(desc="总价"),
-                    'quantity': IntField(desc="数量"),
-                    'show_image': CharField(desc="展示图片"),
-                    'title': CharField(desc="标题"),
-                    'school_name': CharField(desc="学校名称"),
-                    'major_name': CharField(desc="专业名称"),
-                    'duration': CharField(desc="学年"),
-                    'school_city': CharField(desc="学校城市"),
-                    'brand_name': CharField(desc="品牌"),
-                    'production_name': CharField(desc="产品名"),
-                    'remark': CharField(desc="备注")
+            desc = "商品列表",
+            fmt = DictField(
+                desc = "商品",
+                conf = {
+                    'id': IntField(desc = "订单商品详情id"),
+                    'despatch_type': CharField(desc = "发货方式"),
+                    'sale_price': IntField(desc = "单价"),
+                    'total_price': IntField(desc = "总价"),
+                    'quantity': IntField(desc = "数量"),
+                    'show_image': CharField(desc = "展示图片"),
+                    'title': CharField(desc = "标题"),
+                    'school_name': CharField(desc = "学校名称"),
+                    'major_name': CharField(desc = "专业名称"),
+                    'duration': CharField(desc = "学年"),
+                    'school_city': CharField(desc = "学校城市"),
+                    'brand_name': CharField(desc = "品牌"),
+                    'production_name': CharField(desc = "产品名"),
+                    'remark': CharField(desc = "备注")
                 }
             )
         )
@@ -152,7 +152,7 @@ class Get(CustomerAuthorizedApi):
         order = OrderServer.get(request.order_id)
         if order.customer_id != self.auth_user.id:
             raise BusinessError('订单异常')
-        order.order_item_list = OrderItemServer.search_all(order=order)
+        order.order_item_list = OrderItemServer.search_all(order = order)
         mg_OrderServer.hung_snapshoot(order.order_item_list)
         return order
 
@@ -188,54 +188,54 @@ class Get(CustomerAuthorizedApi):
 
 class Search(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.current_page = RequestField(IntField, desc="当前页码")
+    request.current_page = RequestField(IntField, desc = "当前页码")
     request.search_info = RequestField(
         DictField,
-        desc="搜索订单",
-        conf={
-            'status': CharField(desc="订单状态", is_required=False)
+        desc = "搜索订单",
+        conf = {
+            'status': CharField(desc = "订单状态", is_required = False)
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="订单列表",
-        fmt=DictField(
-            desc="订单信息",
-            conf={
-                'id': IntField(desc="订单id"),
-                'number': CharField(desc="订单编号"),
-                'status': CharField(desc="订单状态"),
-                'strike_price': IntField(desc="价格"),
-                'create_time': DatetimeField(desc="下单时间"),
-                'last_payment_type': CharField(desc='付款方式'),
-                'last_payment_time': CharField(desc="付款时间"),
-                'last_payment_number': CharField(desc="最后付款单号"),
+        desc = "订单列表",
+        fmt = DictField(
+            desc = "订单信息",
+            conf = {
+                'id': IntField(desc = "订单id"),
+                'number': CharField(desc = "订单编号"),
+                'status': CharField(desc = "订单状态"),
+                'strike_price': IntField(desc = "价格"),
+                'create_time': DatetimeField(desc = "下单时间"),
+                'last_payment_type': CharField(desc = '付款方式'),
+                'last_payment_time': CharField(desc = "付款时间"),
+                'last_payment_number': CharField(desc = "最后付款单号"),
                 'order_item_list': ListField(
-                    desc="商品列表",
-                    fmt=DictField(
-                        desc="商品",
-                        conf={
-                            'sale_price': IntField(desc="单价"),
-                            'total_price': IntField(desc="总价"),
-                            'quantity': IntField(desc="数量"),
-                            'show_image': CharField(desc="展示图片"),
-                            'title': CharField(desc="标题"),
-                            'school_name': CharField(desc="学校名称"),
-                            'major_name': CharField(desc="专业名称"),
-                            'duration': CharField(desc="学年"),
-                            'school_city': CharField(desc="学校城市"),
-                            'brand_name': CharField(desc="品牌"),
-                            'production_name': CharField(desc="产品名")
+                    desc = "商品列表",
+                    fmt = DictField(
+                        desc = "商品",
+                        conf = {
+                            'sale_price': IntField(desc = "单价"),
+                            'total_price': IntField(desc = "总价"),
+                            'quantity': IntField(desc = "数量"),
+                            'show_image': CharField(desc = "展示图片"),
+                            'title': CharField(desc = "标题"),
+                            'school_name': CharField(desc = "学校名称"),
+                            'major_name': CharField(desc = "专业名称"),
+                            'duration': CharField(desc = "学年"),
+                            'school_city': CharField(desc = "学校城市"),
+                            'brand_name': CharField(desc = "品牌"),
+                            'production_name': CharField(desc = "产品名")
                         }
                     )
                 )
             }
         )
     )
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
 
     @classmethod
     def get_desc(cls):
@@ -248,7 +248,7 @@ class Search(CustomerAuthorizedApi):
     def execute(self, request):
         page_list = OrderServer.search(
             request.current_page,
-            customer_id=self.auth_user.id,
+            customer_id = self.auth_user.id,
             **request.search_info)
         OrderItemServer.hung_order_item(page_list.data)
         all_order_item_list = []
@@ -288,11 +288,11 @@ class Search(CustomerAuthorizedApi):
 
 class Pay(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.order_id = RequestField(IntField, desc="订单id")
+    request.order_id = RequestField(IntField, desc = "订单id")
     request.pay_type = RequestField(
         CharField,
-        desc="交易方式",
-        choices=(
+        desc = "交易方式",
+        choices = (
             ('bank', '银行'),
             ('alipay', "支付宝"),
             ('wechat', "微信"),
@@ -301,11 +301,11 @@ class Pay(CustomerAuthorizedApi):
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.pay_info = ResponseField(DictField, desc='支付信息', conf={
-        'timestamp': CharField(desc="时间"),
-        'prepayid': CharField(desc="微信预支付id"),
-        'noncestr': CharField(desc="随机字符串"),
-        'sign': CharField(desc="签名")
+    response.pay_info = ResponseField(DictField, desc = '支付信息', conf = {
+        'timestamp': CharField(desc = "时间"),
+        'prepayid': CharField(desc = "微信预支付id"),
+        'noncestr': CharField(desc = "随机字符串"),
+        'sign': CharField(desc = "签名")
     })
 
     @classmethod
@@ -329,7 +329,7 @@ class Pay(CustomerAuthorizedApi):
 
 class Cancel(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.order_id = RequestField(IntField, desc="订单id")
+    request.order_id = RequestField(IntField, desc = "订单id")
 
     response = with_metaclass(ResponseFieldSet)
 

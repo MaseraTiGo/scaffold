@@ -5,8 +5,7 @@ from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
-from abs.services.crm.production.store.goods import Goods
-from abs.middleground.business.enterprise.manager import EnterpriseServer
+from abs.services.agent.goods.store.goods import Goods
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.merchandise.utils.constant import UseStatus
 
@@ -37,9 +36,7 @@ class GoodsServer(BaseManager):
                 'production_id': production_id
             })
         if merchandise_info:
-            company = EnterpriseServer.get_crm__company()
             merchandise_id_list = MerchandiseServer.search_id_list(
-                company.id,
                 **merchandise_info
             )
             search_info.update({
@@ -82,7 +79,7 @@ class GoodsServer(BaseManager):
             mapping.update({
                 merchandise.id: merchandise
             })
-        goods_list = Goods.search(merchandise_id__in=mapping.keys())
+        goods_list = Goods.search(merchandise_id__in = mapping.keys())
         for goods in goods_list:
             merchandise = mapping.get(goods.merchandise_id)
             merchandise.goods = goods

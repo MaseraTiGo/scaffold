@@ -6,7 +6,7 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
-from agile.crm.manager.api import StaffAuthorizedApi
+from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.agent.goods.utils.constant import DurationTypes
 from abs.middleground.business.merchandise.utils.constant import\
      DespatchService, UseStatus
@@ -16,9 +16,10 @@ from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.services.crm.university.manager import UniversityServer
+from abs.services.crm.agent.manager import AgentServer
 
 
-class Get(StaffAuthorizedApi):
+class Get(AgentStaffAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
     request.goods_id = RequestField(IntField, desc = "商品id")
@@ -134,7 +135,7 @@ class Get(StaffAuthorizedApi):
         return response
 
 
-class Search(StaffAuthorizedApi):
+class Search(AgentStaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.current_page = RequestField(IntField, desc = "当前页面")
     request.search_info = RequestField(
@@ -215,6 +216,8 @@ class Search(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
+        auth = self.auth_user
+        agent = AgentServer.get(auth.agent_id)
         school_info = {}
         if 'province' in request.search_info:
             province = request.search_info.pop('province')
@@ -233,6 +236,9 @@ class Search(StaffAuthorizedApi):
             request.search_info.update({
                 'school_id__in': school_id_list
             })
+        request.search_info.update({
+            "agent_id":agent.id
+        })
         spliter = GoodsServer.search_goods(
             request.current_page,
             **request.search_info
@@ -276,7 +282,7 @@ class Search(StaffAuthorizedApi):
         return response
 
 
-class Add(StaffAuthorizedApi):
+class Add(AgentStaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.goods_info = RequestField(
         DictField,
@@ -342,6 +348,8 @@ class Add(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
+        auth = self.auth_user
+        agent = AgentServer.get(auth.agent_id)
         school = UniversityServer.get_school(
             request.goods_info.pop('school_id')
         )
@@ -351,10 +359,9 @@ class Add(StaffAuthorizedApi):
         production = ProductionServer.get(
             request.goods_info.pop('production_id')
         )
-        company = EnterpriseServer.get_crm__company()
         merchandise_info = {
             "title":request.goods_info.pop('title'),
-            "company_id":company.id,
+            "company_id":agent.company_id,
             "slideshow":json.dumps(request.goods_info.pop('slideshow')),
             "video_display":request.goods_info.pop('video_display'),
             "detail":json.dumps(request.goods_info.pop('detail')),
@@ -384,6 +391,7 @@ class Add(StaffAuthorizedApi):
             "major_id":major.id,
             "duration":request.goods_info.pop('duration'),
             "merchandise_id":merchandise.id,
+            "agent_id":agent.id
         }
         GoodsServer.create_goods(**goods_info)
 
@@ -394,7 +402,7 @@ class Add(StaffAuthorizedApi):
         return response
 
 
-class Update(StaffAuthorizedApi):
+class Update(AgentStaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.goods_id = RequestField(IntField, desc = "商品id")
     request.goods_info = RequestField(
@@ -513,32 +521,7 @@ class Update(StaffAuthorizedApi):
     def fill(self, response, address_list):
         return response
 
-
-class Remove(StaffAuthorizedApi):
-    """删除商品信息"""
-    request = with_metaclass(RequestFieldSet)
-    request.goods_id = RequestField(IntField, desc = "商品id")
-
-    response = with_metaclass(ResponseFieldSet)
-
-    @classmethod
-    def get_desc(cls):
-        return "商品信息删除接口"
-
-    @classmethod
-    def get_author(cls):
-        return "Fsy"
-
-    def execute(self, request):
-        goods = GoodsServer.get_goods(request.goods_id)
-        MerchandiseServer.remove(goods.merchandise_id)
-        goods.delete()
-
-    def fill(self, response):
-        return response
-
-
-class Setuse(StaffAuthorizedApi):
+class Setuse(AgentStaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.goods_id = RequestField(IntField, desc = "商品id")
 
@@ -563,8 +546,8 @@ class Setuse(StaffAuthorizedApi):
     def fill(self, response):
         return response
 
-
-class Settop(StaffAuthorizedApi):
+class Remove(AgentStaffAuthorizedApi):
+    """删除商品信息"""
     request = with_metaclass(RequestFieldSet)
     request.goods_id = RequestField(IntField, desc = "商品id")
 
@@ -572,7 +555,7 @@ class Settop(StaffAuthorizedApi):
 
     @classmethod
     def get_desc(cls):
-        return "商品置顶接口"
+        return "商品信息删除接口"
 
     @classmethod
     def get_author(cls):
@@ -580,10 +563,8 @@ class Settop(StaffAuthorizedApi):
 
     def execute(self, request):
         goods = GoodsServer.get_goods(request.goods_id)
-        is_hot = True
-        if goods.is_hot:
-            is_hot = False
-        goods.update(is_hot = is_hot)
+        MerchandiseServer.remove(goods.merchandise_id)
+        goods.delete()
 
     def fill(self, response):
         return response

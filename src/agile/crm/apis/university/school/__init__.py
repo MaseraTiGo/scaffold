@@ -9,37 +9,37 @@ from infrastructure.core.exception.business_error import BusinessError
 
 from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.crm.university.manager import UniversityServer
-from abs.services.crm.production.manager import GoodsServer
+from abs.services.agent.goods.manager import GoodsServer
 
 
 class Search(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.current_page = RequestField(IntField, desc="当前页面")
+    request.current_page = RequestField(IntField, desc = "当前页面")
     request.search_info = RequestField(
         DictField,
-        desc="搜索学校",
-        conf={
-              'name': CharField(desc="学校名称", is_required=False),
+        desc = "搜索学校",
+        conf = {
+              'name': CharField(desc = "学校名称", is_required = False),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
     response.data_list = ResponseField(
         ListField,
-        desc="学校列表",
-        fmt=DictField(
-            desc="学校内容",
-            conf={
-                'id': IntField(desc="学校id"),
-                'name': CharField(desc="学校名称"),
-                'logo_url': CharField(desc="学校logo"),
-                'content': CharField(desc="学校描述"),
-                'province': CharField(desc="学校所在省"),
-                'city': CharField(desc="学校所在市"),
-                'is_hot': BooleanField(desc="是否热门"),
-                'create_time': DatetimeField(desc="创建时间"),
+        desc = "学校列表",
+        fmt = DictField(
+            desc = "学校内容",
+            conf = {
+                'id': IntField(desc = "学校id"),
+                'name': CharField(desc = "学校名称"),
+                'logo_url': CharField(desc = "学校logo"),
+                'content': CharField(desc = "学校描述"),
+                'province': CharField(desc = "学校所在省"),
+                'city': CharField(desc = "学校所在市"),
+                'is_hot': BooleanField(desc = "是否热门"),
+                'create_time': DatetimeField(desc = "创建时间"),
             }
         )
     )
@@ -82,18 +82,18 @@ class SearchAll(StaffAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="学校列表",
-        fmt=DictField(
-            desc="学校内容",
-            conf={
-                'id': IntField(desc="学校id"),
-                'name': CharField(desc="学校名称"),
-                'logo_url': CharField(desc="学校logo"),
-                'content': CharField(desc="学校描述"),
-                'province': CharField(desc="学校所在省"),
-                'city': CharField(desc="学校所在市"),
-                'is_hot': BooleanField(desc="是否热门"),
-                'create_time': DatetimeField(desc="创建时间"),
+        desc = "学校列表",
+        fmt = DictField(
+            desc = "学校内容",
+            conf = {
+                'id': IntField(desc = "学校id"),
+                'name': CharField(desc = "学校名称"),
+                'logo_url': CharField(desc = "学校logo"),
+                'content': CharField(desc = "学校描述"),
+                'province': CharField(desc = "学校所在省"),
+                'city': CharField(desc = "学校所在市"),
+                'is_hot': BooleanField(desc = "是否热门"),
+                'create_time': DatetimeField(desc = "创建时间"),
             }
         )
     )
@@ -129,19 +129,19 @@ class Add(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.school_info = RequestField(
         DictField,
-        desc="学校信息",
-        conf={
-                'name': CharField(desc="学校名称"),
-                'logo_url': CharField(desc="学校logo"),
-                'content': CharField(desc="学校描述"),
-                'province': CharField(desc="学校所在省"),
-                'city': CharField(desc="学校所在市"),
-                'is_hot': BooleanField(desc="是否热门"),
+        desc = "学校信息",
+        conf = {
+                'name': CharField(desc = "学校名称"),
+                'logo_url': CharField(desc = "学校logo"),
+                'content': CharField(desc = "学校描述"),
+                'province': CharField(desc = "学校所在省"),
+                'city': CharField(desc = "学校所在市"),
+                'is_hot': BooleanField(desc = "是否热门"),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.school_id = ResponseField(IntField, desc="品牌ID")
+    response.school_id = ResponseField(IntField, desc = "品牌ID")
 
     @classmethod
     def get_desc(cls):
@@ -164,17 +164,17 @@ class Add(StaffAuthorizedApi):
 
 class Update(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.school_id = RequestField(IntField, desc="学校id")
+    request.school_id = RequestField(IntField, desc = "学校id")
     request.school_info = RequestField(
         DictField,
-        desc="需要更新的学校信息",
-        conf={
-                'name': CharField(desc="学校名称"),
-                'logo_url': CharField(desc="学校logo"),
-                'content': CharField(desc="学校描述"),
-                'province': CharField(desc="学校所在省"),
-                'city': CharField(desc="学校所在市"),
-                'is_hot': BooleanField(desc="是否热门"),
+        desc = "需要更新的学校信息",
+        conf = {
+                'name': CharField(desc = "学校名称"),
+                'logo_url': CharField(desc = "学校logo"),
+                'content': CharField(desc = "学校描述"),
+                'province': CharField(desc = "学校所在省"),
+                'city': CharField(desc = "学校所在市"),
+                'is_hot': BooleanField(desc = "是否热门"),
         }
     )
 
@@ -198,7 +198,7 @@ class Update(StaffAuthorizedApi):
 
 class Remove(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.school_id = RequestField(IntField, desc="学校id")
+    request.school_id = RequestField(IntField, desc = "学校id")
 
     response = with_metaclass(ResponseFieldSet)
 
@@ -212,7 +212,7 @@ class Remove(StaffAuthorizedApi):
 
     def execute(self, request):
         school = UniversityServer.get_school(request.school_id)
-        goods_qs = GoodsServer.search_all_goods(school_id=school.id)
+        goods_qs = GoodsServer.search_all_goods(school_id = school.id)
         if goods_qs.count() > 0:
             raise BusinessError("学校已绑定商品禁止删除")
         school.delete()
@@ -223,7 +223,7 @@ class Remove(StaffAuthorizedApi):
 
 class Settop(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.school_id = RequestField(IntField, desc="学校id")
+    request.school_id = RequestField(IntField, desc = "学校id")
 
     response = with_metaclass(ResponseFieldSet)
 
@@ -240,7 +240,7 @@ class Settop(StaffAuthorizedApi):
         is_hot = True
         if school.is_hot:
             is_hot = False
-        school.update(is_hot=is_hot)
+        school.update(is_hot = is_hot)
 
     def fill(self, response):
         return response
