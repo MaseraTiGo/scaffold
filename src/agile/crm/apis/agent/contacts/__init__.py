@@ -10,6 +10,8 @@ from abs.middleground.business.person.utils.constant import GenderTypes
 from abs.middleground.business.account.utils.constant import StatusTypes
 from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.crm.agent.manager import AgentServer
+from abs.services.agent.staff.manager import AgentStaffServer
+from abs.services.agent.account.manager import AgentStaffAccountServer
 
 
 class Add(StaffAuthorizedApi):
@@ -183,7 +185,41 @@ class UpdateAccount(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        pass
+        contacts = AgentServer.get_contacts(request.contacts_id)
+        if contacts.account:
+            update_account_info = {
+                "status":request.contacts_info["account_status"],
+            }
+            if "password" in request.contacts_info:
+                update_account_info.update({
+                    "password":request.contacts_info["account_status"],
+                })
+                AgentStaffAccountServer.update(**update_account_info)
+            contacts.account_status(
+                account = request.contacts_info["account_status"]
+            )
+        else:
+            add_staff_info = {
+                "name":contacts.contacts,
+                "email":contacts.email,
+                "gender":contacts.gender,
+                "is_admin":True,
+            }
+            agent_staff = AgentStaffServer.create(
+                contacts.phone,
+                contacts.agent.company_id,
+                **add_staff_info
+            )
+            add_account_info = {
+                "username":request.contacts_info["account"],
+                "password":contacts.phone[-6:],
+                "role_id":agent_staff.id
+            }
+            AgentStaffAccountServer.create(**add_account_info)
+            contacts.update(
+                account = request.contacts_info["account"],
+                account_status = request.contacts_info["account_status"]
+            )
 
     def fill(self, response):
         return response
