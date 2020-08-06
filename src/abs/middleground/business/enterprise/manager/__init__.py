@@ -16,7 +16,7 @@ class EnterpriseServer(BaseManager):
     @classmethod
     def get_crm__company(cls):
         company_qs = Enterprise.search(
-            license_number="91420100MA4KM4XY1Y"
+            license_number = "91420100MA4KM4XY1Y"
         )
         if company_qs.count() > 0:
             return company_qs[0]
@@ -45,21 +45,24 @@ class EnterpriseServer(BaseManager):
         return splitor
 
     @classmethod
-    def get_byids(cls, id_list, limit=100):
+    def get_byids(cls, id_list, limit = 100):
         if len(id_list) > limit:
             raise BusinessError('搜索id超过上限！')
         enterprise_qs = Enterprise.search(
-            id__in=id_list
+            id__in = id_list
         )
         return enterprise_qs
 
     @classmethod
     def update(cls, enterprise_id, **enterprise_infos):
+        enterprise = cls.get(enterprise_id)
         if 'license_number' in enterprise_infos:
             license_number = enterprise_infos['license_number']
-            is_exsited, _ = Enterprise.is_exsited(license_number)
-            if is_exsited:
+            is_exsited, exsited_enterprise = Enterprise.is_exsited(
+               license_number
+            )
+            if is_exsited and exsited_enterprise.id != enterprise_id:
                 raise BusinessError('该营业执照已存在，不能更新！')
-        enterprise = cls.get(enterprise_id)
+
         enterprise.update(**enterprise_infos)
         return enterprise

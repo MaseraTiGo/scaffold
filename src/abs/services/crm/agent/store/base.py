@@ -7,6 +7,7 @@ from abs.services.crm.university.settings import DB_PREFIX
 
 class Agent(BaseModel):
     company_id = IntegerField(verbose_name = "公司id")
+    name = CharField(verbose_name = "公司名称", max_length = 32, default = "")
     province = CharField(verbose_name = "省", max_length = 32, default = "")
     city = CharField(verbose_name = "市", max_length = 32, default = "")
     area = CharField(verbose_name = "区", max_length = 32, default = "")

@@ -54,7 +54,7 @@ class Search(StaffAuthorizedApi):
         DictField,
         desc = "搜索代理商",
         conf = {
-              # 'name': CharField(desc = "代理商名称", is_required = False),
+            'name': CharField(desc = "代理商名称", is_required = False),
         }
     )
 
@@ -97,12 +97,13 @@ class Search(StaffAuthorizedApi):
     def fill(self, response, spliter):
         data_list = [{
                 "id":agent.id,
-                "name":"必圈信息技术（湖北）有限公司",
+                "name":agent.name,
                 "province":agent.province,
                 "city":agent.city,
                 "area":agent.area,
                 "address":agent.address,
-                "license_code":"91330304MA282CHMXJ",
+                "license_code":agent.enterprise.license_number \
+                               if agent.enterprise else "",
                 "create_time":agent.create_time,
               } for agent in spliter.data]
         response.data_list = data_list
@@ -148,13 +149,13 @@ class Get(StaffAuthorizedApi):
     def fill(self, response, agent):
         agent_info = {
                 "id":agent.id,
-                "name":"必圈信息技术（湖北）有限公司",
+                "name":agent.name,
                 "province":agent.province,
                 "city":agent.city,
                 "area":agent.area,
                 "address":agent.address,
-                "license_code":"91330304MA282CHMXJ",
-                "license_picture":"",
+                "license_code":agent.enterprise.license_number,
+                "license_picture":agent.enterprise.license_url,
                 "official_seal":agent.official_seal,
                 "create_time":agent.create_time,
           }

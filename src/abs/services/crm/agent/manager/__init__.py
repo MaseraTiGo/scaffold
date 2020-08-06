@@ -14,7 +14,7 @@ class AgentServer(BaseManager):
     def create(cls, **agent_info):
         agent = None
         enterprise_infos = {
-            "name":agent_info.pop("name"),
+            "name":agent_info["name"],
             "license_number":agent_info.pop("license_code"),
             "license_url":agent_info.pop("license_picture"),
         }
@@ -26,10 +26,23 @@ class AgentServer(BaseManager):
         return agent
 
     @classmethod
+    def hung_enterprise(cls, agent_list):
+        agent_mapping = {}
+        for agent in agent_list:
+            agent.enterprise = None
+            agent_mapping[agent.company_id] = agent
+        enterprise_qs = EnterpriseServer.get_byids(agent_mapping.keys())
+        for enterprise in enterprise_qs:
+            if enterprise.id in agent_mapping:
+                agent_mapping[enterprise.id].enterprise = enterprise
+        return agent_list
+
+    @classmethod
     def search(cls, current_page, **search_info):
         agent_qs = cls.search_all(**search_info).\
                        order_by("-create_time")
         splitor = Splitor(current_page, agent_qs)
+        cls.hung_enterprise(splitor.data)
         return splitor
 
     @classmethod
@@ -42,6 +55,7 @@ class AgentServer(BaseManager):
         agent = Agent.get_byid(agent_id)
         if agent is None:
             raise BusinessError("此代理商不存在")
+        cls.hung_enterprise([agent])
         return agent
 
     @classmethod
