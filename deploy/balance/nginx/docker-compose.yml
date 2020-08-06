@@ -11,7 +11,6 @@ services:
     volumes:
       - /tmp/data/balance/nginx/resource:/nginx/resource:Z
       - /tmp/data/balance/nginx/cdn:/nginx/cdn:Z
-      - /tmp/data/balance/nginx/agent:/nginx/agent:Z
       - /tmp/data/balance/nginx/logs:/nginx/logs:Z
     networks:
       - app_net
