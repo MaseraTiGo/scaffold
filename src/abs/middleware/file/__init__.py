@@ -31,5 +31,15 @@ class FileMiddleware(Single):
         url = STATIC_URL + file_path.replace(base_dir, "")
         return url.replace("//", "/")
 
+    def get_save_path(self, name, store_type):
+        new_name = self.get_save_file_name(name)
+        base_dir = STATICFILES_DIRS[0]
+        save_path = os.path.join(base_dir, store_type)
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+        file_path = os.path.join(save_path, new_name)
+        url = STATIC_URL + file_path.replace(base_dir, "")
+        return file_path, url.replace("//", "/")
+
 
 file_middleware = FileMiddleware()

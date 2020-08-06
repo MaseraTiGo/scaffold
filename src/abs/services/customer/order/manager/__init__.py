@@ -12,6 +12,7 @@ from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleware.pay import pay_middleware
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.middleware.image import image_middleware
+from abs.services.customer.order.store.contract import Contract
 
 
 class OrderServer(BaseManager):
@@ -159,6 +160,17 @@ class ContractServer(BaseManager):
     @classmethod
     def create(cls, **search_info):
         base64_image = search_info.pop('autograph')
-        url = image_middleware.get_contract(base64_image)
-        return url
+        autograph_url, contract_url = image_middleware.get_contract(
+            base64_image,
+            search_info['name']
+        )
+        search_info.update({
+            'autograph': autograph_url,
+            'url': [contract_url]
+        })
+        return Contract.create(**search_info)
+
+    @classmethod
+    def search_all(cls, **search_info):
+        return Contract.search(**search_info)
 
