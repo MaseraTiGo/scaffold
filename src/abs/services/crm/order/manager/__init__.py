@@ -82,6 +82,7 @@ class OrderServer(BaseManager):
         order = Order.create(
             customer_id=customer.id,
             mg_order_id=mg_order.id,
+            agent_id = specification_list[0].merchandis.goods.agent_id,
             source=source
         )
         mapping = {}
@@ -143,4 +144,11 @@ class OrderItemServer(BaseManager):
                 order_mapping[orderitem.order_id].orderitem_list.\
                 append(orderitem)
         return order_list
+
+    @classmethod
+    def get(cls, order_item_id):
+        order_item = OrderItem.get_byid(order_item_id)
+        if order_item:
+            return order_item
+        raise BusinessError('订单详情不存在')
 

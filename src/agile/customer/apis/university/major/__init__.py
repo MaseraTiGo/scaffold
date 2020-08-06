@@ -79,7 +79,7 @@ class HotSearch(NoAuthorizedApi):
 
     @classmethod
     def get_desc(cls):
-        return "专业列表"
+        return "热门专业"
 
     @classmethod
     def get_author(cls):

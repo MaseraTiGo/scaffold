@@ -9,6 +9,7 @@ from abs.services.crm.production.utils.constant import DurationTypes
 class Goods(BaseModel):
     school_id = IntegerField(verbose_name="学校id")
     major_id = IntegerField(verbose_name="专业id")
+    agent_id = IntegerField(verbose_name="代理商id", null=True)
     merchandise_id = IntegerField(verbose_name='通用商品id')
     duration = CharField(
         verbose_name="时长",

@@ -70,6 +70,8 @@ class Add(CustomerAuthorizedApi):
             specification.total_price = goods_info['quantity'] * specification.sale_price
             specification.production_id = specification.merchandise.production_id
             specification_list.append(specification)
+        if not specification_list:
+            raise BusinessError('请选择商品')
         GoodsServer.hung_goods([
             specification.merchandise
             for specification in specification_list]
@@ -86,7 +88,13 @@ class Add(CustomerAuthorizedApi):
             specification
             for specification in specification_list
         ])
-        order = OrderServer.add(customer, address, 'app', order_info['strike_price'], specification_list)
+        order = OrderServer.add(
+            customer,
+            address,
+            'app',
+            order_info['strike_price'],
+            specification_list
+        )
         return order
 
     def fill(self, response, order):
@@ -114,6 +122,7 @@ class Get(CustomerAuthorizedApi):
                 desc="商品",
                 conf={
                     'id': IntField(desc="订单商品详情id"),
+                    'despatch_type': CharField(desc="发货方式"),
                     'sale_price': IntField(desc="单价"),
                     'total_price': IntField(desc="总价"),
                     'quantity': IntField(desc="数量"),
@@ -159,6 +168,7 @@ class Get(CustomerAuthorizedApi):
             'last_payment_number': '',
             'order_item_list': [{
                 'id': order_item.id,
+                'despatch_type': 'eduction_contract',
                 'sale_price': order_item.snapshoot.sale_price,
                 'total_price': order_item.snapshoot.total_price,
                 'quantity': order_item.snapshoot.count,

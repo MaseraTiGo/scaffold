@@ -8,6 +8,9 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.customer.manager.api import CustomerAuthorizedApi
+from abs.services.crm.order.manager import OrderItemServer
+from infrastructure.core.exception.business_error import BusinessError
+from abs.services.agent.contract.manager import ContractServer
 
 
 class Get(CustomerAuthorizedApi):
@@ -65,8 +68,19 @@ class Add(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        print(request.contract_info)
-        pass
+        order_item = OrderItemServer.get(
+            request.order_item_id
+        )
+        if order_item.order.customer_id != self.auth_user.id:
+            raise BusinessError('订单异常')
+        contract_info = request.contract_info
+        autograph = contract_info.pop('autograph')
+
+        ContractServer.create(
+            customer_id=order_item.order.customer_id,
+            order_item_id=order_item.id,
+            agent_id=order_item.order.agent_id,
+        )
 
     def fill(self, response):
         return response

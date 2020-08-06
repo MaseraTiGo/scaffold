@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'abs.services.controller.staff',
     'abs.services.agent.staff',
     'abs.services.agent.account',
+    'abs.services.agent.contract'
 ]
 
 MIDDLEWARE_CLASSES = [
