@@ -23,7 +23,7 @@ class Goods(BaseModel):
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)
 
     class Meta:
-        db_table = DB_PREFIX + "goods"
+        db_table = DB_PREFIX + "base"
 
     @classmethod
     def search(cls, **attrs):
