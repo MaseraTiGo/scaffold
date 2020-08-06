@@ -1,4 +1,5 @@
 # coding=UTF-8
+import json
 from infrastructure.core.field.base import CharField, DictField, ListField, \
     IntField
 from infrastructure.core.api.utils import with_metaclass
@@ -44,9 +45,10 @@ class Get(CustomerAuthorizedApi):
         return contract_list
 
     def fill(self, response, contract_list):
-        response.contract_list = [{
-            'url': contract.url
-        } for contract in contract_list]
+        contract_list = []
+        for contract in contract_list:
+            contract_list.extend(json.loads(contract.url))
+        response.contract_list = contract_list
         return response
 
 
@@ -83,8 +85,8 @@ class Add(CustomerAuthorizedApi):
             raise BusinessError('订单异常')
         contract_info = request.contract_info
         ContractServer.create(
+            order_item,
             customer_id=order_item.order.customer_id,
-            order_item_id=order_item.id,
             agent_id=order_item.order.agent_id,
             **contract_info
         )

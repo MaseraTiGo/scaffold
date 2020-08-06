@@ -10,10 +10,10 @@ from abs.middleware.file import file_middleware
 class ImageMiddleware(object):
 
     def get_image(self, base64_image):
-        info_list = base64_image.split(',')
+        # info_list = base64_image.split(',')
         # extension_name = guess_extension(info_list[0])
         extension_name = '.png'
-        file_byte = base64.b64decode(info_list[1])
+        file_byte = base64.b64decode(base64_image)
         file_io = BytesIO(file_byte)
         autograph = file_middleware.save(extension_name, file_io, 'autograph')
         return autograph, file_io

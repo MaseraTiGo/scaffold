@@ -1,5 +1,5 @@
 # coding=UTF-8
-
+import json
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
@@ -84,7 +84,7 @@ class OrderServer(BaseManager):
         order = Order.create(
             customer_id=customer.id,
             mg_order_id=mg_order.id,
-            agent_id = specification_list[0].merchandis.goods.agent_id,
+            agent_id = specification_list[0].merchandise.goods.agent_id,
             source=source
         )
         mapping = {}
@@ -158,17 +158,23 @@ class OrderItemServer(BaseManager):
 class ContractServer(BaseManager):
 
     @classmethod
-    def create(cls, **search_info):
+    def create(cls, order_item, **search_info):
         base64_image = search_info.pop('autograph')
         autograph_url, contract_url = image_middleware.get_contract(
             base64_image,
             search_info['name']
         )
         search_info.update({
+            'order_item_id': order_item.id,
             'autograph': autograph_url,
-            'url': [contract_url]
+            'url': json.dumps([contract_url])
         })
-        return Contract.create(**search_info)
+        contract = Contract.create(**search_info)
+        mg_order = mg_OrderServer.get(
+            order_item.order.mg_order_id, is_hung=True
+        )
+        mg_order.update(status=OrderStatus.ORDER_FINISHED)
+        return contract
 
     @classmethod
     def search_all(cls, **search_info):
