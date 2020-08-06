@@ -22,7 +22,7 @@ class ImageMiddleware(object):
         autograph_url, f = self.get_image(autograph_base64_image)
         path = os.path.dirname(os.path.realpath(__file__))
         back_image_path = os.path.join(path, 'contract.png')
-        font_file = './simsun.ttc'
+        font_file = os.path.join(path, './simsun.ttc')
         word_config_list = [
             {
                 'font_file': font_file,
