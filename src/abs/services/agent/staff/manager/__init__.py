@@ -40,16 +40,22 @@ class AgentStaffServer(BaseManager):
         return is_exsited, staff
 
     @classmethod
-    def create(cls, phone, **staff_info):
+    def generate_work_number(cls, company_id):
+        count_num = Staff.search(company_id = company_id).count()
+        work_number = "WN" + str(10000000 + count_num)
+        return work_number
+
+    @classmethod
+    def create(cls, phone, company_id, **staff_info):
         is_person_exsited, person = PersonServer.is_exsited(phone)
         if is_person_exsited:
             raise BusinessError('客户已存在，不能创建')
 
         person = PersonServer.create(phone = phone, **staff_info)
-        company = EnterpriseServer.get_main_company()
         staff = Staff.create(
+            work_number = cls.generate_work_number(company_id),
             person_id = person.id,
-            company_id = company.id,
+            company_id = company_id,
             phone = phone,
             **staff_info
         )
