@@ -2,7 +2,7 @@
 
 from abs.common.model import BaseModel, BooleanField, \
         IntegerField, CharField, TextField, DateTimeField, timezone
-from abs.services.crm.university.settings import DB_PREFIX
+from abs.services.crm.agent.settings import DB_PREFIX
 
 
 class Agent(BaseModel):

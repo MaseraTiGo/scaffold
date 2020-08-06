@@ -12,7 +12,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.field.base import CharField
 
 from agile.base.api import NoAuthorizedApi
-from agile.crm.manager.api import StaffAuthorizedApi
+from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.agent.account.manager import AgentStaffAccountServer
 
 
@@ -51,7 +51,7 @@ class Login(NoAuthorizedApi):
         return response
 
 
-class Logout(StaffAuthorizedApi):
+class Logout(AgentStaffAuthorizedApi):
     """
     注销
     """

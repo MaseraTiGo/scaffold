@@ -13,11 +13,11 @@ from infrastructure.core.field.base import CharField
 from infrastructure.core.exception.business_error import BusinessError
 
 from agile.base.api import NoAuthorizedApi
-from agile.crm.manager.api import StaffAuthorizedApi
+from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.agent.account.manager import AgentStaffAccountServer
 
 
-class Modify(StaffAuthorizedApi):
+class Modify(AgentStaffAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
     request.old_password = RequestField(CharField, desc = "老密码")

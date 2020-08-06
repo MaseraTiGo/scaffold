@@ -1,9 +1,10 @@
 # coding=UTF-8
 
-from abs.common.model import BaseModel, IntegerField, CharField, DateTimeField, timezone, \
+from abs.common.model import BaseModel, BooleanField, \
+        IntegerField, CharField, TextField, DateTimeField, timezone, \
         ForeignKey, CASCADE
+from abs.services.agent.goods.utils.constant import DurationTypes
 from abs.services.customer.order.settings import DB_PREFIX
-from abs.services.crm.production.utils.constant import DurationTypes
 from abs.services.customer.order.store.order import Order
 
 

@@ -46,16 +46,17 @@ class AgentStaffServer(BaseManager):
         return work_number
 
     @classmethod
-    def create(cls, phone, company_id, **staff_info):
+    def create(cls, phone, agent, **staff_info):
         is_person_exsited, person = PersonServer.is_exsited(phone)
         if is_person_exsited:
             raise BusinessError('客户已存在，不能创建')
 
         person = PersonServer.create(phone = phone, **staff_info)
         staff = Staff.create(
-            work_number = cls.generate_work_number(company_id),
+            work_number = cls.generate_work_number(agent.company_id),
             person_id = person.id,
-            company_id = company_id,
+            company_id = agent.company_id,
+            agent_id = agent.id,
             phone = phone,
             **staff_info
         )

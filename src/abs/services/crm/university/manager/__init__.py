@@ -9,8 +9,8 @@ from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.models import School
 from abs.services.crm.university.models import Major
-from abs.services.crm.production.models import Goods
-from abs.services.crm.production.utils.constant import DurationTypes
+from abs.services.agent.goods.models import Goods
+from abs.services.agent.goods.utils.constant import DurationTypes
 
 
 class UniversityServer(BaseManager):
@@ -48,17 +48,17 @@ class UniversityServer(BaseManager):
         return cls.search_all_school(**search_info).order_by('-is_hot', '-create_time')[0:4]
 
     @classmethod
-    def is_exsited_school(cls, name, school=None):
-        school_qs = cls.search_all_school(name=name)
+    def is_exsited_school(cls, name, school = None):
+        school_qs = cls.search_all_school(name = name)
         if school is not None:
-            school_qs = school_qs.exclude(id=school.id)
+            school_qs = school_qs.exclude(id = school.id)
         if school_qs.count() > 0:
             return True
         return False
 
     @classmethod
     def search_school_id_list(cls, **search_info):
-        return list(cls.search_all_school(**search_info).values_list('id', flat=True))
+        return list(cls.search_all_school(**search_info).values_list('id', flat = True))
 
     @classmethod
     def update_school(cls, school, **update_info):
@@ -73,7 +73,7 @@ class UniversityServer(BaseManager):
         all_production_qs = ProductionServer.search_all(company.id)
         school_id_list = [school.id for school in school_list]
         goods_qs = Goods.search(
-            school_id__in=school_id_list
+            school_id__in = school_id_list
         )
         merchandise_school_mapping = {}
         for goods in goods_qs:
@@ -82,8 +82,8 @@ class UniversityServer(BaseManager):
             })
         merchandise_qs = MerchandiseServer.search_all(
             company.id,
-            use_status='enable',
-            id__in=merchandise_school_mapping.keys()
+            use_status = 'enable',
+            id__in = merchandise_school_mapping.keys()
         )
         school_production_quantity_mapping = {}
         for merchandise in merchandise_qs:
@@ -111,7 +111,7 @@ class UniversityServer(BaseManager):
     @classmethod
     def hung_school(cls, obj_list):
         school_id_list = [obj.school_id for obj in obj_list]
-        school_list = School.search(id__in=school_id_list)
+        school_list = School.search(id__in = school_id_list)
         mapping = {}
         for school in school_list:
             mapping.update({
@@ -124,7 +124,7 @@ class UniversityServer(BaseManager):
     @classmethod
     def hung_major(cls, obj_list):
         major_id_list = [obj.major_id for obj in obj_list]
-        major_list = Major.search(id__in=major_id_list)
+        major_list = Major.search(id__in = major_id_list)
         mapping = {}
         for major in major_list:
             mapping.update({
@@ -163,10 +163,10 @@ class UniversityServer(BaseManager):
         return cls.search_all_major(**search_info)[0:3]
 
     @classmethod
-    def is_exsited_major(cls, name, major=None):
-        major_qs = cls.search_all_major(name=name)
+    def is_exsited_major(cls, name, major = None):
+        major_qs = cls.search_all_major(name = name)
         if major is not None:
-            major_qs = major_qs.exclude(id=major.id)
+            major_qs = major_qs.exclude(id = major.id)
         if major_qs.count() > 0:
             return True
         return False

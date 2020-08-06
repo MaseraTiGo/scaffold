@@ -30,3 +30,15 @@ agent_pc_service.add(Get)
 
 from agile.agent.apis.staff import Search
 agent_pc_service.add(Search)
+
+from agile.agent.apis.goods import Get, Search, Add, Update, Setuse
+agent_pc_service.add(Get, Search, Add, Update, Setuse)
+
+from agile.agent.apis.major import SearchAll
+agent_pc_service.add(SearchAll)
+
+from agile.agent.apis.school import SearchAll
+agent_pc_service.add(SearchAll)
+
+from agile.agent.apis.production import SearchAll
+agent_pc_service.add(SearchAll)

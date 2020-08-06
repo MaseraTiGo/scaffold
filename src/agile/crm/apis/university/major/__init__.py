@@ -9,7 +9,7 @@ from infrastructure.core.exception.business_error import BusinessError
 
 from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.crm.university.manager import UniversityServer
-from abs.services.crm.production.manager import GoodsServer
+from abs.services.agent.goods.manager import GoodsServer
 
 
 class Search(StaffAuthorizedApi):

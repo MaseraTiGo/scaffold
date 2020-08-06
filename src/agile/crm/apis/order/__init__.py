@@ -1,5 +1,6 @@
 # coding=UTF-8
 
+import json
 from infrastructure.core.field.base import CharField, DictField, \
         IntField, ListField, DatetimeField
 from infrastructure.core.api.utils import with_metaclass
@@ -9,8 +10,12 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.customer.order.utils.constant import OrderSource
 from abs.middleground.business.order.utils.constant import OrderStatus
-from abs.services.crm.production.utils.constant import DurationTypes
 from abs.services.customer.order.manager import OrderServer, OrderItemServer
+from abs.middleground.business.transaction.utils.constant import \
+        PayTypes, OwnTypes
+from abs.middleground.business.merchandise.utils.constant import \
+        DespatchService
+from abs.services.agent.goods.utils.constant import DurationTypes
 from abs.services.customer.personal.manager import CustomerServer
 
 
