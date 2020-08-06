@@ -9,5 +9,9 @@ class EnterpriseLoader(BaseLoader):
         return [{
             'name': '必圈信息技术（湖北）有限公司',
             'license_number': "91420100MA4KM4XY1Y",
-            'remark': '这是最主要的公司'
+            'remark': '这是最主要的公司',
+            'province':'湖北省',
+            'city':'武汉市',
+            'area':'洪山区',
+            'address':'光谷软件园',
         }]

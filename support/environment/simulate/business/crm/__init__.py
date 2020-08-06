@@ -3,7 +3,7 @@
 from support.common.maker import BaseMaker
 from support.common.generator.helper import StaffGenerator, \
         StaffAccountGenerator, EnterpriseGenerator, SchoolGenerator, \
-        MajorGenerator, GoodsGenerator
+        MajorGenerator, GoodsGenerator, AgentGenerator, ContactsGenerator
 
 from support.environment.common.middleground.person import PersonMaker
 from support.environment.common.middleground.production import ProductionMaker
@@ -13,6 +13,7 @@ from support.environment.simulate.business.crm.staff import CrmStaffLoader
 from support.environment.simulate.business.crm.school import CrmSchoolLoader
 from support.environment.simulate.business.crm.major import CrmMajorLoader
 from support.environment.simulate.business.crm.goods import GoodsLoader
+from support.environment.simulate.business.crm.contacts import CrmAgentContactsLoader
 
 
 class CrmSimulateMaker(BaseMaker):
@@ -33,6 +34,8 @@ class CrmSimulateMaker(BaseMaker):
         staff_info = CrmStaffLoader().generate()
         goods_info = GoodsLoader().generate()
         enterprise = EnterpriseGenerator(EnterpriseLoader().generate())
+        agent = AgentGenerator(EnterpriseLoader().generate())
+        contacts = ContactsGenerator(CrmAgentContactsLoader().generate())
         production = ProductionMaker().generate_relate()
         staff = StaffGenerator(staff_info)
         staff_account = StaffAccountGenerator()
@@ -41,9 +44,10 @@ class CrmSimulateMaker(BaseMaker):
         major = MajorGenerator(CrmMajorLoader().generate())
         goods = GoodsGenerator(goods_info)
         merchandise = MerchandiseMaker(goods_info).generate_relate()
-        goods.add_inputs(merchandise, school, major)
+        goods.add_inputs(merchandise, school, major, agent)
         merchandise.add_inputs(production)
-        enterprise.add_outputs(production)
+        agent.add_outputs(contacts)
+        enterprise.add_outputs(production, agent)
         staff.add_outputs(staff_account)
         staff.add_inputs(enterprise, person)
 
