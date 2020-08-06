@@ -68,7 +68,7 @@ class Logout(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         staff = self.auth_user
-        StaffAccountServer.logout(staff)
+        AgentStaffAccountServer.logout(staff)
 
     def fill(self, response):
         return response

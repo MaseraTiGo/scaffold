@@ -19,8 +19,8 @@ class AgentPcService(BaseAPIService):
 
 
 agent_pc_service = AgentPcService()
-from agile.agent.apis.staff.account import Login
-agent_pc_service.add(Login)
+from agile.agent.apis.staff.account import Login, Logout
+agent_pc_service.add(Login, Logout)
 
 from agile.agent.apis.staff.account.password import Modify
 agent_pc_service.add(Modify)
