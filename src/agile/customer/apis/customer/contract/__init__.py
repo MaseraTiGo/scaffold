@@ -1,6 +1,4 @@
 # coding=UTF-8
-import base64
-
 from infrastructure.core.field.base import CharField, DictField, ListField, \
     IntField
 from infrastructure.core.api.utils import with_metaclass
@@ -68,18 +66,17 @@ class Add(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        order_item = OrderItemServer.get(
-            request.order_item_id
-        )
-        if order_item.order.customer_id != self.auth_user.id:
-            raise BusinessError('订单异常')
+        # order_item = OrderItemServer.get(
+        #     request.order_item_id
+        # )
+        # if order_item.order.customer_id != self.auth_user.id:
+        #     raise BusinessError('订单异常')
         contract_info = request.contract_info
-        autograph = contract_info.pop('autograph')
-        autograph_img = base64.decode(autograph)
         ContractServer.create(
-            customer_id=order_item.order.customer_id,
-            order_item_id=order_item.id,
-            agent_id=order_item.order.agent_id,
+            # customer_id=order_item.order.customer_id,
+            # order_item_id=order_item.id,
+            # agent_id=order_item.order.agent_id,
+            **contract_info
         )
 
     def fill(self, response):

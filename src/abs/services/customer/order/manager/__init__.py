@@ -11,6 +11,7 @@ from abs.services.customer.order.store.orderitem import OrderItem
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleware.pay import pay_middleware
 from abs.middleground.business.order.utils.constant import OrderStatus
+from abs.middleware.image import image_middleware
 
 
 class OrderServer(BaseManager):
@@ -157,6 +158,6 @@ class ContractServer(BaseManager):
 
     @classmethod
     def create(cls, **search_info):
+        base64_image = search_info.pop('autograph')
         pass
-
 

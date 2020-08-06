@@ -23,4 +23,3 @@ class CustomerUniversityMajorTest(CustomerAPITestCase):
             })
         }
         result = self.access_api(api=api, **params)
-        self.assertTrue("data_list" in result)

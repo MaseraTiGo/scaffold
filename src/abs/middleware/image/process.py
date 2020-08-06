@@ -38,7 +38,7 @@ class ImageProcess(object):
             img = Image.open(config['image_path']).convert('RGBA')
             r, g, b, a = img.split()
             back_img.paste(img, box, a)
-        back_img.show()
+        back_img.save()
 
 
 image_process = ImageProcess()
