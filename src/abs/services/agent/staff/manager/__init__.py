@@ -27,6 +27,9 @@ class AgentStaffServer(BaseManager):
 
     @classmethod
     def search(cls, current_page, **search_info):
+        if "name" in search_info:
+            name = search_info.pop("name")
+            search_info.update({"name__contains":name})
         staff_qs = Staff.search(**search_info)
         staff_qs.order_by('-create_time')
         splitor = Splitor(current_page, staff_qs)

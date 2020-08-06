@@ -27,6 +27,9 @@ class StaffServer(BaseManager):
 
     @classmethod
     def search(cls, current_page, **search_info):
+        if "name" in search_info:
+            name = search_info.pop("name")
+            search_info.update({"name__contains":name})
         staff_qs = Staff.search(**search_info)
         staff_qs.order_by('-create_time')
         splitor = Splitor(current_page, staff_qs)
@@ -45,12 +48,12 @@ class StaffServer(BaseManager):
         if is_person_exsited:
             raise BusinessError('客户已存在，不能创建')
 
-        person = PersonServer.create(phone=phone, **staff_info)
+        person = PersonServer.create(phone = phone, **staff_info)
         company = EnterpriseServer.get_main_company()
         staff = Staff.create(
-            person_id=person.id,
-            company_id=company.id,
-            phone=phone,
+            person_id = person.id,
+            company_id = company.id,
+            phone = phone,
             **staff_info
         )
         return staff
