@@ -8,7 +8,7 @@ from support.common.generator.helper.business.crm.university.major import \
         MajorGenerator
 from support.common.generator.helper.business.crm.university.school import \
         SchoolGenerator
-from abs.services.crm.production.models import Goods
+from abs.services.agent.goods.models import Goods
 
 
 class GoodsGenerator(BaseGenerator):

@@ -159,5 +159,6 @@ class ContractServer(BaseManager):
     @classmethod
     def create(cls, **search_info):
         base64_image = search_info.pop('autograph')
-        pass
+        url = image_middleware.get_contract(base64_image)
+        return url
 

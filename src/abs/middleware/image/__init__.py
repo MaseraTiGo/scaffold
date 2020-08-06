@@ -6,6 +6,7 @@ from io import BytesIO
 from .process import image_process
 from abs.middleware.file import file_middleware
 
+
 class ImageMiddleware(object):
 
     def get_image(self, base64_image):
@@ -43,12 +44,12 @@ class ImageMiddleware(object):
                 'image_path': f
             }
         ]
-        image_process.add(
+        url = image_process.add(
             back_image_path,
             word_config_list,
             img_config_list
         )
-
+        return url
 
 
 image_middleware = ImageMiddleware()
