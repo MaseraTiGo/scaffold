@@ -13,7 +13,7 @@ from infrastructure.core.field.base import CharField
 
 from agile.base.api import NoAuthorizedApi
 from agile.crm.manager.api import StaffAuthorizedApi
-from abs.services.crm.account.manager import StaffAccountServer
+from abs.services.agent.account.manager import AgentStaffAccountServer
 
 
 class Login(NoAuthorizedApi):
@@ -21,13 +21,13 @@ class Login(NoAuthorizedApi):
     员工登录接口
     """
     request = with_metaclass(RequestFieldSet)
-    request.username = RequestField(CharField, desc="账号")
-    request.password = RequestField(CharField, desc="密码")
+    request.username = RequestField(CharField, desc = "账号")
+    request.password = RequestField(CharField, desc = "密码")
 
     response = with_metaclass(ResponseFieldSet)
-    response.access_token = ResponseField(CharField, desc="访问凭证")
-    response.renew_flag = ResponseField(CharField, desc="续签标识")
-    response.expire_time = ResponseField(CharField, desc="到期时间")
+    response.access_token = ResponseField(CharField, desc = "访问凭证")
+    response.renew_flag = ResponseField(CharField, desc = "续签标识")
+    response.expire_time = ResponseField(CharField, desc = "到期时间")
 
     @classmethod
     def get_desc(cls):
@@ -35,10 +35,10 @@ class Login(NoAuthorizedApi):
 
     @classmethod
     def get_author(cls):
-        return "Roy"
+        return "Fsy"
 
     def execute(self, request):
-        token = StaffAccountServer.login(
+        token = AgentStaffAccountServer.login(
             request.username,
             request.password
         )

@@ -28,6 +28,7 @@ from agile.customer.manager.server import customer_mobile_service
 from agile.file.manager.server import file_service
 from agile.controller.manager.server import controller_pc_service
 from agile.middleground.manager.server import middleground_service
+from agile.agent.manager.server import agent_pc_service
 from abs.middleware.rule import rule_register
 from abs.middleware.xml import XMLHandler
 
@@ -37,7 +38,7 @@ protocol.add(file_service)
 protocol.add(customer_mobile_service)
 protocol.add(middleground_service)
 protocol.add(controller_pc_service)
-
+protocol.add(agent_pc_service)
 
 def router(request):
     result = protocol.run(request)

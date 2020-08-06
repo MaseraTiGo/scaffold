@@ -6,14 +6,14 @@ Created on 2020年6月18日
 @author: Roy
 '''
 
-from infrastructure.core.field.base import CharField, DictField,\
+from infrastructure.core.field.base import CharField, DictField, \
         IntField, ListField, BooleanField, MobileField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.crm.manager.api import StaffAuthorizedApi
-from abs.services.crm.staff.manager import StaffServer
+from abs.services.agent.staff.manager import AgentStaffServer
 
 
 class Get(StaffAuthorizedApi):
@@ -25,28 +25,28 @@ class Get(StaffAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.staff_info = ResponseField(
         DictField,
-        desc="用户详情",
-        conf={
-            'nick': CharField(desc="昵称"),
-            'head_url': CharField(desc="头像"),
-            'name': CharField(desc="姓名"),
-            'gender': CharField(desc="性别"),
-            'birthday': CharField(desc="生日"),
-            'phone': CharField(desc="电话"),
-            'email': CharField(desc="邮箱"),
-            'work_number': CharField(desc="员工工号"),
-            'is_admin': BooleanField(desc="是否是管理员"),
+        desc = "用户详情",
+        conf = {
+            'nick': CharField(desc = "昵称"),
+            'head_url': CharField(desc = "头像"),
+            'name': CharField(desc = "姓名"),
+            'gender': CharField(desc = "性别"),
+            'birthday': CharField(desc = "生日"),
+            'phone': CharField(desc = "电话"),
+            'email': CharField(desc = "邮箱"),
+            'work_number': CharField(desc = "员工工号"),
+            'is_admin': BooleanField(desc = "是否是管理员"),
             'department_role_list': ListField(
-                desc='所属部门',
-                is_required=False,
-                fmt=DictField(
-                    desc="部门ID",
-                    conf={
-                        'department_role_id': IntField(desc="部门角色id"),
-                        'department_id': IntField(desc="部门id"),
-                        'department_name': CharField(desc="部门名称"),
-                        'role_id': IntField(desc="部门id"),
-                        'role_name': CharField(desc="角色名称"),
+                desc = '所属部门',
+                is_required = False,
+                fmt = DictField(
+                    desc = "部门ID",
+                    conf = {
+                        'department_role_id': IntField(desc = "部门角色id"),
+                        'department_id': IntField(desc = "部门id"),
+                        'department_name': CharField(desc = "部门名称"),
+                        'role_id': IntField(desc = "部门id"),
+                        'role_name': CharField(desc = "角色名称"),
                     }
                 )
             ),
@@ -62,7 +62,7 @@ class Get(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return StaffServer.get(self.auth_user.id)
+        return AgentStaffServer.get(self.auth_user.id)
 
     def fill(self, response, staff):
         department_role_list = [{
@@ -94,17 +94,17 @@ class Update(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.myself_info = RequestField(
         DictField,
-        desc="员工修改详情",
-        conf={
-            'nick': CharField(desc="昵称"),
-            'head_url': CharField(desc="头像"),
-            'name': CharField(desc="姓名"),
-            'gender': CharField(desc="性别"),
-            'birthday': CharField(desc="生日"),
-            'phone': MobileField(desc="电话"),
-            'email': CharField(desc="邮箱"),
-            'work_number': CharField(desc="员工工号"),
-            'is_admin': BooleanField(desc="是否是管理员"),
+        desc = "员工修改详情",
+        conf = {
+            'nick': CharField(desc = "昵称"),
+            'head_url': CharField(desc = "头像"),
+            'name': CharField(desc = "姓名"),
+            'gender': CharField(desc = "性别"),
+            'birthday': CharField(desc = "生日"),
+            'phone': MobileField(desc = "电话"),
+            'email': CharField(desc = "邮箱"),
+            'work_number': CharField(desc = "员工工号"),
+            'is_admin': BooleanField(desc = "是否是管理员"),
         }
     )
 
@@ -120,7 +120,7 @@ class Update(StaffAuthorizedApi):
 
     def execute(self, request):
         staff = self.auth_user
-        StaffServer.update(staff.id, **request.myself_info)
+        AgentStaffServer.update(staff.id, **request.myself_info)
 
     def fill(self, response):
         return response

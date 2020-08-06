@@ -77,5 +77,5 @@ crm_pc_service.add(Get, Search)
 from agile.crm.apis.agent import Add, Search, Get, Update
 crm_pc_service.add(Add, Search, Get, Update)
 
-from agile.crm.apis.agent.contacts import Add, Search, Update, UpdateAccount
-crm_pc_service.add(Add, Search, Update, UpdateAccount)
+from agile.crm.apis.agent.contacts import Add, Search, Update, AddAccount
+crm_pc_service.add(Add, Search, Update, AddAccount)
