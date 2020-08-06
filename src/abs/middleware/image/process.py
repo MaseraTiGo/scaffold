@@ -3,7 +3,8 @@ import os
 import time
 import random
 from PIL import ImageFont, Image, ImageDraw
-from settings import STATIC_URL, STATICFILES_DIRS
+from abs.middleware.file import file_middleware
+
 
 class ImageProcess(object):
 
@@ -41,19 +42,9 @@ class ImageProcess(object):
             r, g, b, a = img.split()
             back_img.paste(img, box, a)
 
-
-        name = "{}_{}.jpeg".format(
-            str(random.randint(1000, 9999)),
-            int(time.time())
-        )
-        base_dir = STATICFILES_DIRS[0]
-        save_path = os.path.join(base_dir, 'contract')
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
-        file_path = os.path.join(save_path, name)
-        url = STATIC_URL + file_path.replace(base_dir, "")
-        back_img.save(url)
-        return url
+        file_path, save_path = file_middleware.get_save_path('.png', 'contract')
+        back_img.save(file_path)
+        return save_path
 
 
 image_process = ImageProcess()

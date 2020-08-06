@@ -33,10 +33,20 @@ class Get(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        pass
+        order_item = OrderItemServer.get(
+            request.order_item_id
+        )
+        if order_item.order.customer_id != self.auth_user.id:
+            raise BusinessError('订单异常')
+        contract_list = ContractServer.search_all(
+            order_item_id=order_item.id
+        )
+        return contract_list
 
-    def fill(self, response):
-        response.contract_list = []
+    def fill(self, response, contract_list):
+        response.contract_list = [{
+            'url': contract.url
+        } for contract in contract_list]
         return response
 
 
@@ -66,16 +76,16 @@ class Add(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        # order_item = OrderItemServer.get(
-        #     request.order_item_id
-        # )
-        # if order_item.order.customer_id != self.auth_user.id:
-        #     raise BusinessError('订单异常')
+        order_item = OrderItemServer.get(
+            request.order_item_id
+        )
+        if order_item.order.customer_id != self.auth_user.id:
+            raise BusinessError('订单异常')
         contract_info = request.contract_info
         ContractServer.create(
-            # customer_id=order_item.order.customer_id,
-            # order_item_id=order_item.id,
-            # agent_id=order_item.order.agent_id,
+            customer_id=order_item.order.customer_id,
+            order_item_id=order_item.id,
+            agent_id=order_item.order.agent_id,
             **contract_info
         )
 
