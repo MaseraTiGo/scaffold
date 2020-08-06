@@ -62,7 +62,7 @@ class AgentServer(BaseManager):
     def is_exist(cls, company_id):
         agent_qs = cls.search_all(company_id = company_id)
         if agent_qs.count() > 0:
-            raise BusinessError("此代理商已存在")
+            raise BusinessError("此代理商信用编码重复")
         return True
 
     @classmethod
@@ -81,6 +81,12 @@ class AgentServer(BaseManager):
     @classmethod
     def create_contacts(cls, **contacts_info):
         contacts = None
+        contacts_qs = cls.search_all_contacts(
+           agent = contacts_info["agent"],
+        )
+        print('=?>>>', contacts_qs.count())
+        if contacts_qs.count() >= 3:
+            raise BusinessError("此代理商联系人添加超过上限")
         if cls.is_exist_contacts(
            contacts_info["phone"],
            contacts_info["agent"],

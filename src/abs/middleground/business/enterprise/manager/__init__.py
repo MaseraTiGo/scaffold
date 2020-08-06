@@ -23,8 +23,10 @@ class EnterpriseServer(BaseManager):
         raise BusinessError('crm总控公司不存在！')
 
     @classmethod
-    def create(cls, license_number, **enterprise_infos):
-        is_exsited, enterprise = Enterprise.is_exsited(license_number)
+    def create(cls, **enterprise_infos):
+        is_exsited, enterprise = Enterprise.is_exsited(
+            enterprise_infos["license_number"]
+        )
         if is_exsited:
             return enterprise
         else:
