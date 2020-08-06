@@ -133,6 +133,10 @@ class Search(AgentStaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        auth = self.auth_user
+        request.search_info.update({
+            "agent_id":auth.agent_id
+        })
         staff_spliter = AgentStaffServer.search(
             request.current_page,
             **request.search_info
