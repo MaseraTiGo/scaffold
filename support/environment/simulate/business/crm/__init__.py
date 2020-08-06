@@ -8,7 +8,7 @@ from support.common.generator.helper import StaffGenerator, \
 from support.environment.common.middleground.person import PersonMaker
 from support.environment.common.middleground.production import ProductionMaker
 from support.environment.common.middleground.merchandise import MerchandiseMaker
-from support.environment.init.business.crm.enterprise import EnterpriseLoader
+from support.environment.init.business.controller.enterprise import EnterpriseLoader
 from support.environment.simulate.business.crm.staff import CrmStaffLoader
 from support.environment.simulate.business.crm.school import CrmSchoolLoader
 from support.environment.simulate.business.crm.major import CrmMajorLoader
