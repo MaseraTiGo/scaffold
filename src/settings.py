@@ -64,13 +64,12 @@ INSTALLED_APPS = [
     'abs.services.crm.tool',
     'abs.services.crm.university',
     'abs.services.crm.production',
-    'abs.services.crm.order',
+    'abs.services.customer.order',
     'abs.services.crm.agent',
     'abs.services.controller.account',
     'abs.services.controller.staff',
     'abs.services.agent.staff',
-    'abs.services.agent.account',
-    'abs.services.agent.contract'
+    'abs.services.agent.account'
 ]
 
 MIDDLEWARE_CLASSES = [

@@ -4,5 +4,5 @@ from django.apps import AppConfig
 
 
 class OrderConfig(AppConfig):
-    name = "abs.services.crm.order"
-    label = 'crm_order'
+    name = "abs.services.customer.order"
+    label = 'customer_order'

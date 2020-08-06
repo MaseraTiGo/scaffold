@@ -12,7 +12,7 @@ from abs.middleground.business.person.manager import PersonServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from infrastructure.core.exception.business_error import BusinessError
 from abs.services.crm.production.manager import GoodsServer
-from abs.services.crm.order.manager import OrderServer, OrderItemServer
+from abs.services.customer.order.manager import OrderServer, OrderItemServer
 from abs.middleground.business.order.manager import OrderServer as mg_OrderServer
 from abs.services.crm.university.manager import UniversityServer
 from abs.middleground.business.production.manager import ProductionServer

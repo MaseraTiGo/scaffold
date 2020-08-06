@@ -6,8 +6,8 @@ from infrastructure.utils.common.split_page import Splitor
 from abs.common.manager import BaseManager
 from abs.middleground.business.order.manager import \
      OrderServer as mg_OrderServer
-from abs.services.crm.order.models import Order
-from abs.services.crm.order.models import OrderItem
+from abs.services.customer.order.store.order import Order
+from abs.services.customer.order.store.orderitem import OrderItem
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleware.pay import pay_middleware
 from abs.middleground.business.order.utils.constant import OrderStatus
@@ -151,4 +151,12 @@ class OrderItemServer(BaseManager):
         if order_item:
             return order_item
         raise BusinessError('订单详情不存在')
+
+
+class ContractServer(BaseManager):
+
+    @classmethod
+    def create(cls, **search_info):
+        pass
+
 

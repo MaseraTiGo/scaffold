@@ -1,16 +1,16 @@
 # coding=UTF-8
-
+import base64
 
 from infrastructure.core.field.base import CharField, DictField, ListField, \
-    IntField, DatetimeField
+    IntField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.customer.manager.api import CustomerAuthorizedApi
-from abs.services.crm.order.manager import OrderItemServer
+from abs.services.customer.order.manager import OrderItemServer
 from infrastructure.core.exception.business_error import BusinessError
-from abs.services.agent.contract.manager import ContractServer
+from abs.services.customer.order.manager import ContractServer
 
 
 class Get(CustomerAuthorizedApi):
@@ -75,7 +75,7 @@ class Add(CustomerAuthorizedApi):
             raise BusinessError('订单异常')
         contract_info = request.contract_info
         autograph = contract_info.pop('autograph')
-
+        autograph_img = base64.decode(autograph)
         ContractServer.create(
             customer_id=order_item.order.customer_id,
             order_item_id=order_item.id,

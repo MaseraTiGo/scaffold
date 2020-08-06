@@ -1,9 +1,8 @@
 # coding=UTF-8
 
-from abs.common.model import BaseModel, BooleanField, \
-        IntegerField, CharField, TextField, DateTimeField, timezone
-from abs.services.crm.order.settings import DB_PREFIX
-from abs.services.crm.order.utils.constant import OrderSource
+from abs.common.model import BaseModel, IntegerField, CharField, DateTimeField, timezone
+from abs.services.customer.order.settings import DB_PREFIX
+from abs.services.customer.order.utils.constant import OrderSource
 
 
 class Order(BaseModel):
