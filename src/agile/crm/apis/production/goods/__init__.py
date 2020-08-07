@@ -10,7 +10,8 @@ from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.agent.goods.utils.constant import DurationTypes
 from abs.middleground.business.merchandise.utils.constant import\
      DespatchService, UseStatus
-
+from abs.services.agent.goods.utils.constant import\
+     CategoryTypes
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.production.manager import ProductionServer
@@ -148,6 +149,11 @@ class Search(StaffAuthorizedApi):
             'school_id': IntField(desc = "学校id", is_required = False),
             'major_id': IntField(desc = "专业id", is_required = False),
             'agent_id': IntField(desc = "代理商id", is_required = False),
+            'category': CharField(
+                desc = "商品分类",
+                is_required = False,
+                choices = CategoryTypes.CHOICES
+            ),
         }
     )
 
@@ -182,6 +188,10 @@ class Search(StaffAuthorizedApi):
                 'duration':CharField(
                     desc = "时长",
                     choices = DurationTypes.CHOICES
+                ),
+                'category':CharField(
+                    desc = "分类",
+                    choices = CategoryTypes.CHOICES
                 ),
                 'agent_id': IntField(desc = "代理商id"),
                 'agent_name': CharField(desc = "公司名称"),
@@ -265,6 +275,7 @@ class Search(StaffAuthorizedApi):
             'major_name': goods.major.name,
             'is_hot':goods.is_hot,
             'duration':goods.duration,
+            'category':goods.category,
             'agent_id': 0,
             'agent_name': goods.agent.name,
             'create_time':goods.create_time,
