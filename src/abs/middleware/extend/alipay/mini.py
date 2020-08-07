@@ -25,7 +25,7 @@ class AlipayMiniExtend(object):
         return "RENT_DIGITAL"
 
     def _get_notify_url(self):
-        return 'http://tuabrb.natappfree.cc'
+        return 'http://ku4aaz.natappfree.cc'
 
     def _get_timestamp(self):
         now_time = datetime.datetime.now()
