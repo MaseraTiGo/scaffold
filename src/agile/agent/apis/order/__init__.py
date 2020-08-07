@@ -7,7 +7,7 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
-from agile.crm.manager.api import StaffAuthorizedApi
+from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.customer.order.utils.constant import OrderSource
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.customer.order.manager import OrderServer, OrderItemServer
@@ -17,10 +17,9 @@ from abs.middleground.business.merchandise.utils.constant import \
         DespatchService
 from abs.services.agent.goods.utils.constant import DurationTypes
 from abs.services.customer.personal.manager import CustomerServer
-from abs.services.crm.agent.manager import AgentServer
 
 
-class Get(StaffAuthorizedApi):
+class Get(AgentStaffAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
     request.order_id = RequestField(IntField, desc = "订单id")
@@ -147,7 +146,7 @@ class Get(StaffAuthorizedApi):
         return response
 
 
-class Search(StaffAuthorizedApi):
+class Search(AgentStaffAuthorizedApi):
     """
     搜索订单
     """
@@ -161,7 +160,6 @@ class Search(StaffAuthorizedApi):
         desc = "搜索订单条件",
         conf = {
           'number': CharField(desc = "订单号", is_required = False),
-          'agent_id': IntField(desc = "代理商id", is_required = False),
         }
     )
 
@@ -192,8 +190,7 @@ class Search(StaffAuthorizedApi):
 
                 're_name': CharField(desc = "收货人姓名"),
                 're_phone': CharField(desc = "收货人手机号"),
-                'agent_id': IntField(desc = "代理商id"),
-                'agent_name': CharField(desc = "公司名称"),
+
                 'snapshoot_list': ListField(
                     desc = '商品列表',
                     fmt = DictField(
@@ -232,12 +229,15 @@ class Search(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
+        auth = self.auth_user
+        request.search_info.update({
+            "agent_id":auth.agent_id
+        })
         order_spliter = OrderServer.search(
             request.current_page,
             **request.search_info
         )
         OrderItemServer.hung_order_item(order_spliter.get_list())
-        AgentServer.hung_agent(order_spliter.get_list())
         return order_spliter
 
     def fill(self, response, order_spliter):
@@ -258,8 +258,7 @@ class Search(StaffAuthorizedApi):
                        order.mg_order.invoice else "",
             're_phone': order.mg_order.invoice.phone if \
                         order.mg_order.invoice else "",
-            'agent_id': order.agent.id,
-            'agent_name': order.agent.name,
+
             'snapshoot_list': [
                 {
                     'id': orderitem.id,

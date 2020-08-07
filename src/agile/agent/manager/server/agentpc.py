@@ -31,8 +31,8 @@ agent_pc_service.add(Get)
 from agile.agent.apis.staff import Search
 agent_pc_service.add(Search)
 
-from agile.agent.apis.goods import Get, Search, Add, Update, Setuse
-agent_pc_service.add(Get, Search, Add, Update, Setuse)
+from agile.agent.apis.goods import Get, Search, Add, Update, Setuse, Remove
+agent_pc_service.add(Get, Search, Add, Update, Setuse, Remove)
 
 from agile.agent.apis.major import SearchAll
 agent_pc_service.add(SearchAll)
@@ -42,3 +42,10 @@ agent_pc_service.add(SearchAll)
 
 from agile.agent.apis.production import SearchAll
 agent_pc_service.add(SearchAll)
+
+from agile.agent.apis.order import Search, Get
+agent_pc_service.add(Search, Get)
+
+from agile.agent.apis.order.contract import Search
+agent_pc_service.add(Search)
+

@@ -200,4 +200,39 @@ class Update(StaffAuthorizedApi):
         return response
 
 
+class SearchAll(StaffAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+
+    response = with_metaclass(ResponseFieldSet)
+    response.data_list = ResponseField(
+        ListField,
+        desc = "代理商列表",
+        fmt = DictField(
+            desc = "代理商内容",
+            conf = {
+                'id': IntField(desc = "代理商id"),
+                'name': CharField(desc = "代理商名称"),
+            }
+        )
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "代理商查询全部接口"
+
+    @classmethod
+    def get_author(cls):
+        return "Fsy"
+
+    def execute(self, request):
+        agent_list = AgentServer.search_all()
+        return agent_list
+
+    def fill(self, response, agent_list):
+        data_list = [{
+                "id":agent.id,
+                "name":agent.name,
+              } for agent in agent_list]
+        response.data_list = data_list
+        return response
 
