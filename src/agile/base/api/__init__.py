@@ -32,6 +32,7 @@ class AuthorizedApi(BaseApi):
         auth_str = parms.pop(self._auth_flag)
         token = self.load_token(auth_str)
         token.check(parms)
+        self._token = token
         self._user_id = token.user_id
         return parms
 

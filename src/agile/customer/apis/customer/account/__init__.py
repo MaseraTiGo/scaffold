@@ -168,8 +168,8 @@ class Logout(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        customer = self.auth_user
-        CustomerAccountServer.logout(customer.id)
+        auth_token = self._token.auth_token
+        CustomerAccountServer.logout(auth_token)
 
     def fill(self, response):
         return response

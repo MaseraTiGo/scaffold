@@ -67,8 +67,7 @@ class Logout(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        staff = self.auth_user
-        StaffAccountServer.logout(staff)
+        StaffAccountServer.logout(self._token.auth_token)
 
     def fill(self, response):
         return response
