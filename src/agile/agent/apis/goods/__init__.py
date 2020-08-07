@@ -5,9 +5,11 @@ from infrastructure.core.field.base import CharField, DictField, \
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
+from infrastructure.core.exception.business_error import BusinessError
 
 from agile.agent.manager.api import AgentStaffAuthorizedApi
-from abs.services.agent.goods.utils.constant import DurationTypes
+from abs.services.agent.goods.utils.constant import DurationTypes, \
+     CategoryTypes
 from abs.middleground.business.merchandise.utils.constant import\
      DespatchService, UseStatus
 
@@ -55,6 +57,10 @@ class Get(AgentStaffAuthorizedApi):
             'duration':CharField(
                 desc = "时长",
                 choices = DurationTypes.CHOICES
+            ),
+            'category':CharField(
+                desc = "分类",
+                choices = CategoryTypes.CHOICES
             ),
             "use_status":CharField(
                 desc = "上下架",
@@ -119,6 +125,7 @@ class Get(AgentStaffAuthorizedApi):
             'major_name': goods.major.name,
             'description': goods.merchandise.description,
             'duration':goods.duration,
+            'category':goods.category,
             'use_status': goods.merchandise.use_status,
             'remark': goods.merchandise.remark,
             'specification_list':[{
@@ -147,6 +154,11 @@ class Search(AgentStaffAuthorizedApi):
             'city': CharField(desc = "学校所在市", is_required = False),
             'school_id': IntField(desc = "学校id", is_required = False),
             'major_id': IntField(desc = "专业id", is_required = False),
+            'category': CharField(
+                desc = "分类",
+                choices = CategoryTypes.CHOICES,
+                is_required = False
+            ),
         }
     )
 
@@ -181,6 +193,10 @@ class Search(AgentStaffAuthorizedApi):
                 'duration':CharField(
                     desc = "时长",
                     choices = DurationTypes.CHOICES
+                ),
+                'category':CharField(
+                    desc = "分类",
+                    choices = CategoryTypes.CHOICES
                 ),
                 'create_time': DatetimeField(desc = "创建时间"),
                 'specification_list': ListField(
@@ -266,6 +282,7 @@ class Search(AgentStaffAuthorizedApi):
             'major_name': goods.major.name,
             'is_hot':goods.is_hot,
             'duration':goods.duration,
+            'category':goods.category,
             'create_time':goods.create_time,
             'specification_list':[{
                 "id": specification.id,
@@ -310,6 +327,10 @@ class Add(AgentStaffAuthorizedApi):
             'duration':CharField(
                 desc = "时长",
                 choices = DurationTypes.CHOICES
+            ),
+            'category':CharField(
+                desc = "分类",
+                choices = CategoryTypes.CHOICES
             ),
             'remark': CharField(desc = "备注"),
             'specification_list': ListField(
@@ -390,6 +411,7 @@ class Add(AgentStaffAuthorizedApi):
             "school_id":school.id,
             "major_id":major.id,
             "duration":request.goods_info.pop('duration'),
+            "category":request.goods_info.pop('category'),
             "merchandise_id":merchandise.id,
             "agent_id":agent.id
         }
@@ -431,6 +453,10 @@ class Update(AgentStaffAuthorizedApi):
             'duration':CharField(
                 desc = "时长",
                 choices = DurationTypes.CHOICES
+            ),
+            'category':CharField(
+                desc = "分类",
+                choices = CategoryTypes.CHOICES
             ),
             "use_status":CharField(
                 desc = "上下架",
@@ -487,6 +513,7 @@ class Update(AgentStaffAuthorizedApi):
             "school_id":school.id,
             "major_id":major.id,
             "duration":request.goods_info.pop('duration'),
+            "category":request.goods_info.pop('category'),
         }
         GoodsServer.update_goods(goods, **goods_update_info)
         merchandise_update_info = {
@@ -541,6 +568,8 @@ class Setuse(AgentStaffAuthorizedApi):
         use_status = UseStatus.ENABLE
         if merchandise.use_status == UseStatus.ENABLE:
             use_status = UseStatus.FORBIDDENT
+        else:
+            raise BusinessError("暂无权限上架商品")
         merchandise.update(use_status = use_status)
 
     def fill(self, response):

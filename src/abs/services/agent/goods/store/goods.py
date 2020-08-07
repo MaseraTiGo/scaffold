@@ -3,7 +3,8 @@
 from abs.common.model import BaseModel, BooleanField, ForeignKey, \
         IntegerField, CharField, TextField, DateTimeField, timezone
 from abs.services.agent.goods.settings import DB_PREFIX
-from abs.services.agent.goods.utils.constant import DurationTypes
+from abs.services.agent.goods.utils.constant import DurationTypes, \
+     CategoryTypes
 
 
 class Goods(BaseModel):
@@ -11,6 +12,12 @@ class Goods(BaseModel):
     major_id = IntegerField(verbose_name = "专业id")
     agent_id = IntegerField(verbose_name = "代理商id", null = True)
     merchandise_id = IntegerField(verbose_name = '通用商品id')
+    category = CharField(
+        verbose_name = "类别",
+        max_length = 64,
+        choices = CategoryTypes.CHOICES,
+        default = CategoryTypes.OTHER
+    )
     duration = CharField(
         verbose_name = "时长",
         max_length = 32,
