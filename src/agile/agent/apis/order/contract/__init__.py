@@ -42,7 +42,10 @@ class Search(AgentStaffAuthorizedApi):
                 'phone': CharField(desc = "签署人手机号"),
                 'email':CharField(desc = "签署人邮箱"),
                 'identification': CharField(desc = "签署人身份证号"),
-                'url': CharField(desc = "合同连接"),
+                'url': ListField(
+                    desc = 'url',
+                    fmt = CharField(desc = "合同地址")
+                ),
                 'create_time': DatetimeField(desc = "签署时间"),
             }
         )
@@ -76,7 +79,7 @@ class Search(AgentStaffAuthorizedApi):
             'phone': contract.phone,
             'email':contract.email,
             'identification':contract.identification,
-            'url': contract.url,
+            'url': json.loads(contract.url),
             'create_time':contract.create_time,
         } for contract in contract_spliter.data]
         response.data_list = data_list
