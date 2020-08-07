@@ -14,7 +14,7 @@ class GoodsServer(BaseManager):
 
     @classmethod
     def search_goods(cls, current_page, **search_info):
-        goods_qs = cls.search_all_goods(**search_info)
+        goods_qs = cls.search_all_goods(**search_info).order_by("-create_time")
         return Splitor(current_page, goods_qs)
 
     @classmethod
@@ -42,17 +42,18 @@ class GoodsServer(BaseManager):
             search_info.update({
                 'merchandise_id__in': merchandise_id_list
             })
-        return Goods.search(**search_info).order_by("-create_time")
+        return Goods.search(**search_info)
 
     @classmethod
     def search_enable_goods(cls, current_page, **search_info):
         search_info.update({'use_status': UseStatus.ENABLE})
-        return cls.search_goods(current_page, **search_info)
+        goods_qs = cls.search_all_goods(**search_info).order_by('-is_hot', "create_time")
+        return Splitor(current_page, goods_qs)
 
     @classmethod
     def search_hot_goods(cls, **search_info):
         search_info.update({'use_status': UseStatus.ENABLE})
-        return list(cls.search_all_goods(**search_info)[0:3])
+        return list(cls.search_all_goods(**search_info).order_by('-is_hot', "create_time")[0:3])
 
     @classmethod
     def get_goods(cls, goods_id):
