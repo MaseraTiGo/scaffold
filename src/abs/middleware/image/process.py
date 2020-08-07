@@ -1,12 +1,17 @@
 # coding=UTF-8
-import os
-import time
-import random
+import io
 from PIL import ImageFont, Image, ImageDraw
 from abs.middleware.file import file_middleware
 
 
 class ImageProcess(object):
+
+    def update_img_size(self, old_img, width, height):
+        obj = Image.open(old_img)
+        img = obj.resize((width, height), Image.ANTIALIAS)
+        byte_io = io.BytesIO()
+        img.save(byte_io, format='png')
+        return byte_io
 
     def add(
         self,

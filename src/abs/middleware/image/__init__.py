@@ -23,8 +23,9 @@ class ImageMiddleware(object):
             autograph_f,
             'autograph'
         )
-        path = os.path.dirname(os.path.realpath(__file__))
+        autograph_f = image_process.update_img_size(autograph_f, 200, 120)
 
+        path = os.path.dirname(os.path.realpath(__file__))
         company_official_seal = self.get_image(official_seal)
         back_image_path = os.path.join(path, 'contract.png')
         font_file = os.path.join(path, './simsun.ttc')
@@ -47,7 +48,7 @@ class ImageMiddleware(object):
             },
             {
                 'width': 1100,
-                'height': 3000,
+                'height': 3050,
                 'image_path': autograph_f
             }
         ]

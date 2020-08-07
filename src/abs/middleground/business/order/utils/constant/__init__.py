@@ -10,9 +10,9 @@ class OrderStatus(object):
     ORDER_FINISHED = "order_finished"  # 发货后的终结操作
 
     CHOICES = (
-        (ORDER_LAUNCHED, "订单已下单"),
-        (PAYMENT_FINISHED, "订单支已支付"),
-        (DELIVERY_FINISHED, "订单已发货"),
-        (ORDER_CLOSED, "订单关闭"),
-        (ORDER_FINISHED, "订单完成"),
+        (ORDER_LAUNCHED, "待支付"),
+        (PAYMENT_FINISHED, "待发货"),
+        (DELIVERY_FINISHED, "已发货"),
+        (ORDER_CLOSED, "已取消"),
+        (ORDER_FINISHED, "已完成"),
     )
