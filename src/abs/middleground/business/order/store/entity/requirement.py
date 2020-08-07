@@ -9,6 +9,8 @@ Created on 2020年7月10日
 from abs.common.model import BaseModel, CASCADE, TextField,\
         IntegerField, CharField, DateTimeField, ForeignKey, timezone
 from abs.middleground.business.order.settings import DB_PREFIX
+from abs.middleground.business.merchandise.utils.constant import \
+        DespatchService
 
 
 class Requirement(BaseModel):
@@ -51,6 +53,11 @@ class MerchandiseSnapShoot(BaseModel):
     count = IntegerField(verbose_name="商品购买数量")
     total_price = IntegerField(verbose_name="总价，单位：分")
 
+    despatch_type = CharField(
+        verbose_name="商品发货方式",
+        choices=DespatchService.CHOICES,
+        max_length=64
+    )
     requirement = ForeignKey(Requirement, on_delete=CASCADE)
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)

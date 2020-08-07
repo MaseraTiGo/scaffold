@@ -13,7 +13,7 @@ class Contacts(BaseModel):
     agent = ForeignKey(Agent, on_delete = CASCADE)
     contacts = CharField(verbose_name = "联系人", max_length = 32, default = "")
     phone = CharField(verbose_name = "联系电话", max_length = 16, default = "")
-    email = TextField(verbose_name = "emali", max_length = 32, default = "")
+    email = CharField(verbose_name = "emali", max_length = 64, default = "")
     gender = CharField(
         verbose_name = "性别",
         max_length = 24,
