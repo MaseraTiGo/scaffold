@@ -26,7 +26,8 @@ class Search(NoAuthorizedApi):
             'school_id': IntField(desc = "学校id", is_required = False),
             'major_id': IntField(desc = "专业id", is_required = False),
             'duration': CharField(desc = "学年", is_required = False),
-            'production_id': IntField(desc = "产品id", is_required = False)
+            'production_id': IntField(desc = "产品id", is_required = False),
+            'category': CharField(desc="类型", is_required=False)
         }
     )
 

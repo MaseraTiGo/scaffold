@@ -1,5 +1,5 @@
 # coding=UTF-8
-
+import json
 from infrastructure.core.field.base import CharField, DictField, \
         IntField, ListField, BooleanField
 from infrastructure.core.api.utils import with_metaclass
@@ -8,6 +8,9 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.base.api import NoAuthorizedApi
 from abs.middleground.business.production.manager import ProductionServer
+from abs.services.crm.university.manager import UniversityServer
+from abs.services.agent.goods.manager import GoodsServer
+from abs.middleground.business.merchandise.manager import MerchandiseServer
 
 
 class HotSearch(NoAuthorizedApi):
