@@ -155,6 +155,9 @@ class UniversityServer(BaseManager):
 
     @classmethod
     def search_all_major(cls, **search_info):
+        if 'name' in search_info:
+            name = search_info.pop('name')
+            search_info.update({'name__contains': name})
         major_qs = Major.query().filter(**search_info)
         return major_qs
 

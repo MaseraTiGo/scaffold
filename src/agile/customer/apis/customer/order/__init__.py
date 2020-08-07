@@ -17,6 +17,7 @@ from abs.middleground.business.order.manager import OrderServer as mg_OrderServe
 from abs.services.crm.university.manager import UniversityServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleware.pay import pay_middleware
+from abs.services.agent.customer.manager import AgentStaffServer
 
 
 class Add(CustomerAuthorizedApi):
@@ -95,6 +96,10 @@ class Add(CustomerAuthorizedApi):
             order_info['strike_price'],
             specification_list
         )
+        AgentStaffServer.create(
+            agent_id=order.agent_id,
+            customer=customer.id
+        )
         return order
 
     def fill(self, response, order):
@@ -111,6 +116,7 @@ class Get(CustomerAuthorizedApi):
         'id': IntField(desc="订单id"),
         'number': CharField(desc="订单编号"),
         'status': CharField(desc="订单状态"),
+        'status_name': CharField(desc="订单状态"),
         'strike_price': IntField(desc="价格"),
         'create_time': DatetimeField(desc="下单时间"),
         'last_payment_type': CharField(desc='付款方式'),
@@ -162,6 +168,7 @@ class Get(CustomerAuthorizedApi):
             'id': order.id,
             'number': order.mg_order.number,
             'status': order.mg_order.status,
+            'status_name': order.mg_order.get_status_display(),
             'strike_price': order.mg_order.strike_price,
             'create_time': order.mg_order.create_time,
             'last_payment_type': order.mg_order.payment.last_payment_type,
@@ -209,12 +216,14 @@ class Search(CustomerAuthorizedApi):
                 'id': IntField(desc="订单id"),
                 'number': CharField(desc="订单编号"),
                 'status': CharField(desc="订单状态"),
+                'status_name': CharField(desc="订单状态"),
                 'strike_price': IntField(desc="价格"),
                 'create_time': DatetimeField(desc="下单时间"),
                 'last_payment_type': CharField(desc='付款方式'),
                 'last_payment_time': CharField(desc="付款时间"),
                 'last_payment_number': CharField(desc="最后付款单号"),
                 'despatch_type': CharField(desc="发货类型"),
+                'contract_background': CharField(desc="合同url"),
                 'order_item_list': ListField(
                     desc="商品列表",
                     fmt=DictField(
@@ -265,12 +274,14 @@ class Search(CustomerAuthorizedApi):
             'id': order.id,
             'number': order.mg_order.number,
             'status': order.mg_order.status,
+            'status_name': order.mg_order.get_status_display(),
             'strike_price': order.mg_order.strike_price,
             'create_time': order.mg_order.create_time,
             'last_payment_type': order.mg_order.payment.last_payment_type,
             'last_payment_time': order.mg_order.payment.last_payment_time,
             'last_payment_number': '',
-            'despatch_type': 'eduction_contract',
+            'despatch_type': order.orderitem_list[0].snapshoot.despatch_type,
+            'contract_background': 'http://education.bq.com/resource/contract/background.png',
             'order_item_list': [{
                 'sale_price': order_item.snapshoot.sale_price,
                 'total_price': order_item.snapshoot.total_price,

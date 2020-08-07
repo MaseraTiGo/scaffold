@@ -11,6 +11,7 @@ from abs.services.agent.goods.manager import GoodsServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.manager import UniversityServer
+from abs.services.agent.goods.utils.constant import CategoryTypes
 
 
 class Search(NoAuthorizedApi):
@@ -27,7 +28,11 @@ class Search(NoAuthorizedApi):
             'major_id': IntField(desc = "专业id", is_required = False),
             'duration': CharField(desc = "学年", is_required = False),
             'production_id': IntField(desc = "产品id", is_required = False),
-            'category': CharField(desc="类型", is_required=False)
+            'category': CharField(
+                desc="类型",
+                choices=CategoryTypes.CHOICES,
+                is_required=False
+            )
         }
     )
 
