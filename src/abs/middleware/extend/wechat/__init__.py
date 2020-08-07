@@ -65,7 +65,7 @@ class MiniMch(object):
 
     @property
     def notify_url(self):
-        return 'http://d8x4uj.natappfree.cc'
+        return 'http://m455p3.natappfree.cc'
 
     @property
     def key(self):
