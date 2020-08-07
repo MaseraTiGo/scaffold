@@ -1,7 +1,6 @@
 # coding=UTF-8
 import os
 import base64
-from mimetypes import guess_extension, guess_type
 from io import BytesIO
 from .process import image_process
 from abs.middleware.file import file_middleware
@@ -10,19 +9,26 @@ from abs.middleware.file import file_middleware
 class ImageMiddleware(object):
 
     def get_image(self, base64_image):
-        # info_list = base64_image.split(',')
-        # extension_name = guess_extension(info_list[0])
-        extension_name = '.png'
+        info_list = base64_image.split(',')
+        if len(info_list) == 2:
+            base64_image = info_list[1]
         file_byte = base64.b64decode(base64_image)
         file_io = BytesIO(file_byte)
-        autograph = file_middleware.save(extension_name, file_io, 'autograph')
-        return autograph, file_io
+        return file_io
 
-    def get_contract(self, autograph_base64_image, name):
-        autograph_url, f = self.get_image(autograph_base64_image)
+    def get_contract(self, official_seal, autograph_base64_image, name):
+        autograph_f = self.get_image(autograph_base64_image)
+        autograph_url = file_middleware.save(
+            '.png',
+            autograph_f,
+            'autograph'
+        )
         path = os.path.dirname(os.path.realpath(__file__))
+
+        company_official_seal = self.get_image(official_seal)
         back_image_path = os.path.join(path, 'contract.png')
         font_file = os.path.join(path, './simsun.ttc')
+
         word_config_list = [
             {
                 'font_file': font_file,
@@ -37,12 +43,12 @@ class ImageMiddleware(object):
             {
                 'width': 400,
                 'height': 3000,
-                'image_path': os.path.join(path, 'company.png')
+                'image_path': company_official_seal
             },
             {
                 'width': 1100,
                 'height': 3000,
-                'image_path': f
+                'image_path': autograph_f
             }
         ]
         contract_url = image_process.add(

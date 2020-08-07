@@ -98,7 +98,7 @@ class Add(CustomerAuthorizedApi):
         )
         AgentStaffServer.create(
             agent_id=order.agent_id,
-            customer=customer.id
+            customer_id=customer.id
         )
         return order
 

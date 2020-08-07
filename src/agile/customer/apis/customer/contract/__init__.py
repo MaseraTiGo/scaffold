@@ -10,6 +10,7 @@ from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.services.customer.order.manager import OrderItemServer
 from infrastructure.core.exception.business_error import BusinessError
 from abs.services.customer.order.manager import ContractServer
+from abs.services.crm.agent.manager import AgentServer
 
 
 class Get(CustomerAuthorizedApi):
@@ -81,11 +82,13 @@ class Add(CustomerAuthorizedApi):
         )
         if order_item.order.customer_id != self.auth_user.id:
             raise BusinessError('订单异常')
+        agent = AgentServer.get(order_item.order.agent_id)
+
         contract_info = request.contract_info
         ContractServer.create(
             order_item,
+            agent,
             customer_id=order_item.order.customer_id,
-            agent_id=order_item.order.agent_id,
             **contract_info
         )
 

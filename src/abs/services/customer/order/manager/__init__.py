@@ -58,7 +58,7 @@ class OrderServer(BaseManager):
     def cancel(cls, order):
         if order.mg_order.status != OrderStatus.ORDER_LAUNCHED:
             raise BusinessError('待付款订单才能取消')
-        order.mg_order.update(status=OrderStatus.ORDER_CLOSED)
+        mg_OrderServer.close(order.mg_order_id)
 
     @classmethod
     def add(cls, customer, address, source, strike_price, specification_list):
@@ -158,22 +158,21 @@ class OrderItemServer(BaseManager):
 class ContractServer(BaseManager):
 
     @classmethod
-    def create(cls, order_item, **search_info):
+    def create(cls, order_item, agent, **search_info):
         base64_image = search_info.pop('autograph')
         autograph_url, contract_url = image_middleware.get_contract(
+            agent.official_seal,
             base64_image,
             search_info['name']
         )
         search_info.update({
             'order_item_id': order_item.id,
+            'agent_id': agent.id,
             'autograph': autograph_url,
             'url': json.dumps([contract_url])
         })
         contract = Contract.create(**search_info)
-        mg_order = mg_OrderServer.get(
-            order_item.order.mg_order_id, is_hung=True
-        )
-        mg_order.update(status=OrderStatus.ORDER_FINISHED)
+        mg_OrderServer.finish(order_item.order.mg_order_id)
         return contract
 
     @classmethod
