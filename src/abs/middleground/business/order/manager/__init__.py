@@ -92,6 +92,7 @@ class OrderServer(BaseManager):
             MerchandiseSnapShoot(
                 production_id=specification.merchandise.production_id,
                 merchandise_id=specification.merchandise.id,
+                despatch_type=specification.merchandise.despatch_type,
                 specification_id=specification.id,
                 title=specification.merchandise.title,
                 show_image=specification.show_image,

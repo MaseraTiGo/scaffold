@@ -20,9 +20,7 @@ class Get(CustomerAuthorizedApi):
     response.contract_list = ResponseField(
         ListField,
         desc="合同列表",
-        fmt=DictField(desc="合同信息", conf={
-            'url': CharField(desc="图片")
-        })
+        fmt=CharField(desc="合同信息")
     )
 
     @classmethod
@@ -45,10 +43,10 @@ class Get(CustomerAuthorizedApi):
         return contract_list
 
     def fill(self, response, contract_list):
-        contract_list = []
+        url_list = []
         for contract in contract_list:
-            contract_list.extend(json.loads(contract.url))
-        response.contract_list = contract_list
+            url_list.extend(json.loads(contract.url))
+        response.contract_list = url_list
         return response
 
 

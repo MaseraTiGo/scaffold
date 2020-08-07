@@ -84,6 +84,15 @@ class AccountServer(BaseManager):
         pass
 
     @classmethod
+    def get_byids(cls, role_id_list, limit=100):
+        if len(role_id_list) > 100:
+            raise BusinessError('账户搜索超过上限')
+        account_qs = cls.APPLY_CLS.search(
+            role_id__in = role_id_list
+        )
+        return account_qs
+
+    @classmethod
     def get_image_verification_code(cls):
         return "654321"
 

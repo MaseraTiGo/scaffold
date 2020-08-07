@@ -116,6 +116,7 @@ class Get(CustomerAuthorizedApi):
         'last_payment_type': CharField(desc='付款方式'),
         'last_payment_time': CharField(desc="付款时间"),
         'last_payment_number': CharField(desc="最后付款单号"),
+        'contract_background': CharField(desc="合同url"),
         'order_item_list': ListField(
             desc="商品列表",
             fmt=DictField(
@@ -165,6 +166,7 @@ class Get(CustomerAuthorizedApi):
             'create_time': order.mg_order.create_time,
             'last_payment_type': order.mg_order.payment.last_payment_type,
             'last_payment_time': order.mg_order.payment.last_payment_time,
+            'contract_background': 'http://education.bq.com/resource/contract/background.png',
             'last_payment_number': '',
             'order_item_list': [{
                 'id': order_item.id,
