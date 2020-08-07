@@ -23,7 +23,7 @@ class OrderServer(BaseManager):
         if order is None:
             raise BusinessError("此订单不存在")
         order.mg_order = mg_OrderServer.get(
-                            order.mg_order_id, is_hung=True
+                            order.mg_order_id, is_hung = True
                          )
         return order
 
@@ -60,6 +60,7 @@ class OrderServer(BaseManager):
             raise BusinessError('待付款订单才能取消')
         mg_OrderServer.close(order.mg_order_id)
 
+
     @classmethod
     def add(cls, customer, address, source, strike_price, specification_list):
         company = EnterpriseServer.get_crm__company()
@@ -82,10 +83,10 @@ class OrderServer(BaseManager):
         )
 
         order = Order.create(
-            customer_id=customer.id,
-            mg_order_id=mg_order.id,
+            customer_id = customer.id,
+            mg_order_id = mg_order.id,
             agent_id = specification_list[0].merchandise.goods.agent_id,
-            source=source
+            source = source
         )
         mapping = {}
         for specification in specification_list:
@@ -93,18 +94,18 @@ class OrderServer(BaseManager):
                 specification.id: specification
             })
         snapshoot_list = mg_OrderServer.search_all_snapshoot(
-            requirement=mg_order.requirement
+            requirement = mg_order.requirement
         )
         for snapshoot in snapshoot_list:
             specification = mapping.get(snapshoot.specification_id)
             OrderItem.create(
-                order=order,
-                goods_id=specification.merchandise.goods.id,
-                merchandise_snapshoot_id=snapshoot.id,
-                school_name=specification.merchandise.goods.school.name,
-                school_city=specification.merchandise.goods.school.city,
-                major_name=specification.merchandise.goods.major.name,
-                duration=specification.merchandise.goods.duration
+                order = order,
+                goods_id = specification.merchandise.goods.id,
+                merchandise_snapshoot_id = snapshoot.id,
+                school_name = specification.merchandise.goods.school.name,
+                school_city = specification.merchandise.goods.school.city,
+                major_name = specification.merchandise.goods.major.name,
+                duration = specification.merchandise.goods.duration
             )
         return order
 
@@ -138,7 +139,7 @@ class OrderItemServer(BaseManager):
             order.orderitem_list = []
             order_mapping[order.id] = order
         orderitem_list = list(cls.search_all(
-                                 order_id__in=order_mapping.keys())
+                                 order_id__in = order_mapping.keys())
                               )
         mg_OrderServer.hung_snapshoot(orderitem_list)
         for orderitem in orderitem_list:
@@ -173,9 +174,17 @@ class ContractServer(BaseManager):
         })
         contract = Contract.create(**search_info)
         mg_OrderServer.finish(order_item.order.mg_order_id)
+
         return contract
 
     @classmethod
     def search_all(cls, **search_info):
         return Contract.search(**search_info)
+
+    @classmethod
+    def search(cls, current_page, **search_info):
+        contract_qs = cls.search_all(**search_info).\
+                      order_by("-create_time")
+        splitor = Splitor(current_page, contract_qs)
+        return splitor
 

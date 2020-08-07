@@ -79,6 +79,21 @@ class AgentServer(BaseManager):
         agent.update(**update_info)
         return agent
 
+    @classmethod
+    def hung_agent(cls, obj_list):
+        obj_mapping = {}
+        for obj in obj_list:
+            obj.agent = None
+            if obj.agent_id not in obj_mapping:
+                obj_mapping[obj.agent_id] = []
+            obj_mapping[obj.agent_id].append(obj)
+        agent_qs = cls.search_all(id__in = obj_mapping.keys())
+        for agent in agent_qs:
+            if agent.id in obj_mapping:
+                for obj in obj_mapping[agent.id]:
+                    obj.agent = agent
+        return obj_list
+
 
     @classmethod
     def create_contacts(cls, **contacts_info):
