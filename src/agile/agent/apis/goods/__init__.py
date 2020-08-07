@@ -19,6 +19,7 @@ from abs.middleground.business.production.manager import ProductionServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.services.crm.university.manager import UniversityServer
 from abs.services.crm.agent.manager import AgentServer
+from abs.services.customer.order.manager import OrderItemServer
 
 
 class Get(AgentStaffAuthorizedApi):
@@ -458,10 +459,6 @@ class Update(AgentStaffAuthorizedApi):
                 desc = "分类",
                 choices = CategoryTypes.CHOICES
             ),
-            "use_status":CharField(
-                desc = "上下架",
-                choices = UseStatus.CHOICES,
-            ),
             'remark': CharField(desc = "备注"),
             'specification_list': ListField(
                     desc = "规格列表",
@@ -526,7 +523,6 @@ class Update(AgentStaffAuthorizedApi):
             "detail":json.dumps(request.goods_info.pop('detail')),
             "market_price":request.goods_info.pop('market_price'),
             "despatch_type":request.goods_info.pop('despatch_type'),
-            "use_status":request.goods_info.pop('use_status'),
             "production_id":production.id,
             "remark":request.goods_info.pop('remark'),
             "description":request.goods_info.pop('description'),
@@ -595,7 +591,12 @@ class Remove(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         goods = GoodsServer.get_goods(request.goods_id)
-        MerchandiseServer.remove(goods.merchandise_id)
+        merchandise = MerchandiseServer.get(goods.merchandise_id)
+        if merchandise.use_status == UseStatus.ENABLE:
+            raise BusinessError("请先下架此商品")
+        if OrderItemServer.search_all(goods_id = goods.id).count() > 0:
+            raise BusinessError("存在订单无法删除")
+        MerchandiseServer.remove(merchandise.id)
         goods.delete()
 
     def fill(self, response):

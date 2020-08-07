@@ -49,3 +49,5 @@ agent_pc_service.add(Search, Get)
 from agile.agent.apis.order.contract import Search
 agent_pc_service.add(Search)
 
+from agile.agent.apis.customer import Search
+agent_pc_service.add(Search)

@@ -8,8 +8,16 @@ from abs.common.manager import BaseManager
 from abs.services.agent.customer.models import AgentCustomer
 
 
-class AgentStaffServer(BaseManager):
+class AgentCustomerServer(BaseManager):
 
     @classmethod
     def create(cls, **info):
         return AgentCustomer.create(**info)
+
+    @classmethod
+    def search(cls, current_page, **search_info):
+        agent_customer_qs = AgentCustomer.search(
+            **search_info
+        ).order_by("-create_time")
+        splitor = Splitor(current_page, agent_customer_qs)
+        return splitor
