@@ -31,9 +31,8 @@ class Get(StaffAuthorizedApi):
         desc = "订单详情",
         conf = {
             'id': IntField(desc = "订单id"),
-            'name': CharField(desc = "客户姓名"),
+            'nick': CharField(desc = "客户姓名"),
             'phone': CharField(desc = "客户手机号"),
-            'identification': CharField(desc = "客户身份证号"),
             'register_time': DatetimeField(desc = "客户注册时间"),
 
             're_name': CharField(desc = "收货人姓名"),
@@ -100,12 +99,9 @@ class Get(StaffAuthorizedApi):
     def fill(self, response, order, customer):
         response.order_info = {
             'id': order.id,
-            'name':customer.person.name,
+            'nick':customer.nick,
             'phone':customer.person.phone,
-            'identification':customer.person_status.\
-                             certification.identification if \
-                             customer.person_status.\
-                             certification else "",
+
             'register_time':customer.create_time,
 
             're_name':order.mg_order.invoice.name if \
@@ -190,8 +186,8 @@ class Search(StaffAuthorizedApi):
                     choices = OrderStatus.CHOICES
                 ),
 
-                're_name': CharField(desc = "收货人姓名"),
-                're_phone': CharField(desc = "收货人手机号"),
+                'nick': CharField(desc = "客户昵称"),
+                'phone': CharField(desc = "客户手机号"),
                 'agent_id': IntField(desc = "代理商id"),
                 'agent_name': CharField(desc = "公司名称"),
                 'snapshoot_list': ListField(
@@ -237,6 +233,7 @@ class Search(StaffAuthorizedApi):
             **request.search_info
         )
         OrderItemServer.hung_order_item(order_spliter.get_list())
+        CustomerServer.hung_customer(order_spliter.get_list())
         AgentServer.hung_agent(order_spliter.get_list())
         return order_spliter
 
@@ -254,10 +251,8 @@ class Search(StaffAuthorizedApi):
                              order.mg_order.payment else 0,
             'status': order.mg_order.status,
 
-            're_name': order.mg_order.invoice.name if \
-                       order.mg_order.invoice else "",
-            're_phone': order.mg_order.invoice.phone if \
-                        order.mg_order.invoice else "",
+            'nick':  order.customer.nick,
+            'phone': order.customer.person.phone,
             'agent_id': order.agent.id,
             'agent_name': order.agent.name,
             'snapshoot_list': [
