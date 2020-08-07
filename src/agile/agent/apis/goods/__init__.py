@@ -499,6 +499,10 @@ class Update(AgentStaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
+        goods = GoodsServer.get_goods(request.goods_id)
+        merchandise = MerchandiseServer.get(goods.merchandise_id)
+        if merchandise.use_status == UseStatus.ENABLE:
+            raise BusinessError("请先下架此商品")
         school = UniversityServer.get_school(
             request.goods_info.pop('school_id')
         )
@@ -508,7 +512,6 @@ class Update(AgentStaffAuthorizedApi):
         production = ProductionServer.get(
             request.goods_info.pop('production_id')
         )
-        goods = GoodsServer.get_goods(request.goods_id)
         goods_update_info = {
             "school_id":school.id,
             "major_id":major.id,

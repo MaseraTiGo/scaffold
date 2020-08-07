@@ -16,6 +16,7 @@ from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.services.crm.university.manager import UniversityServer
+from abs.services.crm.agent.manager import AgentServer
 
 
 class Get(StaffAuthorizedApi):
@@ -146,6 +147,7 @@ class Search(StaffAuthorizedApi):
             'city': CharField(desc = "学校所在市", is_required = False),
             'school_id': IntField(desc = "学校id", is_required = False),
             'major_id': IntField(desc = "专业id", is_required = False),
+            'agent_id': IntField(desc = "代理商id", is_required = False),
         }
     )
 
@@ -181,6 +183,8 @@ class Search(StaffAuthorizedApi):
                     desc = "时长",
                     choices = DurationTypes.CHOICES
                 ),
+                'agent_id': IntField(desc = "代理商id"),
+                'agent_name': CharField(desc = "公司名称"),
                 'create_time': DatetimeField(desc = "创建时间"),
                 'specification_list': ListField(
                     desc = "规格列表",
@@ -237,6 +241,7 @@ class Search(StaffAuthorizedApi):
             request.current_page,
             **request.search_info
         )
+        AgentServer.hung_agent(spliter.data)
         UniversityServer.hung_major(spliter.data)
         UniversityServer.hung_school(spliter.data)
         MerchandiseServer.hung_merchandise(spliter.data)
@@ -260,6 +265,8 @@ class Search(StaffAuthorizedApi):
             'major_name': goods.major.name,
             'is_hot':goods.is_hot,
             'duration':goods.duration,
+            'agent_id': 0,
+            'agent_name': goods.agent.name,
             'create_time':goods.create_time,
             'specification_list':[{
                 "id": specification.id,
