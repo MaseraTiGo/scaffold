@@ -342,7 +342,8 @@ class Remove(StaffAuthorizedApi):
     def execute(self, request):
         production = ProductionServer.get(request.production_id)
         merchandise_qs = MerchandiseServer.search_all(
-            production.company_id, production_id=production.id
+            company_id=production.company_id,
+            production_id=production.id
         )
         if merchandise_qs.count() > 0:
             raise BusinessError("产品已绑定商品禁止删除")
@@ -414,7 +415,7 @@ class SearchAll(StaffAuthorizedApi):
     def execute(self, request):
         company = EnterpriseServer.get_crm__company()
         production_qs = ProductionServer.search_all(
-            company.id,
+            company_id=company.id,
             **{}
         )
         return production_qs

@@ -17,7 +17,8 @@ from abs.middleground.business.order.manager import OrderServer as mg_OrderServe
 from abs.services.crm.university.manager import UniversityServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleware.pay import pay_middleware
-from abs.services.agent.customer.manager import AgentStaffServer
+from abs.services.agent.customer.manager import AgentCustomerServer
+from abs.services.crm.agent.manager import AgentServer
 
 
 class Add(CustomerAuthorizedApi):
@@ -89,14 +90,16 @@ class Add(CustomerAuthorizedApi):
             specification
             for specification in specification_list
         ])
+        agent = AgentServer.get(specification_list[0].merchandise.goods.agent_id)
         order = OrderServer.add(
+            agent,
             customer,
             address,
             'app',
             order_info['strike_price'],
             specification_list
         )
-        AgentStaffServer.create(
+        AgentCustomerServer.create(
             agent_id=order.agent_id,
             customer_id=customer.id
         )
@@ -123,13 +126,13 @@ class Get(CustomerAuthorizedApi):
         'last_payment_time': CharField(desc="付款时间"),
         'last_payment_number': CharField(desc="最后付款单号"),
         'contract_background': CharField(desc="合同url"),
+        'despatch_type': CharField(desc="发货方式"),
         'order_item_list': ListField(
             desc="商品列表",
             fmt=DictField(
                 desc="商品",
                 conf={
                     'id': IntField(desc="订单商品详情id"),
-                    'despatch_type': CharField(desc="发货方式"),
                     'sale_price': IntField(desc="单价"),
                     'total_price': IntField(desc="总价"),
                     'quantity': IntField(desc="数量"),
@@ -175,9 +178,9 @@ class Get(CustomerAuthorizedApi):
             'last_payment_time': order.mg_order.payment.last_payment_time,
             'contract_background': 'http://education.bq.com/resource/contract/background.png',
             'last_payment_number': '',
+            'despatch_type': order.order_item_list[0].snapshoot.despatch_type,
             'order_item_list': [{
                 'id': order_item.id,
-                'despatch_type': 'eduction_contract',
                 'sale_price': order_item.snapshoot.sale_price,
                 'total_price': order_item.snapshoot.total_price,
                 'quantity': order_item.snapshoot.count,

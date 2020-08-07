@@ -385,7 +385,7 @@ class Place(NoAuthorizedApi):
         production_mapping = {
             production.id: production
             for production in ProductionServer.search_all(
-                request.order_info.server_id,
+                company_id=request.order_info.server_id,
                 id__in=production_list
             )
         }

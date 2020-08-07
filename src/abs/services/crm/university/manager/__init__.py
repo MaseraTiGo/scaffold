@@ -69,8 +69,7 @@ class UniversityServer(BaseManager):
 
     @classmethod
     def hung_production_list(cls, school_list):
-        company = EnterpriseServer.get_crm__company()
-        all_production_qs = ProductionServer.search_all(company.id)
+        all_production_qs = ProductionServer.search_all()
         school_id_list = [school.id for school in school_list]
         goods_qs = Goods.search(
             school_id__in = school_id_list
@@ -81,7 +80,6 @@ class UniversityServer(BaseManager):
                 goods.merchandise_id: goods.school_id
             })
         merchandise_qs = MerchandiseServer.search_all(
-            company.id,
             use_status = 'enable',
             id__in = merchandise_school_mapping.keys()
         )

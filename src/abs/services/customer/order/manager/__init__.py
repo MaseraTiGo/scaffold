@@ -62,8 +62,15 @@ class OrderServer(BaseManager):
 
 
     @classmethod
-    def add(cls, customer, address, source, strike_price, specification_list):
-        company = EnterpriseServer.get_crm__company()
+    def add(
+        cls,
+        agent,
+        customer,
+        address,
+        source,
+        strike_price,
+        specification_list
+    ):
         invoice_baseinfos = {}
         if address:
             invoice_baseinfos = {
@@ -78,14 +85,14 @@ class OrderServer(BaseManager):
             'person',
             customer.person_id,
             'company',
-            company.id,
+            agent.company_id,
             **invoice_baseinfos
         )
 
         order = Order.create(
             customer_id = customer.id,
             mg_order_id = mg_order.id,
-            agent_id = specification_list[0].merchandise.goods.agent_id,
+            agent_id = agent.id,
             source = source
         )
         mapping = {}

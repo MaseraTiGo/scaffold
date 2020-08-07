@@ -27,11 +27,9 @@ class ProductionServer(BaseManager):
         return splitor
 
     @classmethod
-    def search_all(cls, company_id, **search_info):
+    def search_all(cls, **search_info):
         production_qs = Production.query().filter(
             **search_info
-        ).filter(
-            company_id=company_id
         )
         return production_qs
 

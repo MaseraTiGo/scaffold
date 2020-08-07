@@ -8,7 +8,7 @@ from abs.common.manager import BaseManager
 from abs.services.agent.customer.models import AgentCustomer
 
 
-class AgentStaffServer(BaseManager):
+class AgentCustomerServer(BaseManager):
 
     @classmethod
     def create(cls, **info):

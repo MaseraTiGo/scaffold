@@ -117,10 +117,8 @@ class MerchandiseServer(BaseManager):
         return spliter
 
     @classmethod
-    def search_all(cls, company_id, **search_info):
-        merchandise_qs = Merchandise.query(
-            company_id = company_id
-        ).filter(
+    def search_all(cls, **search_info):
+        merchandise_qs = Merchandise.query().filter(
             **search_info
         )
         return merchandise_qs

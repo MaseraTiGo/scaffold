@@ -57,7 +57,7 @@ class SearchAll(AgentStaffAuthorizedApi):
     def execute(self, request):
         company = EnterpriseServer.get_crm__company()
         production_qs = ProductionServer.search_all(
-            company.id,
+            company_id=company.id,
             **{}
         )
         return production_qs
