@@ -57,6 +57,10 @@ class Get(StaffAuthorizedApi):
                 desc = "时长",
                 choices = DurationTypes.CHOICES
             ),
+            'category':CharField(
+                desc = "分类",
+                choices = CategoryTypes.CHOICES
+            ),
             "use_status":CharField(
                 desc = "上下架",
                 choices = UseStatus.CHOICES,
@@ -120,6 +124,7 @@ class Get(StaffAuthorizedApi):
             'major_name': goods.major.name,
             'description': goods.merchandise.description,
             'duration':goods.duration,
+            'category':goods.category,
             'use_status': goods.merchandise.use_status,
             'remark': goods.merchandise.remark,
             'specification_list':[{

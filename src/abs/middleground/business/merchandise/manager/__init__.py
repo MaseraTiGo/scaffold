@@ -19,8 +19,8 @@ class MerchandiseServer(BaseManager):
                 specification.id: specification
             })
 
-        for specification_value in SpecificationValue.query().filter(
-            specification__in = specification_mapping.values()
+        for specification_value in SpecificationValue.search(
+            specification__in=specification_mapping.values()
         ):
             specification = specification_mapping.get(
                 specification_value.specification.id
@@ -40,8 +40,8 @@ class MerchandiseServer(BaseManager):
             })
 
         specification_list = []
-        for specification in Specification.query().filter(
-            merchandise__in = merchandise_mapping.values()
+        for specification in Specification.search(
+            merchandise__in=merchandise_mapping.values()
         ):
             merchandise = merchandise_mapping[specification.merchandise_id]
             merchandise.specification_list.append(
@@ -54,8 +54,8 @@ class MerchandiseServer(BaseManager):
 
     @classmethod
     def hung_specification(cls, obj_list):
-        specification_list = Specification.query().filter(
-                id__in = [obj.specification_id for obj in obj_list]
+        specification_list = Specification.search(
+                id__in=[obj.specification_id for obj in obj_list]
         )
         mapping = {}
         for specification in specification_list:
@@ -71,8 +71,8 @@ class MerchandiseServer(BaseManager):
 
     @classmethod
     def hung_merchandise(cls, obj_list):
-        merchandise_list = Merchandise.query().filter(
-            id__in = [obj.merchandise_id for obj in obj_list]
+        merchandise_list = Merchandise.search(
+            id__in=[obj.merchandise_id for obj in obj_list]
         )
         mapping = {}
         for merchandise in merchandise_list:
@@ -90,11 +90,11 @@ class MerchandiseServer(BaseManager):
         if 'title' in search_info:
             title = search_info.pop('title')
             search_info.update({'title__contains': title})
-        return list(Merchandise.query().filter(
+        return list(Merchandise.search(
             **search_info
         ).values_list(
             'id',
-            flat = True
+            flat=True
         ))
 
     @classmethod
@@ -107,8 +107,8 @@ class MerchandiseServer(BaseManager):
 
     @classmethod
     def search(cls, current_page, company_id, **search_info):
-        merchandise_qs = Merchandise.query(
-            company_id = company_id
+        merchandise_qs = Merchandise.search(
+            company_id=company_id
         ).filter(
             **search_info
         )
@@ -118,7 +118,7 @@ class MerchandiseServer(BaseManager):
 
     @classmethod
     def search_all(cls, **search_info):
-        merchandise_qs = Merchandise.query().filter(
+        merchandise_qs = Merchandise.search(
             **search_info
         )
         return merchandise_qs
@@ -147,18 +147,18 @@ class MerchandiseServer(BaseManager):
             raise BusinessError("商品已存在，不能创建")
 
         merchandise = Merchandise.create(
-            company_id = company_id,
-            production_id = production_id,
-            title = title,
-            video_display = video_display,
-            slideshow = slideshow,
-            detail = detail,
-            pay_types = pay_types,
-            pay_services = pay_services,
-            market_price = market_price,
-            despatch_type = despatch_type,
-            remark = remark,
-            description = description,
+            company_id=company_id,
+            production_id=production_id,
+            title=title,
+            video_display=video_display,
+            slideshow=slideshow,
+            detail=detail,
+            pay_types=pay_types,
+            pay_services=pay_services,
+            market_price=market_price,
+            despatch_type=despatch_type,
+            remark=remark,
+            description=description,
         )
         return merchandise
 
@@ -172,15 +172,15 @@ class MerchandiseServer(BaseManager):
 
     @classmethod
     def remove(cls, merchandise_id):
-        specification_qs = Specification.query(
-            merchandise_id = merchandise_id
+        specification_qs = Specification.search(
+            merchandise_id=merchandise_id
         )
-        SpecificationValue.query(
-            specification__in = list(specification_qs)
+        SpecificationValue.search(
+            specification__in=list(specification_qs)
         ).delete()
         specification_qs.delete()
-        Merchandise.query(
-            id = merchandise_id
+        Merchandise.search(
+            id=merchandise_id
         ).delete()
 
     @classmethod
@@ -195,25 +195,25 @@ class MerchandiseServer(BaseManager):
     ):
         merchandise = cls.get(merchandise_id)
         specification = Specification.create(
-            merchandise = merchandise,
-            show_image = show_image,
-            sale_price = sale_price,
-            stock = stock,
-            remark = remark
+            merchandise=merchandise,
+            show_image=show_image,
+            sale_price=sale_price,
+            stock=stock,
+            remark=remark
         )
         for attribute in attribute_list:
             SpecificationValue.create(
-                category = attribute['category'],
-                attribute = attribute['attribute'],
-                specification = specification
+                category=attribute['category'],
+                attribute=attribute['attribute'],
+                specification=specification
             )
         return specification
 
     @classmethod
     def get_specification_list(cls, specification_id_list):
         specification_list = list(
-            Specification.query().filter(
-                id__in = specification_id_list
+            Specification.search(
+                id__in=specification_id_list
             )
         )
         cls._hung_specification_value(specification_list)
@@ -240,14 +240,14 @@ class MerchandiseServer(BaseManager):
     ):
         specification = cls.get_specification(specification_id)
         specification.update(
-            show_image = show_image,
-            sale_price = sale_price,
-            stock = stock,
-            remark = remark
+            show_image=show_image,
+            sale_price=sale_price,
+            stock=stock,
+            remark=remark
         )
         return True
 
     @classmethod
     def remove_specification(cls, specification_id):
-        SpecificationValue.query(specification_id = specification_id).delete()
-        Specification.query(id = specification_id).delete()
+        SpecificationValue.search(specification_id=specification_id).delete()
+        Specification.search(id=specification_id).delete()
