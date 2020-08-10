@@ -91,6 +91,11 @@ class Add(CustomerAuthorizedApi):
             customer_id=order_item.order.customer_id,
             **contract_info
         )
+        order_item.order.invoice.update(
+            name=contract_info['name'],
+            phone=contract_info['phone'],
+            identification=contract_info['identification']
+        )
 
     def fill(self, response):
         return response
