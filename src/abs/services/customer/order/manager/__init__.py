@@ -8,7 +8,7 @@ from abs.middleground.business.order.manager import \
      OrderServer as mg_OrderServer
 from abs.services.customer.order.store.order import Order
 from abs.services.customer.order.store.orderitem import OrderItem
-from abs.middleground.business.enterprise.manager import EnterpriseServer
+from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleware.pay import pay_middleware
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.middleware.image import image_middleware
@@ -59,7 +59,14 @@ class OrderServer(BaseManager):
         if order.mg_order.status != OrderStatus.ORDER_LAUNCHED:
             raise BusinessError('待付款订单才能取消')
         mg_OrderServer.close(order.mg_order_id)
-
+        snapshoot_list = mg_OrderServer.search_all_snapshoot(
+            requirement=order.mg_order.requirement
+        )
+        for snapshoot in snapshoot_list:
+            specification = MerchandiseServer.get_specification(
+                snapshoot.specification_id
+            )
+            specification.update(stock=specification.stock+snapshoot.count)
 
     @classmethod
     def add(
@@ -114,6 +121,7 @@ class OrderServer(BaseManager):
                 major_name = specification.merchandise.goods.major.name,
                 duration = specification.merchandise.goods.duration
             )
+            specification.update(stock=specification.stock-specification.order_count)
         return order
 
     @classmethod
