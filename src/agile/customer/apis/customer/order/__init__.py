@@ -203,9 +203,9 @@ class Get(CustomerAuthorizedApi):
                 'remark': order_item.snapshoot.remark
             } for order_item in order.order_item_list],
             'invoice_info': {
-                'name': order.invoice.name,
-                'phone': order.invoice.phone,
-                'address': order.invoice.address
+                'name': order.mg_order.invoice.name,
+                'phone': order.mg_order.invoice.phone,
+                'address': order.mg_order.invoice.address
             }
         }
         return response
