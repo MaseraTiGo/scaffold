@@ -7,13 +7,15 @@ Created on 2016年7月23日
 '''
 
 from infrastructure.core.field.base import CharField, DictField, \
-        IntField, ListField, DateField, BooleanField, MobileField
+        IntField, ListField, DateField, BooleanField, MobileField, \
+        DatetimeField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.agent.staff.manager import AgentStaffServer
+from abs.services.agent.account.manager import AgentStaffAccountServer
 
 
 class Add(AgentStaffAuthorizedApi):
@@ -105,6 +107,9 @@ class Search(AgentStaffAuthorizedApi):
                 'email': CharField(desc = "邮箱"),
                 'work_number': CharField(desc = "员工工号"),
                 'is_admin': BooleanField(desc = "是否是管理员"),
+                'username': CharField(desc = "账号"),
+                'status': CharField(desc = "账号状态"),
+                'last_login_time':DatetimeField(desc = "最后登陆时间"),
                 'department_role_list': ListField(
                     desc = '所属部门',
                     fmt = DictField(
@@ -141,6 +146,7 @@ class Search(AgentStaffAuthorizedApi):
             request.current_page,
             **request.search_info
         )
+        AgentStaffAccountServer.hung_account(staff_spliter.data)
         return staff_spliter
 
     def fill(self, response, staff_spliter):
@@ -155,6 +161,9 @@ class Search(AgentStaffAuthorizedApi):
             'phone': staff.person.phone,
             'email': staff.person.email,
             'is_admin': staff.is_admin,
+            'username': staff.account.username,
+            'status':staff.account.status,
+            'last_login_time':staff.account.last_login_time,
             'department_role_list': [{
                 'role_id': department_role.role.id,
                 'role_name': department_role.role.name,

@@ -6,7 +6,7 @@ from support.common.generator.field.base import BaseHelper
 
 class BrandEntity(BaseHelper):
 
-    def calc(self, has_none=False):
+    def calc(self, has_none = False):
         if not hasattr(self, '_enume'):
             from abs.middleground.business.production.store import Brand
             self._enume = []
@@ -21,7 +21,7 @@ class BrandEntity(BaseHelper):
 
 class ProductionEntity(BaseHelper):
 
-    def calc(self, has_none=False):
+    def calc(self, has_none = False):
         if not hasattr(self, '_enume'):
             from abs.middleground.business.production.store import Production
             self._enume = []
@@ -36,7 +36,7 @@ class ProductionEntity(BaseHelper):
 
 class MerchandiseEntity(BaseHelper):
 
-    def calc(self, has_none=False):
+    def calc(self, has_none = False):
         if not hasattr(self, '_enume'):
             from abs.middleground.business.merchandise.store import \
                     Merchandise
@@ -52,7 +52,7 @@ class MerchandiseEntity(BaseHelper):
 
 class SpecificationEntity(BaseHelper):
 
-    def calc(self, has_none=False):
+    def calc(self, has_none = False):
         if not hasattr(self, '_enume'):
             from abs.middleground.business.merchandise.store import \
                     Specification
@@ -67,16 +67,16 @@ class SpecificationEntity(BaseHelper):
 
 
 class CrnCompanyEntitry(BaseHelper):
-    def calc(self, has_none=False):
+    def calc(self, has_none = False):
         from abs.middleground.business.enterprise.models import Enterprise
         company_qs = Enterprise.search(
-            license_number="91420100MA4KM4XY1Y"
+            license_number = "91420100MA4KM4XY1Y"
         )
         return company_qs[0]
 
 
 class CrnStaffEntitry(BaseHelper):
-    def calc(self, has_none=False):
+    def calc(self, has_none = False):
         if not hasattr(self, '_enume'):
             from abs.services.crm.staff.models import Staff
             self._enume = []
@@ -91,7 +91,7 @@ class CrnStaffEntitry(BaseHelper):
 
 class CustomerEntity(BaseHelper):
 
-    def calc(self, has_none=False):
+    def calc(self, has_none = False):
         if not hasattr(self, '_enume'):
             from abs.services.customer.personal.store import Customer
             self._enume = []
@@ -105,7 +105,7 @@ class CustomerEntity(BaseHelper):
 
 class SchoolEntity(BaseHelper):
 
-    def calc(self, has_none=False):
+    def calc(self, has_none = False):
         if not hasattr(self, '_enume'):
             from abs.services.crm.university.store import School
             self._enume = []
@@ -119,12 +119,26 @@ class SchoolEntity(BaseHelper):
 
 class MajorEntity(BaseHelper):
 
-    def calc(self, has_none=False):
+    def calc(self, has_none = False):
         if not hasattr(self, '_enume'):
-            from abs.services.customer.university.store import Major
+            from abs.services.crm.university.store import Major
             self._enume = []
             for major in school.query():
                 self._enume.append(major)
+
+        select_enum = self._enume.copy()
+        if has_none:
+            select_enum.append(None)
+        return random.choice(select_enum)
+
+class AgentEntity(BaseHelper):
+
+    def calc(self, has_none = False):
+        if not hasattr(self, '_enume'):
+            from abs.services.crm.agent.store import Agent
+            self._enume = []
+            for agent in Agent.query():
+                self._enume.append(agent)
 
         select_enum = self._enume.copy()
         if has_none:
