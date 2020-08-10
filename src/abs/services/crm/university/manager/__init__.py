@@ -178,7 +178,3 @@ class UniversityServer(BaseManager):
             raise BusinessError("学校名字已存在")
         major.update(**update_info)
         return major
-
-    @classmethod
-    def get_duration(cls):
-        return dict(DurationTypes.CHOICES)

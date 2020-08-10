@@ -169,6 +169,7 @@ class ContractServer(BaseManager):
     def create(cls, order_item, agent, **search_info):
         base64_image = search_info.pop('autograph')
         autograph_url, contract_url = image_middleware.get_contract(
+            agent.name,
             agent.official_seal,
             base64_image,
             search_info['name']

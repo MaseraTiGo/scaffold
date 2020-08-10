@@ -47,8 +47,14 @@ class ImageProcess(object):
             r, g, b, a = img.split()
             back_img.paste(img, box, a)
 
-        file_path, save_path = file_middleware.get_save_path('.png', 'contract')
-        back_img.save(file_path)
+        file_path, save_path = file_middleware.get_save_path('.pdf', 'contract')
+        back_img.convert('RGB').save(
+            file_path,
+            'PDF',
+            resolution=100.0,
+            save_all=True,
+            append_images=[]
+        )
         return save_path
 
 
