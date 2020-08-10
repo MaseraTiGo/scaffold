@@ -224,6 +224,10 @@ class Get(NoAuthorizedApi):
             'logo_url': school.logo_url,
             'name': school.name,
             'content': school.content,
-            'production_list': school.production_list
+            'production_list': sorted(
+                school.production_list,
+                key=lambda x: x['quantity'],
+                reverse=True
+            )
         }
         return response

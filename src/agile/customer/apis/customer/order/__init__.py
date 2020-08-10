@@ -21,7 +21,6 @@ from abs.services.agent.customer.manager import AgentCustomerServer
 from abs.services.crm.agent.manager import AgentServer
 
 
-
 class Add(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.order_info = RequestField(
@@ -148,6 +147,14 @@ class Get(CustomerAuthorizedApi):
                     'remark': CharField(desc = "备注")
                 }
             )
+        ),
+        'invoice_info': DictField(
+            desc="发货信息",
+            conf={
+                'name': CharField(desc="姓名"),
+                'phone': CharField(desc="手机号"),
+                'address': CharField(desc="地址")
+            }
         )
     })
 
@@ -194,7 +201,12 @@ class Get(CustomerAuthorizedApi):
                 'brand_name': order_item.snapshoot.brand_name,
                 'production_name': order_item.snapshoot.production_name,
                 'remark': order_item.snapshoot.remark
-            } for order_item in order.order_item_list]
+            } for order_item in order.order_item_list],
+            'invoice_info': {
+                'name': order.invoice.name,
+                'phone': order.invoice.phone,
+                'address': order.invoice.address
+            }
         }
         return response
 

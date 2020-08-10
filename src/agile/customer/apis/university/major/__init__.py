@@ -179,9 +179,9 @@ class Duration(NoAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        pass
+        return []
 
-    def fill(self, response):
+    def fill(self, response, l):
         data_list = [{
             'id': value[0],
             'name': value[1]
