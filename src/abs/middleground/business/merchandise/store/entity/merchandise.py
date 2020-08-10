@@ -69,4 +69,3 @@ class Merchandise(BaseModel):
     def search(cls, **attrs):
         merchandise_qs = cls.query().filter(**attrs)
         return merchandise_qs
-
