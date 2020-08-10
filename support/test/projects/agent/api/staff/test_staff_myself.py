@@ -2,10 +2,10 @@
 
 import json
 
-from support.common.testcase.crm_api_test_case import CrmAPITestCase
+from support.common.testcase.agent_api_test_case import AgentAPITestCase
 
 
-class StaffTestCase(CrmAPITestCase):
+class StaffTestCase(AgentAPITestCase):
 
     def setUp(self):
         self.update_info = {
@@ -23,7 +23,7 @@ class StaffTestCase(CrmAPITestCase):
     def tearDown(self):
         pass
 
-    def assert_staff_fields(self, staff, need_id=False):
+    def assert_staff_fields(self, staff, need_id = False):
         if need_id:
             self.assertTrue('id' in staff)
         self.assertTrue('nick' in staff)
@@ -49,7 +49,3 @@ class StaffTestCase(CrmAPITestCase):
         result = self.access_api(api)
         self.assertTrue('staff_info' in result)
         self.assert_staff_fields(result['staff_info'])
-
-    def test_update_staff(self):
-        api = "staff.myself.update"
-        self.access_api(api=api, myself_info=json.dumps(self.update_info))

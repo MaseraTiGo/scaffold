@@ -2,10 +2,10 @@
 
 import json
 
-from support.common.testcase.crm_api_test_case import CrmAPITestCase
+from support.common.testcase.agent_api_test_case import AgentAPITestCase
 
 
-class StaffTestCase(CrmAPITestCase):
+class StaffTestCase(AgentAPITestCase):
 
     def setUp(self):
         self.staff_info = {
@@ -32,7 +32,7 @@ class StaffTestCase(CrmAPITestCase):
     def tearDown(self):
         pass
 
-    def assert_staff_fields(self, staff, need_id=False):
+    def assert_staff_fields(self, staff, need_id = False):
         if need_id:
             self.assertTrue('id' in staff)
         self.assertTrue('nick' in staff)
@@ -43,6 +43,9 @@ class StaffTestCase(CrmAPITestCase):
         self.assertTrue('phone' in staff)
         self.assertTrue('email' in staff)
         self.assertTrue('work_number' in staff)
+        self.assertTrue('username' in staff)
+        self.assertTrue('status' in staff)
+        self.assertTrue('last_login_time' in staff)
         self.assertTrue('is_admin' in staff)
         self.assertTrue('department_role_list' in staff)
         dr_list = staff['department_role_list']
@@ -53,48 +56,20 @@ class StaffTestCase(CrmAPITestCase):
             self.assertTrue('role_id' in dr)
             self.assertTrue('role_name' in dr)
 
-    def test_create_staff(self):
-        api = 'staff.add'
-        self.access_api(api=api, staff_info=json.dumps(self.staff_info))
 
     def test_search_staff(self):
         api = 'staff.search'
         current_page = 1
         result = self.access_api(
-            api=api,
-            current_page=current_page,
-            search_info=json.dumps({})
+            api = api,
+            current_page = current_page,
+            search_info = json.dumps({})
         )
         self.assertTrue("data_list" in result)
         self.assertTrue("total" in result)
         self.assertTrue("total_page" in result)
-
-        if result['total'] <= 0:
-            self.test_create_staff()
-            result = self.access_api(
-                api=api,
-                current_page=current_page,
-                search_info=json.dumps({})
-            )
-
         for staff in result['data_list']:
             self.assert_staff_fields(staff, True)
         return result['data_list']
 
-    def test_get_staff(self):
-        staff_list = self.test_search_staff()
-        staff_id = staff_list[-1]['id']
-        api = "staff.get"
-        result = self.access_api(api=api, staff_id=staff_id)
-        self.assertTrue('staff_info' in result)
-        self.assert_staff_fields(result['staff_info'])
 
-    def test_update_staff(self):
-        staff_list = self.test_search_staff()
-        staff_id = staff_list[-1]['id']
-        api = "staff.update"
-        self.access_api(
-            api=api,
-            staff_id=staff_id,
-            staff_info=json.dumps(self.update_info)
-        )

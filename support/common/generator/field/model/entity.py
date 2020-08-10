@@ -123,7 +123,7 @@ class MajorEntity(BaseHelper):
         if not hasattr(self, '_enume'):
             from abs.services.crm.university.store import Major
             self._enume = []
-            for major in school.query():
+            for major in Major.query():
                 self._enume.append(major)
 
         select_enum = self._enume.copy()
