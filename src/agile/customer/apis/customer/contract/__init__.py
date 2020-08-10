@@ -7,7 +7,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.customer.manager.api import CustomerAuthorizedApi
-from abs.services.customer.order.manager import OrderItemServer
+from abs.services.customer.order.manager import OrderItemServer, OrderServer
 from infrastructure.core.exception.business_error import BusinessError
 from abs.services.customer.order.manager import ContractServer
 from abs.services.crm.agent.manager import AgentServer
@@ -91,7 +91,8 @@ class Add(CustomerAuthorizedApi):
             customer_id=order_item.order.customer_id,
             **contract_info
         )
-        order_item.order.invoice.update(
+        order = OrderServer.get(order_item.order.id)
+        order.mg_order.invoice.update(
             name=contract_info['name'],
             phone=contract_info['phone'],
             identification=contract_info['identification']
