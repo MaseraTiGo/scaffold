@@ -1,7 +1,7 @@
 server {
 
     listen 80;
-    server_name example.org;
+    server_name education.bq.com;
     charset utf-8;
 
     location ^~ /interface/ {
@@ -24,11 +24,20 @@ server {
     location /resource/ {
         alias   /nginx/resource/;
     }
-    
-    location /a/ {
-        alias   /nginx/agent/;
+
+}
+
+server {
+
+    listen 80;
+    server_name education-a.bq.com;
+    charset utf-8;
+
+    location / {
+        root   /nginx/agent;
         try_files $uri /index.html;
         index  index.html index.htm;
     }
 
 }
+
