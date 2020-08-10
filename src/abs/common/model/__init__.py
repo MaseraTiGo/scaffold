@@ -88,8 +88,12 @@ class BaseModel(Model):
                     elif isinstance(field, ForeignKey):
                         temp.update({field.name: val})
                     qs=qs.filter(**temp)
-
         return qs
+
+    @classmethod
+    def search(cls, **attrs):
+        cls_qs = cls.query().filter(**attrs)
+        return cls_qs
 
     def update(self, **kwargs):
         valid_files = []
