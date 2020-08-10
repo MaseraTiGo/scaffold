@@ -362,6 +362,8 @@ class Cancel(CustomerAuthorizedApi):
 
     def execute(self, request):
         order = OrderServer.get(request.order_id)
+        if order.customer_id != self.auth_user.id:
+            raise BusinessError('没有权限取消该订单')
         OrderServer.cancel(order)
 
     def fill(self, response):
