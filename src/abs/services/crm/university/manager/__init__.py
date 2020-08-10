@@ -147,7 +147,7 @@ class UniversityServer(BaseManager):
     @classmethod
     def search_major(cls, current_page, **search_info):
         major_qs = cls.search_all_major(**search_info).\
-                    order_by("-is_hot", "create_time")
+                    order_by("-is_hot", "-create_time")
         splitor = Splitor(current_page, major_qs)
         return splitor
 
