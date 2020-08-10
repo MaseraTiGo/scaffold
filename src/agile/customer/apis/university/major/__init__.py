@@ -8,6 +8,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.base.api import NoAuthorizedApi
 from abs.services.crm.university.manager import UniversityServer
+from abs.services.agent.goods.utils.constant import DurationTypes
 
 
 class All(NoAuthorizedApi):
@@ -178,13 +179,12 @@ class Duration(NoAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        duration_mapping = UniversityServer.get_duration()
-        return duration_mapping
+        pass
 
-    def fill(self, response, duration_mapping):
+    def fill(self, response):
         data_list = [{
-            'id': key,
-            'name': value
-        } for key, value in duration_mapping.items()]
+            'id': value[0],
+            'name': value[1]
+        } for value in DurationTypes.CHOICES]
         response.data_list = data_list
         return response
