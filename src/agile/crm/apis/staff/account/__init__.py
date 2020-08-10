@@ -21,13 +21,13 @@ class Login(NoAuthorizedApi):
     员工登录接口
     """
     request = with_metaclass(RequestFieldSet)
-    request.username = RequestField(CharField, desc="账号")
-    request.password = RequestField(CharField, desc="密码")
+    request.username = RequestField(CharField, desc = "账号")
+    request.password = RequestField(CharField, desc = "密码")
 
     response = with_metaclass(ResponseFieldSet)
-    response.access_token = ResponseField(CharField, desc="访问凭证")
-    response.renew_flag = ResponseField(CharField, desc="续签标识")
-    response.expire_time = ResponseField(CharField, desc="到期时间")
+    response.access_token = ResponseField(CharField, desc = "访问凭证")
+    response.renew_flag = ResponseField(CharField, desc = "续签标识")
+    response.expire_time = ResponseField(CharField, desc = "到期时间")
 
     @classmethod
     def get_desc(cls):
@@ -68,7 +68,7 @@ class Logout(StaffAuthorizedApi):
 
     def execute(self, request):
         staff = self.auth_user
-        StaffAccountServer.logout(staff)
+        StaffAccountServer.logout(self._token.auth_token)
 
     def fill(self, response):
         return response
