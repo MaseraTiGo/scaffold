@@ -16,20 +16,20 @@ from abs.services.agent.account.manager import AgentStaffAccountServer
 
 class Add(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.agent_id = RequestField(IntField, desc = "代理商id")
+    request.agent_id = RequestField(IntField, desc="代理商id")
     request.contacts_info = RequestField(
         DictField,
-        desc = "联系人信息",
-        conf = {
-            'contacts': CharField(desc = "联系人"),
-            'phone': CharField(desc = "联系电话"),
-            'email': CharField(desc = "联系邮箱"),
-            'gender': CharField(desc = "性别"),
+        desc="联系人信息",
+        conf={
+            'contacts': CharField(desc="联系人"),
+            'phone': CharField(desc="联系电话"),
+            'email': CharField(desc="联系邮箱"),
+            'gender': CharField(desc="性别"),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.contacts_id = ResponseField(IntField, desc = "联系人ID")
+    response.contacts_id = ResponseField(IntField, desc="联系人ID")
 
     @classmethod
     def get_desc(cls):
@@ -56,39 +56,35 @@ class Add(StaffAuthorizedApi):
 
 class Search(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.current_page = RequestField(IntField, desc = "当前页面")
-    request.agent_id = RequestField(IntField, desc = "代理商id")
+    request.current_page = RequestField(IntField, desc="当前页面")
+    request.agent_id = RequestField(IntField, desc="代理商id")
     request.search_info = RequestField(
         DictField,
-        desc = "搜索联系人",
-        conf = {
+        desc="搜索联系人",
+        conf={
 
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.total = ResponseField(IntField, desc = "数据总数")
-    response.total_page = ResponseField(IntField, desc = "总页码数")
+    response.total = ResponseField(IntField, desc="数据总数")
+    response.total_page = ResponseField(IntField, desc="总页码数")
     response.data_list = ResponseField(
         ListField,
-        desc = "联系人列表",
-        fmt = DictField(
-            desc = "联系人内容",
-            conf = {
-                'id': IntField(desc = "联系人id"),
-                'contacts': CharField(desc = "联系人"),
-                'phone': CharField(desc = "联系电话"),
-                'email': CharField(desc = "联系邮箱"),
+        desc="联系人列表",
+        fmt=DictField(
+            desc="联系人内容",
+            conf={
+                'id': IntField(desc="联系人id"),
+                'contacts': CharField(desc="联系人"),
+                'phone': CharField(desc="联系电话"),
+                'email': CharField(desc="联系邮箱"),
                 'gender': CharField(
-                    desc = "性别",
-                    choices = GenderTypes.CHOICES
+                    desc="性别",
+                    choices=GenderTypes.CHOICES
                 ),
-                'account': CharField(desc = "账号"),
-                'account_status': CharField(
-                    desc = "账号状态",
-                    choices = StatusTypes.CHOICES
-                ),
-                'create_time': DatetimeField(desc = "添加时间"),
+                'account': CharField(desc="账号"),
+                'create_time': DatetimeField(desc="添加时间"),
             }
         )
     )
@@ -120,7 +116,6 @@ class Search(StaffAuthorizedApi):
                 "email":contacts.email,
                 "gender":contacts.gender,
                 "account":contacts.account,
-                "account_status":contacts.account_status,
                 "create_time":contacts.create_time,
               } for contacts in spliter.data]
         response.data_list = data_list
@@ -131,15 +126,15 @@ class Search(StaffAuthorizedApi):
 
 class Update(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.contacts_id = RequestField(IntField, desc = "代理商id")
+    request.contacts_id = RequestField(IntField, desc="代理商id")
     request.contacts_info = RequestField(
         DictField,
-        desc = "联系人信息",
-        conf = {
-            'contacts': CharField(desc = "联系人"),
-            'phone': CharField(desc = "联系电话"),
-            'email': CharField(desc = "联系邮箱"),
-            'gender': CharField(desc = "性别"),
+        desc="联系人信息",
+        conf={
+            'contacts': CharField(desc="联系人"),
+            'phone': CharField(desc="联系电话"),
+            'email': CharField(desc="联系邮箱"),
+            'gender': CharField(desc="性别"),
         }
     )
     response = with_metaclass(ResponseFieldSet)
@@ -164,13 +159,13 @@ class Update(StaffAuthorizedApi):
 
 class AddAccount(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.contacts_id = RequestField(IntField, desc = "代理商id")
+    request.contacts_id = RequestField(IntField, desc="代理商id")
     request.contacts_info = RequestField(
         DictField,
-        desc = "联系人账号信息",
-        conf = {
-            'account': CharField(desc = "账号"),
-            'password': CharField(desc = "密码"),
+        desc="联系人账号信息",
+        conf={
+            'account': CharField(desc="账号"),
+            'password': CharField(desc="密码"),
         }
     )
     response = with_metaclass(ResponseFieldSet)
@@ -205,7 +200,7 @@ class AddAccount(StaffAuthorizedApi):
         }
         AgentStaffAccountServer.create(**add_account_info)
         contacts.update(
-            account = request.contacts_info["account"],
+            account=request.contacts_info["account"],
         )
 
     def fill(self, response):
