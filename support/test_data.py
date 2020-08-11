@@ -4,7 +4,7 @@ import init_envt
 
 from infrastructure.utils.common.single import Single
 from support.environment.simulate import CrmSimulateMaker, \
-        CustomerSimulateMaker
+        CustomerSimulateMaker, AgentSimulateMaker
 
 
 class TestDataManager(Single):
@@ -16,6 +16,8 @@ class TestDataManager(Single):
         # generate customer by staff
         CustomerSimulateMaker().run(1)
 
+        # generate agent
+        AgentSimulateMaker().run(1)
 
 if __name__ == "__main__":
     TestDataManager().run()

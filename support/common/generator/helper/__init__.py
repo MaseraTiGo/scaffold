@@ -18,7 +18,6 @@ from support.common.generator.helper.business.crm.staff import StaffGenerator
 from support.common.generator.helper.business.crm.account import StaffAccountGenerator
 from support.common.generator.helper.business.crm.university.school import SchoolGenerator
 from support.common.generator.helper.business.crm.university.major import MajorGenerator
-from support.common.generator.helper.business.crm.production import GoodsGenerator
 from support.common.generator.helper.business.crm.agent import AgentGenerator
 from support.common.generator.helper.business.crm.agent.contacts import ContactsGenerator
 
@@ -30,3 +29,8 @@ from support.common.generator.helper.business.customer.finance.balance import Cu
 # controller service generator
 from support.common.generator.helper.business.controller.staff import ControllerStaffGenerator
 from support.common.generator.helper.business.controller.account import ControllerStaffAccountGenerator
+
+# agent service generator
+from support.common.generator.helper.business.agent.staff import AgentStaffGenerator
+from support.common.generator.helper.business.agent.account import AgentStaffAccountGenerator
+from support.common.generator.helper.business.agent.goods import GoodsGenerator
