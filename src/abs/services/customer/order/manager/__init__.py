@@ -1,5 +1,6 @@
 # coding=UTF-8
 import json
+import datetime
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
@@ -67,6 +68,18 @@ class OrderServer(BaseManager):
                 snapshoot.specification_id
             )
             specification.update(stock=specification.stock+snapshoot.count)
+
+    @classmethod
+    def auto_cancel(cls):
+        expire_time = datetime.datetime.now() - datetime.timedelta(minutes=30)
+        order_list = Order.search(
+            status=OrderStatus.ORDER_LAUNCHED,
+            create_time__lt=expire_time
+        )
+        mg_OrderServer.hung_order(order_list)
+        for order in order_list:
+            order.update(status=OrderStatus.ORDER_CLOSED)
+            cls.cancel(order)
 
     @classmethod
     def add(
