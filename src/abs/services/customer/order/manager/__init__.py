@@ -1,5 +1,6 @@
 # coding=UTF-8
 import json
+import datetime
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
@@ -67,6 +68,18 @@ class OrderServer(BaseManager):
                 snapshoot.specification_id
             )
             specification.update(stock=specification.stock+snapshoot.count)
+
+    @classmethod
+    def auto_cancel(cls):
+        expire_time = datetime.datetime.now() - datetime.timedelta(minutes=30)
+        order_list = Order.search(
+            status=OrderStatus.ORDER_LAUNCHED,
+            create_time__lt=expire_time
+        )
+        mg_OrderServer.hung_order(order_list)
+        for order in order_list:
+            order.update(status=OrderStatus.ORDER_CLOSED)
+            cls.cancel(order)
 
     @classmethod
     def add(
@@ -197,7 +210,7 @@ class ContractServer(BaseManager):
     @classmethod
     def create(cls, order_item, agent, **search_info):
         base64_image = search_info.pop('autograph')
-        autograph_url, contract_url = image_middleware.get_contract(
+        autograph_url, contract_url, contract_img_url = image_middleware.get_contract(
             agent.name,
             agent.official_seal,
             base64_image,
@@ -207,7 +220,8 @@ class ContractServer(BaseManager):
             'order_item_id': order_item.id,
             'agent_id': agent.id,
             'autograph': autograph_url,
-            'url': json.dumps([contract_url])
+            'url': json.dumps([contract_url]),
+            'img_url': json.dumps([contract_img_url])
         })
         contract = Contract.create(**search_info)
         mg_OrderServer.finish(order_item.order.mg_order_id)

@@ -19,6 +19,7 @@ from abs.middleground.business.production.manager import ProductionServer
 from abs.middleware.pay import pay_middleware
 from abs.services.agent.customer.manager import AgentCustomerServer
 from abs.services.crm.agent.manager import AgentServer
+from abs.middleground.business.order.utils.constant import OrderStatus
 
 
 class Add(CustomerAuthorizedApi):
@@ -274,6 +275,7 @@ class Search(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
+        OrderServer.auto_cancel()
         page_list = OrderServer.search(
             request.current_page,
             customer_id = self.auth_user.id,
@@ -349,6 +351,8 @@ class Pay(CustomerAuthorizedApi):
 
     def execute(self, request):
         order = OrderServer.get(request.order_id)
+        if order.status != OrderStatus.ORDER_LAUNCHED:
+            raise BusinessError('订单状态异常，待支付订单才能付款')
         prepay_id = OrderServer.pay(order, request.pay_type)
         pay_info = pay_middleware.parse_pay_info(prepay_id, request.pay_type)
         return pay_info
@@ -366,7 +370,7 @@ class Cancel(CustomerAuthorizedApi):
 
     @classmethod
     def get_desc(cls):
-        return "付款"
+        return "取消订单"
 
     @classmethod
     def get_author(cls):
