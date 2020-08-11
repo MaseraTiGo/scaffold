@@ -1,5 +1,7 @@
 # coding=UTF-8
 
+import datetime
+
 from infrastructure.core.exception.business_error import BusinessError
 from abs.common.manager import BaseManager
 from abs.middleware.token import TokenManager
@@ -11,7 +13,7 @@ class AccountServer(BaseManager):
     APPLY_CLS = None
 
     @classmethod
-    def create(cls, role_id, username, password):
+    def create(cls, role_id, username, password, ip=""):
         account = cls.APPLY_CLS.get_byrole(role_id=role_id)
         if account is not None:
             raise BusinessError('客户已存在，不能创建账号！')
@@ -20,6 +22,7 @@ class AccountServer(BaseManager):
             role_id=role_id,
             username=username,
             password=password,
+            register_ip=ip,
             status=StatusTypes.ENABLE
         )
         token = TokenManager.generate_token(
@@ -33,14 +36,20 @@ class AccountServer(BaseManager):
         return TokenManager.renew_token(auth_str, renew_str)
 
     @classmethod
-    def login(cls, username, password):
+    def login(cls, username, password, ip=""):
         is_exsited, account = cls.APPLY_CLS.is_exsited(username, password)
-        if is_exsited and password:
-            token = TokenManager.generate_token(
-                account.role_type,
-                account.role_id
-            )
-            return token
+        if is_exsited:
+            if account.status == StatusTypes.ENABLE:
+                token = TokenManager.generate_token(
+                    account.role_type,
+                    account.role_id
+                )
+                account.update(
+                    last_login_ip="",
+                    last_login_time=datetime.datetime.now()
+                )
+                return token
+            raise BusinessError('账号状态不可用！')
         raise BusinessError('账号或密码错误！')
 
     @classmethod
