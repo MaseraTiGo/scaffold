@@ -5,7 +5,7 @@ from support.common.generator.field.normal import *
 from support.common.generator.field.model import *
 
 
-class CrmStaffLoader(BaseLoader):
+class AgentStaffLoader(BaseLoader):
 
     def generate(self):
         birthday = DateHelper().generate(years=30)

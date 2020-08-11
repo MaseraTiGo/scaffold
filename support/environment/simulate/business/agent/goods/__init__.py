@@ -3,7 +3,8 @@ import random
 from support.common.generator.field.normal import \
         AmountHelper
 from support.common.generator.field.model import \
-        DespatchServiceConstant, UseStatusConstant, DurationTypesConstant
+        DespatchServiceConstant, UseStatusConstant, \
+        DurationTypesConstant, CategoryTypesConstant
 from support.common.maker import BaseLoader
 
 
@@ -14,6 +15,7 @@ class GoodsLoader(BaseLoader):
         goods_list = []
         for _ in range(times):
             title = "这是一个商品" + str(random.randint(0, 100)).rjust(3, '0')
+            category = CategoryTypesConstant().generate()
             goods = {
                 'title': title,
                 'description': "这是一个商品描述",
@@ -27,6 +29,7 @@ class GoodsLoader(BaseLoader):
                 'use_status': UseStatusConstant().generate(),
                 'remark': "这是一个备注",
                 'duration': DurationTypesConstant().generate(),
+                'category': category,
             }
             goods_list.append(goods)
         return goods_list
