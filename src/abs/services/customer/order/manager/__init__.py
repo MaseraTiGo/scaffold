@@ -96,12 +96,20 @@ class OrderServer(BaseManager):
             **invoice_baseinfos
         )
 
-        order = Order.create(
-            customer_id = customer.id,
-            mg_order_id = mg_order.id,
-            agent_id = agent.id,
-            source = source
-        )
+        create_info = {
+            'customer_id': customer.id,
+            'mg_order_id': mg_order.id,
+            'agent_id': agent.id,
+            'source': source,
+            'number': mg_order.number,
+            'status': mg_order.status
+        }
+        if address:
+            create_info.update({
+                'name': address.contacts,
+                'phone': address.phone
+            })
+        order = Order.create(**create_info)
         mapping = {}
         for specification in specification_list:
             mapping.update({
@@ -121,7 +129,9 @@ class OrderServer(BaseManager):
                 major_name = specification.merchandise.goods.major.name,
                 duration = specification.merchandise.goods.duration
             )
-            specification.update(stock=specification.stock-specification.order_count)
+            specification.update(
+                stock=specification.stock-specification.order_count
+            )
         return order
 
     @classmethod
@@ -138,6 +148,17 @@ class OrderServer(BaseManager):
             order.mg_order.strike_price
         )
         return prepay_id
+
+    @classmethod
+    def pay_success_callback(cls, output_record_number):
+        mg_order = mg_OrderServer.pay_success_callback(
+            output_record_number
+        )
+        order = cls.search_all(mg_order_id=mg_order.id).first()
+        order.update(
+            status=mg_order.status,
+            last_payment_time=mg_order.payment.last_payment_time
+        )
 
 
 class OrderItemServer(BaseManager):
@@ -190,7 +211,7 @@ class ContractServer(BaseManager):
         })
         contract = Contract.create(**search_info)
         mg_OrderServer.finish(order_item.order.mg_order_id)
-
+        order_item.order.update(status=OrderStatus.ORDER_FINISHED)
         return contract
 
     @classmethod

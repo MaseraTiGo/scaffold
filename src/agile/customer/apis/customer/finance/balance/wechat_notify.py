@@ -6,7 +6,7 @@ from infrastructure.log.base import logger
 from infrastructure.core.exception.business_error import BusinessError
 from abs.services.customer.finance.manager import CustomerFinanceServer
 from abs.middleware.pay import pay_middleware
-from abs.middleground.business.order.manager import OrderServer as mg_OrderServer
+from abs.services.customer.order.manager import OrderServer
 
 
 def wechat_top_up_notify(request):
@@ -72,7 +72,7 @@ def wechat_order_pay_notify(request):
 
         pay_time = datetime.datetime.strptime(data['time_end'], '%Y%m%d%H%M%S')
         order_sn = data['out_trade_no']
-        mg_OrderServer.pay_success_callback(order_sn)
+        OrderServer.pay_success_callback(order_sn)
 
         return success_response()
     except Exception as e:

@@ -13,8 +13,9 @@ class Contract(BaseModel):
     phone = CharField(verbose_name="联系电话", max_length=16, default="")
     email = TextField(verbose_name="emali", max_length=32, default="")
     identification = CharField(verbose_name="身份证号", max_length=24, default="")
-    autograph = TextField(verbose_name="签名URL", default="[]")
+    autograph = TextField(verbose_name="签名URL", default="")
     url = TextField(verbose_name="合同url", default="[]")
+    img_url = TextField(verbose_name="合同图片", default='[]')
 
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)

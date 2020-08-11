@@ -92,6 +92,10 @@ class Add(CustomerAuthorizedApi):
             **contract_info
         )
         order = OrderServer.get(order_item.order.id)
+        order.update(
+            name=contract_info['name'],
+            phone=contract_info['phone']
+        )
         order.mg_order.invoice.update(
             name=contract_info['name'],
             phone=contract_info['phone'],

@@ -3,6 +3,7 @@
 from abs.common.model import BaseModel, IntegerField, CharField, DateTimeField, timezone
 from abs.services.customer.order.settings import DB_PREFIX
 from abs.services.customer.order.utils.constant import OrderSource
+from abs.middleground.business.order.utils.constant import OrderStatus
 
 
 class Order(BaseModel):
@@ -16,6 +17,21 @@ class Order(BaseModel):
         choices = OrderSource.CHOICES,
         default = OrderSource.OTHER
     )
+
+    number = CharField(verbose_name="订单编号", max_length=24, default='')
+    status = CharField(
+        verbose_name="订单状态",
+        max_length=24,
+        choices=OrderStatus.CHOICES,
+        default=OrderStatus.ORDER_LAUNCHED
+    )
+    last_payment_time = DateTimeField(
+        verbose_name="最后支付时间",
+        null=True,
+        default=None,
+    )
+    name = CharField(verbose_name="姓名", max_length=16, default="")
+    phone = CharField(verbose_name="手机号", max_length=24, default="")
 
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)

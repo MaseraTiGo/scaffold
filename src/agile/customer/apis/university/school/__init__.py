@@ -124,7 +124,11 @@ class Search(NoAuthorizedApi):
             'logo_url': school.logo_url,
             'name': school.name,
             'content': school.content,
-            'production_list': school.production_list
+            'production_list': sorted(
+                school.production_list,
+                key=lambda x: x['quantity'],
+                reverse=True
+            )
         } for school in page_list.data]
         response.data_list = data_list
         response.total = page_list.total

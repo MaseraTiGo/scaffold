@@ -123,7 +123,7 @@ class Get(CustomerAuthorizedApi):
         'strike_price': IntField(desc = "价格"),
         'create_time': DatetimeField(desc = "下单时间"),
         'last_payment_type': CharField(desc = '付款方式'),
-        'last_payment_time': CharField(desc = "付款时间"),
+        'last_payment_time': DatetimeField(desc = "付款时间"),
         'last_payment_number': CharField(desc = "最后付款单号"),
         'contract_background': CharField(desc = "合同url"),
         'despatch_type': CharField(desc = "发货方式"),

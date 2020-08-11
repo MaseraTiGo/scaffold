@@ -213,6 +213,7 @@ class OrderServer(BaseManager):
         order.update(
             status=OrderStatus.PAYMENT_FINISHED
         )
+        return order
 
     @classmethod
     def pay_fail_callback(cls, output_record_number):
