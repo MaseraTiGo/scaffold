@@ -44,7 +44,7 @@ class ImageMiddleware(object):
         )
 
         back_image_path = os.path.join(path, 'contract.png')
-        font_file = os.path.join(path, './simsun.ttc')
+        font_file = os.path.join(path, 'simsun.ttc')
 
         word_config_list = [
             {
