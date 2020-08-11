@@ -76,12 +76,12 @@ class ImageMiddleware(object):
                 'image_path': autograph_f
             }
         ]
-        contract_url = image_process.add(
+        contract_url, contract_img_url = image_process.add(
             back_image_path,
             word_config_list,
             img_config_list
         )
-        return autograph_url, contract_url
+        return autograph_url, contract_url, contract_img_url
 
 
 image_middleware = ImageMiddleware()

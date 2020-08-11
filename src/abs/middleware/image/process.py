@@ -58,12 +58,12 @@ class ImageProcess(object):
             save_all=True,
             append_images=[]
         )
-        img_file_path, _ = file_middleware.get_save_path(
+        img_file_path, img_save_path = file_middleware.get_save_path(
             '.png',
             'contract_img'
         )
         back_img.save(img_file_path)
-        return save_path
+        return save_path, img_save_path
 
 
 image_process = ImageProcess()

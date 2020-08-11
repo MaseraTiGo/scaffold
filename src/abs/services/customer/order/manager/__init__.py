@@ -210,7 +210,7 @@ class ContractServer(BaseManager):
     @classmethod
     def create(cls, order_item, agent, **search_info):
         base64_image = search_info.pop('autograph')
-        autograph_url, contract_url = image_middleware.get_contract(
+        autograph_url, contract_url, contract_img_url = image_middleware.get_contract(
             agent.name,
             agent.official_seal,
             base64_image,
@@ -220,7 +220,8 @@ class ContractServer(BaseManager):
             'order_item_id': order_item.id,
             'agent_id': agent.id,
             'autograph': autograph_url,
-            'url': json.dumps([contract_url])
+            'url': json.dumps([contract_url]),
+            'img_url': json.dumps([contract_img_url])
         })
         contract = Contract.create(**search_info)
         mg_OrderServer.finish(order_item.order.mg_order_id)
