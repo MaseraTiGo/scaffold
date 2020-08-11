@@ -57,8 +57,6 @@ class OrderServer(BaseManager):
 
     @classmethod
     def cancel(cls, order):
-        if order.mg_order.status != OrderStatus.ORDER_LAUNCHED:
-            raise BusinessError('待付款订单才能取消')
         mg_OrderServer.close(order.mg_order_id)
         snapshoot_list = mg_OrderServer.search_all_snapshoot(
             requirement=order.mg_order.requirement
