@@ -116,7 +116,9 @@ class PermissionServer(BaseManager):
     def get_all_organization_byappkey(cls, appkey):
         platform = cls.get_platform_byappkey(appkey)
         helper = permission_register.get_helper(platform).organization
-        all_organization = helper.root.get_tree()
+        all_organization = []
+        if helper.root is not None:
+            all_organization = helper.root.get_tree()
         return all_organization
 
     @classmethod
@@ -199,7 +201,9 @@ class PermissionServer(BaseManager):
     def get_all_position_byappkey(cls, appkey):
         platform = cls.get_platform_byappkey(appkey)
         helper = permission_register.get_helper(platform).position
-        all_position = helper.root.get_tree()
+        all_position = []
+        if helper.root is not None:
+            all_position = helper.root.get_tree()
         return all_position
 
     @classmethod
