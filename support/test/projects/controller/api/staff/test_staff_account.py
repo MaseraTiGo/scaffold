@@ -1,20 +1,30 @@
 # coding=UTF-8
 
-import os
 import json
 import hashlib
 
-from support.common.testcase.controller_api_test_case import ControllerAPITestCase
+from support.common.testcase.controller_api_test_case import \
+        ControllerAPITestCase
 
 
 class StaffAccountTest(ControllerAPITestCase):
 
     def setUp(self):
-        username = ''
-        password = ''
+        pass
 
     def tearDown(self):
         pass
+
+    def assert_account_fiels(self, account_info):
+        self.assertTrue('username' in account_info)
+        self.assertTrue('nick' in account_info)
+        self.assertTrue('head_url' in account_info)
+        self.assertTrue('last_login_time' in account_info)
+        self.assertTrue('last_login_ip' in account_info)
+        self.assertTrue('register_ip' in account_info)
+        self.assertTrue('status' in account_info)
+        self.assertTrue('update_time' in account_info)
+        self.assertTrue('create_time' in account_info)
 
     def test_account_login(self):
         api = 'staff.account.login'
@@ -27,11 +37,28 @@ class StaffAccountTest(ControllerAPITestCase):
         self.assertTrue('renew_flag' in result)
         self.assertTrue('expire_time' in result)
 
-
     def test_account_logout(self):
         api = 'staff.account.logout'
         params = {}
         self.access_api(api=api, **params)
+
+    def test_account_get(self):
+        api = 'staff.account.get'
+        result = self.access_api(api=api)
+        self.assertTrue('account_info' in result)
+        self.assert_account_fiels(result['account_info'])
+
+    def test_account_update(self):
+        api = 'staff.account.update'
+        update_info = {
+            'nick': "我是流氓我怕谁",
+            'head_url': "我是流氓我怕谁",
+
+        }
+        self.access_api(
+            api=api,
+            update_info=json.dumps(update_info)
+        )
 
     def test_account_password_modify(self):
         api = 'staff.account.password.modify'
@@ -39,7 +66,7 @@ class StaffAccountTest(ControllerAPITestCase):
         self.access_api(
             api=api,
             old_password=password,
-            new_password=password, 
+            new_password=password,
             repeat_password=password
         )
 
@@ -48,11 +75,11 @@ class StaffAccountTest(ControllerAPITestCase):
         params = {
             "number": "15527703115",
         }
-        result = self.access_api(api = api, is_auth = False, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue('code' in result)
 
     def test_account_image_verification_code(self):
         api = 'staff.account.vcode.image'
         params = {}
-        result = self.access_api(api = api, is_auth = False, **params)
+        result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue('code' in result)

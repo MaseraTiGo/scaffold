@@ -26,7 +26,8 @@ class PlatForm(BaseModel):
     use_status = CharField(
         verbose_name="使用状态",
         max_length=24,
-        choices=UseStatus.CHOICES
+        choices=UseStatus.CHOICES,
+        default=UseStatus.FORBIDDEN,
     )
     prefix = CharField(verbose_name="公司前缀", max_length=8)
     remark = TextField(verbose_name="备注")

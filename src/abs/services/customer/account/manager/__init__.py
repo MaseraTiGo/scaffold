@@ -1,9 +1,9 @@
 # coding=UTF-8
 
 
+from abs.middleware.token import TokenManager
 from abs.middleground.business.account.manager import AccountServer
 from abs.services.customer.account.store import CustomerAccount
-from infrastructure.core.exception.business_error import BusinessError
 
 
 class CustomerAccountServer(AccountServer):
@@ -31,3 +31,11 @@ class CustomerAccountServer(AccountServer):
         if account:
             return account
         return None
+
+    @classmethod
+    def account_login(cls,  account):
+        token = TokenManager.generate_token(
+            account.role_type,
+            account.role_id
+        )
+        return token

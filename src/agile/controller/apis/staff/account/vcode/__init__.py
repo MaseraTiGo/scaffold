@@ -55,7 +55,7 @@ class Image(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return StaffAccountServer.get_image_verification_code()
+        return "654321"
 
     def fill(self, response, code):
         response.code = code

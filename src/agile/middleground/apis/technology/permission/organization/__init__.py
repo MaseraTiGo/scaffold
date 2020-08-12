@@ -61,7 +61,7 @@ class All(NoAuthorizedApi):
     所有组织
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="当前页码")
+    request.appkey = RequestField(CharField, desc="当前值")
 
     response = with_metaclass(ResponseFieldSet)
     response.organization_list = ResponseField(
@@ -70,7 +70,7 @@ class All(NoAuthorizedApi):
         fmt=DictField(
             desc="组织详情",
             conf={
-                "id": IntField(desc="名称"),
+                "id": IntField(desc="id"),
                 "name": CharField(desc="名称"),
                 "remark": CharField(desc="备注"),
                 "description": CharField(desc="描述"),
@@ -83,7 +83,7 @@ class All(NoAuthorizedApi):
                         desc="组织详情",
                         conf={
                             "id": IntField(
-                                desc="名称",
+                                desc="id",
                                 is_required=False
                             ),
                             "name": CharField(

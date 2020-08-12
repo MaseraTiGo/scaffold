@@ -28,8 +28,8 @@ controller_pc_service.add(Get, Update)
 # from agile.controller.apis.staff.token import Renew
 # controller_pc_service.add(Renew)
 
-from agile.controller.apis.staff.account import Login, Logout
-controller_pc_service.add(Login, Logout)
+from agile.controller.apis.staff.account import Login, Logout, Get, Update
+controller_pc_service.add(Login, Logout, Get, Update)
 
 from agile.controller.apis.staff.account.vcode import Phone, Image
 controller_pc_service.add(Phone, Image)

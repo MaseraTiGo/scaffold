@@ -8,9 +8,9 @@ from abs.services.crm.staff.settings import DB_PREFIX
 class Staff(BaseModel):
 
     nick = CharField(verbose_name = "昵称", max_length = 32)
+    head_url = CharField(verbose_name = "头像URL", max_length = 256, default = "")
     name = CharField(verbose_name = "姓名", max_length = 32, default = "")
     phone = CharField(verbose_name = "手机号", max_length = 20, default = "")
-    head_url = CharField(verbose_name = "头像URL", max_length = 256, default = "")
 
     work_number = CharField(verbose_name = "工号", max_length = 24)
     is_admin = BooleanField(verbose_name = "是否是管理员", default = False)
