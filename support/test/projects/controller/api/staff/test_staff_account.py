@@ -52,7 +52,7 @@ class StaffAccountTest(ControllerAPITestCase):
         api = 'staff.account.update'
         update_info = {
             'nick': "我是流氓我怕谁",
-            'head_url': "我是流氓我怕谁",
+            'head_url': "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597232346269&di=003269ea6aa55de935f180b98f5d1222&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F6e8f56b2543cce8bffa35b22d03684fae76a1b2c56c32-COdswi_fw658",
 
         }
         self.access_api(

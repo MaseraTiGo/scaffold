@@ -7,13 +7,17 @@ Created on 2020年6月18日
 '''
 
 from infrastructure.core.field.base import CharField, DictField,\
-        IntField, ListField, BooleanField, MobileField
+        IntField, BooleanField, MobileField, DatetimeField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.controller.manager.api import StaffAuthorizedApi
+from abs.middleground.business.account.utils.constant import StatusTypes
+from abs.middleground.business.person.utils.constant import GenderTypes
+from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.services.controller.staff.manager import StaffServer
+from abs.services.controller.account.manager import StaffAccountServer
 
 
 class Get(StaffAuthorizedApi):
@@ -27,8 +31,7 @@ class Get(StaffAuthorizedApi):
         DictField,
         desc="用户详情",
         conf={
-            'nick': CharField(desc="昵称"),
-            'head_url': CharField(desc="头像"),
+            'id': IntField(desc="员工编号"),
             'name': CharField(desc="姓名"),
             'gender': CharField(desc="性别"),
             'birthday': CharField(desc="生日"),
@@ -36,20 +39,32 @@ class Get(StaffAuthorizedApi):
             'email': CharField(desc="邮箱"),
             'work_number': CharField(desc="员工工号"),
             'is_admin': BooleanField(desc="是否是管理员"),
-            'department_role_list': ListField(
-                desc='所属部门',
-                is_required=False,
-                fmt=DictField(
-                    desc="部门ID",
-                    conf={
-                        'department_role_id': IntField(desc="部门角色id"),
-                        'department_id': IntField(desc="部门id"),
-                        'department_name': CharField(desc="部门名称"),
-                        'role_id': IntField(desc="部门id"),
-                        'role_name': CharField(desc="角色名称"),
-                    }
-                )
+            'account_info': DictField(
+                desc="账号信息",
+                conf={
+                    'nick': CharField(desc="昵称"),
+                    'head_url': CharField(desc="头像"),
+                    'last_login_time': DatetimeField(desc="最后登录时间"),
+                    'last_login_ip': CharField(desc="最后登录ip"),
+                    'register_ip': CharField(desc="注册ip"),
+                    'status': CharField(
+                        desc="状态",
+                        is_required=False,
+                        choices=StatusTypes.CHOICES
+                    ),
+                    'update_time': DatetimeField(desc="更新时间"),
+                    'create_time': DatetimeField(desc="创建时间"),
+                }
             ),
+            'company_info': DictField(
+                desc="账号信息",
+                conf={
+                    'id': IntField(desc="id"),
+                    'name': CharField(desc="昵称"),
+                    'license_number': CharField(desc="营业执照"),
+                    'create_time': DatetimeField(desc="创建时间"),
+                }
+            )
         }
     )
 
@@ -62,19 +77,15 @@ class Get(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        return StaffServer.get(self.auth_user.id)
+        staff_id = self.auth_user.id
+        staff = StaffServer.get(staff_id)
+        staff.account = StaffAccountServer.get(staff_id)
+        staff.company = EnterpriseServer.get(staff.company_id)
+        return staff
 
     def fill(self, response, staff):
-        department_role_list = [{
-            'role_id': department_role.role.id,
-            'role_name': department_role.role.name,
-            'department_id': department_role.department.id,
-            'department_name': department_role.department.name,
-            'department_role_id': department_role.id,
-        } for department_role in staff.department_role_list]
         response.staff_info = {
-            'nick': staff.nick,
-            'head_url': staff.head_url,
+            'id': staff.id,
             'name': staff.person.name,
             'work_number': staff.work_number,
             'gender': staff.person.gender,
@@ -82,7 +93,22 @@ class Get(StaffAuthorizedApi):
             'phone': staff.person.phone,
             'email': staff.person.email,
             'is_admin': staff.is_admin,
-            'department_role_list': department_role_list
+            'account_info': {
+                'nick': staff.account.nick,
+                'head_url': staff.account.head_url,
+                'last_login_time': staff.account.last_login_time,
+                'last_login_ip': staff.account.last_login_ip,
+                'register_ip': staff.account.register_ip,
+                'status': staff.account.status,
+                'update_time': staff.account.update_time,
+                'create_time': staff.account.create_time,
+            },
+            'company_info': {
+                'id': staff.company.id,
+                'name': staff.company.name,
+                'license_number': staff.company.license_number,
+                'create_time': staff.company.create_time,
+            },
         }
         return response
 
@@ -96,11 +122,13 @@ class Update(StaffAuthorizedApi):
         DictField,
         desc="员工修改详情",
         conf={
-            'nick': CharField(desc="昵称", is_required=False),
-            'head_url': CharField(desc="头像", is_required=False),
             'name': CharField(desc="姓名", is_required=False),
-            'gender': CharField(desc="性别", is_required=False),
             'birthday': CharField(desc="生日", is_required=False),
+            'gender': CharField(
+                desc="性别",
+                is_required=False,
+                choices=GenderTypes.CHOICES
+            ),
             'phone': MobileField(desc="电话", is_required=False),
             'email': CharField(desc="邮箱", is_required=False),
             'work_number': CharField(desc="员工工号", is_required=False),

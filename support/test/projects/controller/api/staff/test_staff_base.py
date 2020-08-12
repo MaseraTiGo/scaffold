@@ -2,7 +2,8 @@
 
 import json
 
-from support.common.testcase.controller_api_test_case import ControllerAPITestCase
+from support.common.testcase.controller_api_test_case import \
+        ControllerAPITestCase
 
 
 class StaffTestCase(ControllerAPITestCase):
@@ -18,8 +19,6 @@ class StaffTestCase(ControllerAPITestCase):
             'gender': 'man',
         }
         self.update_info = {
-            'nick': '蜡笔小新',
-            'head_url': 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2091711702,2468700162&fm=11&gp=0.jpg',
             'name': '王海东',
             'work_number': 'Bq0002',
             'birthday': '1989-07-07',
@@ -32,11 +31,8 @@ class StaffTestCase(ControllerAPITestCase):
     def tearDown(self):
         pass
 
-    def assert_staff_fields(self, staff, need_id=False):
-        if need_id:
-            self.assertTrue('id' in staff)
-        self.assertTrue('nick' in staff)
-        self.assertTrue('head_url' in staff)
+    def assert_staff_fields(self, staff, is_search=True):
+        self.assertTrue('id' in staff)
         self.assertTrue('name' in staff)
         self.assertTrue('gender' in staff)
         self.assertTrue('birthday' in staff)
@@ -44,14 +40,24 @@ class StaffTestCase(ControllerAPITestCase):
         self.assertTrue('email' in staff)
         self.assertTrue('work_number' in staff)
         self.assertTrue('is_admin' in staff)
-        self.assertTrue('department_role_list' in staff)
-        dr_list = staff['department_role_list']
-        for dr in dr_list:
-            self.assertTrue('department_role_id' in dr)
-            self.assertTrue('department_id' in dr)
-            self.assertTrue('department_name' in dr)
-            self.assertTrue('role_id' in dr)
-            self.assertTrue('role_name' in dr)
+        if not is_search:
+            self.assertTrue('account_info' in staff)
+            account = staff['account_info']
+            self.assertTrue('nick' in account)
+            self.assertTrue('head_url' in account)
+            self.assertTrue('last_login_time' in account)
+            self.assertTrue('last_login_ip' in account)
+            self.assertTrue('register_ip' in account)
+            self.assertTrue('status' in account)
+            self.assertTrue('update_time' in account)
+            self.assertTrue('create_time' in account)
+
+            self.assertTrue('company_info' in staff)
+            company = staff['company_info']
+            self.assertTrue('id' in company)
+            self.assertTrue('name' in company)
+            self.assertTrue('license_number' in company)
+            self.assertTrue('create_time' in company)
 
     def test_create_staff(self):
         api = 'staff.add'
@@ -78,7 +84,7 @@ class StaffTestCase(ControllerAPITestCase):
             )
 
         for staff in result['data_list']:
-            self.assert_staff_fields(staff, True)
+            self.assert_staff_fields(staff)
         return result['data_list']
 
     def test_get_staff(self):
@@ -87,7 +93,7 @@ class StaffTestCase(ControllerAPITestCase):
         api = "staff.get"
         result = self.access_api(api=api, staff_id=staff_id)
         self.assertTrue('staff_info' in result)
-        self.assert_staff_fields(result['staff_info'])
+        self.assert_staff_fields(result['staff_info'], False)
 
     def test_update_staff(self):
         staff_list = self.test_search_staff()
