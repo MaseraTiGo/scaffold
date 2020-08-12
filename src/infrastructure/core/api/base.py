@@ -3,13 +3,12 @@
 from infrastructure.core.api.request import RequestFieldSet
 from infrastructure.core.api.response import ResponseFieldSet, ResponseField
 from infrastructure.core.exception.api_error import ApiCodes, api_errors
-from infrastructure.core.api.utils import with_metaclass
 
 
 class ApiInterface(object):
 
     @classmethod
-    def get_name(cls, level = 3):
+    def get_name(cls, level=3):
         name = cls.__name__.lower()
         namespace = '.'.join(cls.__module__.split('.')[level:])
         return '.'.join([namespace, name])
@@ -61,8 +60,16 @@ class BaseApi(ApiInterface, ApiHelper):
         assert self.response is not None
         assert issubclass(self.response, ResponseFieldSet)
 
-        self.request = type('tmp' + self.request.__name__, (self.request,), {})()
-        self.response = type('tmp' + self.response.__name__, (self.response,), {})()
+        self.request = type(
+            'tmp' + self.request.__name__,
+            (self.request,),
+            {}
+        )()
+        self.response = type(
+            'tmp' + self.response.__name__,
+            (self.response,),
+            {}
+        )()
 
     def parse(self, request, parms):
         for key, helper in request.get_fields().items():
@@ -72,17 +79,27 @@ class BaseApi(ApiInterface, ApiHelper):
                 try:
                     setattr(request, key, parms[key])
                 except Exception as e:
-                    raise api_errors(ApiCodes.INTERFACE_PARATERS_PARSE_WRONG, key, e)
+                    raise api_errors(
+                        ApiCodes.INTERFACE_PARATERS_PARSE_WRONG,
+                        key,
+                        e
+                    )
         return request
 
     def authorized(self, request, parms):
-        raise NotImplementedError('Please imporlement this interface in subclass')
+        raise NotImplementedError(
+            'Please imporlement this interface in subclass'
+        )
 
     def execute(self, *args, **kwargs):
-        raise NotImplementedError('Please imporlement this interface in subclass')
+        raise NotImplementedError(
+            'Please imporlement this interface in subclass'
+        )
 
     def fill(self, response, *args):
-        raise NotImplementedError('Please imporlement this interface in subclass')
+        raise NotImplementedError(
+            'Please imporlement this interface in subclass'
+        )
 
     def pack(self, response, result):
         if result is None:

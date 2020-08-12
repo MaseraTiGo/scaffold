@@ -96,15 +96,15 @@ class Update(StaffAuthorizedApi):
         DictField,
         desc="员工修改详情",
         conf={
-            'nick': CharField(desc="昵称"),
-            'head_url': CharField(desc="头像"),
-            'name': CharField(desc="姓名"),
-            'gender': CharField(desc="性别"),
-            'birthday': CharField(desc="生日"),
-            'phone': MobileField(desc="电话"),
-            'email': CharField(desc="邮箱"),
-            'work_number': CharField(desc="员工工号"),
-            'is_admin': BooleanField(desc="是否是管理员"),
+            'nick': CharField(desc="昵称", is_required=False),
+            'head_url': CharField(desc="头像", is_required=False),
+            'name': CharField(desc="姓名", is_required=False),
+            'gender': CharField(desc="性别", is_required=False),
+            'birthday': CharField(desc="生日", is_required=False),
+            'phone': MobileField(desc="电话", is_required=False),
+            'email': CharField(desc="邮箱", is_required=False),
+            'work_number': CharField(desc="员工工号", is_required=False),
+            'is_admin': BooleanField(desc="是否是管理员", is_required=False),
         }
     )
 
