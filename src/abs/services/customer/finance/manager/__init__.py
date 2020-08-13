@@ -103,7 +103,7 @@ class CustomerFinanceServer(BaseManager):
 
         prepay_id = pay_middleware.top_up(
             pay_type,
-            balance_record.number,
+            input_record.number,
             amount
         )
 
@@ -119,6 +119,8 @@ class CustomerFinanceServer(BaseManager):
     @classmethod
     def top_up_notify(cls, number, pay_time, transaction_id, price):
         input_record = TransactionServer.get_input_record_bynumber(number)
+        if not input_record:
+            raise BusinessError('付款单不存在')
         if input_record.amount != int(price):
             raise BusinessError('金额不正确')
         if input_record:

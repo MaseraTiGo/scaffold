@@ -157,6 +157,10 @@ class OrderServer(BaseManager):
             last_payment_time = mg_order.payment.last_payment_time
         )
 
+    @classmethod
+    def pay_fail_callback(cls, output_record_number):
+        mg_OrderServer.pay_fail_callback(output_record_number)
+
 
 class OrderItemServer(BaseManager):
 

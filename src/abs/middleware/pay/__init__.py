@@ -113,5 +113,8 @@ class PayMiddleware(object):
     def wechant_check_sign(self, kwargs):
         return mini_mch_server.check_sign(kwargs)
 
+    def alipay_check_sign(self, kwargs):
+        return alipay_extend.check_sign(kwargs)
+
 
 pay_middleware = PayMiddleware()

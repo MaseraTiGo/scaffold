@@ -4,12 +4,10 @@ from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
-from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.models import School, Major, Relations
 from abs.services.agent.goods.models import Goods
-from abs.services.agent.goods.utils.constant import DurationTypes
 
 
 class UniversityServer(BaseManager):
@@ -44,7 +42,8 @@ class UniversityServer(BaseManager):
 
     @classmethod
     def search_hot_school(cls, **search_info):
-        return cls.search_all_school(**search_info).order_by('-is_hot', '-create_time')[0:4]
+        search_info.update({'is_hot': True})
+        return cls.search_all_school(**search_info).order_by('-create_time')
 
     @classmethod
     def is_exsited_school(cls, name, school = None):
@@ -57,7 +56,7 @@ class UniversityServer(BaseManager):
 
     @classmethod
     def search_school_id_list(cls, **search_info):
-        return list(cls.search_all_school(**search_info).values_list('id', flat = True))
+        return list(cls.search_all_school(**search_info).values_list('id', flat=True))
 
     @classmethod
     def update_school(cls, school, **update_info):
@@ -119,6 +118,10 @@ class UniversityServer(BaseManager):
             obj.school = school
 
     @classmethod
+    def get_location(cls, **search_info):
+        return list(set(cls.search_all_school(**search_info).values_list('city', flat=True)))
+
+    @classmethod
     def hung_major(cls, obj_list):
         major_id_list = [obj.major_id for obj in obj_list]
         major_list = Major.search(id__in = major_id_list)
@@ -160,7 +163,8 @@ class UniversityServer(BaseManager):
 
     @classmethod
     def search_hot_major(cls, **search_info):
-        return cls.search_all_major(**search_info).order_by("-is_hot", "-create_time")[0:3]
+        search_info.update({'is_hot': True})
+        return cls.search_all_major(**search_info).order_by("-create_time")
 
     @classmethod
     def is_exsited_major(cls, name, major = None):
