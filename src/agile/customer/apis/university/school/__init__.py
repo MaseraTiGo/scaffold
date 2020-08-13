@@ -8,6 +8,8 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.base.api import NoAuthorizedApi
 from abs.services.crm.university.manager import UniversityServer
+from abs.services.agent.goods.manager import GoodsServer
+from abs.services.crm.agent.manager import AgentServer
 
 
 class HotSearch(NoAuthorizedApi):
@@ -16,6 +18,7 @@ class HotSearch(NoAuthorizedApi):
         DictField,
         desc="搜索学校",
         conf={
+            'name': CharField(desc="学校名称", is_required=False),
             'province': CharField(desc="学校所在省", is_required=False),
             'city': CharField(desc="学校所在市", is_required=False)
         }
@@ -85,14 +88,13 @@ class Search(NoAuthorizedApi):
                 'logo_url': CharField(desc="学校logo"),
                 'name': CharField(desc="名称"),
                 'content': CharField(desc="描述"),
-                'production_list': ListField(
-                    desc="产品列表",
+                'agent_list': ListField(
+                    desc="代理商列表",
                     fmt=DictField(
-                        desc="产品信息",
+                        desc="代理商",
                         conf={
-                            'id': IntField(desc="产品id"),
-                            'name': CharField(desc='产品名称'),
-                            'quantity': IntField(desc="商品数量")
+                            'id': IntField(desc="代理商id"),
+                            'name': CharField(desc='代理商名称'),
                         }
                     )
                 )
@@ -115,7 +117,11 @@ class Search(NoAuthorizedApi):
             request.current_page,
             **request.search_info
         )
-        UniversityServer.hung_production_list(page_list.data)
+        GoodsServer.hung_goods_forschool(page_list.data)
+        goods_list = []
+        for school in page_list.data:
+            goods_list.extend(school.goods_list)
+        AgentServer.hung_agent(goods_list)
         return page_list
 
     def fill(self, response, page_list):
@@ -124,11 +130,10 @@ class Search(NoAuthorizedApi):
             'logo_url': school.logo_url,
             'name': school.name,
             'content': school.content,
-            'production_list': sorted(
-                school.production_list,
-                key=lambda x: x['quantity'],
-                reverse=True
-            )
+            'agent_list': list(set([{
+                'id': goods.agent.id,
+                'name': goods.agent.name
+            } for goods in school.goods_list]))
         } for school in page_list.data]
         response.data_list = data_list
         response.total = page_list.total
@@ -193,18 +198,7 @@ class Get(NoAuthorizedApi):
             'id': IntField(desc="学校id"),
             'logo_url': CharField(desc="学校logo"),
             'name': CharField(desc="名称"),
-            'content': CharField(desc="描述"),
-            'production_list': ListField(
-                desc="产品列表",
-                fmt=DictField(
-                    desc="产品信息",
-                    conf={
-                        'id': IntField(desc="产品id"),
-                        'name': CharField(desc='产品名称'),
-                        'quantity': IntField(desc="商品数量")
-                    }
-                )
-            )
+            'content': CharField(desc="描述")
         }
 
     )
@@ -219,7 +213,6 @@ class Get(NoAuthorizedApi):
 
     def execute(self, request):
         school = UniversityServer.get_school(request.school_id)
-        UniversityServer.hung_production_list([school])
         return school
 
     def fill(self, response, school):
@@ -227,12 +220,7 @@ class Get(NoAuthorizedApi):
             'id': school.id,
             'logo_url': school.logo_url,
             'name': school.name,
-            'content': school.content,
-            'production_list': sorted(
-                school.production_list,
-                key=lambda x: x['quantity'],
-                reverse=True
-            )
+            'content': school.content
         }
         return response
 

@@ -84,3 +84,29 @@ class GoodsServer(BaseManager):
         for goods in goods_list:
             merchandise = mapping.get(goods.merchandise_id)
             merchandise.goods = goods
+
+    @classmethod
+    def hung_goods_forschool(cls, school_list):
+        mapping = {}
+        for school in school_list:
+            school.goods_list = []
+            mapping.update({
+                school.id: school
+            })
+        goods_list = list(Goods.search(school_id__in=mapping.keys()))
+        for goods in goods_list:
+            school = mapping.get(goods.school_id)
+            school.goods_list.append(goods)
+
+    @classmethod
+    def hung_goods_forrelations(cls, relation_list):
+        mapping = {}
+        for relation in relation_list:
+            relation.goods_list = []
+            mapping.update({
+                relation.id: relation
+            })
+        goods_list = Goods.search(relations_id__in=relation_list)
+        for goods in goods_list:
+            relation = mapping.get(goods.relations_id)
+            relation.goods_list.append(goods)

@@ -4,10 +4,7 @@ from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
-from abs.middleground.business.production.manager import ProductionServer
-from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.models import School, Major, Relations
-from abs.services.agent.goods.models import Goods
 
 
 class UniversityServer(BaseManager):
@@ -64,45 +61,6 @@ class UniversityServer(BaseManager):
             raise BusinessError("学校名字已存在")
         school.update(**update_info)
         return school
-
-    @classmethod
-    def hung_production_list(cls, school_list):
-        all_production_qs = ProductionServer.search_all()
-        school_id_list = [school.id for school in school_list]
-        goods_qs = Goods.search(
-            school_id__in = school_id_list
-        )
-        merchandise_school_mapping = {}
-        for goods in goods_qs:
-            merchandise_school_mapping.update({
-                goods.merchandise_id: goods.school_id
-            })
-        merchandise_qs = MerchandiseServer.search_all(
-            use_status = 'enable',
-            id__in = merchandise_school_mapping.keys()
-        )
-        school_production_quantity_mapping = {}
-        for merchandise in merchandise_qs:
-            school_id = merchandise_school_mapping.get(
-                merchandise.id
-            )
-            cur_quantity = school_production_quantity_mapping.get(
-                (school_id, merchandise.production_id), 0
-            )
-            school_production_quantity_mapping.update({
-                (school_id, merchandise.production_id): cur_quantity + 1
-            })
-        for school in school_list:
-            school.production_list = []
-            for production in all_production_qs:
-                cur_quantity = school_production_quantity_mapping.get(
-                    (school.id, production.id), 0
-                )
-                school.production_list.append({
-                    'id': production.id,
-                    'name': production.name,
-                    'quantity': cur_quantity
-                })
 
     @classmethod
     def hung_school(cls, obj_list):
@@ -185,7 +143,6 @@ class UniversityServer(BaseManager):
 
 class UniversityRelationsServer(BaseManager):
 
-
     @classmethod
     def create(cls, **relations_info):
         relations = Relations.create(**relations_info)
@@ -207,6 +164,16 @@ class UniversityRelationsServer(BaseManager):
 
     @classmethod
     def search_all(cls, **search_info):
+        if 'city' in search_info:
+            city = search_info.pop('city')
+            search_info.update({
+                'school__city': city
+            })
+        if 'province' in search_info:
+            province = search_info.pop('province')
+            search_info.update({
+                'school__province': province
+            })
         relations_qs = Relations.search(**search_info)
         return relations_qs
 
@@ -233,3 +200,12 @@ class UniversityRelationsServer(BaseManager):
         if relations_qs.count() > 0:
             return True
         return False
+
+    @classmethod
+    def search_all_major_list(cls, **search_info):
+        return cls.search_all(
+            **search_info
+        ).values_list(
+            'major_id',
+            flat=True
+        ).distinct()
