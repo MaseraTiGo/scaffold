@@ -7,8 +7,7 @@ from abs.common.manager import BaseManager
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
-from abs.services.crm.university.models import School
-from abs.services.crm.university.models import Major
+from abs.services.crm.university.models import School, Major, Relations
 from abs.services.agent.goods.models import Goods
 from abs.services.agent.goods.utils.constant import DurationTypes
 
@@ -178,3 +177,55 @@ class UniversityServer(BaseManager):
             raise BusinessError("学校名字已存在")
         major.update(**update_info)
         return major
+
+
+class UniversityRelationsServer(BaseManager):
+
+
+    @classmethod
+    def create(cls, **relations_info):
+        relations = Relations.create(**relations_info)
+        return relations
+
+    @classmethod
+    def get(cls, relations_id):
+        relations = Relations.get_byid(relations_id)
+        if relations is None:
+            raise BusinessError("此学校专业不存在")
+        return relations
+
+    @classmethod
+    def search(cls, current_page, **search_info):
+        relations_qs = cls.search_all(**search_info).\
+                       order_by("-create_time")
+        splitor = Splitor(current_page, relations_qs)
+        return splitor
+
+    @classmethod
+    def search_all(cls, **search_info):
+        relations_qs = Relations.search(**search_info)
+        return relations_qs
+
+    @classmethod
+    def update(cls, relations_id, **update_info):
+        relations = cls.get(relations_id)
+        relations.update(**update_info)
+        return relations
+
+    @classmethod
+    def remove(cls, relations_id):
+        relations = cls.get(relations_id)
+        relations.delete()
+        return True
+
+    @classmethod
+    def is_exsited(cls, school, major, relations = None):
+        relations_qs = cls.search_all(
+            school = school,
+            major = major
+        )
+        if relations is not None:
+            relations_qs = relations_qs.exclude(id = relations.id)
+        if relations_qs.count() > 0:
+            return True
+        return False
