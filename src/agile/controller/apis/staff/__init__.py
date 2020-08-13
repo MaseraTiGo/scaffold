@@ -160,6 +160,7 @@ class Get(StaffAuthorizedApi):
                 desc="账号信息",
                 conf={
                     'nick': CharField(desc="昵称"),
+                    'username': CharField(desc="账户"),
                     'head_url': CharField(desc="头像"),
                     'last_login_time': DatetimeField(desc="最后登录时间"),
                     'last_login_ip': CharField(desc="最后登录ip"),
@@ -212,6 +213,7 @@ class Get(StaffAuthorizedApi):
             'is_admin': staff.is_admin,
             'account_info': {
                 'nick': staff.account.nick,
+                'username': staff.account.username,
                 'head_url': staff.account.head_url,
                 'last_login_time': staff.account.last_login_time,
                 'last_login_ip': staff.account.last_login_ip,
