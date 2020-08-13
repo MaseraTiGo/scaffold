@@ -11,6 +11,7 @@ from infrastructure.core.field.base import CharField, DictField, \
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
+from infrastructure.utils.common.jsontools import CJsonEncoder
 
 from agile.base.api import NoAuthorizedApi
 from abs.middleground.technology.permission.manager import PermissionServer
@@ -65,64 +66,7 @@ class All(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
 
     response = with_metaclass(ResponseFieldSet)
-    response.data_list = ResponseField(
-        ListField,
-        desc = "身份列表",
-        fmt = DictField(
-            desc = "身份详情",
-            conf = {
-                "id": IntField(desc = "名称"),
-                "name": CharField(desc = "名称"),
-                "remark": CharField(desc = "备注"),
-                "description": CharField(desc = "描述"),
-                "parent_id": IntField(desc = "父级ID"),
-                "organization_id": IntField(desc = "组织ID"),
-                "rule_group_id": IntField(desc = "权限组ID"),
-                "create_time": DatetimeField(desc = "创建时间"),
-                'children': ListField(
-                    desc = "规格列表",
-                    is_required = False,
-                    fmt = DictField(
-                        desc = "身份详情",
-                        conf = {
-                            "id": IntField(
-                                desc = "名称",
-                                is_required = False
-                            ),
-                            "name": CharField(
-                                desc = "名称",
-                                is_required = False
-                            ),
-                            "description": CharField(
-                                desc = "描述",
-                                is_required = False
-                            ),
-                            "parent_id": IntField(
-                                desc = "父级ID",
-                                is_required = False
-                            ),
-                            "organization_id": IntField(
-                                desc = "组织ID",
-                                is_required = False
-                            ),
-                            "rule_group_id": IntField(
-                                desc = "权限组ID",
-                                is_required = False
-                            ),
-                            "remark": CharField(
-                                desc = "备注",
-                                is_required = False,
-                            ),
-                            "create_time": DatetimeField(
-                                desc = "创建时间",
-                                is_required = False
-                            ),
-                        }
-                    )
-                )
-            }
-        )
-    )
+    response.data_list_json = ResponseField(CharField, desc = "身份结构")
 
     @classmethod
     def get_desc(cls):
@@ -140,26 +84,9 @@ class All(NoAuthorizedApi):
         return position_list
 
     def fill(self, response, position_list):
-        response.data_list = [{
-            'id': position.id,
-            'name': position.name,
-            'parent_id': position.parent_id,
-            'organization_id': position.organization_id,
-            'rule_group_id': position.rule_group_id,
-            'description': position.description,
-            'remark': position.remark,
-            'create_time': position.create_time,
-            'children': [{
-                'id': sub_position.id,
-                'name': sub_position.name,
-                'parent_id': sub_position.parent_id,
-                'organization_id': sub_position.organization_id,
-                'rule_group_id': sub_position.rule_group_id,
-                'description': sub_position.description,
-                'remark': sub_position.remark,
-                'create_time': sub_position.create_time,
-            } for sub_position in position.children]
-        } for position in position_list]
+        response.data_list_json = json.dumps(
+            CJsonEncoder(position_list)
+        )
         return response
 
 

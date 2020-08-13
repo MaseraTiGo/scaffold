@@ -11,6 +11,7 @@ from infrastructure.core.field.base import CharField, DictField, \
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
+from infrastructure.utils.common.jsontools import CJsonEncoder
 
 from agile.base.api import NoAuthorizedApi
 from agile.crm.manager.api import StaffAuthorizedApi
@@ -64,54 +65,7 @@ class All(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
 
     response = with_metaclass(ResponseFieldSet)
-    response.data_list = ResponseField(
-        ListField,
-        desc = "组织列表",
-        fmt = DictField(
-            desc = "组织详情",
-            conf = {
-                "id": IntField(desc = "名称"),
-                "name": CharField(desc = "名称"),
-                "remark": CharField(desc = "备注"),
-                "description": CharField(desc = "描述"),
-                "parent_id": IntField(desc = "父级ID"),
-                "create_time": DatetimeField(desc = "创建时间"),
-                'children': ListField(
-                    desc = "规格列表",
-                    is_required = False,
-                    fmt = DictField(
-                        desc = "组织详情",
-                        conf = {
-                            "id": IntField(
-                                desc = "名称",
-                                is_required = False
-                            ),
-                            "name": CharField(
-                                desc = "名称",
-                                is_required = False
-                            ),
-                            "description": CharField(
-                                desc = "描述",
-                                is_required = False
-                            ),
-                            "parent_id": IntField(
-                                desc = "父级ID",
-                                is_required = False
-                            ),
-                            "remark": CharField(
-                                desc = "备注",
-                                is_required = False,
-                            ),
-                            "create_time": DatetimeField(
-                                desc = "创建时间",
-                                is_required = False
-                            ),
-                        }
-                    )
-                )
-            }
-        )
-    )
+    response.data_list_json = ResponseField(CharField, desc = "身份结构")
 
     @classmethod
     def get_desc(cls):
@@ -129,22 +83,9 @@ class All(StaffAuthorizedApi):
         return organization_list
 
     def fill(self, response, organization_list):
-        response.data_list = [{
-            'id': organization.id,
-            'name': organization.name,
-            'parent_id': organization.parent_id,
-            'description': organization.description,
-            'remark': organization.remark,
-            'create_time': organization.create_time,
-            'children': [{
-                'id': sub_organization.id,
-                'name': sub_organization.name,
-                'parent_id': sub_organization.parent_id,
-                'description': sub_organization.description,
-                'remark': sub_organization.remark,
-                'create_time': sub_organization.create_time,
-            } for sub_organization in organization.children]
-        } for organization in organization_list]
+        response.data_list_json = json.dumps(
+            CJsonEncoder(organization_list)
+        )
         return response
 
 

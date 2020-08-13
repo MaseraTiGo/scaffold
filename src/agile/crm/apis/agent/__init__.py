@@ -85,6 +85,7 @@ class Add(StaffAuthorizedApi):
             appkey = platform.appkey,
             **position_info
         )
+        PermissionServer.apply(platform.appkey)
         return agent
 
     def fill(self, response, agent):
