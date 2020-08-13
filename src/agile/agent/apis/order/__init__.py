@@ -156,6 +156,11 @@ class Search(AgentStaffAuthorizedApi):
         desc = "搜索订单条件",
         conf = {
           'number': CharField(desc = "订单号", is_required = False),
+          'status': CharField(
+                desc = "订单状态",
+                choices = OrderStatus.CHOICES,
+                is_required = False
+          ),
         }
     )
 

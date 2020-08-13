@@ -8,6 +8,9 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.crm.agent.manager import AgentServer
+from abs.middleground.technology.permission.manager import PermissionServer
+from abs.middleground.technology.permission.utils.constant import \
+        PermissionTypes
 
 
 class Add(StaffAuthorizedApi):
@@ -40,6 +43,50 @@ class Add(StaffAuthorizedApi):
 
     def execute(self, request):
         agent = AgentServer.create(**request.agent_info)
+        authorize_info = {
+            'name':agent.name,
+            'company_id':agent.company_id,
+            'app_type':PermissionTypes.POSITION,
+            'prefix':'',
+            'remark':'',
+        }
+        platform = PermissionServer.authorize(
+            **authorize_info
+        )
+        organization_info = {
+            "parent_id":0,
+            "name":"公司",
+            "description":"公司",
+            "remark":""
+        }
+        organization = PermissionServer.add_organization(
+            appkey = platform.appkey,
+            **organization_info
+        )
+        rule_group_info = {
+            "name":"超级管理员权限",
+            "content":"",
+            "description":"超级管理员权限",
+            "remark":"",
+        }
+        rule_group = PermissionServer.add_rule_group(
+            appkey = platform.appkey,
+            **rule_group_info
+        )
+        position_info = {
+            "organization_id":organization.id,
+            "rule_group_id":rule_group.id,
+            "parent_id":0,
+            "description":"超级管理员",
+            "name":"超级管理员",
+            "remark":"",
+        }
+        position = PermissionServer.add_position(
+            appkey = platform.appkey,
+            **position_info
+        )
+        PermissionServer.apply(platform.appkey)
+        agent.update(appkey = platform.appkey)
         return agent
 
     def fill(self, response, agent):

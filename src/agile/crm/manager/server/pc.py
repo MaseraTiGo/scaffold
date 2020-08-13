@@ -64,6 +64,9 @@ from agile.crm.apis.university.school import Search, SearchAll, Add, Update, \
                                              Remove, Settop
 crm_pc_service.add(Search, SearchAll, Add, Update, Remove, Settop)
 
+from agile.crm.apis.university.school.relations import Search, All, Add, Update, Remove
+crm_pc_service.add(Search, All, Add, Update, Remove)
+
 from agile.crm.apis.tool.sms import Search
 crm_pc_service.add(Search)
 
@@ -82,3 +85,11 @@ crm_pc_service.add(Add, Search, Get, Update, SearchAll)
 
 from agile.crm.apis.agent.contacts import Add, Search, Update, AddAccount
 crm_pc_service.add(Add, Search, Update, AddAccount)
+
+from agile.crm.apis.technology.permission.organization import Add, All, Get , \
+                                                              Update, Remove
+crm_pc_service.add(Add, All, Get, Update, Remove)
+
+from agile.crm.apis.technology.permission.position import Add, All, Get , \
+                                                          Update, Remove
+crm_pc_service.add(Add, All, Get, Update, Remove)

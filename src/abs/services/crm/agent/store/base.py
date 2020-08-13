@@ -13,6 +13,7 @@ class Agent(BaseModel):
     area = CharField(verbose_name = "区", max_length = 32, default = "")
     address = CharField(verbose_name = "详细地址", max_length = 128, default = "")
     official_seal = TextField(verbose_name = "公章", default = "")
+    appkey = CharField(verbose_name = "appkey", max_length = 128, default = "")
 
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)

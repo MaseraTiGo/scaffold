@@ -38,20 +38,6 @@ class OrderServer(BaseManager):
 
     @classmethod
     def search_all(cls, **search_info):
-        mg_search_info = {}
-        if 'number' in search_info:
-            number = search_info.pop('number')
-            mg_search_info.update({"number":number})
-        if 'status' in search_info:
-            status = search_info.pop('status')
-            mg_search_info.update({"status":status})
-        if len(mg_search_info) > 0:
-            order_id_list = mg_OrderServer.search_order_id_list(
-                **mg_search_info
-            )
-            search_info.update({
-                'mg_order_id__in': order_id_list
-            })
         order_qs = Order.search(**search_info)
         return order_qs
 
@@ -59,24 +45,24 @@ class OrderServer(BaseManager):
     def cancel(cls, order):
         mg_OrderServer.close(order.mg_order_id)
         snapshoot_list = mg_OrderServer.search_all_snapshoot(
-            requirement=order.mg_order.requirement
+            requirement = order.mg_order.requirement
         )
         for snapshoot in snapshoot_list:
             specification = MerchandiseServer.get_specification(
                 snapshoot.specification_id
             )
-            specification.update(stock=specification.stock+snapshoot.count)
+            specification.update(stock = specification.stock + snapshoot.count)
 
     @classmethod
     def auto_cancel(cls):
-        expire_time = datetime.datetime.now() - datetime.timedelta(minutes=30)
+        expire_time = datetime.datetime.now() - datetime.timedelta(minutes = 30)
         order_list = Order.search(
-            status=OrderStatus.ORDER_LAUNCHED,
-            create_time__lt=expire_time
+            status = OrderStatus.ORDER_LAUNCHED,
+            create_time__lt = expire_time
         )
         mg_OrderServer.hung_order(order_list)
         for order in order_list:
-            order.update(status=OrderStatus.ORDER_CLOSED)
+            order.update(status = OrderStatus.ORDER_CLOSED)
             cls.cancel(order)
 
     @classmethod
@@ -141,7 +127,7 @@ class OrderServer(BaseManager):
                 duration = specification.merchandise.goods.duration
             )
             specification.update(
-                stock=specification.stock-specification.order_count
+                stock = specification.stock - specification.order_count
             )
         return order
 
@@ -165,10 +151,10 @@ class OrderServer(BaseManager):
         mg_order = mg_OrderServer.pay_success_callback(
             output_record_number
         )
-        order = cls.search_all(mg_order_id=mg_order.id).first()
+        order = cls.search_all(mg_order_id = mg_order.id).first()
         order.update(
-            status=mg_order.status,
-            last_payment_time=mg_order.payment.last_payment_time
+            status = mg_order.status,
+            last_payment_time = mg_order.payment.last_payment_time
         )
 
     @classmethod
@@ -227,7 +213,7 @@ class ContractServer(BaseManager):
         })
         contract = Contract.create(**search_info)
         mg_OrderServer.finish(order_item.order.mg_order_id)
-        order_item.order.update(status=OrderStatus.ORDER_FINISHED)
+        order_item.order.update(status = OrderStatus.ORDER_FINISHED)
         return contract
 
     @classmethod
