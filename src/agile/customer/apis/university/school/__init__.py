@@ -235,3 +235,32 @@ class Get(NoAuthorizedApi):
             )
         }
         return response
+
+
+class Location(NoAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+
+    response = with_metaclass(ResponseFieldSet)
+    response.hot_city_list = ResponseField(
+        ListField,
+        desc="热门城市列表",
+        fmt=CharField(desc="城市")
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "热门城市列表"
+
+    @classmethod
+    def get_author(cls):
+        return "xyc"
+
+    def execute(self, request):
+        hot_city_list = UniversityServer.get_location(
+            is_hot=True
+        )
+        return hot_city_list
+
+    def fill(self, response, hot_city_list):
+        response.hot_city_list = hot_city_list
+        return response

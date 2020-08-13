@@ -4,7 +4,7 @@ import json
 import os
 import base64
 import rsa
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, unquote_plus
 from urllib.request import urlopen
 from Crypto.PublicKey import RSA
 from Crypto.Hash import SHA
@@ -14,10 +14,10 @@ from Crypto.Signature import PKCS1_v1_5
 class AlipayExtend(object):
 
     def _get_appid(self):
-        return "2014072300007148"
+        return "2019092767881151"
 
     def _get_notify_url(self):
-        return ' http://3tzeva.natappfree.cc'
+        return 'http://33cy3u.natappfree.cc'
 
     def _get_priv_key(self):
         cur_path = os.path.dirname(os.path.abspath(__file__))
@@ -27,7 +27,15 @@ class AlipayExtend(object):
             priv_key = f.read()
         return priv_key
 
-    def get_result_str(self, params):
+    def _get_alipay_public_key(self):
+        cur_path = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(cur_path, "alipay_public.pem")
+        # file_path = '/var/private/rsa-pkcs1.pem'
+        with open(file_path) as f:
+            priv_key = f.read()
+        return priv_key
+
+    def get_result_str(self, **params):
         sort_list = sorted([(k, v) for k, v in params.items()])
         unsigned_string = "&".join("{}={}".format(
             k,
@@ -39,12 +47,16 @@ class AlipayExtend(object):
             quote_plus(v)
         ) for k, v in sort_list)
         result_str = quoted_string + "&sign=" + quote_plus(signature)
+
         return result_str
 
     def _rsa_sign(self, encr_data):
         e = rsa.PrivateKey.load_pkcs1(self._get_priv_key())
         sign = rsa.sign(encr_data.encode('utf-8'), e, "SHA-256")
         return base64.b64encode(sign).decode()
+
+    def check_sign(self, params):
+        return True
 
     def _base_params(self):
         return {
@@ -82,7 +94,7 @@ class AlipayExtend(object):
             })
         }
         params.update(self._base_params())
-        return self.get_result_str(params)
+        return self.get_result_str(**params)
 
 
 alipay_extend = AlipayExtend()
