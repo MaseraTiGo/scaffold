@@ -6,7 +6,7 @@ from infrastructure.utils.common.split_page import Splitor
 from abs.common.manager import BaseManager
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
-from abs.services.crm.university.models import School, Major, Relations
+from abs.services.crm.university.models import School, Major, Relations, Years
 from abs.services.agent.goods.models import Goods
 
 
@@ -56,7 +56,7 @@ class UniversityServer(BaseManager):
 
     @classmethod
     def search_school_id_list(cls, **search_info):
-        return list(cls.search_all_school(**search_info).values_list('id', flat=True))
+        return list(cls.search_all_school(**search_info).values_list('id', flat = True))
 
     @classmethod
     def update_school(cls, school, **update_info):
@@ -119,7 +119,7 @@ class UniversityServer(BaseManager):
 
     @classmethod
     def get_location(cls, **search_info):
-        return list(set(cls.search_all_school(**search_info).values_list('city', flat=True)))
+        return list(set(cls.search_all_school(**search_info).values_list('city', flat = True)))
 
     @classmethod
     def hung_major(cls, obj_list):
@@ -188,6 +188,11 @@ class UniversityRelationsServer(BaseManager):
 
     @classmethod
     def create(cls, **relations_info):
+        if cls.is_exsited(
+            relations_info["school"],
+            relations_info["major"],
+        ):
+            raise BusinessError("此学校专业已存在")
         relations = Relations.create(**relations_info)
         return relations
 
@@ -213,6 +218,12 @@ class UniversityRelationsServer(BaseManager):
     @classmethod
     def update(cls, relations_id, **update_info):
         relations = cls.get(relations_id)
+        if cls.is_exsited(
+            relations.school,
+            update_info["major"],
+            relations,
+        ):
+            raise BusinessError("此学校专业已存在")
         relations.update(**update_info)
         return relations
 
@@ -221,6 +232,95 @@ class UniversityRelationsServer(BaseManager):
         relations = cls.get(relations_id)
         relations.delete()
         return True
+
+    @classmethod
+    def is_exsited(cls, school, major, relations = None):
+        relations_qs = cls.search_all(
+            school = school,
+            major = major
+        )
+        if relations is not None:
+            relations_qs = relations_qs.exclude(id = relations.id)
+        if relations_qs.count() > 0:
+            return True
+        return False
+
+
+class UniversityYearsServer(BaseManager):
+
+
+    @classmethod
+    def create(cls, **years_info):
+        years = Years.create(**years_info)
+        return years
+
+    @classmethod
+    def batch_create(cls, years_list, relations):
+        create_list = []
+        for year_dic in years_list:
+            create_list.append(Years(
+                relations = relations,
+                category = year_dic["category"],
+                duration = year_dic["duration"],
+            ))
+        Years.objects.bulk_create(create_list)
+
+    @classmethod
+    def get(cls, years_id):
+        years = Years.get_byid(years_id)
+        if years is None:
+            raise BusinessError("此学校专业学年不存在")
+        return years
+
+    @classmethod
+    def search(cls, current_page, **search_info):
+        years_qs = cls.search_all(**search_info).\
+                       order_by("-create_time")
+        splitor = Splitor(current_page, years_qs)
+        return splitor
+
+    @classmethod
+    def search_all(cls, **search_info):
+        years_qs = Years.search(**search_info)
+        return years_qs
+
+    @classmethod
+    def update(cls, years_id, **update_info):
+        years = cls.get(years_id)
+        years.update(**update_info)
+        return years
+
+    @classmethod
+    def remove(cls, years_id):
+        years = cls.get(years_id)
+        years.delete()
+        return True
+
+    @classmethod
+    def hung_years_byrelations(cls, relations_list):
+        relations_mapping = {}
+        for relations in relations_list:
+            relations.years_list = []
+            relations_mapping[relations.id] = relations
+        years_qs = cls.search_all(relations_id__in = obj_mapping.keys())
+        for years in years_qs:
+            if years.relations_id in relations_mapping:
+                relations_mapping[years.relations_id].years_list.append(years)
+        return relations_list
+
+    @classmethod
+    def hung_years(cls, obj_list):
+        obj_mapping = {}
+        for obj in obj_list:
+            obj.years = None
+            if obj.years_id not in obj_mapping:
+                obj_mapping[obj.years_id] = [obj]
+        years_qs = cls.search_all(id__in = obj_mapping.keys())
+        for years in years_qs:
+            if years.id in obj_mapping:
+                for obj in obj_mapping[years.id]:
+                    obj.years = years
+        return obj_list
 
     @classmethod
     def is_exsited(cls, school, major, relations = None):

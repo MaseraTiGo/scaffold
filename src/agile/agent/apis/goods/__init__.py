@@ -17,7 +17,7 @@ from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.services.agent.goods.manager import GoodsServer
-from abs.services.crm.university.manager import UniversityServer
+from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
 from abs.services.crm.agent.manager import AgentServer
 from abs.services.customer.order.manager import OrderItemServer
 
@@ -55,6 +55,7 @@ class Get(AgentStaffAuthorizedApi):
             'major_id': IntField(desc = "专业ID"),
             'major_name': CharField(desc = "专业名称"),
             'description': CharField(desc = "商品描述"),
+            'years_id': IntField(desc = "学年ID"),
             'duration':CharField(
                 desc = "时长",
                 choices = DurationTypes.CHOICES
@@ -107,6 +108,7 @@ class Get(AgentStaffAuthorizedApi):
         UniversityServer.hung_major([goods])
         MerchandiseServer.hung_merchandise([goods])
         ProductionServer.hung_production([goods.merchandise])
+        UniversityYearsServer.hung_production([goods])
         return goods
 
     def fill(self, response, goods):
@@ -120,13 +122,14 @@ class Get(AgentStaffAuthorizedApi):
             'despatch_type': goods.merchandise.despatch_type,
             'production_id': goods.merchandise.production.id,
             'production_name': goods.merchandise.production.name,
-            'school_id': goods.school.id,
-            'school_name': goods.school.name,
-            'major_id':goods.major.id,
-            'major_name': goods.major.name,
+            'school_id': goods.years.relations.school.id,
+            'school_name': goods.years.relations.school.name,
+            'major_id':goods.years.relations.major.id,
+            'major_name': goods.years.relations.major.name,
             'description': goods.merchandise.description,
-            'duration':goods.duration,
-            'category':goods.category,
+            'years_id': goods.years.id,
+            'duration':goods.years.duration,
+            'category':goods.years.category,
             'use_status': goods.merchandise.use_status,
             'remark': goods.merchandise.remark,
             'specification_list':[{
@@ -191,6 +194,7 @@ class Search(AgentStaffAuthorizedApi):
                 'major_id': IntField(desc = "专业ID"),
                 'major_name': CharField(desc = "专业名称"),
                 'is_hot':BooleanField(desc = "是否热门"),
+                'years_id': IntField(desc = "学年ID"),
                 'duration':CharField(
                     desc = "时长",
                     choices = DurationTypes.CHOICES
@@ -265,6 +269,7 @@ class Search(AgentStaffAuthorizedApi):
         MerchandiseServer.hung_merchandise(spliter.data)
         merchandise_list = [goods.merchandise for goods in spliter.data]
         ProductionServer.hung_production(merchandise_list)
+        UniversityYearsServer.hung_production(spliter.data)
         return spliter
 
     def fill(self, response, spliter):
@@ -277,13 +282,14 @@ class Search(AgentStaffAuthorizedApi):
             'production_name': goods.merchandise.production.name,
             'brand_id': goods.merchandise.production.brand.id,
             'brand_name':goods.merchandise.production.brand.name,
-            'school_id': goods.school.id,
-            'school_name': goods.school.name,
-            'major_id':goods.major.id,
-            'major_name': goods.major.name,
+            'school_id': goods.years.relations.school.id,
+            'school_name': goods.years.relations.school.name,
+            'major_id':goods.years.relations.major.id,
+            'major_name': goods.years.relations.major.name,
             'is_hot':goods.is_hot,
-            'duration':goods.duration,
-            'category':goods.category,
+            'years_id': goods.years.id,
+            'duration':goods.years.duration,
+            'category':goods.years.category,
             'create_time':goods.create_time,
             'specification_list':[{
                 "id": specification.id,
@@ -322,39 +328,9 @@ class Add(AgentStaffAuthorizedApi):
                 choices = DespatchService.CHOICES
             ),
             'production_id': IntField(desc = "产品ID"),
-            'school_id': IntField(desc = "学校ID"),
-            'major_id': IntField(desc = "专业ID"),
+            'years_id': IntField(desc = "学年id"),
             'description':CharField(desc = "商品描述"),
-            'duration':CharField(
-                desc = "时长",
-                choices = DurationTypes.CHOICES
-            ),
-            'category':CharField(
-                desc = "分类",
-                choices = CategoryTypes.CHOICES
-            ),
             'remark': CharField(desc = "备注"),
-            'specification_list': ListField(
-                    desc = "规格列表",
-                    fmt = DictField(
-                        desc = "规格详情",
-                        conf = {
-                            'show_image': CharField(desc = "图片"),
-                            'sale_price': IntField(desc = "销售价/分"),
-                            'stock': IntField(desc = "库存"),
-                            "specification_value_list": ListField(
-                                desc = "属性值列表",
-                                fmt = DictField(
-                                    desc = "属性详情",
-                                    conf = {
-                                        "category": CharField(desc = "属性分类"),
-                                        "attribute": CharField(desc = "属性值"),
-                                    }
-                                )
-                            ),
-                        }
-                    )
-            )
         }
     )
 
@@ -372,11 +348,8 @@ class Add(AgentStaffAuthorizedApi):
     def execute(self, request):
         auth = self.auth_user
         agent = AgentServer.get(auth.agent_id)
-        school = UniversityServer.get_school(
-            request.goods_info.pop('school_id')
-        )
-        major = UniversityServer.get_major(
-            request.goods_info.pop('major_id')
+        year = UniversityYearsServer.get(
+            request.goods_info.pop('years_id')
         )
         production = ProductionServer.get(
             request.goods_info.pop('production_id')
@@ -409,12 +382,12 @@ class Add(AgentStaffAuthorizedApi):
             MerchandiseServer.generate_specification(**specification_info)
 
         goods_info = {
-            "school_id":school.id,
-            "major_id":major.id,
-            "duration":request.goods_info.pop('duration'),
-            "category":request.goods_info.pop('category'),
+            "school_id":year.relations.school_id,
+            "major_id":year.relations.major_id,
             "merchandise_id":merchandise.id,
-            "agent_id":agent.id
+            "agent_id":agent.id,
+            "relations_id":year.relations_id,
+            "years_id":year.id,
         }
         GoodsServer.create_goods(**goods_info)
 
@@ -447,41 +420,9 @@ class Update(AgentStaffAuthorizedApi):
                 desc = "发货方式",
                 choices = DespatchService.CHOICES
             ),
-            'production_id': IntField(desc = "产品ID"),
-            'school_id': IntField(desc = "学校ID"),
-            'major_id': IntField(desc = "专业ID"),
+            'years_id': IntField(desc = "学年ID"),
             "description":CharField(desc = "商品描述"),
-            'duration':CharField(
-                desc = "时长",
-                choices = DurationTypes.CHOICES
-            ),
-            'category':CharField(
-                desc = "分类",
-                choices = CategoryTypes.CHOICES
-            ),
             'remark': CharField(desc = "备注"),
-            'specification_list': ListField(
-                    desc = "规格列表",
-                    fmt = DictField(
-                        desc = "规格详情",
-                        conf = {
-                            'id': IntField(desc = "规格id"),
-                            'show_image': CharField(desc = "图片"),
-                            'sale_price': IntField(desc = "销售价/分"),
-                            'stock': IntField(desc = "库存"),
-                            "specification_value_list": ListField(
-                                desc = "属性值列表",
-                                fmt = DictField(
-                                    desc = "属性详情",
-                                    conf = {
-                                        "category": CharField(desc = "属性分类"),
-                                        "attribute": CharField(desc = "属性值"),
-                                    }
-                                )
-                            ),
-                        }
-                    )
-            )
         }
     )
 
@@ -500,20 +441,14 @@ class Update(AgentStaffAuthorizedApi):
         merchandise = MerchandiseServer.get(goods.merchandise_id)
         if merchandise.use_status == UseStatus.ENABLE:
             raise BusinessError("请先下架此商品")
-        school = UniversityServer.get_school(
-            request.goods_info.pop('school_id')
-        )
-        major = UniversityServer.get_major(
-            request.goods_info.pop('major_id')
-        )
-        production = ProductionServer.get(
-            request.goods_info.pop('production_id')
+        year = UniversityYearsServer.get(
+            request.goods_info.pop('years_id')
         )
         goods_update_info = {
-            "school_id":school.id,
-            "major_id":major.id,
-            "duration":request.goods_info.pop('duration'),
-            "category":request.goods_info.pop('category'),
+            "school_id":year.relations.school_id,
+            "major_id":year.relations.major_id,
+            "relations_id":year.relations_id,
+            "years_id":year.id,
         }
         GoodsServer.update_goods(goods, **goods_update_info)
         merchandise_update_info = {
@@ -523,7 +458,6 @@ class Update(AgentStaffAuthorizedApi):
             "detail":json.dumps(request.goods_info.pop('detail')),
             "market_price":request.goods_info.pop('market_price'),
             "despatch_type":request.goods_info.pop('despatch_type'),
-            "production_id":production.id,
             "remark":request.goods_info.pop('remark'),
             "description":request.goods_info.pop('description'),
         }
