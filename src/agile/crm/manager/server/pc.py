@@ -82,3 +82,11 @@ crm_pc_service.add(Add, Search, Get, Update, SearchAll)
 
 from agile.crm.apis.agent.contacts import Add, Search, Update, AddAccount
 crm_pc_service.add(Add, Search, Update, AddAccount)
+
+from agile.crm.apis.technology.permission.organization import Add, All, Get , \
+                                                              Update, Remove
+crm_pc_service.add(Add, All, Get, Update, Remove)
+
+from agile.crm.apis.technology.permission.position import Add, All, Get , \
+                                                          Update, Remove
+crm_pc_service.add(Add, All, Get, Update, Remove)

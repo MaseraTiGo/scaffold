@@ -158,6 +158,11 @@ class Search(StaffAuthorizedApi):
         conf = {
           'number': CharField(desc = "订单号", is_required = False),
           'agent_id': IntField(desc = "代理商id", is_required = False),
+          'status': CharField(
+                desc = "订单状态",
+                choices = OrderStatus.CHOICES,
+                is_required = False
+          ),
         }
     )
 
