@@ -537,6 +537,7 @@ class SearchAll(AgentStaffAuthorizedApi):
         auth = self.auth_user
         agent = AgentServer.get(auth.agent_id)
         goods_list = GoodsServer.search_all_goods(
+            use_status = UseStatus.ENABLE,
             agent_id = agent.id
         )
         MerchandiseServer.hung_merchandise(goods_list)
@@ -569,6 +570,10 @@ class Share(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         goods = GoodsServer.get_goods(request.goods_id)
+        merchandise = MerchandiseServer.get(goods.merchandise_id)
+        if merchandise.use_status == UseStatus.FORBIDDENT:
+            raise BusinessError("下架商品无法生成连接")
+
         url = "type=goods&goods_id={goods_id}".format(
             goods_id = goods.id
         )
