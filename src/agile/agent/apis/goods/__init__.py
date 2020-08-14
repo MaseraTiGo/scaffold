@@ -512,3 +512,73 @@ class Remove(AgentStaffAuthorizedApi):
 
     def fill(self, response):
         return response
+
+
+class SearchAll(AgentStaffAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+
+    response = with_metaclass(ResponseFieldSet)
+    response.data_list = ResponseField(
+        ListField,
+        desc = "商品列表搜索接口",
+        fmt = DictField(
+            desc = "商品内容",
+            conf = {
+                'id': IntField(desc = "编号"),
+                'title': CharField(desc = "标题"),
+            }
+        )
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "本代理商所有商品搜索"
+
+    @classmethod
+    def get_author(cls):
+        return "Fsy"
+
+    def execute(self, request):
+        auth = self.auth_user
+        agent = AgentServer.get(auth.agent_id)
+        goods_list = GoodsServer.search_all_goods(
+            agent_id = agent.id
+        )
+        MerchandiseServer.hung_merchandise(goods_list)
+        return goods_list
+
+    def fill(self, response, goods_list):
+        data_list = [{
+            'id': goods.id,
+            'title': goods.merchandise.title,
+        } for goods in goods_list]
+        response.data_list = data_list
+        return response
+
+
+class Share(AgentStaffAuthorizedApi):
+    """商品信息分享"""
+    request = with_metaclass(RequestFieldSet)
+    request.goods_id = RequestField(IntField, desc = "商品id")
+
+    response = with_metaclass(ResponseFieldSet)
+    response.url = ResponseField(CharField, desc = "分享连接")
+
+    @classmethod
+    def get_desc(cls):
+        return "商品信息分享接口"
+
+    @classmethod
+    def get_author(cls):
+        return "Fsy"
+
+    def execute(self, request):
+        goods = GoodsServer.get_goods(request.goods_id)
+        url = "type=goods&goods_id={goods_id}".format(
+            goods_id = goods.id
+        )
+        return url
+
+    def fill(self, response, url):
+        response.url = url
+        return response

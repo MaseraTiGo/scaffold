@@ -11,16 +11,16 @@ from abs.services.agent.customer.store import AgentCustomer
 
 class AgentCustomerSaleChance(BaseModel):
     agent_customer = ForeignKey(AgentCustomer, on_delete = CASCADE)
+    agent_id = IntegerField(verbose_name = "代理商id", default = 0)
     staff_id = IntegerField(verbose_name = "所属机会员工id")
     founder_id = IntegerField(verbose_name = "创建机会员工id")
     organization_id = IntegerField(verbose_name = "组织id")
-    product_id = IntegerField(verbose_name = "产品id")
+    production_id = IntegerField(verbose_name = "产品id")
     education = CharField(verbose_name = "学历", max_length = 32, \
                           choices = EducationTypes.CHOICES, \
                           default = EducationTypes.OTHER)
     city = CharField(verbose_name = "地址", max_length = 128, default = '')
-    end_time = DateField(verbose_name = "机会截至时间", \
-                         max_length = 20, null = False, \
+    end_time = DateField(verbose_name = "机会截至时间", null = False, \
                          blank = False)
     batch_no = CharField(verbose_name = "批号", max_length = 128, default = '')
     source = CharField(verbose_name = "来源", max_length = 64, \

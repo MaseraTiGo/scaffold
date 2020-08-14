@@ -31,8 +31,9 @@ agent_pc_service.add(Get)
 from agile.agent.apis.staff import Search
 agent_pc_service.add(Search)
 
-from agile.agent.apis.goods import Get, Search, Add, Update, Setuse, Remove
-agent_pc_service.add(Get, Search, Add, Update, Setuse, Remove)
+from agile.agent.apis.goods import Get, Search, Add, Update, Setuse, Remove, \
+                                   SearchAll, Share
+agent_pc_service.add(Get, Search, Add, Update, Setuse, Remove, SearchAll, Share)
 
 from agile.agent.apis.goods.specification import Add, Get, Update, Remove
 agent_pc_service.add(Add, Get, Update, Remove)
@@ -57,6 +58,9 @@ agent_pc_service.add(Search)
 
 from agile.agent.apis.customer import Search
 agent_pc_service.add(Search)
+
+from agile.agent.apis.customer.salechance import Search, Add
+agent_pc_service.add(Search, Add)
 
 from agile.agent.apis.technology.permission.organization import Add, All, Get , \
                                                               Update, Remove

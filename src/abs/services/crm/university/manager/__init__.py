@@ -183,7 +183,7 @@ class UniversityServer(BaseManager):
         return major
 
     @classmethod
-    def remove_major(cls,):
+    def remove_major(cls, major_id):
         major = cls.get_major(major_id)
         relations_qs = UniversityRelationsServer.search_all(major = major)
         if relations_qs.count() > 0:
