@@ -2,14 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="213d7b7e-426d-4d3e-a6a1-5f3f9deff373" name="Default Changelist" comment="update">
-      <change afterPath="$PROJECT_DIR$/src/agile/customer/apis/university/relations/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/abs/services/agent/goods/migrations/0004_auto_20200813_1747.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/agile/agent/apis/goods/specification/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/agile/crm/apis/university/school/relations/years.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/abs/services/agent/goods/manager/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/agent/goods/manager/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/abs/services/agent/goods/store/goods.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/agent/goods/store/goods.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/abs/services/crm/university/manager/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/crm/university/manager/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abs/services/customer/order/manager/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/manager/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/agile/agent/apis/goods/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/agent/apis/goods/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/agile/crm/apis/university/school/relations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/crm/apis/university/school/relations/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/agile/crm/manager/server/pc.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/crm/manager/server/pc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/agile/customer/apis/customer/contract/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/customer/apis/customer/contract/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/agile/customer/apis/production/goods/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/customer/apis/production/goods/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/agile/customer/apis/university/major/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/customer/apis/university/major/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/agile/customer/apis/university/relations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/customer/apis/university/relations/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/agile/customer/apis/university/school/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/customer/apis/university/school/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/agile/customer/manager/server/mobile.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/customer/manager/server/mobile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_major.py" beforeDir="false" afterPath="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_major.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_school.py" beforeDir="false" afterPath="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_school.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,25 +35,34 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/university/relations/__init__.py">
+        <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/contract.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="45" column="34" lean-forward="true" selection-start-line="45" selection-start-column="34" selection-end-line="45" selection-end-column="34" />
+            <state relative-caret-position="357">
+              <caret line="17" column="11" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="11" />
               <folding>
-                <element signature="e#16#124#0" expanded="true" />
+                <element signature="e#16#125#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/university/major/__init__.py">
+        <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/contract/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-329">
-              <caret line="106" column="56" selection-start-line="106" selection-start-column="56" selection-end-line="106" selection-end-column="56" />
+            <state relative-caret-position="39">
+              <caret line="108" column="12" selection-start-line="108" selection-start-column="6" selection-end-line="108" selection-end-column="12" />
               <folding>
-                <element signature="e#16#124#0" expanded="true" />
+                <element signature="e#15#26#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/agile/customer/manager/server/mobile.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="438">
+              <caret line="70" column="44" selection-start-line="70" selection-start-column="44" selection-end-line="70" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -49,8 +70,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/university/school/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="70">
-              <caret line="74" column="34" selection-start-line="74" selection-start-column="34" selection-end-line="74" selection-end-column="34" />
+            <state relative-caret-position="539">
+              <caret line="148" lean-forward="true" selection-start-line="126" selection-start-column="4" selection-end-line="148" />
               <folding>
                 <element signature="e#16#124#0" expanded="true" />
               </folding>
@@ -58,30 +79,16 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/manager/__init__.py">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="284">
-              <caret line="204" column="50" selection-start-line="204" selection-start-column="50" selection-end-line="204" selection-end-column="50" />
+            <state relative-caret-position="294">
+              <caret line="197" column="37" selection-start-line="197" selection-start-column="32" selection-end-line="197" selection-end-column="37" />
               <folding>
-                <element signature="e#16#86#0" expanded="true" />
+                <element signature="e#17#122#0" expanded="true" />
               </folding>
             </state>
           </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/store/relations.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="10" column="6" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/store/years.py">
-          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -95,36 +102,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Orderserver</find>
-      <find>待付款订单才能</find>
-      <find>系统不存在</find>
-      <find>auto_cancel</find>
-      <find>2019092767881151</find>
-      <find>_get_priv_key</find>
-      <find>customer_account_base</find>
-      <find>customer_account</find>
-      <find>wechat_handle</find>
-      <find>_rsa_sign</find>
-      <find>get_result_str</find>
-      <find>CustomerFinanceServer</find>
-      <find>HttpResponse</find>
-      <find>OrderServer</find>
-      <find>unquote</find>
-      <find>get_sign</find>
-      <find>goodsserver(</find>
-      <find>hung_agent</find>
-      <find>hung_production_list</find>
-      <find>category = Char</find>
-      <find>category = Ch</find>
-      <find>hung_goods_list</find>
-      <find>GoodsServer</find>
-      <find>AgentServer</find>
-      <find>_icontains</find>
-      <find>__contains</find>
       <find>RelationsServer</find>
       <find>agent</find>
-      <find>search_all_major_list</find>
       <find>search_major</find>
+      <find>search_all_major_list</find>
+      <find>search_major_list</find>
+      <find>GoodsServer</find>
+      <find>AgentServer</find>
+      <find>category = Ch</find>
+      <find>page_list</find>
+      <find>production</find>
+      <find>hung_years</find>
+      <find>UniversityYearsServer</find>
+      <find>years(ba</find>
+      <find>get_duration_display</find>
+      <find>hung_goods_forrelations</find>
+      <find>category = C</find>
+      <find>major</find>
+      <find>agentserver</find>
+      <find>invoice(</find>
+      <find>despatch_type</find>
+      <find>order</find>
+      <find>address</find>
+      <find>goods(base</find>
+      <find>agent_name</find>
+      <find>mg_order</find>
+      <find>agent_</find>
+      <find>class Search(CustomerAuthor</find>
+      <find>class Search(CustomerAuthorized</find>
+      <find>DatetimeField</find>
+      <find>&quot;url&quot;</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -154,7 +161,6 @@
         <option value="$PROJECT_DIR$/support/environment/simulate/business/crm/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/middleware/file/__init__.py" />
         <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_contract.py" />
-        <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_major.py" />
         <option value="$PROJECT_DIR$/src/agile/customer/apis/production/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/services/agent/customer/settings.py" />
         <option value="$PROJECT_DIR$/src/abs/services/agent/customer/models.py" />
@@ -163,7 +169,6 @@
         <option value="$PROJECT_DIR$/src/abs/services/agent/customer/store/customer.py" />
         <option value="$PROJECT_DIR$/src/abs/services/agent/customer/store/__init__.py" />
         <option value="$PROJECT_DIR$/src/settings.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/apis/production/goods/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/middleground/business/order/utils/constant/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/services/agent/customer/manager/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/middleground/business/production/manager/__init__.py" />
@@ -176,29 +181,31 @@
         <option value="$PROJECT_DIR$/src/abs/services/customer/order/store/order.py" />
         <option value="$PROJECT_DIR$/src/abs/services/customer/order/store/contract.py" />
         <option value="$PROJECT_DIR$/src/abs/middleware/extend/wechat/__init__.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/contract/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/middleware/image/process.py" />
         <option value="$PROJECT_DIR$/src/abs/middleware/image/__init__.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py" />
         <option value="$PROJECT_DIR$/src/settings_local.py" />
-        <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_school.py" />
         <option value="$PROJECT_DIR$/src/abs/middleware/extend/alipay/private.pem" />
         <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/finance/balance/wechat_notify.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/customer/order/manager/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/middleware/pay/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/middleware/extend/alipay/alipay_public.pem" />
         <option value="$PROJECT_DIR$/src/abs/middleware/extend/alipay/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/services/customer/finance/manager/__init__.py" />
         <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/finance/balance/alipay_notify.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/agent/goods/manager/__init__.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/apis/university/school/__init__.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/apis/university/relations/__init__.py" />
         <option value="$PROJECT_DIR$/support/unit_test.py" />
         <option value="$PROJECT_DIR$/support/common/testcase/api_test_case.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/manager/server/mobile.py" />
         <option value="$PROJECT_DIR$/src/abs/services/agent/goods/store/goods.py" />
         <option value="$PROJECT_DIR$/src/agile/customer/apis/university/major/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/agent/goods/manager/__init__.py" />
+        <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_major.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/apis/university/relations/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/customer/order/manager/__init__.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/apis/production/goods/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/services/crm/university/manager/__init__.py" />
+        <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_school.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/apis/university/school/__init__.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/contract/__init__.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/manager/server/mobile.py" />
       </list>
     </option>
   </component>
@@ -319,8 +326,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="abs" type="462c0819:PsiDirectoryNode" />
               <item name="services" type="462c0819:PsiDirectoryNode" />
-              <item name="crm" type="462c0819:PsiDirectoryNode" />
-              <item name="university" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
@@ -328,8 +334,17 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="abs" type="462c0819:PsiDirectoryNode" />
               <item name="services" type="462c0819:PsiDirectoryNode" />
-              <item name="crm" type="462c0819:PsiDirectoryNode" />
-              <item name="university" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="order" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="abs" type="462c0819:PsiDirectoryNode" />
+              <item name="services" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="order" type="462c0819:PsiDirectoryNode" />
               <item name="store" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -377,6 +392,16 @@
               <item name="customer" type="462c0819:PsiDirectoryNode" />
               <item name="apis" type="462c0819:PsiDirectoryNode" />
               <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="contract" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="apis" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
               <item name="finance" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -389,6 +414,35 @@
               <item name="customer" type="462c0819:PsiDirectoryNode" />
               <item name="finance" type="462c0819:PsiDirectoryNode" />
               <item name="balance" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="apis" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="order" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="apis" type="462c0819:PsiDirectoryNode" />
+              <item name="production" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="apis" type="462c0819:PsiDirectoryNode" />
+              <item name="production" type="462c0819:PsiDirectoryNode" />
+              <item name="goods" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
@@ -639,7 +693,7 @@
       <workItem from="1593332142583" duration="623000" />
       <workItem from="1593424193925" duration="1999000" />
       <workItem from="1594953839693" duration="337191000" />
-      <workItem from="1596709044806" duration="129052000" />
+      <workItem from="1596709044806" duration="155605000" />
     </task>
     <task id="LOCAL-00036" summary="order">
       <created>1596521290431</created>
@@ -996,7 +1050,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="489561000" />
+    <option name="totallyTimeSpent" value="516114000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1011,7 +1065,7 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19029851" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19029851" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info active="true" anchor="bottom" id="Concurrent Activities Diagram" order="0" weight="0.329718" />
@@ -1019,7 +1073,7 @@
       <window_info anchor="bottom" id="Message" order="2" />
       <window_info anchor="bottom" id="Find" order="3" />
       <window_info anchor="bottom" id="Run" order="4" weight="0.329718" />
-      <window_info active="true" anchor="bottom" id="Debug" order="5" sideWeight="0.4989339" visible="true" weight="0.34164858" />
+      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.4989339" visible="true" weight="0.31127983" />
       <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="8" weight="0.329718" />
@@ -1074,6 +1128,56 @@
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
       <expression>
+        <expression-string>cls.search_all_school(
+            **search_info
+        ).values(
+            'province',
+            'city'
+        )</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cls.search_all_school(
+            **search_info
+        ).values(
+            'province',
+            'city'
+        ).distinct()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>list(set(cls.search_all_school(
+            **search_info
+        ).values(
+            'province',
+            'city'
+        ).distinct()))</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cls.search_all(**search_info).values_list('relations__major', flat=True).distinct()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cls.search_all(**search_info).values_list('relations__major')</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cls.search_all(**search_info).values('relations__major')</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>page_list.data</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
         <expression-string>data</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
@@ -1088,46 +1192,6 @@
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>number</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>TransactionServer.get_input_record_bynumber(number)</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>CustomerFinanceServer.top_up_notify(
-                order_sn,
-                pay_time,
-                data['transaction_id'],
-                data['total_fee']
-            )</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>data['trade_status']</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>data['out_trade_no']</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>datetime.datetime.strptime(data['gmt_close'], '%Y-%m-%d %H:%M:%S')</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>pay_middleware.alipay_check_sign(data)</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
     </expressions>
     <expressions id="setValue">
       <expression>
@@ -1138,30 +1202,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/order/store/entity/requirement.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-84">
-          <caret line="15" column="6" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/order/store/entity/refundment.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/transaction/manager/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="43" column="8" selection-start-line="43" selection-start-column="8" selection-end-line="43" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/order/store/entity/payment.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="665">
-          <caret line="86" column="8" selection-start-line="86" selection-start-column="8" selection-end-line="86" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/order/store/entity/order.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="179">
@@ -1185,30 +1225,10 @@
     <entry file="file://$PROJECT_DIR$/resource/contract_img/9402_1597113416.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/order.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="707">
-          <caret line="42" column="8" selection-start-line="42" selection-start-column="8" selection-end-line="42" selection-end-column="8" />
-          <folding>
-            <element signature="e#16#104#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/order/utils/constant/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/contract.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="17" column="11" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="11" />
-          <folding>
-            <element signature="e#16#125#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1239,26 +1259,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/contract/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1187">
-          <caret line="93" lean-forward="true" selection-start-line="93" selection-end-line="93" />
-          <folding>
-            <element signature="e#15#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="458">
-          <caret line="383" column="44" selection-start-line="383" selection-start-column="44" selection-end-line="383" selection-end-column="44" />
-          <folding>
-            <element signature="e#17#122#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/merchandise/manager/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="599">
@@ -1275,13 +1275,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_order.py">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/production/goods/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-588">
-          <caret line="233" column="40" lean-forward="true" selection-start-line="233" selection-start-column="40" selection-end-line="233" selection-end-column="40" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/agile/customer/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
@@ -1341,16 +1334,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/manager/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="160" column="25" selection-start-line="160" selection-start-column="25" selection-end-line="160" selection-end-column="25" />
-          <folding>
-            <element signature="e#15#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/finance/balance/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -1402,20 +1385,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_school.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="27" column="46" lean-forward="true" selection-start-line="27" selection-start-column="46" selection-end-line="27" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/agent/manager/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="82" column="8" selection-start-line="82" selection-start-column="8" selection-end-line="82" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1449" />
@@ -1442,45 +1411,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/agile/customer/manager/server/mobile.py">
+    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/goods/store/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="263">
-          <caret line="60" column="57" selection-start-line="60" selection-start-column="57" selection-end-line="60" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_major.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-10">
-          <caret line="15" column="30" lean-forward="true" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
-          <folding>
-            <element signature="e#15#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/goods/manager/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="410">
-          <caret line="111" column="45" lean-forward="true" selection-start-line="111" selection-start-column="45" selection-end-line="111" selection-end-column="45" />
-          <folding>
-            <element signature="e#17#87#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="63">
+          <caret line="3" column="52" selection-start-line="3" selection-start-column="52" selection-end-line="3" selection-end-column="52" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/abs/services/agent/goods/store/goods.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="18" column="29" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+        <state relative-caret-position="126">
+          <caret line="12" column="64" selection-start-line="12" selection-start-column="64" selection-end-line="12" selection-end-column="64" />
           <folding>
             <element signature="e#16#151#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/store/years.py">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/src/agile/crm/apis/university/major/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="10" column="59" lean-forward="true" selection-start-line="10" selection-start-column="59" selection-end-line="10" selection-end-column="59" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/store/relations.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -1489,43 +1442,165 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/university/relations/__init__.py">
+    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/store/years.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="45" column="34" lean-forward="true" selection-start-line="45" selection-start-column="34" selection-end-line="45" selection-end-column="34" />
+        <state relative-caret-position="126">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/utils/constant/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="15" column="34" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/university/major/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2335">
+          <caret line="165" column="20" selection-start-line="165" selection-start-column="20" selection-end-line="165" selection-end-column="20" />
           <folding>
             <element signature="e#16#124#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/university/major/__init__.py">
+    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/agent/manager/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-329">
-          <caret line="106" column="56" selection-start-line="106" selection-start-column="56" selection-end-line="106" selection-end-column="56" />
+        <state relative-caret-position="298">
+          <caret line="82" column="8" selection-start-line="82" selection-start-column="8" selection-end-line="82" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_major.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="494">
+          <caret line="55" column="48" selection-start-line="55" selection-start-column="36" selection-end-line="55" selection-end-column="48" />
+          <folding>
+            <element signature="e#15#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/goods/manager/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1964">
+          <caret line="99" lean-forward="true" selection-start-line="99" selection-end-line="99" />
+          <folding>
+            <element signature="e#17#87#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/university/relations/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="903">
+          <caret line="199" column="22" selection-start-line="199" selection-start-column="22" selection-end-line="199" selection-end-column="22" />
           <folding>
             <element signature="e#16#124#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/merchandise/utils/constant/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="63">
+          <caret line="3" column="6" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/production/goods/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2597">
+          <caret line="56" column="54" selection-start-line="56" selection-start-column="54" selection-end-line="56" selection-end-column="54" />
+          <folding>
+            <element signature="e#15#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_school.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="514">
+          <caret line="50" column="34" selection-start-line="50" selection-start-column="34" selection-end-line="50" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/manager/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="445">
+          <caret line="94" column="20" lean-forward="true" selection-start-line="94" selection-start-column="20" selection-end-line="94" selection-end-column="20" />
+          <folding>
+            <element signature="e#16#86#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/order.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="770">
+          <caret line="42" column="8" selection-start-line="42" selection-start-column="8" selection-end-line="42" selection-end-column="8" />
+          <folding>
+            <element signature="e#16#104#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/manager/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1880">
+          <caret line="217" column="19" selection-start-line="217" selection-start-column="19" selection-end-line="217" selection-end-column="19" />
+          <folding>
+            <element signature="e#15#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/contract.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="17" column="11" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="11" />
+          <folding>
+            <element signature="e#16#125#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="197" column="37" selection-start-line="197" selection-start-column="32" selection-end-line="197" selection-end-column="37" />
+          <folding>
+            <element signature="e#17#122#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/university/school/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="70">
-          <caret line="74" column="34" selection-start-line="74" selection-start-column="34" selection-end-line="74" selection-end-column="34" />
+        <state relative-caret-position="539">
+          <caret line="148" lean-forward="true" selection-start-line="126" selection-start-column="4" selection-end-line="148" />
           <folding>
             <element signature="e#16#124#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/manager/__init__.py">
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/contract/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="204" column="50" selection-start-line="204" selection-start-column="50" selection-end-line="204" selection-end-column="50" />
+        <state relative-caret-position="39">
+          <caret line="108" column="12" selection-start-line="108" selection-start-column="6" selection-end-line="108" selection-end-column="12" />
           <folding>
-            <element signature="e#16#86#0" expanded="true" />
+            <element signature="e#15#26#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/manager/server/mobile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="438">
+          <caret line="70" column="44" selection-start-line="70" selection-start-column="44" selection-end-line="70" selection-end-column="44" />
         </state>
       </provider>
     </entry>
