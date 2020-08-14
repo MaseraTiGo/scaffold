@@ -197,11 +197,12 @@ class Remove(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        major = UniversityServer.get_major(request.major_id)
-        goods_qs = GoodsServer.search_all_goods(major_id = major.id)
+        goods_qs = GoodsServer.search_all_goods(
+            major_id = request.major_id
+        )
         if goods_qs.count() > 0:
             raise BusinessError("专业已绑定商品禁止删除")
-        major.delete()
+        UniversityServer.remove_major(request.major_id)
 
     def fill(self, response):
         return response

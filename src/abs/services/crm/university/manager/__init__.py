@@ -182,6 +182,15 @@ class UniversityServer(BaseManager):
         major.update(**update_info)
         return major
 
+    @classmethod
+    def remove_major(cls,):
+        major = cls.get_major(major_id)
+        relations_qs = UniversityRelationsServer.search_all(major = major)
+        if relations_qs.count() > 0:
+            raise BusinessError("专业已绑定学校禁止删除")
+        major.delete()
+        return True
+
 
 class UniversityRelationsServer(BaseManager):
 
@@ -251,6 +260,12 @@ class UniversityYearsServer(BaseManager):
 
     @classmethod
     def create(cls, **years_info):
+        if cls.is_exsited(
+            years_info["category"],
+            years_info["duration"],
+            years_info["relations"]
+        ):
+            raise BusinessError("此学年已添加")
         years = Years.create(**years_info)
         return years
 
@@ -259,6 +274,7 @@ class UniversityYearsServer(BaseManager):
         create_list = []
         for year_dic in years_list:
             create_list.append(Years(
+                unique_number = Years.generate_unique_number(),
                 relations = relations,
                 category = year_dic["category"],
                 duration = year_dic["duration"],
@@ -285,8 +301,43 @@ class UniversityYearsServer(BaseManager):
         return years_qs
 
     @classmethod
+    def linkage(cls):
+        link_mapping = {}
+        relations_mapping = {}
+        years_qs = cls.search_all()
+        for years in years_qs:
+            if years.relations not in relations_mapping:
+                relations_mapping[years.relations] = []
+            relations_mapping[years.relations].append({
+                'years_id':years.id,
+                'category': years.category,
+                'duration': years.duration,
+            })
+        for relations, years_list in relations_mapping.items():
+            major_mapping = {
+                'major_id':relations.major.id,
+                'major_name':relations.major.name,
+                'children':years_list
+            }
+            if relations.school not in link_mapping:
+                link_mapping[relations.school] = {
+                    "school_id":relations.school.id,
+                    "school_name":relations.school.name,
+                    "children":[]
+                }
+            link_mapping[relations.school]["children"].append(major_mapping)
+        return list(link_mapping.values())
+
+    @classmethod
     def update(cls, years_id, **update_info):
         years = cls.get(years_id)
+        if cls.is_exsited(
+            update_info["category"],
+            update_info["duration"],
+            years, relations,
+            years
+        ):
+            raise BusinessError("此学年已添加")
         years.update(**update_info)
         return years
 
@@ -302,7 +353,7 @@ class UniversityYearsServer(BaseManager):
         for relations in relations_list:
             relations.years_list = []
             relations_mapping[relations.id] = relations
-        years_qs = cls.search_all(relations_id__in = obj_mapping.keys())
+        years_qs = cls.search_all(relations_id__in = relations_mapping.keys())
         for years in years_qs:
             if years.relations_id in relations_mapping:
                 relations_mapping[years.relations_id].years_list.append(years)
@@ -323,13 +374,14 @@ class UniversityYearsServer(BaseManager):
         return obj_list
 
     @classmethod
-    def is_exsited(cls, school, major, relations = None):
-        relations_qs = cls.search_all(
-            school = school,
-            major = major
+    def is_exsited(cls, category, duration, relations, years = None):
+        years_qs = cls.search_all(
+            category = category,
+            duration = duration,
+            relations = relations
         )
-        if relations is not None:
-            relations_qs = relations_qs.exclude(id = relations.id)
-        if relations_qs.count() > 0:
+        if years is not None:
+            years_qs = years_qs.exclude(id = years.id)
+        if years_qs.count() > 0:
             return True
         return False
