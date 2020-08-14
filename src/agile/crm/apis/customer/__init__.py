@@ -54,6 +54,7 @@ class Search(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.current_page = RequestField(IntField, desc = "当前页码")
     request.search_info = RequestField(DictField, desc = "搜索客户条件", conf = {
+        'nick': CharField(desc = "昵称", is_required = False),
         'create_time__gte': DatetimeField(desc = "注册起始时间", is_required = False),
         'create_time__lte': DatetimeField(desc = "注册结束时间", is_required = False),
     })

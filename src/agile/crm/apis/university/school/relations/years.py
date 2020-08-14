@@ -165,7 +165,7 @@ class Remove(StaffAuthorizedApi):
 
     def execute(self, request):
         goods_qs = GoodsServer.search_all_goods(
-            major_id = request.major_id
+            years_id = request.years_id
         )
         if goods_qs.count() > 0:
             raise BusinessError("专业已绑定商品禁止删除")

@@ -159,11 +159,6 @@ class Search(AgentStaffAuthorizedApi):
             'city': CharField(desc = "学校所在市", is_required = False),
             'school_id': IntField(desc = "学校id", is_required = False),
             'major_id': IntField(desc = "专业id", is_required = False),
-            'category': CharField(
-                desc = "分类",
-                choices = CategoryTypes.CHOICES,
-                is_required = False
-            ),
         }
     )
 
@@ -359,12 +354,12 @@ class Add(AgentStaffAuthorizedApi):
             "title":request.goods_info.pop('title'),
             "company_id":agent.company_id,
             "slideshow":json.dumps(request.goods_info.pop('slideshow')),
-            "video_display":request.goods_info.pop('video_display'),
+            "video_display":request.goods_info.pop('video_display', ''),
             "detail":json.dumps(request.goods_info.pop('detail')),
             "market_price":request.goods_info.pop('market_price'),
             "despatch_type":request.goods_info.pop('despatch_type'),
             "production_id":production.id,
-            "remark":request.goods_info.pop('remark'),
+            "remark":request.goods_info.pop('remark', ''),
             'description':request.goods_info.pop('description'),
             "pay_types":"[]",
             "pay_services":"[]",
@@ -443,11 +438,11 @@ class Update(AgentStaffAuthorizedApi):
         merchandise_update_info = {
             "title":request.goods_info.pop('title'),
             "slideshow":json.dumps(request.goods_info.pop('slideshow')),
-            "video_display":request.goods_info.pop('video_display'),
+            "video_display":request.goods_info.pop('video_display', ''),
             "detail":json.dumps(request.goods_info.pop('detail')),
             "market_price":request.goods_info.pop('market_price'),
             "despatch_type":request.goods_info.pop('despatch_type'),
-            "remark":request.goods_info.pop('remark'),
+            "remark":request.goods_info.pop('remark', ''),
             "description":request.goods_info.pop('description'),
         }
         MerchandiseServer.update(goods.merchandise_id,

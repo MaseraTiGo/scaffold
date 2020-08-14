@@ -19,6 +19,11 @@ class CustomerServer(BaseManager):
 
     @classmethod
     def search(cls, current_page, **search_info):
+        if "nick" in search_info:
+            nick = search_info.pop("nick")
+            search_info.update({
+                "nick__contains":nick
+            })
         customer_qs = Customer.search(**search_info).order_by('-create_time')
         splitor = Splitor(current_page, customer_qs)
         PersonServer.hung_persons(splitor.get_list())
