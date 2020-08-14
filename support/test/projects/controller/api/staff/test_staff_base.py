@@ -36,6 +36,8 @@ class StaffTestCase(ControllerAPITestCase):
         self.assertTrue('name' in staff)
         self.assertTrue('gender' in staff)
         self.assertTrue('birthday' in staff)
+        self.assertTrue('wechat' in staff)
+        self.assertTrue('qq' in staff)
         self.assertTrue('phone' in staff)
         self.assertTrue('email' in staff)
         self.assertTrue('work_number' in staff)
