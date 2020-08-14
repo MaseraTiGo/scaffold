@@ -159,11 +159,6 @@ class Search(StaffAuthorizedApi):
             'school_id': IntField(desc = "学校id", is_required = False),
             'major_id': IntField(desc = "专业id", is_required = False),
             'agent_id': IntField(desc = "代理商id", is_required = False),
-            'category': CharField(
-                desc = "商品分类",
-                is_required = False,
-                choices = CategoryTypes.CHOICES
-            ),
         }
     )
 
@@ -387,12 +382,12 @@ class Add(StaffAuthorizedApi):
             "title":request.goods_info.pop('title'),
             "company_id":company.id,
             "slideshow":json.dumps(request.goods_info.pop('slideshow')),
-            "video_display":request.goods_info.pop('video_display'),
+            "video_display":request.goods_info.pop('video_display', ''),
             "detail":json.dumps(request.goods_info.pop('detail')),
             "market_price":request.goods_info.pop('market_price'),
             "despatch_type":request.goods_info.pop('despatch_type'),
             "production_id":production.id,
-            "remark":request.goods_info.pop('remark'),
+            "remark":request.goods_info.pop('remark', ''),
             'description':request.goods_info.pop('description'),
             "pay_types":"[]",
             "pay_services":"[]",
@@ -515,13 +510,13 @@ class Update(StaffAuthorizedApi):
         merchandise_update_info = {
             "title":request.goods_info.pop('title'),
             "slideshow":json.dumps(request.goods_info.pop('slideshow')),
-            "video_display":request.goods_info.pop('video_display'),
+            "video_display":request.goods_info.pop('video_display', ''),
             "detail":json.dumps(request.goods_info.pop('detail')),
             "market_price":request.goods_info.pop('market_price'),
             "despatch_type":request.goods_info.pop('despatch_type'),
             "use_status":request.goods_info.pop('use_status'),
             "production_id":production.id,
-            "remark":request.goods_info.pop('remark'),
+            "remark":request.goods_info.pop('remark', ''),
             "description":request.goods_info.pop('description'),
         }
         MerchandiseServer.update(goods.merchandise_id,
@@ -586,6 +581,8 @@ class Setuse(StaffAuthorizedApi):
     def execute(self, request):
         goods = GoodsServer.get_goods(request.goods_id)
         merchandise = MerchandiseServer.get(goods.merchandise_id)
+        if len(merchandise.specification_list) == 0:
+            raise BusinessError("该商品缺少规格无法上架")
         use_status = UseStatus.ENABLE
         if merchandise.use_status == UseStatus.ENABLE:
             use_status = UseStatus.FORBIDDENT

@@ -380,7 +380,8 @@ class UniversityYearsServer(BaseManager):
         for obj in obj_list:
             obj.years = None
             if obj.years_id not in obj_mapping:
-                obj_mapping[obj.years_id] = [obj]
+                obj_mapping[obj.years_id] = []
+            obj_mapping[obj.years_id].append(obj)
         years_qs = cls.search_all(id__in = obj_mapping.keys())
         for years in years_qs:
             if years.id in obj_mapping:
