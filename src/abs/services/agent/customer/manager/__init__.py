@@ -52,31 +52,32 @@ class AgentCustomerServer(BaseManager):
     def create_foradd_order(cls, customer, agent_id, order_id):
         person = PersonServer.get(customer.person_id)
         agent_customer = AgentCustomer.search(
-            phone=person.phone,
-            agent_id=agent_id
+            phone = person.phone,
+            agent_id = agent_id
         ).first()
         if agent_customer:
             agent_customer.update(
-                customer_id=customer.id
+                customer_id = customer.id
             )
         else:
             AgentCustomer.create(
-                customer_id=customer.id,
-                agent_id=agent_id,
-                phone=person.phone,
-                person_id=person.id
+                customer_id = customer.id,
+                agent_id = agent_id,
+                phone = person.phone,
+                person_id = person.id
             )
         sale_chance = AgentCustomerSaleChance.search(
-            agent_customer=agent_customer,
-            end_time__gt=datetime.date.today()
+            agent_customer = agent_customer,
+            end_time__gt = datetime.date.today()
         ).first()
         if sale_chance:
             SaleChanceOrder.create(
-                sale_chance=sale_chance,
-                order_id=order_id
+                sale_chance = sale_chance,
+                order_id = order_id
             )
         return agent_customer
 
+    @classmethod
     def check_byphone(cls, phone):
         agent_customer_qs = cls.search_all(
             phone = phone
