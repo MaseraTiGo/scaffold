@@ -78,15 +78,23 @@ class Search(AgentStaffAuthorizedApi):
     def fill(self, response, agent_customer_spliter):
         data_list = [{
             'id': agent_customer.id,
-            'nick': agent_customer.customer.nick,
-            'head_url': agent_customer.customer.head_url,
-            'name': agent_customer.customer.person.name,
-            'gender': agent_customer.customer.person.gender,
-            'birthday': agent_customer.customer.person.birthday,
-            'phone': agent_customer.customer.person.phone,
-            'email': agent_customer.customer.person.email,
-            'wechat': agent_customer.customer.person.wechat,
-            'qq': agent_customer.customer.person.qq,
+            'nick': agent_customer.customer.nick if \
+                    agent_customer.customer else '',
+            'head_url': agent_customer.customer.head_url if \
+                        agent_customer.customer else '',
+            'name': agent_customer.customer.person.name if \
+                    agent_customer.customer else '',
+            'gender': agent_customer.customer.person.gender if \
+                      agent_customer.customer else '',
+            'birthday': agent_customer.customer.person.birthday if \
+                        agent_customer.customer else '',
+            'phone': agent_customer.phone,
+            'email': agent_customer.customer.person.email if \
+                     agent_customer.customer else '',
+            'wechat': agent_customer.customer.person.wechat if \
+                      agent_customer.customer else '',
+            'qq': agent_customer.customer.person.qq if \
+                  agent_customer.customer else '',
             'create_time': agent_customer.create_time
         } for agent_customer in agent_customer_spliter.data]
         response.data_list = data_list
