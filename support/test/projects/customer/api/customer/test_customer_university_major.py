@@ -37,3 +37,31 @@ class CustomerUniversityMajorTest(CustomerAPITestCase):
         self.assertTrue("data_list" in result)
         self.assertTrue("total" in result)
         self.assertTrue("total_page" in result)
+
+    def test_product_relations_searchmajor(self):
+        api = 'university.relations.searchmajor'
+        params = {
+            "current_page": 1,
+            'search_info': json.dumps({
+                'school_id': 5,
+                'category': 'undergraduate'
+            })
+        }
+        result = self.access_api(api=api, is_auth=False, **params)
+        self.assertTrue("data_list" in result)
+        self.assertTrue("total" in result)
+        self.assertTrue("total_page" in result)
+
+    def test_product_relations_searchschool(self):
+        api = 'university.relations.searchschool'
+        params = {
+            "current_page": 1,
+            'search_info': json.dumps({
+                'major_id': 1,
+                'category': 'undergraduate'
+            })
+        }
+        result = self.access_api(api=api, is_auth=False, **params)
+        self.assertTrue("data_list" in result)
+        self.assertTrue("total" in result)
+        self.assertTrue("total_page" in result)

@@ -1,7 +1,7 @@
 # coding=UTF-8
 import json
 from infrastructure.core.field.base import CharField, DictField, ListField, \
-    IntField
+    IntField, DatetimeField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -66,9 +66,6 @@ class Add(CustomerAuthorizedApi):
         DictField,
         desc="合同信息",
         conf={
-            'name': CharField(desc="签署人"),
-            'phone': CharField(desc="手机号"),
-            'identification': CharField(desc="身份证"),
             'email': CharField(desc="邮箱"),
             'autograph': CharField(desc="签名图片")
         }
@@ -93,22 +90,81 @@ class Add(CustomerAuthorizedApi):
         agent = AgentServer.get(order_item.order.agent_id)
 
         contract_info = request.contract_info
+        contract_info.update({
+            'name': order_item.order.invoice.name,
+            'phone': order_item.order.invoice.phone,
+            'identification': order_item.order.invoice.identification,
+        })
         ContractServer.create(
             order_item,
             agent,
             customer_id=order_item.order.customer_id,
             **contract_info
         )
-        order = OrderServer.get(order_item.order.id)
-        order.update(
-            name=contract_info['name'],
-            phone=contract_info['phone']
-        )
-        order.mg_order.invoice.update(
-            name=contract_info['name'],
-            phone=contract_info['phone'],
-            identification=contract_info['identification']
-        )
 
     def fill(self, response):
         return response
+
+
+class Search(CustomerAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.current_page = RequestField(IntField, desc="当前页码")
+    request.search_info = RequestField(
+        DictField,
+        desc="搜索学校",
+        conf={
+        }
+    )
+
+    response = with_metaclass(ResponseFieldSet)
+    response.data_list = ResponseField(
+        ListField,
+        desc="合同列表",
+        fmt=DictField(
+            desc="合同信息",
+            conf={
+                'id': IntField(desc="id"),
+                'name': CharField(desc="名称"),
+                'create_time': DatetimeField(desc="创建时间"),
+                'url': ListField(
+                    desc="合同列表pdf",
+                    fmt=CharField(desc="合同信息")
+                ),
+                'img_url': ListField(
+                    desc="合同列表png",
+                    fmt=CharField(desc="合同信息")
+                )
+            }
+        )
+    )
+    response.total = ResponseField(IntField, desc="数据总数")
+    response.total_page = ResponseField(IntField, desc="总页码数")
+
+    @classmethod
+    def get_desc(cls):
+        return "我的合同列表"
+
+    @classmethod
+    def get_author(cls):
+        return "xyc"
+
+    def execute(self, request):
+        page_list = ContractServer.search(
+            request.current_page,
+            customer_id=self.auth_user.id,
+            **request.search_info
+        )
+        return page_list
+
+    def fill(self, response, page_list):
+        response.data_list = [{
+            'id': contract.id,
+            'name': '教育合同-{name}'.format(name=contract.name),
+            'create_time': contract.create_time,
+            'url': json.loads(contract.url),
+            'img_url': json.loads(contract.img_url)
+        } for contract in page_list.data]
+        response.total = page_list.total
+        response.total_page = page_list.total_page
+        return response
+

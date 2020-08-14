@@ -10,8 +10,9 @@ from agile.base.api import NoAuthorizedApi
 from abs.services.agent.goods.manager import GoodsServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
-from abs.services.crm.university.manager import UniversityServer
+from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
 from abs.services.agent.goods.utils.constant import CategoryTypes
+from abs.services.crm.agent.manager import AgentServer
 
 
 class Search(NoAuthorizedApi):
@@ -52,7 +53,8 @@ class Search(NoAuthorizedApi):
                 'school_city': CharField(desc = "学校所在城市"),
                 'production_name': CharField(desc = "产品名称"),
                 'brand_name': CharField(desc = "品牌名"),
-                'sale_price': IntField(desc = "售价")
+                'sale_price': IntField(desc = "售价"),
+                'agent_name': CharField(desc="代理商名称"),
             }
         )
     )
@@ -87,6 +89,13 @@ class Search(NoAuthorizedApi):
             search_info.update({
                 'school_id__in': school_id_list
             })
+        if 'category' in search_info:
+            years_id_list = UniversityYearsServer.search_id_list(
+                category=search_info.pop('category')
+            )
+            search_info.update({
+                'years_id__in': years_id_list
+            })
         page_list = GoodsServer.search_enable_goods(
             request.current_page,
             **search_info
@@ -96,6 +105,8 @@ class Search(NoAuthorizedApi):
         MerchandiseServer.hung_merchandise(page_list.data)
         merchandise_list = [goods.merchandise for goods in page_list.data]
         ProductionServer.hung_production(merchandise_list)
+        UniversityYearsServer.hung_years(page_list.data)
+        AgentServer.hung_agent(page_list.data)
         return page_list
 
     def fill(self, response, page_list):
@@ -108,10 +119,11 @@ class Search(NoAuthorizedApi):
                 'title': goods.merchandise.title,
                 'school_name': goods.school.name,
                 'major_name': goods.major.name,
-                'duration': goods.get_duration_display(),
+                'duration': goods.years.get_duration_display(),
                 'school_city': goods.school.city,
                 'production_name': goods.merchandise.production.name,
                 'brand_name': goods.merchandise.production.brand.name,
+                'agent_name': goods.agent.name,
                 'sale_price': min([
                     specification.sale_price
                     for specification in goods.merchandise.specification_list
@@ -150,6 +162,7 @@ class HotSearch(NoAuthorizedApi):
                 'school_city': CharField(desc = "学校所在城市"),
                 'production_name': CharField(desc = "产品名称"),
                 'brand_name': CharField(desc = "品牌名称"),
+                'agent_name': CharField(desc="代理商名称"),
                 'sale_price': IntField(desc = "售价")
             }
         )
@@ -191,6 +204,8 @@ class HotSearch(NoAuthorizedApi):
         MerchandiseServer.hung_merchandise(data_list)
         merchandise_list = [goods.merchandise for goods in data_list]
         ProductionServer.hung_production(merchandise_list)
+        UniversityYearsServer.hung_years(data_list)
+        AgentServer.hung_agent(data_list)
         return data_list
 
     def fill(self, response, data_list):
@@ -203,10 +218,11 @@ class HotSearch(NoAuthorizedApi):
                 'title': goods.merchandise.title,
                 'school_name': goods.school.name,
                 'major_name': goods.major.name,
-                'duration': goods.get_duration_display(),
+                'duration': goods.years.get_duration_display(),
                 'school_city': goods.school.city,
                 'production_name': goods.merchandise.production.name,
                 'brand_name': goods.merchandise.production.brand.name,
+                'agent_name': goods.agent.name,
                 'sale_price': min([
                     specification.sale_price
                     for specification in goods.merchandise.specification_list
@@ -236,6 +252,7 @@ class Get(NoAuthorizedApi):
         'duration': CharField(desc = "学年"),
         'brand_name': CharField(desc = "品牌"),
         'production_name': CharField(desc = "产品名"),
+        'agent_name': CharField(desc="代理商名称"),
         'specification_list': ListField(
             desc = "规格列表",
             fmt = DictField(
@@ -274,6 +291,8 @@ class Get(NoAuthorizedApi):
         UniversityServer.hung_school([goods])
         MerchandiseServer.hung_merchandise([goods])
         ProductionServer.hung_production([goods.merchandise])
+        UniversityYearsServer.hung_years([goods])
+        AgentServer.hung_agent([goods])
         return goods
 
     def fill(self, response, goods):
@@ -292,9 +311,10 @@ class Get(NoAuthorizedApi):
             'month_quantity': 0,
             'school_name': goods.school.name,
             'major_name': goods.major.name,
-            'duration': goods.get_duration_display(),
+            'duration': goods.years.get_duration_display(),
             'brand_name': goods.merchandise.production.brand.name,
             'production_name': goods.merchandise.production.name,
+            'agent_name': goods.agent.name,
             'specification_list': [{
                 'id': specification.id,
                 'sale_price': specification.sale_price,

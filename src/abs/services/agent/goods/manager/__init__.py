@@ -106,7 +106,20 @@ class GoodsServer(BaseManager):
             mapping.update({
                 relation.id: relation
             })
-        goods_list = Goods.search(relations_id__in=relation_list)
+        goods_list = Goods.search(relations_id__in=mapping.keys())
         for goods in goods_list:
             relation = mapping.get(goods.relations_id)
             relation.goods_list.append(goods)
+
+    @classmethod
+    def hung_goods_foryears(cls, years_list):
+        mapping = {}
+        for years in years_list:
+            years.goods_list = []
+            mapping.update({
+                years.id: years
+            })
+        goods_list = Goods.search(years_id__in=mapping.keys())
+        for goods in goods_list:
+            years = mapping.get(goods.years_id)
+            years.goods_list.append(goods)

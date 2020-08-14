@@ -48,4 +48,4 @@ class CustomerUniversitySchoolTest(CustomerAPITestCase):
     def test_product_school_location(self):
         api = 'university.school.location'
         result = self.access_api(api=api, is_auth=False)
-        self.assertTrue("hot_city_list" in result)
+        self.assertTrue("data_list" in result)
