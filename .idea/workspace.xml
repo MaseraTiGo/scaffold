@@ -1,39 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="213d7b7e-426d-4d3e-a6a1-5f3f9deff373" name="Default Changelist" comment="">
+    <list default="true" id="213d7b7e-426d-4d3e-a6a1-5f3f9deff373" name="Default Changelist" comment="update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/agent/contract/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/agent/contract/apis/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/apis/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/agent/contract/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/agent/contract/manager/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/agent/contract/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/agent/contract/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/migrations/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/agent/contract/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/agent/contract/settings.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/agent/contract/store/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/agent/contract/store/contract.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/store/contract.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/agent/contract/utils/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/utils/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/apis/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/apps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/manager/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/manager/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/migrations/0002_orderitem_school_city.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/migrations/0003_order_agent_id.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/store/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/store/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/store/order.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/store/order.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/store/orderitem.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/store/orderitem.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/utils/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abs/services/crm/order/utils/constant/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/abs/services/customer/order/utils/constant/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/agile/crm/apis/order/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/crm/apis/order/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/agile/customer/apis/customer/contract/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/customer/apis/customer/contract/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abs/services/agent/goods/migrations/0004_goods_merchandise_id.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/support/z_test.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -46,55 +17,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/order.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="84">
-              <caret line="4" column="47" selection-start-line="4" selection-start-column="47" selection-end-line="4" selection-end-column="47" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/orderitem.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="6" column="44" selection-start-line="6" selection-start-column="44" selection-end-line="6" selection-end-column="44" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="14" column="40" selection-start-line="14" selection-start-column="40" selection-end-line="14" selection-end-column="40" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/utils/__init__.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/contract/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="332">
-              <caret line="77" column="48" lean-forward="true" selection-start-line="77" selection-start-column="48" selection-end-line="77" selection-end-column="48" />
+            <state relative-caret-position="459">
+              <caret line="122" column="8" lean-forward="true" selection-start-line="122" selection-start-column="8" selection-end-line="125" selection-end-column="9" />
               <folding>
-                <element signature="e#15#28#0" expanded="true" />
+                <element signature="e#17#122#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/settings.py">
+        <entry file="file://$PROJECT_DIR$/src/abs/services/agent/customer/store/salechance.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="71" column="32" selection-start-line="71" selection-start-column="32" selection-end-line="71" selection-end-column="32" />
+            <state relative-caret-position="336">
+              <caret line="34" column="43" lean-forward="true" selection-start-line="34" selection-start-column="43" selection-end-line="34" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -102,41 +41,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/settings_local.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="273">
-              <caret line="193" column="29" selection-start-line="193" selection-start-column="29" selection-end-line="193" selection-end-column="29" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/django/utils/autoreload.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="212" column="24" selection-start-line="212" selection-start-column="24" selection-end-line="212" selection-end-column="24" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/manager/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="399">
-              <caret line="19" column="40" lean-forward="true" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
-              <folding>
-                <element signature="e#16#86#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/abs/middleware/file/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="20" column="8" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="8" />
-              <folding>
-                <element signature="e#16#25#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="454">
+              <caret line="188" lean-forward="true" selection-start-line="188" selection-end-line="188" />
             </state>
           </provider>
         </entry>
@@ -152,42 +58,46 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>OrderServer</find>
-      <find>pay_middleware</find>
-      <find>pay_finish</find>
-      <find>wechat_pay_order_notify</find>
-      <find>wechat_order_pay_notify</find>
-      <find>get_bypayment</find>
-      <find>NoA</find>
-      <find>Customer(base</find>
-      <find>Address(base</find>
-      <find>invoice(bas</find>
-      <find>address</find>
-      <find>OrderStatus</find>
-      <find>pillow</find>
-      <find>customer</find>
-      <find>地址不存在</find>
-      <find>LOGISTICS</find>
-      <find>身份证</find>
-      <find>邮箱</find>
-      <find>Major(</find>
-      <find>phone =</find>
-      <find>identification</find>
-      <find>url =</find>
-      <find>cutomer_id</find>
-      <find>customer_id</find>
-      <find>snapshoot</find>
+      <find>RelationsServer</find>
+      <find>agent</find>
+      <find>search_major</find>
+      <find>search_all_major_list</find>
+      <find>search_major_list</find>
+      <find>GoodsServer</find>
+      <find>AgentServer</find>
+      <find>category = Ch</find>
+      <find>page_list</find>
+      <find>production</find>
+      <find>hung_years</find>
+      <find>UniversityYearsServer</find>
+      <find>years(ba</find>
+      <find>get_duration_display</find>
+      <find>hung_goods_forrelations</find>
+      <find>category = C</find>
+      <find>major</find>
+      <find>agentserver</find>
+      <find>invoice(</find>
       <find>despatch_type</find>
-      <find>def create(</find>
-      <find>orderitemserver</find>
-      <find>OrderItemServer</find>
-      <find>Bus</find>
+      <find>order</find>
+      <find>address</find>
+      <find>goods(base</find>
+      <find>agent_name</find>
+      <find>mg_order</find>
+      <find>agent_</find>
+      <find>class Search(CustomerAuthor</find>
+      <find>class Search(CustomerAuthorized</find>
+      <find>DatetimeField</find>
+      <find>&quot;url&quot;</find>
     </findStrings>
+    <replaceStrings>
+      <replace />
+    </replaceStrings>
     <dirStrings>
       <dir>G:\www\scaffold\src\agile\customer\apis</dir>
       <dir>G:\www\scaffold\src\abs\services\crm\tool</dir>
       <dir>G:\www\scaffold\support\test\projects\customer\api\customer</dir>
       <dir>G:\www\scaffold\src\abs\services\crm\production</dir>
+      <dir>C:\Users\Administrator\AppData\Local\Programs\Python\Python36\Lib\site-packages\PIL</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -201,57 +111,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/support/common/generator/field/model/constant.py" />
+        <option value="$PROJECT_DIR$/support/common/generator/helper/business/crm/production/__init__.py" />
+        <option value="$PROJECT_DIR$/support/environment/simulate/business/customer/__init__.py" />
+        <option value="$PROJECT_DIR$/support/environment/simulate/business/crm/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/middleware/file/__init__.py" />
+        <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_contract.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/apis/production/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/agent/customer/settings.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/agent/customer/models.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/agent/customer/apps.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/agent/customer/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/agent/customer/store/customer.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/agent/customer/store/__init__.py" />
+        <option value="$PROJECT_DIR$/src/settings.py" />
+        <option value="$PROJECT_DIR$/src/abs/middleground/business/order/utils/constant/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/agent/customer/manager/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/middleground/business/production/manager/__init__.py" />
+        <option value="$PROJECT_DIR$/src/agile/agent/apis/production/__init__.py" />
+        <option value="$PROJECT_DIR$/src/agile/middleground/apis/business/order/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/middleground/business/merchandise/manager/__init__.py" />
-        <option value="$PROJECT_DIR$/src/abs/middleware/alipay/__init__.py" />
-        <option value="$PROJECT_DIR$/src/abs/middleware/wechat/__init__.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/finance/balance/__init__.py" />
+        <option value="$PROJECT_DIR$/src/agile/crm/apis/production/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/middleware/extend/alipay/mini.py" />
+        <option value="$PROJECT_DIR$/src/abs/middleground/business/order/manager/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/customer/order/store/order.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/customer/order/store/contract.py" />
+        <option value="$PROJECT_DIR$/src/abs/middleware/extend/wechat/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/middleware/image/process.py" />
+        <option value="$PROJECT_DIR$/src/abs/middleware/image/__init__.py" />
+        <option value="$PROJECT_DIR$/src/settings_local.py" />
+        <option value="$PROJECT_DIR$/src/abs/middleware/extend/alipay/private.pem" />
+        <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/finance/balance/wechat_notify.py" />
+        <option value="$PROJECT_DIR$/src/abs/middleware/pay/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/middleware/extend/alipay/alipay_public.pem" />
         <option value="$PROJECT_DIR$/src/abs/middleware/extend/alipay/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/services/customer/finance/manager/__init__.py" />
-        <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_order.py" />
-        <option value="$PROJECT_DIR$/support/environment/simulate/business/crm/__init__.py" />
-        <option value="$PROJECT_DIR$/support/environment/simulate/business/customer/__init__.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/account/vcode/__init__.py" />
-        <option value="$PROJECT_DIR$/src/interface/urls.py" />
-        <option value="$PROJECT_DIR$/src/abs/middleware/file/__init__.py" />
-        <option value="$PROJECT_DIR$/src/abs/middleware/pay/__init__.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/finance/balance/wechat_notify.py" />
-        <option value="$PROJECT_DIR$/src/abs/middleground/business/order/manager/__init__.py" />
-        <option value="$PROJECT_DIR$/src/abs/middleground/business/order/store/entity/order.py" />
-        <option value="$PROJECT_DIR$/src/abs/middleware/extend/wechat/__init__.py" />
-        <option value="$PROJECT_DIR$/src/agile/crm/apis/production/goods/__init__.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/apis/production/goods/__init__.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/apis/university/school/__init__.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/apis/production/__init__.py" />
-        <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_major.py" />
-        <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_school.py" />
-        <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_production_goods.py" />
-        <option value="$PROJECT_DIR$/support/z_test.py" />
-        <option value="$PROJECT_DIR$/src/abs/middleware/image/process.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/crm/university/manager/__init__.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/manager/server/mobile.py" />
-        <option value="$PROJECT_DIR$/src/abs/middleware/image/__init__.py" />
-        <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_contract.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/agent/contract/store/__init__.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/agent/contract/store/contract.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/agent/contract/__init__.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/agent/contract/apps.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/agent/contract/models.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/agent/contract/settings.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/agent/contract/manager/__init__.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/finance/balance/alipay_notify.py" />
+        <option value="$PROJECT_DIR$/support/unit_test.py" />
+        <option value="$PROJECT_DIR$/support/common/testcase/api_test_case.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/agent/goods/store/goods.py" />
         <option value="$PROJECT_DIR$/src/agile/customer/apis/university/major/__init__.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/crm/production/store/goods.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/crm/order/store/order.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/crm/order/manager/__init__.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/customer/order/settings.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/customer/order/apps.py" />
-        <option value="$PROJECT_DIR$/src/agile/crm/apis/order/__init__.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/customer/order/store/order.py" />
-        <option value="$PROJECT_DIR$/src/abs/services/customer/order/store/orderitem.py" />
-        <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/agent/goods/manager/__init__.py" />
+        <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_major.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/apis/university/relations/__init__.py" />
         <option value="$PROJECT_DIR$/src/abs/services/customer/order/manager/__init__.py" />
-        <option value="$PROJECT_DIR$/src/settings.py" />
-        <option value="$PROJECT_DIR$/src/settings_local.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/apis/production/goods/__init__.py" />
+        <option value="$PROJECT_DIR$/src/abs/services/crm/university/manager/__init__.py" />
+        <option value="$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_school.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/apis/university/school/__init__.py" />
         <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/contract/__init__.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/manager/server/mobile.py" />
+        <option value="$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py" />
       </list>
     </option>
   </component>
@@ -261,12 +171,12 @@
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -297,23 +207,6 @@
               <item name="scaffold" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="abs" type="462c0819:PsiDirectoryNode" />
-              <item name="middleground" type="462c0819:PsiDirectoryNode" />
-              <item name="business" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="abs" type="462c0819:PsiDirectoryNode" />
-              <item name="middleground" type="462c0819:PsiDirectoryNode" />
-              <item name="business" type="462c0819:PsiDirectoryNode" />
-              <item name="order" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="abs" type="462c0819:PsiDirectoryNode" />
               <item name="middleware" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -321,6 +214,14 @@
               <item name="scaffold" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="abs" type="462c0819:PsiDirectoryNode" />
+              <item name="middleware" type="462c0819:PsiDirectoryNode" />
+              <item name="pay" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="abs" type="462c0819:PsiDirectoryNode" />
               <item name="services" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -338,7 +239,7 @@
               <item name="abs" type="462c0819:PsiDirectoryNode" />
               <item name="services" type="462c0819:PsiDirectoryNode" />
               <item name="agent" type="462c0819:PsiDirectoryNode" />
-              <item name="staff" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
@@ -347,7 +248,46 @@
               <item name="abs" type="462c0819:PsiDirectoryNode" />
               <item name="services" type="462c0819:PsiDirectoryNode" />
               <item name="agent" type="462c0819:PsiDirectoryNode" />
-              <item name="staff" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="migrations" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="abs" type="462c0819:PsiDirectoryNode" />
+              <item name="services" type="462c0819:PsiDirectoryNode" />
+              <item name="agent" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="store" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="abs" type="462c0819:PsiDirectoryNode" />
+              <item name="services" type="462c0819:PsiDirectoryNode" />
+              <item name="agent" type="462c0819:PsiDirectoryNode" />
+              <item name="goods" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="abs" type="462c0819:PsiDirectoryNode" />
+              <item name="services" type="462c0819:PsiDirectoryNode" />
+              <item name="agent" type="462c0819:PsiDirectoryNode" />
+              <item name="goods" type="462c0819:PsiDirectoryNode" />
+              <item name="migrations" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="abs" type="462c0819:PsiDirectoryNode" />
+              <item name="services" type="462c0819:PsiDirectoryNode" />
+              <item name="agent" type="462c0819:PsiDirectoryNode" />
+              <item name="goods" type="462c0819:PsiDirectoryNode" />
               <item name="store" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -364,105 +304,104 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="abs" type="462c0819:PsiDirectoryNode" />
               <item name="services" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
               <item name="crm" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="apis" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="apis" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="apis" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="contract" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="apis" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="finance" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="apis" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="finance" type="462c0819:PsiDirectoryNode" />
+              <item name="balance" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="apis" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="order" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="apis" type="462c0819:PsiDirectoryNode" />
               <item name="production" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
               <item name="scaffold" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="abs" type="462c0819:PsiDirectoryNode" />
-              <item name="services" type="462c0819:PsiDirectoryNode" />
-              <item name="crm" type="462c0819:PsiDirectoryNode" />
+              <item name="agile" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="apis" type="462c0819:PsiDirectoryNode" />
               <item name="production" type="462c0819:PsiDirectoryNode" />
-              <item name="store" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="abs" type="462c0819:PsiDirectoryNode" />
-              <item name="services" type="462c0819:PsiDirectoryNode" />
-              <item name="customer" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="abs" type="462c0819:PsiDirectoryNode" />
-              <item name="services" type="462c0819:PsiDirectoryNode" />
-              <item name="customer" type="462c0819:PsiDirectoryNode" />
-              <item name="order" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="abs" type="462c0819:PsiDirectoryNode" />
-              <item name="services" type="462c0819:PsiDirectoryNode" />
-              <item name="customer" type="462c0819:PsiDirectoryNode" />
-              <item name="order" type="462c0819:PsiDirectoryNode" />
-              <item name="manager" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="abs" type="462c0819:PsiDirectoryNode" />
-              <item name="services" type="462c0819:PsiDirectoryNode" />
-              <item name="customer" type="462c0819:PsiDirectoryNode" />
-              <item name="order" type="462c0819:PsiDirectoryNode" />
-              <item name="store" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="abs" type="462c0819:PsiDirectoryNode" />
-              <item name="services" type="462c0819:PsiDirectoryNode" />
-              <item name="customer" type="462c0819:PsiDirectoryNode" />
-              <item name="order" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="agile" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="agile" type="462c0819:PsiDirectoryNode" />
-              <item name="customer" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="agile" type="462c0819:PsiDirectoryNode" />
-              <item name="customer" type="462c0819:PsiDirectoryNode" />
-              <item name="apis" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="agile" type="462c0819:PsiDirectoryNode" />
-              <item name="customer" type="462c0819:PsiDirectoryNode" />
-              <item name="apis" type="462c0819:PsiDirectoryNode" />
-              <item name="customer" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="agile" type="462c0819:PsiDirectoryNode" />
-              <item name="customer" type="462c0819:PsiDirectoryNode" />
-              <item name="apis" type="462c0819:PsiDirectoryNode" />
-              <item name="customer" type="462c0819:PsiDirectoryNode" />
-              <item name="order" type="462c0819:PsiDirectoryNode" />
+              <item name="goods" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
@@ -488,31 +427,27 @@
               <item name="scaffold" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="agile" type="462c0819:PsiDirectoryNode" />
-              <item name="file" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="agile" type="462c0819:PsiDirectoryNode" />
-              <item name="file" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
               <item name="apis" type="462c0819:PsiDirectoryNode" />
+              <item name="university" type="462c0819:PsiDirectoryNode" />
+              <item name="relations" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
               <item name="scaffold" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="agile" type="462c0819:PsiDirectoryNode" />
-              <item name="file" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
               <item name="apis" type="462c0819:PsiDirectoryNode" />
-              <item name="file" type="462c0819:PsiDirectoryNode" />
+              <item name="university" type="462c0819:PsiDirectoryNode" />
+              <item name="school" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
               <item name="scaffold" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="agile" type="462c0819:PsiDirectoryNode" />
-              <item name="file" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
               <item name="manager" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -520,7 +455,9 @@
               <item name="scaffold" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="agile" type="462c0819:PsiDirectoryNode" />
-              <item name="middleground" type="462c0819:PsiDirectoryNode" />
+              <item name="customer" type="462c0819:PsiDirectoryNode" />
+              <item name="manager" type="462c0819:PsiDirectoryNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
@@ -558,14 +495,6 @@
               <item name="support" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="projects" type="462c0819:PsiDirectoryNode" />
-              <item name="crm" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="scaffold" type="b2602c69:ProjectViewProjectNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
-              <item name="support" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="projects" type="462c0819:PsiDirectoryNode" />
               <item name="customer" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -595,30 +524,31 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/abs/services/customer/order/store" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../crm-be" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\www\scaffold\src\abs\middleware\image" />
+      <recent name="G:\www\scaffold\src\abs\services\customer\order\store" />
+      <recent name="G:\www\scaffold\src\abs\services\customer" />
+      <recent name="G:\www\scaffold\src\abs\middleware\extend\sms" />
+      <recent name="G:\www\scaffold\src" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="G:\www\scaffold\src\abs\services\agent\customer" />
+      <recent name="G:\www\scaffold\src\abs\middleware\image" />
       <recent name="G:\www\scaffold\src\abs\services\customer\order\store" />
       <recent name="G:\www\scaffold\src\abs\services\customer" />
       <recent name="G:\www\scaffold\src\abs\services\agent\contract" />
-      <recent name="G:\www\scaffold\src\abs\services\crm\production\utils" />
-      <recent name="G:\www\scaffold\src\agile\customer\apis\production\goods" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="G:\www\scaffold\src\abs\services\customer\order\store" />
-      <recent name="G:\www\scaffold\src\abs\services\customer" />
-      <recent name="G:\www\scaffold\src\abs\middleware\image" />
-      <recent name="G:\www\scaffold\src\abs\middleware\extend\sms" />
-      <recent name="G:\www\scaffold\src" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -633,7 +563,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.z_test">
+  <component name="RunManager" selected="Django server.scaffold">
     <configuration name="z_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="scaffold" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -663,10 +593,9 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DJANGO_SETTINGS_MODULE" value="src.settings" />
-        <env name="Path" value="" />
       </envs>
       <option name="SDK_HOME" value="C:\Users\Administrator\AppData\Local\Programs\Python\Python36\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -722,231 +651,8 @@
       <workItem from="1592806712433" duration="20696000" />
       <workItem from="1593332142583" duration="623000" />
       <workItem from="1593424193925" duration="1999000" />
-      <workItem from="1594953839693" duration="327331000" />
-    </task>
-    <task id="LOCAL-00005" summary="短信">
-      <created>1595506376154</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1595506376154</updated>
-    </task>
-    <task id="LOCAL-00006" summary="update">
-      <created>1595554643036</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1595554643036</updated>
-    </task>
-    <task id="LOCAL-00007" summary="update">
-      <created>1595560818664</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1595560818664</updated>
-    </task>
-    <task id="LOCAL-00008" summary="update">
-      <created>1595561083977</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1595561083977</updated>
-    </task>
-    <task id="LOCAL-00009" summary="update">
-      <created>1595561262632</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1595561262632</updated>
-    </task>
-    <task id="LOCAL-00010" summary="微信支付">
-      <created>1595584895681</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1595584895681</updated>
-    </task>
-    <task id="LOCAL-00011" summary="微信支付">
-      <created>1595587282338</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1595587282338</updated>
-    </task>
-    <task id="LOCAL-00012" summary="微信支付">
-      <created>1595589107207</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1595589107207</updated>
-    </task>
-    <task id="LOCAL-00013" summary="微信支付">
-      <created>1595589135606</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1595589135606</updated>
-    </task>
-    <task id="LOCAL-00014" summary="云账户提现">
-      <created>1595833905684</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1595833905684</updated>
-    </task>
-    <task id="LOCAL-00015" summary="云账户提现">
-      <created>1595836102510</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1595836102510</updated>
-    </task>
-    <task id="LOCAL-00016" summary="支付宝">
-      <created>1595852020818</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1595852020818</updated>
-    </task>
-    <task id="LOCAL-00017" summary="update">
-      <created>1595924942634</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1595924942634</updated>
-    </task>
-    <task id="LOCAL-00018" summary="验证码登陆">
-      <created>1595988616105</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1595988616105</updated>
-    </task>
-    <task id="LOCAL-00019" summary="update">
-      <created>1596012594641</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1596012594641</updated>
-    </task>
-    <task id="LOCAL-00020" summary="app学校接口">
-      <created>1596022033938</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1596022033938</updated>
-    </task>
-    <task id="LOCAL-00021" summary="update">
-      <created>1596079569107</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1596079569107</updated>
-    </task>
-    <task id="LOCAL-00022" summary="update">
-      <created>1596105393910</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1596105393910</updated>
-    </task>
-    <task id="LOCAL-00023" summary="update">
-      <created>1596109178491</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1596109178491</updated>
-    </task>
-    <task id="LOCAL-00024" summary="update">
-      <created>1596163957983</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1596163957983</updated>
-    </task>
-    <task id="LOCAL-00025" summary="update">
-      <created>1596178049186</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1596178049186</updated>
-    </task>
-    <task id="LOCAL-00026" summary="update">
-      <created>1596183952288</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1596183952288</updated>
-    </task>
-    <task id="LOCAL-00027" summary="update">
-      <created>1596189154481</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1596189154481</updated>
-    </task>
-    <task id="LOCAL-00028" summary="update">
-      <created>1596189303754</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1596189303754</updated>
-    </task>
-    <task id="LOCAL-00029" summary="update">
-      <created>1596189362443</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1596189362443</updated>
-    </task>
-    <task id="LOCAL-00030" summary="order">
-      <created>1596457925309</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1596457925309</updated>
-    </task>
-    <task id="LOCAL-00031" summary="order">
-      <created>1596459654790</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1596459654790</updated>
-    </task>
-    <task id="LOCAL-00032" summary="order">
-      <created>1596460466070</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1596460466070</updated>
-    </task>
-    <task id="LOCAL-00033" summary="order">
-      <created>1596462415254</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1596462415254</updated>
-    </task>
-    <task id="LOCAL-00034" summary="order">
-      <created>1596465716392</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1596465716392</updated>
-    </task>
-    <task id="LOCAL-00035" summary="order">
-      <created>1596514001370</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1596514001370</updated>
-    </task>
-    <task id="LOCAL-00036" summary="order">
-      <created>1596521290431</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1596521290431</updated>
+      <workItem from="1594953839693" duration="337191000" />
+      <workItem from="1596709044806" duration="157288000" />
     </task>
     <task id="LOCAL-00037" summary="order">
       <created>1596523064500</created>
@@ -1067,7 +773,231 @@
       <option name="project" value="LOCAL" />
       <updated>1596697581643</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="update">
+      <created>1596704942078</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1596704942078</updated>
+    </task>
+    <task id="LOCAL-00055" summary="update">
+      <created>1596705571312</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1596705571312</updated>
+    </task>
+    <task id="LOCAL-00056" summary="update">
+      <created>1596706550448</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1596706550448</updated>
+    </task>
+    <task id="LOCAL-00057" summary="update">
+      <created>1596707330406</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1596707330406</updated>
+    </task>
+    <task id="LOCAL-00058" summary="update">
+      <created>1596712104729</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1596712104730</updated>
+    </task>
+    <task id="LOCAL-00059" summary="update">
+      <created>1596712988750</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1596712988750</updated>
+    </task>
+    <task id="LOCAL-00060" summary="update">
+      <created>1596715458258</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1596715458258</updated>
+    </task>
+    <task id="LOCAL-00061" summary="update">
+      <created>1596717606509</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1596717606509</updated>
+    </task>
+    <task id="LOCAL-00062" summary="update">
+      <created>1596717831574</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1596717831574</updated>
+    </task>
+    <task id="LOCAL-00063" summary="update">
+      <created>1596765288946</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1596765288946</updated>
+    </task>
+    <task id="LOCAL-00064" summary="update">
+      <created>1596765499562</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1596765499562</updated>
+    </task>
+    <task id="LOCAL-00065" summary="update">
+      <created>1596770412815</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1596770412815</updated>
+    </task>
+    <task id="LOCAL-00066" summary="update">
+      <created>1596781323217</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1596781323217</updated>
+    </task>
+    <task id="LOCAL-00067" summary="update">
+      <created>1596784238920</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1596784238920</updated>
+    </task>
+    <task id="LOCAL-00068" summary="update">
+      <created>1596787935176</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1596787935176</updated>
+    </task>
+    <task id="LOCAL-00069" summary="update">
+      <created>1596791554577</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1596791554577</updated>
+    </task>
+    <task id="LOCAL-00070" summary="update">
+      <created>1596793468925</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1596793468925</updated>
+    </task>
+    <task id="LOCAL-00071" summary="update">
+      <created>1596794623908</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1596794623908</updated>
+    </task>
+    <task id="LOCAL-00072" summary="update">
+      <created>1597032241208</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1597032241208</updated>
+    </task>
+    <task id="LOCAL-00073" summary="update">
+      <created>1597044416659</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1597044416659</updated>
+    </task>
+    <task id="LOCAL-00074" summary="update">
+      <created>1597044478778</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1597044478778</updated>
+    </task>
+    <task id="LOCAL-00075" summary="update">
+      <created>1597050572596</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1597050572596</updated>
+    </task>
+    <task id="LOCAL-00076" summary="update">
+      <created>1597053945229</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1597053945229</updated>
+    </task>
+    <task id="LOCAL-00077" summary="update">
+      <created>1597055202696</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1597055202696</updated>
+    </task>
+    <task id="LOCAL-00078" summary="update">
+      <created>1597114400153</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1597114400153</updated>
+    </task>
+    <task id="LOCAL-00079" summary="update">
+      <created>1597114423198</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1597114423198</updated>
+    </task>
+    <task id="LOCAL-00080" summary="update">
+      <created>1597119815813</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1597119815813</updated>
+    </task>
+    <task id="LOCAL-00081" summary="update">
+      <created>1597119864205</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1597119864205</updated>
+    </task>
+    <task id="LOCAL-00082" summary="update">
+      <created>1597129057542</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1597129057542</updated>
+    </task>
+    <task id="LOCAL-00083" summary="update">
+      <created>1597130231257</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1597130231257</updated>
+    </task>
+    <task id="LOCAL-00084" summary="update">
+      <created>1597287835816</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1597287835816</updated>
+    </task>
+    <task id="LOCAL-00085" summary="update">
+      <created>1597393819981</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1597393819981</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1079,13 +1009,22 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="350649000" />
+    <option name="totallyTimeSpent" value="517797000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16364606" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19029851" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info active="true" anchor="bottom" id="Concurrent Activities Diagram" order="0" weight="0.329718" />
@@ -1093,15 +1032,15 @@
       <window_info anchor="bottom" id="Message" order="2" />
       <window_info anchor="bottom" id="Find" order="3" />
       <window_info anchor="bottom" id="Run" order="4" weight="0.329718" />
-      <window_info active="true" anchor="bottom" id="Debug" order="5" visible="true" weight="0.34164858" />
+      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.4989339" weight="0.31127983" />
       <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="8" />
+      <window_info anchor="bottom" id="TODO" order="8" weight="0.329718" />
       <window_info anchor="bottom" id="Docker" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.54338396" />
       <window_info anchor="bottom" id="Database Changes" order="11" />
-      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.50053304" side_tool="true" weight="0.32104123" />
-      <window_info anchor="bottom" id="Terminal" order="13" sideWeight="0.49946696" weight="0.32104123" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5010661" side_tool="true" weight="0.34164858" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="13" sideWeight="0.4989339" visible="true" weight="0.29718006" />
       <window_info anchor="bottom" id="Python Console" order="14" weight="0.30911064" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -1148,18 +1087,52 @@
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
       <expression>
-        <expression-string>json.loads(data['contract_info'])</expression-string>
+        <expression-string>cls.search_all_school(
+            **search_info
+        ).values(
+            'province',
+            'city'
+        )</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>import json
-json.loads(data['contract_info'])</expression-string>
+        <expression-string>cls.search_all_school(
+            **search_info
+        ).values(
+            'province',
+            'city'
+        ).distinct()</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>data['contract_info']</expression-string>
+        <expression-string>list(set(cls.search_all_school(
+            **search_info
+        ).values(
+            'province',
+            'city'
+        ).distinct()))</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cls.search_all(**search_info).values_list('relations__major', flat=True).distinct()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cls.search_all(**search_info).values_list('relations__major')</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cls.search_all(**search_info).values('relations__major')</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>page_list.data</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
@@ -1169,364 +1142,406 @@ json.loads(data['contract_info'])</expression-string>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>self.extract_parms(pro)</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>pro</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>request</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>back_img.convert('RGBA').split()</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>back_img.mode</expression-string>
+        <expression-string>CustomerFinanceServer.top_up_notify(
+                order_sn,
+                pay_time,
+                data['trade_no'],
+                data['total_amount']
+            )</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
     </expressions>
+    <expressions id="setValue">
+      <expression>
+        <expression-string>'2020-08-13 10:37:48'</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/agile/customer/manager/server/mobile.py">
+    <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/merchandise/manager/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="536">
-          <caret line="58" column="52" selection-start-line="58" selection-start-column="52" selection-end-line="58" selection-end-column="52" />
+        <state relative-caret-position="599">
+          <caret line="246" column="9" lean-forward="true" selection-start-line="246" selection-start-column="9" selection-end-line="246" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_myself.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_major.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="17" column="9" lean-forward="true" selection-end-line="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/interface/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="29" column="17" selection-start-line="29" selection-start-column="17" selection-end-line="29" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/interface/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="42" selection-start-line="42" selection-end-line="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/infrastructure/core/protocol/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="106" selection-start-line="106" selection-end-line="106" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/contract/apis/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/contract/migrations/0001_initial.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/staff/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/staff/store/staff.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="23" column="26" lean-forward="true" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/account/store/account.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="13" column="24" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/account/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/contract/utils/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/contract/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="52" selection-start-line="2" selection-start-column="52" selection-end-line="2" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/contract/apps.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/contract/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="32" selection-start-line="2" selection-start-column="32" selection-end-line="2" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/order/store/entity/requirement.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="37" column="18" lean-forward="true" selection-start-line="37" selection-start-column="18" selection-end-line="37" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/order/store/entity/invoice.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="50" column="17" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/merchandise/store/entity/merchandise.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="33" column="17" selection-start-line="33" selection-start-column="4" selection-end-line="33" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/merchandise/utils/constant/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="6" column="42" selection-start-line="6" selection-start-column="25" selection-end-line="6" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/contract/store/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="3" column="43" lean-forward="true" selection-start-line="3" selection-start-column="43" selection-end-line="3" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/contract/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_contract.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="21" column="26" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="26" />
-          <folding>
-            <element signature="e#15#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/agile/crm/apis/university/major/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3906" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/university/major/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
-          <caret line="81" column="21" lean-forward="true" selection-start-line="81" selection-start-column="21" selection-end-line="81" selection-end-column="21" />
-          <folding>
-            <element signature="e#16#124#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/support/z_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="14" column="19" lean-forward="true" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
-          <folding>
-            <element signature="e#16#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/contract.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="11" column="8" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="8" />
-          <folding>
-            <element signature="e#16#125#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/production/store/goods.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="11" column="59" selection-start-line="11" selection-start-column="48" selection-end-line="11" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/agile/file/apis/file/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="431">
-          <caret line="33" column="36" selection-start-line="33" selection-start-column="36" selection-end-line="33" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/apis/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/agile/crm/apis/order/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="12" column="40" selection-start-line="12" selection-start-column="40" selection-end-line="12" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/apps.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="7" column="21" selection-start-line="7" selection-start-column="21" selection-end-line="7" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="38" selection-start-line="2" selection-start-column="33" selection-end-line="2" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="3" column="28" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/middleware/file/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="20" column="8" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="8" />
-          <folding>
-            <element signature="e#16#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/utils/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/order.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="4" column="47" selection-start-line="4" selection-start-column="47" selection-end-line="4" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/orderitem.py">
+    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/store/school.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
-          <caret line="6" column="44" selection-start-line="6" selection-start-column="44" selection-end-line="6" selection-end-column="44" />
+          <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py">
+    <entry file="file://$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_order.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="6" column="3" lean-forward="true" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/middleground/technology/permission/manager/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/middleware/extend/alipay/mini.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="18" column="32" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/middleware/extend/alipay/private.pem">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="42">
+          <caret line="2" column="29" lean-forward="true" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/urllib/parse.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="36" column="35" selection-start-line="36" selection-start-column="23" selection-end-line="36" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/rsa/pkcs1.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="193">
-          <caret line="14" column="40" selection-start-line="14" selection-start-column="40" selection-end-line="14" selection-end-column="40" />
+          <caret line="283" column="4" selection-start-line="283" selection-start-column="4" selection-end-line="283" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/migrations/0001_initial.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/migrations/0002_orderitem_school_city.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/migrations/0003_order_agent_id.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/django/db/migrations/graph.py">
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/finance/balance/wechat_notify.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="131" column="26" lean-forward="true" selection-start-line="131" selection-start-column="26" selection-end-line="131" selection-end-column="26" />
+        <state relative-caret-position="200">
+          <caret line="13" column="42" selection-start-line="13" selection-start-column="42" selection-end-line="13" selection-end-column="42" />
+          <folding>
+            <element signature="e#15#31#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/contract.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/django/utils/autoreload.py">
+    <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/order/manager/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="212" column="24" selection-start-line="212" selection-start-column="24" selection-end-line="212" selection-end-column="24" />
+        <state relative-caret-position="1096">
+          <caret line="218" column="25" selection-start-line="218" selection-start-column="8" selection-end-line="218" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/contract/manager/__init__.py">
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/finance/balance/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="13" column="12" lean-forward="true" selection-end-line="14" />
+        <state relative-caret-position="210">
+          <caret line="77" column="44" selection-start-line="77" selection-start-column="44" selection-end-line="77" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/finance/manager/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="59">
+          <caret line="119" column="8" selection-start-line="119" selection-start-column="8" selection-end-line="119" selection-end-column="8" />
           <folding>
             <element signature="e#17#87#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/manager/__init__.py">
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/finance/balance/alipay_notify.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="19" column="40" lean-forward="true" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
+        <state relative-caret-position="200">
+          <caret line="51" column="46" selection-start-line="51" selection-start-column="46" selection-end-line="51" selection-end-column="46" />
+          <folding>
+            <element signature="e#15#30#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/middleware/extend/alipay/alipay_public.pem">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="21">
+          <caret line="1" selection-start-line="1" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/middleware/extend/alipay/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="57" column="8" selection-start-line="57" selection-start-column="8" selection-end-line="57" selection-end-column="8" />
+          <folding>
+            <element signature="e#15#30#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/middleware/pay/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="704">
+          <caret line="118" lean-forward="true" selection-start-line="118" selection-end-line="118" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1449" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/support/unit_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="409">
+          <caret line="56" column="39" selection-start-line="56" selection-start-column="29" selection-end-line="56" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/support/common/testcase/api_test_case.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="69" selection-start-line="69" selection-end-line="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/goods/store/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="63">
+          <caret line="3" column="52" selection-start-line="3" selection-start-column="52" selection-end-line="3" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/goods/store/goods.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="12" column="64" selection-start-line="12" selection-start-column="64" selection-end-line="12" selection-end-column="64" />
+          <folding>
+            <element signature="e#16#151#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/crm/apis/university/major/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="10" column="59" lean-forward="true" selection-start-line="10" selection-start-column="59" selection-end-line="10" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/store/relations.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="10" column="6" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/store/years.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/utils/constant/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="15" column="34" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/university/major/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2335">
+          <caret line="165" column="20" selection-start-line="165" selection-start-column="20" selection-end-line="165" selection-end-column="20" />
+          <folding>
+            <element signature="e#16#124#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/agent/manager/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="82" column="8" selection-start-line="82" selection-start-column="8" selection-end-line="82" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_major.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="494">
+          <caret line="55" column="48" selection-start-line="55" selection-start-column="36" selection-end-line="55" selection-end-column="48" />
+          <folding>
+            <element signature="e#15#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/goods/manager/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1964">
+          <caret line="99" lean-forward="true" selection-start-line="99" selection-end-line="99" />
+          <folding>
+            <element signature="e#17#87#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/university/relations/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="903">
+          <caret line="199" column="22" selection-start-line="199" selection-start-column="22" selection-end-line="199" selection-end-column="22" />
+          <folding>
+            <element signature="e#16#124#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/middleground/business/merchandise/utils/constant/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="63">
+          <caret line="3" column="6" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/production/goods/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2597">
+          <caret line="56" column="54" selection-start-line="56" selection-start-column="54" selection-end-line="56" selection-end-column="54" />
+          <folding>
+            <element signature="e#15#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/support/test/projects/customer/api/customer/test_customer_university_school.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="514">
+          <caret line="50" column="34" selection-start-line="50" selection-start-column="34" selection-end-line="50" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/crm/university/manager/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="445">
+          <caret line="94" column="20" lean-forward="true" selection-start-line="94" selection-start-column="20" selection-end-line="94" selection-end-column="20" />
           <folding>
             <element signature="e#16#86#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/settings.py">
+    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/order.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="71" column="32" selection-start-line="71" selection-start-column="32" selection-end-line="71" selection-end-column="32" />
+        <state relative-caret-position="770">
+          <caret line="42" column="8" selection-start-line="42" selection-start-column="8" selection-end-line="42" selection-end-column="8" />
+          <folding>
+            <element signature="e#16#104#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/settings_local.py">
+    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/manager/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="193" column="29" selection-start-line="193" selection-start-column="29" selection-end-line="193" selection-end-column="29" />
+        <state relative-caret-position="1880">
+          <caret line="217" column="19" selection-start-line="217" selection-start-column="19" selection-end-line="217" selection-end-column="19" />
+          <folding>
+            <element signature="e#15#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/university/school/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="539">
+          <caret line="148" selection-start-line="126" selection-start-column="4" selection-end-line="148" />
+          <folding>
+            <element signature="e#16#124#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/manager/server/mobile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="43" column="37" selection-start-line="43" selection-start-column="37" selection-end-line="43" selection-end-column="37" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/contract/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="77" column="48" lean-forward="true" selection-start-line="77" selection-start-column="48" selection-end-line="77" selection-end-column="48" />
+        <state relative-caret-position="39">
+          <caret line="108" column="12" selection-start-line="108" selection-start-column="6" selection-end-line="108" selection-end-column="12" />
           <folding>
-            <element signature="e#15#28#0" expanded="true" />
+            <element signature="e#15#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/customer/order/store/contract.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="16" column="55" lean-forward="true" selection-start-line="16" selection-start-column="55" selection-end-line="16" selection-end-column="55" />
+          <folding>
+            <element signature="e#16#125#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/customer/manager/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="20" column="21" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
+          <folding>
+            <element signature="e#17#87#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/customer/store/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/customer/store/customer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/customer/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="63">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/customer/store/salechance.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="34" column="43" lean-forward="true" selection-start-line="34" selection-start-column="43" selection-end-line="34" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/goods/migrations/0004_goods_merchandise_id.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/abs/services/agent/goods/migrations/0004_auto_20200813_1747.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/settings_local.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="454">
+          <caret line="188" lean-forward="true" selection-start-line="188" selection-end-line="188" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/agile/customer/apis/customer/order/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="122" column="8" lean-forward="true" selection-start-line="122" selection-start-column="8" selection-end-line="125" selection-end-column="9" />
+          <folding>
+            <element signature="e#17#122#0" expanded="true" />
           </folding>
         </state>
       </provider>

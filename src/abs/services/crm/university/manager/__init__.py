@@ -4,6 +4,7 @@ from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
+from abs.services.crm.university.models import School, Major, Relations
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.models import School, Major, Relations, Years
@@ -66,45 +67,6 @@ class UniversityServer(BaseManager):
         return school
 
     @classmethod
-    def hung_production_list(cls, school_list):
-        all_production_qs = ProductionServer.search_all()
-        school_id_list = [school.id for school in school_list]
-        goods_qs = Goods.search(
-            school_id__in = school_id_list
-        )
-        merchandise_school_mapping = {}
-        for goods in goods_qs:
-            merchandise_school_mapping.update({
-                goods.merchandise_id: goods.school_id
-            })
-        merchandise_qs = MerchandiseServer.search_all(
-            use_status = 'enable',
-            id__in = merchandise_school_mapping.keys()
-        )
-        school_production_quantity_mapping = {}
-        for merchandise in merchandise_qs:
-            school_id = merchandise_school_mapping.get(
-                merchandise.id
-            )
-            cur_quantity = school_production_quantity_mapping.get(
-                (school_id, merchandise.production_id), 0
-            )
-            school_production_quantity_mapping.update({
-                (school_id, merchandise.production_id): cur_quantity + 1
-            })
-        for school in school_list:
-            school.production_list = []
-            for production in all_production_qs:
-                cur_quantity = school_production_quantity_mapping.get(
-                    (school.id, production.id), 0
-                )
-                school.production_list.append({
-                    'id': production.id,
-                    'name': production.name,
-                    'quantity': cur_quantity
-                })
-
-    @classmethod
     def hung_school(cls, obj_list):
         school_id_list = [obj.school_id for obj in obj_list]
         school_list = School.search(id__in = school_id_list)
@@ -119,7 +81,12 @@ class UniversityServer(BaseManager):
 
     @classmethod
     def get_location(cls, **search_info):
-        return list(set(cls.search_all_school(**search_info).values_list('city', flat = True)))
+        return cls.search_all_school(
+            **search_info
+        ).values(
+            'province',
+            'city'
+        ).distinct()
 
     @classmethod
     def hung_major(cls, obj_list):
@@ -194,7 +161,6 @@ class UniversityServer(BaseManager):
 
 class UniversityRelationsServer(BaseManager):
 
-
     @classmethod
     def create(cls, **relations_info):
         if cls.is_exsited(
@@ -221,6 +187,16 @@ class UniversityRelationsServer(BaseManager):
 
     @classmethod
     def search_all(cls, **search_info):
+        if 'city' in search_info:
+            city = search_info.pop('city')
+            search_info.update({
+                'school__city': city
+            })
+        if 'province' in search_info:
+            province = search_info.pop('province')
+            search_info.update({
+                'school__province': province
+            })
         relations_qs = Relations.search(**search_info)
         return relations_qs
 
@@ -259,9 +235,33 @@ class UniversityRelationsServer(BaseManager):
             return True
         return False
 
+    @classmethod
+    def search_all_major_list(cls, **search_info):
+        if 'major_name' in search_info:
+            major_name = search_info.pop('major_name')
+            search_info.update({
+                'major__name__contains': major_name
+            })
+        return cls.search_all(
+            **search_info
+        ).values_list(
+            'major_id',
+            flat=True
+        ).order_by(
+            '-major__is_hot',
+            'major__create_time'
+        ).distinct()
+
+    @classmethod
+    def search_major_list(cls, current_page, **search_info):
+        splitor = Splitor(
+            current_page,
+            cls.search_all_major_list(**search_info)
+        )
+        return splitor
+
 
 class UniversityYearsServer(BaseManager):
-
 
     @classmethod
     def create(cls, **years_info):
@@ -302,6 +302,16 @@ class UniversityYearsServer(BaseManager):
 
     @classmethod
     def search_all(cls, **search_info):
+        if 'school_id' in search_info:
+            school_id = search_info.pop('school_id')
+            search_info.update({
+                'relations__school_id': school_id
+            })
+        if 'major_id' in search_info:
+            major_id = search_info.pop('major_id')
+            search_info.update({
+                'relations__major_id': major_id
+            })
         years_qs = Years.search(**search_info)
         return years_qs
 
@@ -390,3 +400,38 @@ class UniversityYearsServer(BaseManager):
         if years_qs.count() > 0:
             return True
         return False
+
+    @classmethod
+    def search_major_list(cls, current_page, **search_info):
+        years_qs = cls.search_all(
+            **search_info
+        ).values_list(
+            'relations__major'
+            , flat=True
+        ).order_by(
+            '-relations__major__is_hot',
+            'create_time'
+        ).distinct()
+        return Splitor(current_page, years_qs)
+
+    @classmethod
+    def search_school_list(cls, current_page, **search_info):
+        years_qs = cls.search_all(
+            **search_info
+        ).values_list(
+            'relations__school'
+            , flat=True
+        ).order_by(
+            '-relations__school__is_hot',
+            'create_time'
+        ).distinct()
+        return Splitor(current_page, years_qs)
+
+    @classmethod
+    def search_id_list(cls, **search_info):
+        return list(cls.search_all(
+            **search_info
+        ).values_list(
+            'id',
+            flat=True
+        ))

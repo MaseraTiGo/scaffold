@@ -70,18 +70,18 @@ class OrderServer(BaseManager):
         cls,
         agent,
         customer,
-        address,
+        invoice_info,
         source,
         strike_price,
         specification_list
     ):
-        invoice_baseinfos = {}
-        if address:
-            invoice_baseinfos = {
-                'name': address.contacts,
-                'phone': address.phone,
-                'address': '-'.join([address.city, address.address])
-            }
+        # invoice_baseinfos = {}
+        # if address:
+        #     invoice_baseinfos = {
+        #         'name': address.contacts,
+        #         'phone': address.phone,
+        #         'address': '-'.join([address.city, address.address])
+        #     }
         mg_order = mg_OrderServer.place(
             specification_list,
             strike_price,
@@ -90,7 +90,7 @@ class OrderServer(BaseManager):
             customer.person_id,
             'company',
             agent.company_id,
-            **invoice_baseinfos
+            **invoice_info
         )
 
         create_info = {
@@ -99,13 +99,10 @@ class OrderServer(BaseManager):
             'agent_id': agent.id,
             'source': source,
             'number': mg_order.number,
-            'status': mg_order.status
+            'status': mg_order.status,
+            'name': invoice_info.get('name'),
+            'phone': invoice_info.get('phone')
         }
-        if address:
-            create_info.update({
-                'name': address.contacts,
-                'phone': address.phone
-            })
         order = Order.create(**create_info)
         mapping = {}
         for specification in specification_list:
@@ -124,7 +121,7 @@ class OrderServer(BaseManager):
                 school_name = specification.merchandise.goods.school.name,
                 school_city = specification.merchandise.goods.school.city,
                 major_name = specification.merchandise.goods.major.name,
-                duration = specification.merchandise.goods.duration
+                duration = specification.merchandise.goods.years.duration
             )
             specification.update(
                 stock = specification.stock - specification.order_count

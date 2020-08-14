@@ -9,6 +9,51 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from agile.base.api import NoAuthorizedApi
 from abs.services.crm.university.manager import UniversityServer
 from abs.services.agent.goods.utils.constant import DurationTypes
+from abs.services.crm.university.manager import UniversityRelationsServer
+from abs.services.agent.goods.manager import GoodsServer
+from abs.services.crm.agent.manager import AgentServer
+
+
+class Get(NoAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.major_id = RequestField(
+        IntField,
+        desc="专业id"
+    )
+
+    response = with_metaclass(ResponseFieldSet)
+    response.major_info = ResponseField(
+        DictField,
+        desc="专业详情",
+        conf={
+            'id': IntField(desc="学校id"),
+            'name': CharField(desc="名称"),
+            'content': CharField(desc="描述"),
+            'icons': CharField(desc="图片")
+        }
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "专业详情"
+
+    @classmethod
+    def get_author(cls):
+        return "xyc"
+
+    def execute(self, request):
+        major = UniversityServer.get_major(**request.major_id)
+        return major
+
+    def fill(self, response, major):
+        major_info = {
+            'id': major.id,
+            'name': major.name,
+            'content': major.content,
+            'icons': major.icons,
+        }
+        response.major_info = major_info
+        return response
 
 
 class All(NoAuthorizedApi):
@@ -61,7 +106,9 @@ class Search(NoAuthorizedApi):
         DictField,
         desc="搜索专业",
         conf={
-            'name': CharField(desc="名称", is_required=False)
+            'major_name': CharField(desc="名称", is_required=False),
+            'province': CharField(desc="学校所在省", is_required=False),
+            'city': CharField(desc="学校所在市", is_required=False)
         }
     )
 
@@ -75,7 +122,17 @@ class Search(NoAuthorizedApi):
                 'id': IntField(desc="学校id"),
                 'name': CharField(desc="名称"),
                 'content': CharField(desc="描述"),
-                'icons': CharField(desc="图片")
+                'icons': CharField(desc="图片"),
+                'agent_list': ListField(
+                    desc="代理商列表",
+                    fmt=DictField(
+                        desc="代理商",
+                        conf={
+                            'id': IntField(desc="代理商id"),
+                            'name': CharField(desc='代理商名称'),
+                        }
+                    )
+                )
             }
         )
     )
@@ -91,7 +148,31 @@ class Search(NoAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        page_list = UniversityServer.search_major(request.current_page, **request.search_info)
+        page_list = UniversityRelationsServer.search_major_list(
+            request.current_page,
+            **request.search_info
+        )
+        page_list.data = UniversityServer.search_all_major(
+            id__in=page_list.data
+        )
+        mapping = {}
+        for major in page_list.data:
+            major.agent_list = []
+            mapping.update({major.id: major})
+        relation_list = UniversityRelationsServer.search_all(
+            major__in=page_list.data,
+            **request.search_info
+        )
+        GoodsServer.hung_goods_forrelations(relation_list)
+        goods_list = []
+        for relation in relation_list:
+            goods_list.extend(relation.goods_list)
+        AgentServer.hung_agent(goods_list)
+        for relation in relation_list:
+            major = mapping.get(relation.major_id)
+            for goods in relation.goods_list:
+                if goods.agent not in major.agent_list:
+                    major.agent_list.append(goods.agent)
         return page_list
 
     def fill(self, response, page_list):
@@ -99,7 +180,11 @@ class Search(NoAuthorizedApi):
             'id': major.id,
             'name': major.name,
             'content': major.content,
-            'icons': major.icons
+            'icons': major.icons,
+            'agent_list': [{
+                'id': agent.id,
+                'name': agent.name
+            } for agent in major.agent_list]
         } for major in page_list.data]
         response.data_list = data_list
         response.total = page_list.total
@@ -113,6 +198,8 @@ class HotSearch(NoAuthorizedApi):
         DictField,
         desc="搜索专业",
         conf={
+            'province': CharField(desc="学校所在省", is_required=False),
+            'city': CharField(desc="学校所在市", is_required=False)
         }
     )
 
@@ -140,7 +227,13 @@ class HotSearch(NoAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        major_list = UniversityServer.search_hot_major(**request.search_info)
+        major_id_list = UniversityRelationsServer.search_all_major_list(
+            major__is_hot=True,
+            **request.search_info
+        )
+        major_list = UniversityServer.search_all_major(
+            id__in=major_id_list
+        ).order_by('create_time')
         return major_list
 
     def fill(self, response, major_list):

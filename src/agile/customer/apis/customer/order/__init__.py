@@ -14,7 +14,7 @@ from infrastructure.core.exception.business_error import BusinessError
 from abs.services.customer.order.manager import OrderServer, OrderItemServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.middleground.business.order.manager import OrderServer as mg_OrderServer
-from abs.services.crm.university.manager import UniversityServer
+from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleware.pay import pay_middleware
 from abs.services.agent.customer.manager import AgentCustomerServer
@@ -30,6 +30,15 @@ class Add(CustomerAuthorizedApi):
         conf = {
             'strike_price': IntField(desc = "金额"),
             'address_id': IntField(desc = "收货地址id", is_required = False),
+            'invoice_info': DictField(
+                desc="合同信息",
+                is_required=False,
+                conf={
+                    'name': CharField(desc="名称"),
+                    'phone': CharField(desc="电话"),
+                    'identification': CharField(desc="身份证")
+                }
+            ),
             'goods_list': ListField(
                 desc = '商品列表',
                 fmt = DictField(
@@ -57,9 +66,18 @@ class Add(CustomerAuthorizedApi):
     def execute(self, request):
         order_info = request.order_info
         customer = self.auth_user
-        address = None
+        invoice_info = {}
         if 'address_id' in order_info:
             address = PersonServer.get_address(order_info.pop('address_id'))
+            invoice_info.update({
+                'name': address.contacts,
+                'phone': address.phone,
+                'address': '-'.join([address.city, address.address])
+            })
+        if 'invoice_info' in order_info:
+            invoice_info.update(order_info.pop('invoice_info'))
+        if not invoice_info:
+            raise BusinessError('请填写发货信息')
         specification_list = []
         for goods_info in order_info['goods_list']:
             specification = MerchandiseServer.get_specification(goods_info['specification_id'])
@@ -67,8 +85,6 @@ class Add(CustomerAuthorizedApi):
                 raise BusinessError('库存不足')
             if specification.merchandise.use_status != 'enable':
                 raise BusinessError('商品已下架')
-            if specification.merchandise.despatch_type == 'logistics' and not address:
-                raise BusinessError('请填写物流地址')
             specification.order_count = goods_info['quantity']
             specification.total_price = goods_info['quantity'] * specification.sale_price
             specification.production_id = specification.merchandise.production_id
@@ -91,11 +107,15 @@ class Add(CustomerAuthorizedApi):
             specification
             for specification in specification_list
         ])
+        UniversityYearsServer.hung_years([
+            specification.merchandise.goods
+            for specification in specification_list
+        ])
         agent = AgentServer.get(specification_list[0].merchandise.goods.agent_id)
         order = OrderServer.add(
             agent,
             customer,
-            address,
+            invoice_info,
             'app',
             order_info['strike_price'],
             specification_list
@@ -134,6 +154,7 @@ class Get(CustomerAuthorizedApi):
                 desc = "商品",
                 conf = {
                     'id': IntField(desc = "订单商品详情id"),
+                    'agent_name': CharField(desc="代理商"),
                     'sale_price': IntField(desc = "单价"),
                     'total_price': IntField(desc = "总价"),
                     'quantity': IntField(desc = "数量"),
@@ -154,7 +175,8 @@ class Get(CustomerAuthorizedApi):
             conf={
                 'name': CharField(desc="姓名"),
                 'phone': CharField(desc="手机号"),
-                'address': CharField(desc="地址")
+                'address': CharField(desc="地址"),
+                'identification': CharField(desc="身份证号")
             }
         )
     })
@@ -173,6 +195,7 @@ class Get(CustomerAuthorizedApi):
             raise BusinessError('订单异常')
         order.order_item_list = OrderItemServer.search_all(order = order)
         mg_OrderServer.hung_snapshoot(order.order_item_list)
+        AgentServer.hung_agent([order])
         return order
 
     def fill(self, response, order):
@@ -190,6 +213,7 @@ class Get(CustomerAuthorizedApi):
             'despatch_type': order.order_item_list[0].snapshoot.despatch_type,
             'order_item_list': [{
                 'id': order_item.id,
+                'agent_name': order.agent.name,
                 'sale_price': order_item.snapshoot.sale_price,
                 'total_price': order_item.snapshoot.total_price,
                 'quantity': order_item.snapshoot.count,
@@ -206,7 +230,8 @@ class Get(CustomerAuthorizedApi):
             'invoice_info': {
                 'name': order.mg_order.invoice.name,
                 'phone': order.mg_order.invoice.phone,
-                'address': order.mg_order.invoice.address
+                'address': order.mg_order.invoice.address,
+                'identification': order.mg_order.invoice.identification
             }
         }
         return response
@@ -246,6 +271,7 @@ class Search(CustomerAuthorizedApi):
                     fmt = DictField(
                         desc = "商品",
                         conf = {
+                            'agent_name': CharField(desc="代理商名称"),
                             'sale_price': IntField(desc = "单价"),
                             'total_price': IntField(desc = "总价"),
                             'quantity': IntField(desc = "数量"),
@@ -259,6 +285,15 @@ class Search(CustomerAuthorizedApi):
                             'production_name': CharField(desc = "产品名")
                         }
                     )
+                ),
+                'invoice_info': DictField(
+                    desc="发货信息",
+                    conf={
+                        'name': CharField(desc="姓名"),
+                        'phone': CharField(desc="手机号"),
+                        'address': CharField(desc="地址"),
+                        'identification': CharField(desc="身份证号")
+                    }
                 )
             }
         )
@@ -285,6 +320,7 @@ class Search(CustomerAuthorizedApi):
         for order in page_list.data:
             all_order_item_list.extend(order.orderitem_list)
         mg_OrderServer.hung_snapshoot(all_order_item_list)
+        AgentServer.hung_agent(page_list.data)
         return page_list
 
     def fill(self, response, page_list):
@@ -301,6 +337,7 @@ class Search(CustomerAuthorizedApi):
             'despatch_type': order.orderitem_list[0].snapshoot.despatch_type,
             'contract_background': 'http://education.bq.com/resource/contract/background.png',
             'order_item_list': [{
+                'agent_name': order.agent.name,
                 'sale_price': order_item.snapshoot.sale_price,
                 'total_price': order_item.snapshoot.total_price,
                 'quantity': order_item.snapshoot.count,
@@ -312,7 +349,13 @@ class Search(CustomerAuthorizedApi):
                 'school_city': order_item.school_city,
                 'brand_name': order_item.snapshoot.brand_name,
                 'production_name': order_item.snapshoot.production_name
-            } for order_item in order.orderitem_list]
+            } for order_item in order.orderitem_list],
+            'invoice_info': {
+                'name': order.mg_order.invoice.name,
+                'phone': order.mg_order.invoice.phone,
+                'address': order.mg_order.invoice.address,
+                'identification': order.mg_order.invoice.identification
+            }
         } for order in page_list.data]
         response.total = page_list.total
         response.total_page = page_list.total_page
