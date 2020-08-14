@@ -12,16 +12,16 @@ class SourceTypes(object):
 
 class EducationTypes(object):
     PRIMARY = 'primary'
-    SECONDARY = 'secondary'
-    TECHNICALSECONDARY = 'technicalsecondary'
-    HIGHSCHOOL = 'highschool'
-    JUNIORCOLLEGE = 'juniorcollege'
+    MIDDLE = 'middle'
+    HIGH = 'hign'
+    MIDDLECOLLEGE = 'middlecollege'
+    COLLEGE = 'college'
     UNSERGRADUATE = 'undergraduate'
     MASTER = 'master'
     DOCTOR = 'doctor'
     OTHER = 'other'
-    CHOICES = ((PRIMARY, '小学'), (SECONDARY, '初中'),
-               (TECHNICALSECONDARY, "中专"), (JUNIORCOLLEGE, '大专'),
-               (HIGHSCHOOL, '高中'), (UNSERGRADUATE, '本科'),
+    CHOICES = ((PRIMARY, '小学'), (MIDDLE, '初中'),
+               (MIDDLECOLLEGE, "中专"), (COLLEGE, '大专'),
+               (HIGH, '高中'), (UNSERGRADUATE, '本科'),
                (MASTER, '硕士'), (DOCTOR, '博士'),
                (OTHER, '其他'))

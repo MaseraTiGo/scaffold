@@ -71,3 +71,18 @@ class AgentStaffServer(BaseManager):
         PersonServer.update(staff.person_id, **update_info)
         staff.update(**update_info)
         return staff
+
+    @classmethod
+    def hung_staff(cls, obj_list):
+        obj_mapping = {}
+        for obj in obj_list:
+            obj.staff = None
+            if obj.staff_id not in obj_mapping:
+                obj_mapping[obj.staff_id] = []
+            obj_mapping[obj.staff_id].append(obj)
+        staff_qs = Staff.search(id__in = obj_mapping.keys())
+        for staff in staff_qs:
+            if staff.id in obj_mapping:
+                for obj in obj_mapping[staff.id]:
+                    obj.staff = staff
+        return obj_list
