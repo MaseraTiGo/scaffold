@@ -143,7 +143,7 @@ class Search(CustomerAuthorizedApi):
     def execute(self, request):
         data_list = ContractServer.search_all(
             customer_id=self.auth_user.id
-        )
+        ).order('-create_time')
         return data_list
 
     def fill(self, response, data_list):
