@@ -93,7 +93,7 @@ class GoodsServer(BaseManager):
             mapping.update({
                 school.id: school
             })
-        goods_list = list(Goods.search(school_id__in=mapping.keys()))
+        goods_list = list(Goods.search(school_id__in = mapping.keys()))
         for goods in goods_list:
             school = mapping.get(goods.school_id)
             school.goods_list.append(goods)
@@ -106,7 +106,7 @@ class GoodsServer(BaseManager):
             mapping.update({
                 relation.id: relation
             })
-        goods_list = Goods.search(relations_id__in=mapping.keys())
+        goods_list = Goods.search(relations_id__in = mapping.keys())
         for goods in goods_list:
             relation = mapping.get(goods.relations_id)
             relation.goods_list.append(goods)
@@ -119,7 +119,11 @@ class GoodsServer(BaseManager):
             mapping.update({
                 years.id: years
             })
-        goods_list = Goods.search(years_id__in=mapping.keys())
+        goods_list = Goods.search(years_id__in = mapping.keys())
+        goods_list = cls.search_all_goods(
+            years_id__in = mapping.keys(),
+            use_status = UseStatus.ENABLE
+        )
         for goods in goods_list:
             years = mapping.get(goods.years_id)
             years.goods_list.append(goods)
