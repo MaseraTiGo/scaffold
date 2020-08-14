@@ -66,7 +66,7 @@ class SearchMajor(NoAuthorizedApi):
         )
         page_list.data = UniversityServer.search_all_major(
             id__in=page_list.data
-        )
+        ).order('-is_hot', 'create_time')
         mapping = {}
         for major in page_list.data:
             major.agent_list = []
@@ -163,7 +163,7 @@ class SearchSchool(NoAuthorizedApi):
         )
         page_list.data = UniversityServer.search_all_school(
             id__in=page_list.data
-        )
+        ).order('-is_hot', 'create_time')
         mapping = {}
         for school in page_list.data:
             school.agent_list = []

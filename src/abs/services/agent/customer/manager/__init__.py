@@ -5,6 +5,8 @@ from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
+from abs.services.agent.customer.store.salechance import SaleChanceOrder
+from abs.middleground.business.person.manager import PersonServer
 from abs.services.agent.customer.models import AgentCustomer, \
      AgentCustomerSaleChance
 
@@ -47,6 +49,34 @@ class AgentCustomerServer(BaseManager):
         return splitor
 
     @classmethod
+    def create_foradd_order(cls, customer, agent_id, order_id):
+        person = PersonServer.get(customer.person_id)
+        agent_customer = AgentCustomer.search(
+            phone=person.phone,
+            agent_id=agent_id
+        ).first()
+        if agent_customer:
+            agent_customer.update(
+                customer_id=customer.id
+            )
+        else:
+            AgentCustomer.create(
+                customer_id=customer.id,
+                agent_id=agent_id,
+                phone=person.phone,
+                person_id=person.id
+            )
+        sale_chance = AgentCustomerSaleChance.search(
+            agent_customer=agent_customer,
+            end_time__gt=datetime.date.today()
+        ).first()
+        if sale_chance:
+            SaleChanceOrder.create(
+                sale_chance=sale_chance,
+                order_id=order_id
+            )
+        return agent_customer
+
     def check_byphone(cls, phone):
         agent_customer_qs = cls.search_all(
             phone = phone
@@ -54,7 +84,7 @@ class AgentCustomerServer(BaseManager):
         if agent_customer_qs.count() > 0:
             return agent_customer_qs[0]
         else:
-            None
+            return None
 
 
 class SaleChanceServer(BaseManager):

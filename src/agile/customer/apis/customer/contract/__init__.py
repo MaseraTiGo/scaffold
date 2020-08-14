@@ -88,17 +88,18 @@ class Add(CustomerAuthorizedApi):
         if order_item.order.customer_id != self.auth_user.id:
             raise BusinessError('订单异常')
         agent = AgentServer.get(order_item.order.agent_id)
+        order = OrderServer.get(order_item.order.id)
 
         contract_info = request.contract_info
         contract_info.update({
-            'name': order_item.order.invoice.name,
-            'phone': order_item.order.invoice.phone,
-            'identification': order_item.order.invoice.identification,
+            'name': order.mg_order.invoice.name,
+            'phone': order.mg_order.invoice.phone,
+            'identification': order.mg_order.invoice.identification,
         })
         ContractServer.create(
             order_item,
             agent,
-            customer_id=order_item.order.customer_id,
+            customer_id=order.customer_id,
             **contract_info
         )
 
@@ -108,13 +109,6 @@ class Add(CustomerAuthorizedApi):
 
 class Search(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.current_page = RequestField(IntField, desc="当前页码")
-    request.search_info = RequestField(
-        DictField,
-        desc="搜索学校",
-        conf={
-        }
-    )
 
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
@@ -137,8 +131,6 @@ class Search(CustomerAuthorizedApi):
             }
         )
     )
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
 
     @classmethod
     def get_desc(cls):
@@ -149,22 +141,18 @@ class Search(CustomerAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        page_list = ContractServer.search(
-            request.current_page,
-            customer_id=self.auth_user.id,
-            **request.search_info
+        data_list = ContractServer.search_all(
+            customer_id=self.auth_user.id
         )
-        return page_list
+        return data_list
 
-    def fill(self, response, page_list):
+    def fill(self, response, data_list):
         response.data_list = [{
             'id': contract.id,
             'name': '教育合同-{name}'.format(name=contract.name),
             'create_time': contract.create_time,
             'url': json.loads(contract.url),
             'img_url': json.loads(contract.img_url)
-        } for contract in page_list.data]
-        response.total = page_list.total
-        response.total_page = page_list.total_page
+        } for contract in data_list]
         return response
 
