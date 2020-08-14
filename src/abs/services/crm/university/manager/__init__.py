@@ -239,6 +239,11 @@ class UniversityRelationsServer(BaseManager):
     @classmethod
     def remove(cls, relations_id):
         relations = cls.get(relations_id)
+        years_qs = UniversityYearsServer.search_all(
+            relations = relations
+        )
+        if years_qs.count() > 0:
+            raise BusinessError("存在学年无法删除")
         relations.delete()
         return True
 

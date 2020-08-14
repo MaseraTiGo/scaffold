@@ -12,6 +12,7 @@ from abs.services.crm.university.utils.constant import DurationTypes, \
      CategoryTypes
 from abs.services.crm.university.manager import UniversityServer, \
      UniversityRelationsServer, UniversityYearsServer
+from abs.services.agent.goods.manager import GoodsServer
 
 
 class Search(StaffAuthorizedApi):
@@ -206,6 +207,11 @@ class Remove(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
+        goods_qs = GoodsServer.search_all_goods(
+            relations_id = request.relations_id
+        )
+        if goods_qs.count() > 0:
+            raise BusinessError("已绑定商品禁止删除")
         UniversityRelationsServer.remove(
             request.relations_id
         )
