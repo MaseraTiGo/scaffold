@@ -117,7 +117,7 @@ class Add(AgentStaffAuthorizedApi):
         desc = "机会详情",
         conf = {
             'phone': CharField(desc = "客户手机号码"),
-            'product_id': IntField(desc = "产品id"),
+            'production_id': IntField(desc = "产品id"),
             'city': CharField(desc = "省市区"),
             'education': CharField(desc = "学历"),
             'remark': CharField(desc = "备注", is_required = False),
@@ -138,9 +138,7 @@ class Add(AgentStaffAuthorizedApi):
         auth = self.auth_user
         agent = AgentServer.get(auth.agent_id)
         phone = request.sale_chance_info.pop("phone")
-        customer = AgentCustomerServer.check_byphone(
-            phone
-        )
+        customer = AgentCustomerServer.check_byphone(phone)
         if customer is None:
             customer = AgentCustomerServer.create(
                 agent_id = agent.id,
