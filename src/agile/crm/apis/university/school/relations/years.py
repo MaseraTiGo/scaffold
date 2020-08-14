@@ -12,6 +12,7 @@ from abs.services.crm.university.utils.constant import DurationTypes, \
      CategoryTypes
 from abs.services.crm.university.manager import UniversityServer, \
      UniversityRelationsServer, UniversityYearsServer
+from abs.services.agent.goods.manager import GoodsServer
 
 
 class Search(StaffAuthorizedApi):
@@ -51,18 +52,18 @@ class Search(StaffAuthorizedApi):
     def execute(self, request):
         relations = UniversityRelationsServer.get(request.relations_id)
         request.search_info.update({"relations":relations})
-        spliter = UniversityYearsServer.search_all(
+        years_list = UniversityYearsServer.search_all(
             **request.search_info
         )
-        return spliter
+        return years_list
 
-    def fill(self, response, spliter):
+    def fill(self, response, years_list):
         data_list = [{
                         "id":years.id,
                         "category":years.category,
                         "duration":years.duration,
                         "create_time":years.create_time,
-                      } for years in spliter.data]
+                      } for years in years_list]
         response.data_list = data_list
         return response
 
@@ -163,6 +164,11 @@ class Remove(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
+        goods_qs = GoodsServer.search_all_goods(
+            major_id = request.major_id
+        )
+        if goods_qs.count() > 0:
+            raise BusinessError("专业已绑定商品禁止删除")
         UniversityYearsServer.remove(
             request.years_id
         )

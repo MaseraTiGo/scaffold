@@ -12,11 +12,11 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
-from agile.crm.manager.api import StaffAuthorizedApi
+from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.agent.staff.manager import AgentStaffServer
 
 
-class Get(StaffAuthorizedApi):
+class Get(AgentStaffAuthorizedApi):
     """
     获取个人中心详情
     """
@@ -87,7 +87,7 @@ class Get(StaffAuthorizedApi):
         return response
 
 
-class Update(StaffAuthorizedApi):
+class Update(AgentStaffAuthorizedApi):
     """
     修改个人中心详情
     """

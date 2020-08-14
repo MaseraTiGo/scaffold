@@ -14,38 +14,42 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.base.api import NoAuthorizedApi
+from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.middleground.business.merchandise.manager import MerchandiseServer
+from abs.services.agent.goods.manager import GoodsServer
 
 
-class Add(NoAuthorizedApi):
+class Add(AgentStaffAuthorizedApi):
     """
     添加商品规格
     """
     request = with_metaclass(RequestFieldSet)
-    request.merchandise_id = RequestField(IntField, desc="商品id")
-    request.specification_info = RequestField(
-        DictField,
-        desc="商品规格详情",
-        conf={
-            'show_image': CharField(desc="图片"),
-            'sale_price': IntField(desc="销售价"),
-            'stock': IntField(desc="库存"),
-            'remark': CharField(desc="备注"),
-            'attribute_list': ListField(
-                desc='属性列表',
-                fmt=DictField(
-                    desc="属性",
-                    conf={
-                        'category': CharField(desc="属性分类"),
-                        'attribute': CharField(desc="属性"),
-                    }
-                )
-            ),
-        }
+    request.goods_id = RequestField(IntField, desc = "商品id")
+    request.specification_list = RequestField(
+        ListField,
+        desc = "规格列表",
+        fmt = DictField(
+            desc = "商品规格内容",
+            conf = {
+                'show_image': CharField(desc = "图片"),
+                'sale_price': IntField(desc = "销售价/分"),
+                'stock': IntField(desc = "库存"),
+                "specification_value_list": ListField(
+                    desc = "属性值列表",
+                    fmt = DictField(
+                        desc = "属性详情",
+                        conf = {
+                            "category": CharField(desc = "属性分类"),
+                            "attribute": CharField(desc = "属性值"),
+                        }
+                    )
+                ),
+            }
+        )
     )
 
+
     response = with_metaclass(ResponseFieldSet)
-    response.specification_id = ResponseField(IntField, desc="商品规格Id")
 
     @classmethod
     def get_desc(cls):
@@ -53,45 +57,49 @@ class Add(NoAuthorizedApi):
 
     @classmethod
     def get_author(cls):
-        return "Roy"
+        return "Fsy"
 
     def execute(self, request):
-        specification_info = request.specification_info
-        specification = MerchandiseServer.generate_specification(
-            request.merchandise_id,
-            **specification_info
-        )
-        return specification
+        goods = GoodsServer.get_goods(request.goods_id)
+        for specification in request.specification_list:
+            specification_info = {
+                "merchandise_id":goods.merchandise_id,
+                "show_image" : specification["show_image"],
+                "sale_price" : specification["sale_price"],
+                "stock" : specification["stock"],
+                "remark" : "",
+                "attribute_list":specification["specification_value_list"],
+            }
+            MerchandiseServer.generate_specification(**specification_info)
 
-    def fill(self, response, specification):
-        response.specification_id = specification.id
+    def fill(self, response,):
         return response
 
 
-class Get(NoAuthorizedApi):
+class Get(AgentStaffAuthorizedApi):
     """
     获取商品规格详情接口
     """
     request = with_metaclass(RequestFieldSet)
-    request.specification_id = RequestField(IntField, desc="商品规格id")
+    request.specification_id = RequestField(IntField, desc = "商品规格id")
 
     response = with_metaclass(ResponseFieldSet)
     response.specification_info = ResponseField(
         DictField,
-        desc="商品规格详情",
-        conf={
-            'id': IntField(desc="编号"),
-            'show_image': CharField(desc="图片"),
-            'sale_price': IntField(desc="销售价"),
-            'stock': IntField(desc="库存"),
-            'remark': CharField(desc="备注"),
+        desc = "商品规格详情",
+        conf = {
+            'id': IntField(desc = "编号"),
+            'show_image': CharField(desc = "图片"),
+            'sale_price': IntField(desc = "销售价"),
+            'stock': IntField(desc = "库存"),
+            'remark': CharField(desc = "备注"),
             'specification_value_list': ListField(
-                desc='属性列表',
-                fmt=DictField(
-                    desc="属性",
-                    conf={
-                        'category': CharField(desc="属性分类"),
-                        'attribute': CharField(desc="属性"),
+                desc = '属性列表',
+                fmt = DictField(
+                    desc = "属性",
+                    conf = {
+                        'category': CharField(desc = "属性分类"),
+                        'attribute': CharField(desc = "属性"),
                     }
                 )
             ),
@@ -127,20 +135,20 @@ class Get(NoAuthorizedApi):
         return response
 
 
-class Update(NoAuthorizedApi):
+class Update(AgentStaffAuthorizedApi):
     """
     修改商品规格信息
     """
     request = with_metaclass(RequestFieldSet)
-    request.specification_id = RequestField(IntField, desc="商品规格id")
+    request.specification_id = RequestField(IntField, desc = "商品规格id")
     request.update_info = RequestField(
         DictField,
-        desc="商品规格修改详情",
-        conf={
-            'show_image': CharField(desc="图片"),
-            'sale_price': IntField(desc="销售价"),
-            'stock': IntField(desc="库存"),
-            'remark': CharField(desc="备注"),
+        desc = "商品规格修改详情",
+        conf = {
+            'show_image': CharField(desc = "图片"),
+            'sale_price': IntField(desc = "销售价"),
+            'stock': IntField(desc = "库存"),
+            'remark': CharField(desc = "备注", is_required = False),
         }
     )
 
@@ -164,12 +172,12 @@ class Update(NoAuthorizedApi):
         return response
 
 
-class Remove(NoAuthorizedApi):
+class Remove(AgentStaffAuthorizedApi):
     """
     删除商品规格信息
     """
     request = with_metaclass(RequestFieldSet)
-    request.specification_id = RequestField(IntField, desc="商品规格id")
+    request.specification_id = RequestField(IntField, desc = "商品规格id")
 
     response = with_metaclass(ResponseFieldSet)
 
