@@ -67,7 +67,8 @@ crm_pc_service.add(Search, SearchAll, Add, Update, Remove, Settop)
 from agile.crm.apis.university.school.relations import Search, Add, Update, Remove
 crm_pc_service.add(Search, Add, Update, Remove)
 
-from agile.crm.apis.university.school.relations.years import Search, Add, Update, Remove
+from agile.crm.apis.university.school.relations.years import Search, Add, Update, \
+                                                             Remove
 crm_pc_service.add(Search, Add, Update, Remove)
 
 from agile.crm.apis.tool.sms import Search

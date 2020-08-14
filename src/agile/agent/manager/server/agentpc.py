@@ -34,11 +34,17 @@ agent_pc_service.add(Search)
 from agile.agent.apis.goods import Get, Search, Add, Update, Setuse, Remove
 agent_pc_service.add(Get, Search, Add, Update, Setuse, Remove)
 
+from agile.agent.apis.goods.specification import Add, Get, Update, Remove
+agent_pc_service.add(Add, Get, Update, Remove)
+
 from agile.agent.apis.major import SearchAll
 agent_pc_service.add(SearchAll)
 
 from agile.agent.apis.school import SearchAll
 agent_pc_service.add(SearchAll)
+
+from agile.agent.apis.school.relations.years import All
+agent_pc_service.add(All)
 
 from agile.agent.apis.production import SearchAll
 agent_pc_service.add(SearchAll)

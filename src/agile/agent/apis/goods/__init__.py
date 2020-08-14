@@ -17,7 +17,8 @@ from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.services.agent.goods.manager import GoodsServer
-from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
+from abs.services.crm.university.manager import UniversityServer, \
+     UniversityYearsServer
 from abs.services.crm.agent.manager import AgentServer
 from abs.services.customer.order.manager import OrderItemServer
 
@@ -108,7 +109,7 @@ class Get(AgentStaffAuthorizedApi):
         UniversityServer.hung_major([goods])
         MerchandiseServer.hung_merchandise([goods])
         ProductionServer.hung_production([goods.merchandise])
-        UniversityYearsServer.hung_production([goods])
+        UniversityYearsServer.hung_years([goods])
         return goods
 
     def fill(self, response, goods):
@@ -269,7 +270,7 @@ class Search(AgentStaffAuthorizedApi):
         MerchandiseServer.hung_merchandise(spliter.data)
         merchandise_list = [goods.merchandise for goods in spliter.data]
         ProductionServer.hung_production(merchandise_list)
-        UniversityYearsServer.hung_production(spliter.data)
+        UniversityYearsServer.hung_years(spliter.data)
         return spliter
 
     def fill(self, response, spliter):
@@ -313,7 +314,7 @@ class Add(AgentStaffAuthorizedApi):
         desc = "商品详情",
         conf = {
             'title': CharField(desc = "标题"),
-            'video_display': CharField(desc = "宣传视频"),
+            'video_display': CharField(desc = "宣传视频", is_required = False),
             'slideshow': ListField(
                 desc = '轮播图',
                 fmt = CharField(desc = "图片地址")
@@ -330,7 +331,7 @@ class Add(AgentStaffAuthorizedApi):
             'production_id': IntField(desc = "产品ID"),
             'years_id': IntField(desc = "学年id"),
             'description':CharField(desc = "商品描述"),
-            'remark': CharField(desc = "备注"),
+            'remark': CharField(desc = "备注", is_required = False),
         }
     )
 
@@ -370,17 +371,6 @@ class Add(AgentStaffAuthorizedApi):
         }
         merchandise = MerchandiseServer.generate(**merchandise_info)
 
-        for specification in request.goods_info["specification_list"]:
-            specification_info = {
-                "merchandise_id":merchandise.id,
-                "show_image" : specification["show_image"],
-                "sale_price" : specification["sale_price"],
-                "stock" : specification["stock"],
-                "remark" : "",
-                "attribute_list":specification["specification_value_list"],
-            }
-            MerchandiseServer.generate_specification(**specification_info)
-
         goods_info = {
             "school_id":year.relations.school_id,
             "major_id":year.relations.major_id,
@@ -389,12 +379,11 @@ class Add(AgentStaffAuthorizedApi):
             "relations_id":year.relations_id,
             "years_id":year.id,
         }
-        GoodsServer.create_goods(**goods_info)
-
-        return None
+        goods = GoodsServer.create_goods(**goods_info)
+        return goods
 
     def fill(self, response, goods):
-        response.goods_id = 0
+        response.goods_id = goods.id
         return response
 
 
@@ -406,7 +395,7 @@ class Update(AgentStaffAuthorizedApi):
         desc = "商品详情",
         conf = {
             'title': CharField(desc = "标题"),
-            'video_display': CharField(desc = "宣传视频"),
+            'video_display': CharField(desc = "宣传视频", is_required = False),
             'slideshow': ListField(
                 desc = '轮播图',
                 fmt = CharField(desc = "图片地址")
@@ -422,7 +411,7 @@ class Update(AgentStaffAuthorizedApi):
             ),
             'years_id': IntField(desc = "学年ID"),
             "description":CharField(desc = "商品描述"),
-            'remark': CharField(desc = "备注"),
+            'remark': CharField(desc = "备注", is_required = False),
         }
     )
 
@@ -463,23 +452,10 @@ class Update(AgentStaffAuthorizedApi):
         }
         MerchandiseServer.update(goods.merchandise_id,
                                  **merchandise_update_info)
-        for specification in request.goods_info["specification_list"]:
-            specification_id = specification["id"]
-            show_image = specification["show_image"]
-            sale_price = specification["sale_price"]
-            stock = specification["stock"]
-            remark = ""
-            MerchandiseServer.update_specification(
-                specification_id,
-                show_image,
-                sale_price,
-                stock,
-                remark
-            )
 
-
-    def fill(self, response, address_list):
+    def fill(self, response):
         return response
+
 
 class Setuse(AgentStaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
@@ -507,6 +483,7 @@ class Setuse(AgentStaffAuthorizedApi):
 
     def fill(self, response):
         return response
+
 
 class Remove(AgentStaffAuthorizedApi):
     """删除商品信息"""

@@ -5,6 +5,7 @@ from infrastructure.core.field.base import CharField, DictField, \
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
+from infrastructure.core.exception.business_error import BusinessError
 
 from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.agent.goods.utils.constant import DurationTypes
@@ -16,7 +17,8 @@ from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.services.agent.goods.manager import GoodsServer
-from abs.services.crm.university.manager import UniversityServer
+from abs.services.crm.university.manager import UniversityServer, \
+     UniversityYearsServer
 from abs.services.crm.agent.manager import AgentServer
 
 
@@ -53,6 +55,7 @@ class Get(StaffAuthorizedApi):
             'major_id': IntField(desc = "专业ID"),
             'major_name': CharField(desc = "专业名称"),
             'description': CharField(desc = "商品描述"),
+            'years_id': IntField(desc = "学年ID"),
             'duration':CharField(
                 desc = "时长",
                 choices = DurationTypes.CHOICES
@@ -105,6 +108,7 @@ class Get(StaffAuthorizedApi):
         UniversityServer.hung_major([goods])
         MerchandiseServer.hung_merchandise([goods])
         ProductionServer.hung_production([goods.merchandise])
+        UniversityYearsServer.hung_years([goods])
         return goods
 
     def fill(self, response, goods):
@@ -118,13 +122,14 @@ class Get(StaffAuthorizedApi):
             'despatch_type': goods.merchandise.despatch_type,
             'production_id': goods.merchandise.production.id,
             'production_name': goods.merchandise.production.name,
-            'school_id': goods.school.id,
-            'school_name': goods.school.name,
-            'major_id':goods.major.id,
-            'major_name': goods.major.name,
+            'school_id': goods.years.relations.school.id,
+            'school_name': goods.years.relations.school.name,
+            'major_id':goods.years.relations.major.id,
+            'major_name': goods.years.relations.major.name,
             'description': goods.merchandise.description,
-            'duration':goods.duration,
-            'category':goods.category,
+            'years_id': goods.years.id,
+            'duration':goods.years.duration,
+            'category':goods.years.category,
             'use_status': goods.merchandise.use_status,
             'remark': goods.merchandise.remark,
             'specification_list':[{
@@ -190,6 +195,7 @@ class Search(StaffAuthorizedApi):
                 'major_id': IntField(desc = "专业ID"),
                 'major_name': CharField(desc = "专业名称"),
                 'is_hot':BooleanField(desc = "是否热门"),
+                'years_id': IntField(desc = "学年ID"),
                 'duration':CharField(
                     desc = "时长",
                     choices = DurationTypes.CHOICES
@@ -262,6 +268,7 @@ class Search(StaffAuthorizedApi):
         MerchandiseServer.hung_merchandise(spliter.data)
         merchandise_list = [goods.merchandise for goods in spliter.data]
         ProductionServer.hung_production(merchandise_list)
+        UniversityYearsServer.hung_years(spliter.data)
         return spliter
 
     def fill(self, response, spliter):
@@ -274,13 +281,14 @@ class Search(StaffAuthorizedApi):
             'production_name': goods.merchandise.production.name,
             'brand_id': goods.merchandise.production.brand.id,
             'brand_name':goods.merchandise.production.brand.name,
-            'school_id': goods.school.id,
-            'school_name': goods.school.name,
-            'major_id':goods.major.id,
-            'major_name': goods.major.name,
+            'school_id': goods.years.relations.school.id,
+            'school_name': goods.years.relations.school.name,
+            'major_id':goods.years.relations.major.id,
+            'major_name': goods.years.relations.major.name,
             'is_hot':goods.is_hot,
-            'duration':goods.duration,
-            'category':goods.category,
+            'years_id': goods.years.id,
+            'duration':goods.years.duration,
+            'category':goods.years.category,
             'agent_id': 0,
             'agent_name': goods.agent.name,
             'create_time':goods.create_time,
@@ -606,6 +614,10 @@ class Settop(StaffAuthorizedApi):
         is_hot = True
         if goods.is_hot:
             is_hot = False
+        if is_hot:
+           merchandise = MerchandiseServer.get(goods.merchandise_id)
+           if merchandise.use_status == UseStatus.FORBIDDENT:
+               raise BusinessError("请先上架商品")
         goods.update(is_hot = is_hot)
 
     def fill(self, response):
