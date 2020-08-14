@@ -120,9 +120,11 @@ class Add(CustomerAuthorizedApi):
             order_info['strike_price'],
             specification_list
         )
-        AgentCustomerServer.create(
-            agent_id = order.agent_id,
-            customer_id = customer.id
+
+        AgentCustomerServer.create_foradd_order(
+            customer,
+            order.agent_id,
+            order.id
         )
         return order
 
