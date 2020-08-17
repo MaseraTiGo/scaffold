@@ -36,6 +36,8 @@ class Add(StaffAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
+        if SpaceServer.get_bylabel(request.space_info['label']):
+            raise BusinessError('标签重复')
         space = SpaceServer.create(
             **request.space_info
         )
@@ -73,6 +75,10 @@ class Update(StaffAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
+        if 'label' in request.space_info:
+            check_space = SpaceServer.get_bylabel(request.space_info['label'])
+            if check_space and check_space.id != request.space_id:
+                raise BusinessError('标签重复')
         space = SpaceServer.get(request.space_id)
         space.update(**request.space_info)
         return space

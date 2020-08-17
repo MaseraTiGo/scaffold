@@ -20,11 +20,6 @@ class AdvertisementServer(BaseManager):
             search_info.update({
                 'name__contains': name
             })
-        if 'label' in search_info:
-            label = search_info.pop('label')
-            search_info.update({
-                'space__label': label
-            })
         return Advertisement.search(**search_info)
 
     @classmethod
