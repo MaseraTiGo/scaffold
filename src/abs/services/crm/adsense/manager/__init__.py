@@ -4,6 +4,7 @@ from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 from abs.common.manager import BaseManager
 from abs.services.crm.adsense.models import *
+from django.db.models import *
 
 
 class AdvertisementServer(BaseManager):
@@ -43,6 +44,25 @@ class AdvertisementServer(BaseManager):
         if ad:
             return ad
         raise BusinessError('广告不存在')
+
+    @classmethod
+    def hung_enable_num(cls, space_list):
+        mapping = {}
+        for space in space_list:
+            space.enable_num = 0
+            mapping.update({
+                space.label: space
+            })
+        ad_list = Advertisement.search(
+            space__label__in=mapping.keys()
+        ).values(
+            'space__label'
+        ).annotate(
+            enable_num=Count("*")
+        )
+        for ad in ad_list:
+            space = mapping.get(ad['space__label'])
+            space.enable_num = ad['enable_num']
 
 
 class SpaceServer(BaseManager):
