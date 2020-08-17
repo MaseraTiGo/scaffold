@@ -23,7 +23,8 @@ class Add(StaffAuthorizedApi):
             'name': CharField(desc="广告名称"),
             'thumbnail': CharField(desc="广告缩略图"),
             'url': CharField(desc="跳转地址"),
-            'sort': IntField(desc="排序")
+            'sort': IntField(desc="排序"),
+            'is_enable': BooleanField(desc="开关", is_required=False)
         }
     )
 
@@ -60,7 +61,8 @@ class Update(StaffAuthorizedApi):
             'name': CharField(desc="广告名称", is_required=False),
             'thumbnail': CharField(desc="广告缩略图", is_required=False),
             'url': CharField(desc="跳转地址", is_required=False),
-            'sort': IntField(desc="排序", is_required=False)
+            'sort': IntField(desc="排序", is_required=False),
+            'is_enable': BooleanField(desc="开关", is_required=False)
         }
     )
 
@@ -112,6 +114,7 @@ class Search(StaffAuthorizedApi):
                 'thumbnail': CharField(desc="广告缩略图"),
                 'url': CharField(desc="跳转地址"),
                 'sort': IntField(desc="排序"),
+                'is_enable': BooleanField(desc="开关"),
                 'create_time': DatetimeField(desc="创建时间")
             }
         )
@@ -141,6 +144,7 @@ class Search(StaffAuthorizedApi):
             'thumbnail': ad.thumbnail,
             'url': ad.url,
             'sort': ad.sort,
+            'is_enable': ad.is_enable,
             'create_time': ad.create_time
         } for ad in spliter.data]
         response.data_list = data_list

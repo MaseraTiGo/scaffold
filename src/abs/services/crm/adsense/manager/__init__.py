@@ -76,3 +76,9 @@ class SpaceServer(BaseManager):
         if space:
             return space
         raise BusinessError('广告位不存在')
+
+    @classmethod
+    def get_bylabel(cls, label):
+        return Space.search(
+            label=label
+        ).first()

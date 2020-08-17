@@ -12,6 +12,7 @@ class Advertisement(BaseModel):
     name = CharField(verbose_name="广告名称", max_length=256)
     url = TextField(verbose_name="跳转地址", default='')
     sort = IntegerField(verbose_name="排序", default=0)
+    is_enable = BooleanField(verbose_name="是否使用", default=False)
 
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)

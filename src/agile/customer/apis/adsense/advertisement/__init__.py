@@ -7,7 +7,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.base.api import NoAuthorizedApi
-from abs.services.crm.adsense.manager import AdvertisementServer
+from abs.services.crm.adsense.manager import AdvertisementServer, SpaceServer
 
 
 class Search(NoAuthorizedApi):
@@ -44,8 +44,13 @@ class Search(NoAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
+        label = request.search_info.pop('label')
+        space = SpaceServer.get_bylabel(label)
+        if not space or not space.is_enable:
+            return []
         ad_list = AdvertisementServer.search_all(
-            **request.search_info
+            is_enable=True,
+            space=space
         ).order_by('sort')
         return ad_list
 
