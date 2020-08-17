@@ -24,6 +24,7 @@ class SearchAll(AgentStaffAuthorizedApi):
             conf = {
                 'id': IntField(desc = "产品id"),
                 'name': CharField(desc = "产品名称"),
+                'brand_name': CharField(desc = "品牌名称"),
                 'attribute_list': ListField(
                     desc = "属性列表",
                     fmt = DictField(
@@ -57,7 +58,7 @@ class SearchAll(AgentStaffAuthorizedApi):
     def execute(self, request):
         company = EnterpriseServer.get_crm__company()
         production_qs = ProductionServer.search_all(
-            company_id=company.id,
+            company_id = company.id,
             **{}
         )
         return production_qs
@@ -66,6 +67,7 @@ class SearchAll(AgentStaffAuthorizedApi):
         data_list = [{
             'id': production.id,
             'name': production.name,
+            'brand_name': production.brand.name,
             'attribute_list': json.loads(production.attribute_list),
         } for production in production_qs]
         response.data_list = data_list
