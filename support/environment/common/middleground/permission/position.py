@@ -1,11 +1,9 @@
 # coding=UTF-8
 
-
-import json
 from support.common.maker import BaseLoader
 
 
-class RoleLoader(BaseLoader):
+class PositionLoader(BaseLoader):
 
     def generate(self):
         return [
