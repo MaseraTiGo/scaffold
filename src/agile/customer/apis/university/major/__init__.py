@@ -227,17 +227,12 @@ class HotSearch(NoAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        '''
         major_id_list = UniversityRelationsServer.search_all_major_list(
             major__is_hot=True,
             **request.search_info
         )
         major_list = UniversityServer.search_all_major(
             id__in=major_id_list
-        ).order_by('create_time')
-        '''
-        major_list = UniversityServer.search_all_major(
-            is_hot = True
         ).order_by('create_time')
         return major_list
 
