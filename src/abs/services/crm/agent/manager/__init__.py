@@ -70,7 +70,7 @@ class AgentServer(BaseManager):
     @classmethod
     def update(cls, agent_id, **update_info):
         enterprise_infos = {
-            "name":update_info.pop("name"),
+            "name":update_info["name"],
             "license_number":update_info.pop("license_code"),
             "license_url":update_info.pop("license_picture"),
         }

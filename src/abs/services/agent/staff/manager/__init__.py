@@ -68,6 +68,12 @@ class AgentStaffServer(BaseManager):
     @classmethod
     def update(cls, staff_id, **update_info):
         staff = cls.get(staff_id)
+        is_person_exsited, person = PersonServer.is_exsited(
+            update_info["phone"]
+        )
+        if is_person_exsited:
+            if person.id != staff.person_id:
+                raise BusinessError('手机号已存在')
         PersonServer.update(staff.person_id, **update_info)
         staff.update(**update_info)
         return staff

@@ -12,6 +12,12 @@ from support.common.generator.helper.middleground.production.brand import BrandG
 from support.common.generator.helper.middleground.production import ProductionGenerator
 from support.common.generator.helper.middleground.merchandise import MerchandiseGenerator
 from support.common.generator.helper.middleground.merchandise.specification import SpecificationGenerator
+from support.common.generator.helper.middleground.permission.platform import PlatformGenerator
+from support.common.generator.helper.middleground.permission.organization import OrganizationGenerator
+from support.common.generator.helper.middleground.permission.rule import RuleGroupGenerator
+from support.common.generator.helper.middleground.permission.position import PositionGenerator
+from support.common.generator.helper.middleground.permission.personposition import PersonPositionGenerator
+
 
 # crm service generator
 from support.common.generator.helper.business.crm.staff import StaffGenerator
