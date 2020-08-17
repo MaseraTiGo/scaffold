@@ -70,7 +70,8 @@ INSTALLED_APPS = [
     'abs.services.agent.staff',
     'abs.services.agent.account',
     'abs.services.agent.goods',
-    'abs.services.agent.customer'
+    'abs.services.agent.customer',
+    'abs.services.crm.adsense'
 ]
 
 MIDDLEWARE_CLASSES = [

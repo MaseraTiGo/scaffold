@@ -69,3 +69,6 @@ customer_mobile_service.add(Add, Get, Search, Pay, Cancel)
 
 from agile.customer.apis.customer.contract import Get, Add, Search
 customer_mobile_service.add(Get, Add, Search)
+
+from agile.customer.apis.adsense.advertisement import Search
+customer_mobile_service.add(Search)
