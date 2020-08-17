@@ -5,15 +5,16 @@ Created on 2016年7月23日
 
 @author: Roy
 '''
-
+import hashlib
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
-from infrastructure.core.field.base import CharField
+from infrastructure.core.field.base import CharField, IntField, DictField
 
 from agile.base.api import NoAuthorizedApi
 from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.agent.account.manager import AgentStaffAccountServer
+from abs.services.agent.staff.manager import AgentStaffServer
 
 
 class Login(NoAuthorizedApi):
@@ -69,6 +70,56 @@ class Logout(AgentStaffAuthorizedApi):
     def execute(self, request):
         staff = self.auth_user
         AgentStaffAccountServer.logout(self._token.auth_token)
+
+    def fill(self, response):
+        return response
+
+
+class Add(AgentStaffAuthorizedApi):
+    """
+    创建账号
+    """
+    request = with_metaclass(RequestFieldSet)
+    request.staff_id = RequestField(IntField, desc = "员工id")
+    request.account_info = RequestField(
+        DictField,
+        desc = "联系人账号信息",
+        conf = {
+            'username': CharField(desc = "账号"),
+            'password': CharField(desc = "密码", is_required = False),
+            'status': CharField(desc = "账号状态"),
+        }
+    )
+
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_desc(cls):
+        return "员工添加账号接口"
+
+    @classmethod
+    def get_author(cls):
+        return "Fsy"
+
+    def execute(self, request):
+        agent_staff = AgentStaffServer.get(request.staff_id)
+        check_account = AgentStaffAccountServer.is_exsited(
+            request.account_info["username"]
+        )
+        if check_account:
+            AgentStaffAccountServer.update(
+                agent_staff.id,
+                **request.account_info
+            )
+        else:
+            AgentStaffAccountServer.create(
+                agent_staff.id,
+                request.account_info["username"],
+                request.account_info["password"] if \
+                "password" in request.account_info else \
+                hashlib.md5("123456".encode('utf8')).hexdigest()
+            )
 
     def fill(self, response):
         return response
