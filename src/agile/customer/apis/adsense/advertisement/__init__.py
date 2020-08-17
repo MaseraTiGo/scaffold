@@ -46,7 +46,7 @@ class Search(NoAuthorizedApi):
     def execute(self, request):
         ad_list = AdvertisementServer.search_all(
             **request.search_info
-        )
+        ).order_by('sort')
         return ad_list
 
     def fill(self, response, ad_list):

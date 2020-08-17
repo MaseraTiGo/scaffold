@@ -197,6 +197,11 @@ class UniversityRelationsServer(BaseManager):
             search_info.update({
                 'school__province': province
             })
+        if 'major_name' in search_info:
+            major_name = search_info.pop('major_name')
+            search_info.update({
+                'major__name__contains': major_name
+            })
         relations_qs = Relations.search(**search_info)
         return relations_qs
 
@@ -237,11 +242,6 @@ class UniversityRelationsServer(BaseManager):
 
     @classmethod
     def search_all_major_list(cls, **search_info):
-        if 'major_name' in search_info:
-            major_name = search_info.pop('major_name')
-            search_info.update({
-                'major__name__contains': major_name
-            })
         return cls.search_all(
             **search_info
         ).values_list(
