@@ -11,7 +11,9 @@ class AdvertisementServer(BaseManager):
 
     @classmethod
     def search(cls, current_page, **search_info):
-        ad_qs = cls.search_all(**search_info)
+        ad_qs = cls.search_all(**search_info).order_by(
+            'space__name', 'sort'
+        )
         return Splitor(current_page, ad_qs)
 
     @classmethod
