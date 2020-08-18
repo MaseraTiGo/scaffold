@@ -1,5 +1,5 @@
 # coding=UTF-8
-
+import random
 
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
@@ -41,6 +41,13 @@ class CustomerServer(BaseManager):
             raise BusinessError('客户已存在，不能创建')
 
         person = PersonServer.create(phone = phone, **customer_info)
+        if 'nick' not in customer_info:
+            nick = '用户CL_{random_num}'.format(
+                random_num=str(random.randint(10000, 99999))
+            )
+            customer_info.update({
+                'nick': nick
+            })
         customer = Customer.create(
             person_id = person.id,
             phone = phone,

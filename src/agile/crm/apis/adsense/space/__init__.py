@@ -7,7 +7,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 from agile.crm.manager.api import StaffAuthorizedApi
-from abs.services.crm.adsense.manager import SpaceServer
+from abs.services.crm.adsense.manager import SpaceServer, AdvertisementServer
 
 
 class Add(StaffAuthorizedApi):
@@ -114,6 +114,7 @@ class Search(StaffAuthorizedApi):
                 'width': IntField(desc="宽度"),
                 'height': CharField(desc="高度"),
                 'is_enable': BooleanField(desc="开关"),
+                'enable_num': IntField(desc="展示广告数"),
                 'create_time': DatetimeField(desc="创建时间")
             }
         )
@@ -132,6 +133,7 @@ class Search(StaffAuthorizedApi):
             request.current_page,
             **request.search_info
         )
+        AdvertisementServer.hung_enable_num(spliter.data)
         return spliter
 
     def fill(self, response, spliter):
@@ -142,6 +144,7 @@ class Search(StaffAuthorizedApi):
             'width': space.width,
             'height': space.height,
             'is_enable': space.is_enable,
+            'enable_num': space.enable_num,
             'create_time': space.create_time
         } for space in spliter.data]
         response.data_list = data_list

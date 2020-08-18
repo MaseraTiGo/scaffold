@@ -1,9 +1,9 @@
 # coding=UTF-8
 
-from support.environment.init.base import BaseLoader
+from support.common.maker import BaseLoader
 
 
-class DepartmentLoader(BaseLoader):
+class OrganizationLoader(BaseLoader):
 
     def generate(self):
         return [

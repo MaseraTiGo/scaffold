@@ -20,6 +20,7 @@ from abs.middleware.pay import pay_middleware
 from abs.services.agent.customer.manager import AgentCustomerServer
 from abs.services.crm.agent.manager import AgentServer
 from abs.middleground.business.order.utils.constant import OrderStatus
+from abs.middleware.extend.yunaccount import yunaccount_extend
 
 
 class Add(CustomerAuthorizedApi):
@@ -76,6 +77,12 @@ class Add(CustomerAuthorizedApi):
             })
         if 'invoice_info' in order_info:
             invoice_info.update(order_info.pop('invoice_info'))
+            flag, result = yunaccount_extend.verify_identity(
+                invoice_info['name'],
+                invoice_info['identification']
+            )
+            if not flag:
+                raise BusinessError('姓名与身份证号不匹配')
         if not invoice_info:
             raise BusinessError('请填写发货信息')
         specification_list = []

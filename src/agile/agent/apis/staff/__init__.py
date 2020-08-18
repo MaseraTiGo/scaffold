@@ -5,7 +5,7 @@ Created on 2016年7月23日
 
 @author: Administrator
 '''
-
+import json
 from infrastructure.core.field.base import CharField, DictField, \
         IntField, ListField, DateField, BooleanField, MobileField, \
         DatetimeField
@@ -14,6 +14,9 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.agent.manager.api import AgentStaffAuthorizedApi
+from abs.middleground.business.person.utils.constant import\
+     GenderTypes
+
 from abs.services.agent.staff.manager import AgentStaffServer
 from abs.services.agent.account.manager import AgentStaffAccountServer
 
@@ -27,33 +30,33 @@ class Add(AgentStaffAuthorizedApi):
         DictField,
         desc = "员工详情",
         conf = {
-            'nick': CharField(desc = "昵称", is_required = False),
-            'head_url': CharField(desc = "头像", is_required = False),
             'name': CharField(desc = "姓名"),
-            'birthday': DateField(desc = "生日", is_required = False),
-            'phone': MobileField(desc = "手机", is_required = False),
+            'identification': CharField(desc = "身份证号"),
+            'phone': CharField(desc = "手机"),
+            'organization_id': IntField(desc = "组织id"),
+            'position_id': IntField(desc = "身份id"),
+            'entry_time':DateField(desc = "入职时间", is_required = False),
+            'address': CharField(desc = "家庭住址", is_required = False),
+            'emergency_contact': CharField(desc = "紧急联系人", is_required = False),
+            'emergency_phone': CharField(desc = "紧急联系人电话", is_required = False),
+            'education': CharField(desc = "学历", is_required = False),
+            'bank_number': CharField(desc = "银行卡号", is_required = False),
+            'contract': CharField(desc = "合同编号", is_required = False),
             'email': CharField(desc = "邮箱", is_required = False),
             'gender': CharField(
                 desc = "性别",
-                is_required = False,
-                choices = [("男", "man"), ("女", "woman")]
+                choices = GenderTypes.CHOICES
             ),
-            'remark': CharField(desc = "备注", is_required = False),
-            'department_role_ids': ListField(
-                desc = '所属部门及角色',
-                is_required = False,
-                fmt = DictField(
-                    desc = "部门ID",
-                    conf = {
-                        'department_id': IntField(desc = "部门id"),
-                        'role_id': IntField(desc = "角色id"),
-                    }
-                )
+            'diploma_img':ListField(
+                desc = '毕业证书',
+                fmt = CharField(desc = "毕业证书"),
+                is_required = False
             ),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
+    response.agent_staff_id = ResponseField(IntField, desc = "当前页码")
 
     @classmethod
     def get_desc(cls):
@@ -61,12 +64,24 @@ class Add(AgentStaffAuthorizedApi):
 
     @classmethod
     def get_author(cls):
-        return "Roy"
+        return "Fsy"
 
     def execute(self, request):
-        print(request.staff_info)
+        agent = self.auth_agent
+        if "diploma_img" in request.staff_info:
+            diploma_img = request.staff_info.pop("diploma_img")
+            request.staff_info.update({
+                "diploma_img":json.dumps(diploma_img)
+            })
+        agent_staff = AgentStaffServer.create(
+            request.staff_info.pop("phone"), \
+            agent, \
+            **request.staff_info
+        )
+        return agent_staff
 
-    def fill(self, response):
+    def fill(self, response, agent_staff):
+        response.agent_staff_id = agent_staff.id
         return response
 
 
@@ -161,9 +176,12 @@ class Search(AgentStaffAuthorizedApi):
             'phone': staff.person.phone,
             'email': staff.person.email,
             'is_admin': staff.is_admin,
-            'username': staff.account.username,
-            'status':staff.account.status,
-            'last_login_time':staff.account.last_login_time,
+            'username': staff.account.username if \
+                        staff.account else "",
+            'status':staff.account.status if \
+                     staff.account else "",
+            'last_login_time':staff.account.last_login_time if \
+                              staff.account else None,
             'department_role_list': [{
                 'role_id': department_role.role.id,
                 'role_name': department_role.role.name,
@@ -190,29 +208,29 @@ class Get(AgentStaffAuthorizedApi):
         DictField,
         desc = "用户详情",
         conf = {
-            'id': IntField(desc = "员工编号"),
-            'nick': CharField(desc = "昵称"),
-            'head_url': CharField(desc = "头像"),
+            'id':IntField(desc = "员工id"),
             'name': CharField(desc = "姓名"),
-            'gender': CharField(desc = "性别"),
-            'birthday': CharField(desc = "生日"),
-            'phone': CharField(desc = "电话"),
+            'identification': CharField(desc = "身份证号"),
+            'phone': CharField(desc = "手机"),
+            'organization_id': IntField(desc = "组织id"),
+            'organization_name': IntField(desc = "组织名称"),
+            'position_id': IntField(desc = "身份名称"),
+            'position_name': IntField(desc = "身份id"),
+            'entry_time':DateField(desc = "入职时间"),
+            'address': CharField(desc = "家庭住址"),
+            'emergency_contact': CharField(desc = "紧急联系人"),
+            'emergency_phone': CharField(desc = "紧急联系人电话"),
+            'education': CharField(desc = "学历"),
+            'bank_number': CharField(desc = "银行卡号"),
+            'contract': CharField(desc = "合同编号"),
             'email': CharField(desc = "邮箱"),
-            'work_number': CharField(desc = "员工工号"),
-            'is_admin': BooleanField(desc = "是否是管理员"),
-            'department_role_list': ListField(
-                desc = '所属部门',
-                is_required = False,
-                fmt = DictField(
-                    desc = "部门ID",
-                    conf = {
-                        'department_role_id': IntField(desc = "部门角色id"),
-                        'department_id': IntField(desc = "部门id"),
-                        'department_name': CharField(desc = "部门名称"),
-                        'role_id': IntField(desc = "部门id"),
-                        'role_name': CharField(desc = "角色名称"),
-                    }
-                )
+            'gender': CharField(
+                desc = "性别",
+                choices = GenderTypes.CHOICES
+            ),
+            'diploma_img':ListField(
+                desc = '毕业证书',
+                fmt = CharField(desc = "毕业证书")
             ),
         }
     )
@@ -223,12 +241,14 @@ class Get(AgentStaffAuthorizedApi):
 
     @classmethod
     def get_author(cls):
-        return "Roy"
+        return "Fsy"
 
     def execute(self, request):
-        return AgentStaffServer.get(request.staff_id)
+        agent_staff = AgentStaffServer.get(request.staff_id)
+        return agent_staff
 
-    def fill(self, response, staff):
+    def fill(self, response, agent_staff):
+        '''
         department_role_list = [{
             'role_id': department_role.role.id,
             'role_name': department_role.role.name,
@@ -236,18 +256,26 @@ class Get(AgentStaffAuthorizedApi):
             'department_name': department_role.department.name,
             'department_role_id': department_role.id,
         } for department_role in staff.department_role_list]
+        '''
         response.staff_info = {
-            'id': staff.id,
-            'nick': staff.nick,
-            'head_url': staff.head_url,
-            'name': staff.person.name,
-            'work_number': staff.work_number,
-            'gender': staff.person.gender,
-            'birthday': staff.person.birthday,
-            'phone': staff.person.phone,
-            'email': staff.person.email,
-            'is_admin': staff.is_admin,
-            'department_role_list': department_role_list
+            'id':agent_staff.id,
+            'name': agent_staff.name,
+            'identification': agent_staff.identification,
+            'phone': agent_staff.phone,
+            'organization_id': 1,
+            'organization_name':'公司',
+            'position_id':1,
+            'position_name':'超级管理员',
+            'entry_time':agent_staff.entry_time,
+            'address': agent_staff.address,
+            'emergency_contact': agent_staff.emergency_contact,
+            'emergency_phone':agent_staff.emergency_phone,
+            'education': agent_staff.education,
+            'bank_number': agent_staff.bank_number,
+            'contract': agent_staff.contract,
+            'email': agent_staff.person.email,
+            'gender': agent_staff.person.gender,
+            'diploma_img':json.loads(agent_staff.diploma_img),
         }
         return response
 
@@ -262,16 +290,28 @@ class Update(AgentStaffAuthorizedApi):
         DictField,
         desc = "员工修改详情",
         conf = {
-            'nick': CharField(desc = "昵称", is_required = False),
-            'head_url': CharField(desc = "头像", is_required = False),
-            'name': CharField(desc = "姓名", is_required = False),
-            'identification': CharField(desc = "身份证", is_required = False),
-            'gender': CharField(desc = "性别", is_required = False),
-            'birthday': CharField(desc = "生日", is_required = False),
-            'phone': MobileField(desc = "电话", is_required = False),
+            'name': CharField(desc = "姓名"),
+            'identification': CharField(desc = "身份证号"),
+            'phone': CharField(desc = "手机"),
+            'organization_id': IntField(desc = "组织id"),
+            'position_id': IntField(desc = "身份id"),
+            'entry_time':DateField(desc = "入职时间", is_required = False),
+            'address': CharField(desc = "家庭住址", is_required = False),
+            'emergency_contact': CharField(desc = "紧急联系人", is_required = False),
+            'emergency_phone': CharField(desc = "紧急联系人电话", is_required = False),
+            'education': CharField(desc = "学历", is_required = False),
+            'bank_number': CharField(desc = "银行卡号", is_required = False),
+            'contract': CharField(desc = "合同编号", is_required = False),
             'email': CharField(desc = "邮箱", is_required = False),
-            'work_number': CharField(desc = "员工工号", is_required = False),
-            'is_admin': BooleanField(desc = "是否是管理员", is_required = False),
+            'gender': CharField(
+                desc = "性别",
+                choices = GenderTypes.CHOICES
+            ),
+            'diploma_img':ListField(
+                desc = '毕业证书',
+                fmt = CharField(desc = "毕业证书"),
+                is_required = False
+            ),
         }
     )
 
@@ -283,10 +323,18 @@ class Update(AgentStaffAuthorizedApi):
 
     @classmethod
     def get_author(cls):
-        return "Roy"
+        return "Fsy"
 
     def execute(self, request):
-        AgentStaffServer.update(request.staff_id, **request.staff_info)
+        if "diploma_img" in request.staff_info:
+            diploma_img = request.staff_info.pop("diploma_img")
+            request.staff_info.update({
+                "diploma_img":json.dumps(diploma_img)
+            })
+        agent_staff = AgentStaffServer.update(
+            request.staff_id,
+            **request.staff_info
+        )
 
     def fill(self, response):
         return response
