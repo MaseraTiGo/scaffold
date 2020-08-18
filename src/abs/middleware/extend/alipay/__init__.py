@@ -17,7 +17,7 @@ class AlipayExtend(object):
         return "2019092767881151"
 
     def _get_notify_url(self):
-        return 'http://73damt.natappfree.cc'
+        return 'http://q69bjf.natappfree.cc'
 
     def _get_priv_key(self):
         cur_path = os.path.dirname(os.path.abspath(__file__))
