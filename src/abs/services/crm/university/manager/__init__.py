@@ -246,7 +246,7 @@ class UniversityRelationsServer(BaseManager):
             **search_info
         ).values_list(
             'major_id',
-            flat=True
+            flat = True
         ).order_by(
             '-major__is_hot',
             'major__create_time'
@@ -349,7 +349,7 @@ class UniversityYearsServer(BaseManager):
         if cls.is_exsited(
             update_info["category"],
             update_info["duration"],
-            years, relations,
+            years.relations,
             years
         ):
             raise BusinessError("此学年已添加")
@@ -408,7 +408,7 @@ class UniversityYearsServer(BaseManager):
             **search_info
         ).values_list(
             'relations__major'
-            , flat=True
+            , flat = True
         ).order_by(
             '-relations__major__is_hot',
             'create_time'
@@ -421,7 +421,7 @@ class UniversityYearsServer(BaseManager):
             **search_info
         ).values_list(
             'relations__school'
-            , flat=True
+            , flat = True
         ).order_by(
             '-relations__school__is_hot',
             'create_time'
@@ -434,5 +434,5 @@ class UniversityYearsServer(BaseManager):
             **search_info
         ).values_list(
             'id',
-            flat=True
+            flat = True
         ))
