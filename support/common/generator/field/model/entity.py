@@ -144,3 +144,31 @@ class AgentEntity(BaseHelper):
         if has_none:
             select_enum.append(None)
         return random.choice(select_enum)
+
+class YearsEntity(BaseHelper):
+
+    def calc(self, has_none = False):
+        if not hasattr(self, '_enume'):
+            from abs.services.crm.university.store import Years
+            self._enume = []
+            for years in Years.query():
+                self._enume.append(years)
+
+        select_enum = self._enume.copy()
+        if has_none:
+            select_enum.append(None)
+        return random.choice(select_enum)
+
+class RelationsEntity(BaseHelper):
+
+    def calc(self, has_none = False):
+        if not hasattr(self, '_enume'):
+            from abs.services.crm.university.store import Relations
+            self._enume = []
+            for relations in Relations.query():
+                self._enume.append(relations)
+
+        select_enum = self._enume.copy()
+        if has_none:
+            select_enum.append(None)
+        return random.choice(select_enum)

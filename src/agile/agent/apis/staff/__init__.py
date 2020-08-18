@@ -15,7 +15,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.middleground.business.person.utils.constant import\
-     GenderTypes
+     GenderTypes, EducationTypes
 
 from abs.services.agent.staff.manager import AgentStaffServer
 from abs.services.agent.account.manager import AgentStaffAccountServer
@@ -39,7 +39,10 @@ class Add(AgentStaffAuthorizedApi):
             'address': CharField(desc = "家庭住址", is_required = False),
             'emergency_contact': CharField(desc = "紧急联系人", is_required = False),
             'emergency_phone': CharField(desc = "紧急联系人电话", is_required = False),
-            'education': CharField(desc = "学历", is_required = False),
+            'education': CharField(
+                desc = "学历",
+                choices = EducationTypes.CHOICES
+            ),
             'bank_number': CharField(desc = "银行卡号", is_required = False),
             'contract': CharField(desc = "合同编号", is_required = False),
             'email': CharField(desc = "邮箱", is_required = False),
@@ -220,7 +223,10 @@ class Get(AgentStaffAuthorizedApi):
             'address': CharField(desc = "家庭住址"),
             'emergency_contact': CharField(desc = "紧急联系人"),
             'emergency_phone': CharField(desc = "紧急联系人电话"),
-            'education': CharField(desc = "学历"),
+            'education': CharField(
+                desc = "学历",
+                choices = EducationTypes.CHOICES
+            ),
             'bank_number': CharField(desc = "银行卡号"),
             'contract': CharField(desc = "合同编号"),
             'email': CharField(desc = "邮箱"),
@@ -299,7 +305,10 @@ class Update(AgentStaffAuthorizedApi):
             'address': CharField(desc = "家庭住址", is_required = False),
             'emergency_contact': CharField(desc = "紧急联系人", is_required = False),
             'emergency_phone': CharField(desc = "紧急联系人电话", is_required = False),
-            'education': CharField(desc = "学历", is_required = False),
+            'education': CharField(
+                desc = "学历",
+                choices = EducationTypes.CHOICES
+            ),
             'bank_number': CharField(desc = "银行卡号", is_required = False),
             'contract': CharField(desc = "合同编号", is_required = False),
             'email': CharField(desc = "邮箱", is_required = False),
