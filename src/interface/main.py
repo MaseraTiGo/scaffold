@@ -25,6 +25,7 @@ from infrastructure.log.base import logger
 from agile.base.protocol.django import DjangoProtocol
 from agile.crm.manager.server import crm_pc_service
 from agile.customer.manager.server import customer_mobile_service
+from agile.wechat.manager.server import customer_wechat_service
 from agile.file.manager.server import file_service
 from agile.controller.manager.server import controller_pc_service
 from agile.middleground.manager.server import middleground_service
@@ -39,6 +40,7 @@ protocol.add(customer_mobile_service)
 protocol.add(middleground_service)
 protocol.add(controller_pc_service)
 protocol.add(agent_pc_service)
+protocol.add(customer_wechat_service)
 
 def router(request):
     result = protocol.run(request)
