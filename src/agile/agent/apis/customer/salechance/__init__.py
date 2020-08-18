@@ -73,6 +73,9 @@ class Search(AgentStaffAuthorizedApi):
             request.search_info.update({
                 "staff_id":auth.id
             })
+        request.search_info.update({
+            "agent_id":auth.agent_id
+        })
         spliter = SaleChanceServer.search(
             request.current_page,
             **request.search_info
