@@ -349,7 +349,7 @@ class UniversityYearsServer(BaseManager):
         if cls.is_exsited(
             update_info["category"],
             update_info["duration"],
-            years, relations,
+            years.relations,
             years
         ):
             raise BusinessError("此学年已添加")
