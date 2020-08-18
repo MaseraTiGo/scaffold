@@ -11,7 +11,7 @@ from abs.common.model import BaseModel, ForeignKey, CASCADE,\
         IntegerField, CharField, DateTimeField, TextField, timezone
 from abs.middleground.technology.permission.settings import DB_PREFIX
 from abs.middleground.technology.permission.store.entity.platform import \
-        PlatForm
+        PlatForm, Authorization
 
 
 class Rule(BaseModel):
@@ -76,7 +76,7 @@ class RuleGroup(BaseModel):
     remark = TextField(verbose_name="备注")
     content = TextField(verbose_name="权限内容")
 
-    platform = ForeignKey(PlatForm, on_delete=CASCADE)
+    authorization = ForeignKey(Authorization, on_delete=CASCADE)
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)
 

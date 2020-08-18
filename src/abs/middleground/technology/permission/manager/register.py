@@ -3,7 +3,8 @@
 
 from infrastructure.utils.common.dictwrapper import DictWrapper
 from infrastructure.utils.common.single import Single
-from abs.middleground.technology.permission.models import PlatForm
+from abs.middleground.technology.permission.models import \
+        Authorization
 from abs.middleground.technology.permission.manager.organization import \
         OrganizationHelper
 from abs.middleground.technology.permission.manager.position import \
@@ -18,31 +19,36 @@ class PermissionRegister(Single):
             self._platform_mapping = self.all_refresh()
         return self._platform_mapping
 
-    def load_cache(self, platform):
-        organization = OrganizationHelper(platform)
-        position = PositionHelper(platform)
+    def load_cache(self, authorization):
+        organization = OrganizationHelper(authorization)
+        position = PositionHelper(authorization)
         cache = DictWrapper({
             'organization': organization,
             'position': position,
-            'platform': platform
+            'authorization': authorization,
+            'platform': authorization.platform
         })
         return cache
 
-    def refresh(self, platform):
+    def refresh(self, authorization):
         self.platform_mapping.update({
-            platform.appkey: self.load_cache(platform)
+            authorization.appkey: self.load_cache(
+                authorization
+            )
         })
 
     def all_refresh(self):
         result = {}
-        for platform in PlatForm.query():
-            result[platform.appkey] = self.load_cache(platform)
+        for authorization in Authorization.query():
+            result[authorization.id] = self.load_cache(
+                authorization
+            )
         return result
 
-    def get_helper(self, platform):
-        if platform.appkey not in self.platform_mapping:
-            self.refresh(platform)
-        return self.platform_mapping[platform.appkey]
+    def get_helper(self, authorization):
+        if authorization.appkey not in self.platform_mapping:
+            self.refresh(authorization)
+        return self.platform_mapping[authorization.appkey]
 
 
 permission_register = PermissionRegister()

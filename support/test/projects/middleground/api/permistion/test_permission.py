@@ -57,15 +57,53 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         self.assertTrue('description' in organization)
         self.assertTrue('create_time' in organization)
 
-    def platform_authorize(self):
-        api = 'technology.permission.platform.authorize'
+    def assert_platform_fields(self, platform):
+        self.assertTrue('id' in platform)
+        self.assertTrue('name' in platform)
+        self.assertTrue('company_id' in platform)
+        self.assertTrue('remark' in platform)
+
+    def platform_add(self):
+        api = 'technology.permission.platform.add'
         result = self.access_api(
             api=api,
             authorize_info=json.dumps({
                 'name': "必圈CRM平台",
                 'company_id': self.company.id,
                 'app_type': PermissionTypes.POSITION,
-                'prefix': 'BQ',
+                'remark': '必圈公司',
+            })
+        )
+        self.assertTrue('platform_id' in result)
+        return result['platform_id']
+
+    def platform_update(self, platform_id):
+        api = 'technology.permission.platform.update'
+        result = self.access_api(
+            api=api,
+            platform_id=platform_id,
+            update_info=json.dumps({
+                'name': "必圈CRM平台-更新",
+                'remark': '必圈公司-更新',
+            })
+        )
+
+    def platform_all(self):
+        api = 'technology.permission.platform.all'
+        result = self.access_api(
+            api=api,
+        )
+        self.assertTrue('data_list' in result)
+        for platform in result['data_list']:
+            self.assert_platform_fields(platform)
+
+    def platform_authorize(self, platform_id):
+        api = 'technology.permission.platform.authorize'
+        result = self.access_api(
+            api=api,
+            platform_id=platform_id,
+            authorize_info=json.dumps({
+                'company_id': self.company.id,
                 'remark': '必圈公司授权',
             })
         )
@@ -95,11 +133,11 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         self.assertTrue('appkey' in result)
         return result['appkey']
 
-    def rule_add(self, appkey, **rule_info):
+    def rule_add(self, platform_id, **rule_info):
         api = 'technology.permission.rule.add'
         result = self.access_api(
             api=api,
-            appkey=appkey,
+            platform_id=platform_id,
             rule_info=json.dumps(rule_info)
         )
         self.assertTrue('rule_id' in result)
@@ -130,11 +168,11 @@ class PermissionTestCase(MiddlegroundAPITestCase):
             rule_id=rule_id,
         )
 
-    def rule_all(self, appkey):
+    def rule_all(self, platform_id):
         api = 'technology.permission.rule.all'
         result = self.access_api(
             api=api,
-            appkey=appkey,
+            platform_id=platform_id,
         )
         self.assertTrue('rule_list' in result)
         for rule in result['rule_list']:
@@ -312,8 +350,11 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         self.assertTrue('data' in result)
 
     def test_permission_workflow(self):
-        # 1. 授权测试
-        appkey = self.platform_authorize()
+        # 1. 创建平台
+        platform_id = self.platform_add()
+        self.platform_update(platform_id)
+        self.platform_all()
+        appkey = self.platform_authorize(platform_id)
 
         # 2. 启动授权
         self.platform_apply(appkey)
@@ -323,49 +364,49 @@ class PermissionTestCase(MiddlegroundAPITestCase):
 
         # 3. 测试规则
         rule_id = self.rule_add(
-            appkey,
+            platform_id,
             name="权限管理",
             parent_id=0,
             description="一级权限描述",
             remark="一级权限",
         )
         rule_id_2 = self.rule_add(
-            appkey,
+            platform_id,
             name="权限列表",
             parent_id=rule_id,
             description="二级权限描述",
             remark="二级权限",
         )
         rule_id_3 = self.rule_add(
-            appkey,
+            platform_id,
             name="查看",
             parent_id=rule_id_2,
             description="查看操作描述",
             remark="查看操作权限",
         )
         rule_id_3 = self.rule_add(
-            appkey,
+            platform_id,
             name="详情",
             parent_id=rule_id_2,
             description="查看操作描述",
             remark="查看操作权限",
         )
         rule_id_2 = self.rule_add(
-            appkey,
+            platform_id,
             name="组织列表",
             parent_id=rule_id,
             description="组织列表描述",
             remark="组织列表权限",
         )
         rule_id_3 = self.rule_add(
-            appkey,
+            platform_id,
             name="详情",
             parent_id=rule_id_2,
             description="详情操作描述",
             remark="详情操作权限",
         )
         self.rule_update(rule_id_3, name='删除', remark="删除操作备注")
-        self.rule_all(appkey)
+        self.rule_all(platform_id)
         self.rule_remove(rule_id_3)
 
         # 4.测试权限组
@@ -496,4 +537,3 @@ class PermissionTestCase(MiddlegroundAPITestCase):
             appkey,
             self.staff.id,
         )
-

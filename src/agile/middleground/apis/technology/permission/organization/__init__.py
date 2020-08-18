@@ -61,7 +61,7 @@ class All(NoAuthorizedApi):
     所有组织
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="当前值")
+    request.appkey = RequestField(CharField, desc="appkey")
 
     response = with_metaclass(ResponseFieldSet)
     response.organization_list = ResponseField(

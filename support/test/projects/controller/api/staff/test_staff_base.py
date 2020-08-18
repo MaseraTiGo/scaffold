@@ -21,10 +21,12 @@ class StaffTestCase(ControllerAPITestCase):
         self.update_info = {
             'name': '王海东',
             'work_number': 'Bq0002',
+            'gender': 'woman',
             'birthday': '1989-07-07',
             'phone': '15527703110',
             'email': '212838281@qq.com',
-            'gender': 'woman',
+            'qq': '212838281',
+            'wechat': 'weixin_29122934231x',
             'is_admin': False,
         }
 

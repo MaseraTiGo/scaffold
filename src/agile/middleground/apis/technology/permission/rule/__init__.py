@@ -21,7 +21,7 @@ class Add(NoAuthorizedApi):
     添加规则
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="appkey")
+    request.platform_id = RequestField(IntField, desc="平台id")
     request.rule_info = RequestField(
         DictField,
         desc="规则详情",
@@ -46,7 +46,7 @@ class Add(NoAuthorizedApi):
 
     def execute(self, request):
         rule = PermissionServer.add_rule(
-            appkey=request.appkey,
+            platform_id=request.platform_id,
             **request.rule_info
         )
         return rule
@@ -61,7 +61,7 @@ class All(NoAuthorizedApi):
     所有规则
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="appkey")
+    request.platform_id = RequestField(IntField, desc="平台id")
 
     response = with_metaclass(ResponseFieldSet)
     response.rule_list = ResponseField(
@@ -96,8 +96,8 @@ class All(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        rule_list = PermissionServer.get_all_rule_byappkey(
-            request.appkey
+        rule_list = PermissionServer.get_all_rule_byplatform(
+            request.platform_id
         )
         return rule_list
 

@@ -76,7 +76,11 @@ class Entity(object):
                         attr: getattr(entity.model, attr)
                     })
                 else:
-                    raise Exception("losed attribute [ {} ]".format(attr))
+                    raise Exception(
+                        "losed attribute [ {field} ]".format(
+                            field=attr
+                        )
+                    )
             return result
 
         def _get_child_list(parent_entity, parent):

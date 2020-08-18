@@ -31,8 +31,8 @@ middleground_service.add(Place, Pay, PayCallback, Delivery, Finish, Close, Get, 
 from agile.middleground.apis.technology.permission import Get
 middleground_service.add(Get)
 
-from agile.middleground.apis.technology.permission.platform import Authorize, Apply, Forbidden, Refresh
-middleground_service.add(Authorize, Apply, Forbidden, Refresh)
+from agile.middleground.apis.technology.permission.platform import Add, All, Update, Authorize, Apply, Forbidden, Refresh
+middleground_service.add(Add, All, Update, Authorize, Apply, Forbidden, Refresh)
 
 from agile.middleground.apis.technology.permission.rule import Add, All, Get, Update, Remove
 middleground_service.add(Add, All, Get, Update, Remove)

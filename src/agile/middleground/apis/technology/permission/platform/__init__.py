@@ -7,7 +7,7 @@ Created on 2020年7月23日
 '''
 
 from infrastructure.core.field.base import CharField, DictField, \
-        IntField
+        IntField, ListField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -18,9 +18,9 @@ from abs.middleground.technology.permission.utils.constant import \
         PermissionTypes
 
 
-class Authorize(NoAuthorizedApi):
+class Add(NoAuthorizedApi):
     """
-    添加授权
+    添加平台
     """
     request = with_metaclass(RequestFieldSet)
     request.authorize_info = RequestField(
@@ -30,10 +30,127 @@ class Authorize(NoAuthorizedApi):
             'name': CharField(desc="平台名称"),
             'company_id': IntField(desc="公司ID"),
             'app_type': CharField(
-                desc="授权类型",
-                choices=PermissionTypes.CHOICES,
+                desc="平台类型",
+                choices=PermissionTypes.CHOICES
             ),
-            'prefix': CharField(desc="前缀，仅允许2位"),
+            'remark': CharField(desc="备注"),
+        }
+    )
+
+    response = with_metaclass(ResponseFieldSet)
+    response.platform_id = ResponseField(IntField, desc="平台id")
+
+    @classmethod
+    def get_desc(cls):
+        return "添加授权"
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self, request):
+        platform = PermissionServer.create_platform(
+            **request.authorize_info
+        )
+        return platform
+
+    def fill(self, response, platform):
+        response.platform_id = platform.id
+        return response
+
+
+class All(NoAuthorizedApi):
+    """
+    获取所有平台列表
+    """
+    request = with_metaclass(RequestFieldSet)
+
+    response = with_metaclass(ResponseFieldSet)
+    response.data_list = ResponseField(
+        ListField,
+        desc="平台列表",
+        fmt=DictField(
+            desc="平台详情",
+            conf={
+                'id': IntField(desc="平台id"),
+                'name': CharField(desc="平台名称"),
+                'company_id': IntField(desc="公司ID"),
+                'remark': CharField(desc="备注"),
+            }
+        )
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "获取所有平台列表"
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self, request):
+        platform_list = PermissionServer.all_platform()
+        return platform_list
+
+    def fill(self, response, platform_list):
+        response.data_list = [
+            {
+                'id': platform.id,
+                'name': platform.name,
+                'company_id': platform.company_id,
+                'remark': platform.remark,
+            }
+            for platform in platform_list
+        ]
+        return response
+
+
+class Update(NoAuthorizedApi):
+    """
+    更新平台信息
+    """
+    request = with_metaclass(RequestFieldSet)
+    request.platform_id = RequestField(IntField, desc="平台id")
+    request.update_info = RequestField(
+        DictField,
+        desc="更新内容",
+        conf={
+            'name': CharField(desc="平台名称"),
+            'remark': CharField(desc="备注"),
+        }
+    )
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_desc(cls):
+        return "更新平台信息"
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self, request):
+        PermissionServer.update_platform(
+            request.platform_id,
+            **request.update_info
+        )
+
+    def fill(self, response):
+        return response
+
+
+class Authorize(NoAuthorizedApi):
+    """
+    添加授权
+    """
+    request = with_metaclass(RequestFieldSet)
+    request.platform_id = RequestField(IntField, desc="平台id")
+    request.authorize_info = RequestField(
+        DictField,
+        desc="授权详情",
+        conf={
+            'company_id': IntField(desc="公司ID"),
             'remark': CharField(desc="备注"),
         }
     )
@@ -51,6 +168,7 @@ class Authorize(NoAuthorizedApi):
 
     def execute(self, request):
         platform = PermissionServer.authorize(
+            request.platform_id,
             **request.authorize_info
         )
         return platform
