@@ -89,9 +89,18 @@ class Search(NoAuthorizedApi):
             search_info.update({
                 'school_id__in': school_id_list
             })
+        years_info = {}
         if 'category' in search_info:
+            years_info.update({
+                'category': search_info.pop('category')
+            })
+        if 'duration' in search_info:
+            years_info.update({
+                'duration': search_info.pop('duration')
+            })
+        if years_info:
             years_id_list = UniversityYearsServer.search_id_list(
-                category=search_info.pop('category')
+                **years_info
             )
             search_info.update({
                 'years_id__in': years_id_list
