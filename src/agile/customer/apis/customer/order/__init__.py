@@ -217,7 +217,7 @@ class Get(CustomerAuthorizedApi):
             'create_time': order.mg_order.create_time,
             'last_payment_type': order.mg_order.payment.last_payment_type,
             'last_payment_time': order.mg_order.payment.last_payment_time,
-            'contract_background': 'http://education.bq.com/resource/contract/background.png',
+            'contract_background': 'http://test-b.rong-mi.com/resource/contract/background.png',
             'last_payment_number': '',
             'despatch_type': order.order_item_list[0].snapshoot.despatch_type,
             'order_item_list': [{
@@ -344,7 +344,7 @@ class Search(CustomerAuthorizedApi):
             'last_payment_time': order.mg_order.payment.last_payment_time,
             'last_payment_number': '',
             'despatch_type': order.orderitem_list[0].snapshoot.despatch_type,
-            'contract_background': 'http://education.bq.com/resource/contract/background.png',
+            'contract_background': 'http://test-b.rong-mi.com/resource/contract/background.png',
             'order_item_list': [{
                 'agent_name': order.agent.name,
                 'sale_price': order_item.snapshoot.sale_price,
