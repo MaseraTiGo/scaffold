@@ -34,7 +34,7 @@ class AgentGenerator(BaseGenerator):
 
     def create(self, agent_info, result_mapping):
         agent_qs = Agent.query(
-            name=agent_info.name,
+            name = agent_info.name,
         )
         if agent_qs.count():
             agent = agent_qs[0]

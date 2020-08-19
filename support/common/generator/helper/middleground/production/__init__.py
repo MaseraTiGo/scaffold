@@ -33,8 +33,8 @@ class ProductionGenerator(BaseGenerator):
 
     def create(self, production_info, result_mapping):
         production_qs = Production.query(
-            company_id=production_info.company_id,
-            name=production_info.name,
+            company_id = production_info.company_id,
+            name = production_info.name,
         )
         if production_qs.count():
             production = production_qs[0]

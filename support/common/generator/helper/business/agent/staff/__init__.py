@@ -27,8 +27,8 @@ class AgentStaffGenerator(BaseGenerator):
 
     def create(self, staff_info, result_mapping):
         staff_qs = Staff.query().filter(
-            work_number=staff_info.work_number,
-            agent_id=staff_info.agent_id
+            work_number = staff_info.work_number,
+            agent_id = staff_info.agent_id
         )
         if staff_qs.count():
             staff = staff_qs[0]
@@ -38,8 +38,8 @@ class AgentStaffGenerator(BaseGenerator):
             for person in person_list:
                 for enterprise in enterprise_list:
                     staff = Staff.create(
-                        company_id=enterprise.id,
-                        person_id=person.id,
+                        company_id = enterprise.id,
+                        person_id = person.id,
                         **staff_info
                     )
         return staff

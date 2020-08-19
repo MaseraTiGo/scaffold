@@ -13,6 +13,7 @@ from abs.services.agent.order.manager import OrderServer, OrderItemServer
 from abs.services.agent.goods.utils.constant import DurationTypes
 from abs.services.customer.personal.manager import CustomerServer
 from abs.services.crm.agent.manager import AgentServer
+from abs.services.agent.customer.manager import AgentCustomerServer
 
 
 class Get(StaffAuthorizedApi):
@@ -87,17 +88,17 @@ class Get(StaffAuthorizedApi):
 
     def execute(self, request):
         order = OrderServer.get(request.order_id)
-        customer = CustomerServer.get(order.customer_id)
+        agent_customer = AgentCustomerServer.get(order.agent_customer_id)
         OrderItemServer.hung_order_item([order])
         return order, customer
 
-    def fill(self, response, order, customer):
+    def fill(self, response, order, agent_customer):
         response.order_info = {
             'id': order.id,
-            'nick':customer.nick,
-            'phone':customer.person.phone,
+            'nick':agent_customer.name,
+            'phone':agent_customer.phone,
 
-            'register_time':customer.create_time,
+            'register_time':agent_customer.create_time,
 
             're_name':order.mg_order.invoice.name if \
                       order.mg_order.invoice else "",
@@ -233,7 +234,7 @@ class Search(StaffAuthorizedApi):
             **request.search_info
         )
         OrderItemServer.hung_order_item(order_spliter.get_list())
-        CustomerServer.hung_customer(order_spliter.get_list())
+        AgentCustomerServer.hung_agent_customer(order_spliter.get_list())
         AgentServer.hung_agent(order_spliter.get_list())
         return order_spliter
 
@@ -251,8 +252,8 @@ class Search(StaffAuthorizedApi):
                              order.mg_order.payment else 0,
             'status': order.mg_order.status,
 
-            'nick':  order.customer.nick,
-            'phone': order.customer.person.phone,
+            'nick':  order.agent_customer.name,
+            'phone': order.agent_customer.phone,
             'agent_id': order.agent.id,
             'agent_name': order.agent.name,
             'snapshoot_list': [

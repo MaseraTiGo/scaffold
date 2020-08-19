@@ -62,11 +62,11 @@ class UseStatusConstant(BaseHelper):
 class DurationTypesConstant(BaseHelper):
 
     def calc(self):
-        from abs.services.agent.goods.utils.constant import DurationTypes
+        from abs.services.crm.university.utils.constant import DurationTypes
         return random.choice(DurationTypes.CHOICES)[0]
 
 class CategoryTypesConstant(BaseHelper):
 
     def calc(self):
-        from abs.services.agent.goods.utils.constant import CategoryTypes
+        from abs.services.crm.university.utils.constant import CategoryTypes
         return random.choice(CategoryTypes.CHOICES)[0]

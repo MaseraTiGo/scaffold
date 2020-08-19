@@ -11,7 +11,8 @@ from abs.services.agent.order.utils.constant import OrderSource
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.agent.order.manager import OrderServer, OrderItemServer
 from abs.services.agent.goods.utils.constant import DurationTypes
-from abs.services.customer.personal.manager import CustomerServer
+from abs.middleground.business.person.manager import PersonServer
+from abs.services.agent.customer.manager import AgentCustomerServer
 
 
 class Get(AgentStaffAuthorizedApi):
@@ -86,17 +87,17 @@ class Get(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         order = OrderServer.get(request.order_id)
-        customer = CustomerServer.get(order.customer_id)
+        agent_customer = AgentCustomerServer.get(order.agent_customer_id)
         OrderItemServer.hung_order_item([order])
         return order, customer
 
-    def fill(self, response, order, customer):
+    def fill(self, response, order, agent_customer):
         response.order_info = {
             'id': order.id,
-            'nick':customer.nick,
-            'phone':customer.person.phone,
+            'nick':agent_customer.name,
+            'phone':agent_customer.phone,
 
-            'register_time':customer.create_time,
+            'register_time':agent_customer.create_time,
 
             're_name':order.mg_order.invoice.name if \
                       order.mg_order.invoice else "",
@@ -234,7 +235,7 @@ class Search(AgentStaffAuthorizedApi):
             **request.search_info
         )
         OrderItemServer.hung_order_item(order_spliter.get_list())
-        CustomerServer.hung_customer(order_spliter.get_list())
+        AgentCustomerServer.hung_agent_customer(order_spliter.get_list())
         return order_spliter
 
     def fill(self, response, order_spliter):
@@ -251,8 +252,8 @@ class Search(AgentStaffAuthorizedApi):
                              order.mg_order.payment else 0,
             'status': order.mg_order.status,
 
-            'nick':  order.customer.nick,
-            'phone': order.customer.person.phone,
+            'nick':  order.agent_customer.name,
+            'phone': order.agent_customer.phone,
 
             'snapshoot_list': [
                 {
