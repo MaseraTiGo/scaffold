@@ -29,6 +29,7 @@ class Search(AgentStaffAuthorizedApi):
         DictField,
         desc = "搜索商品",
         conf = {
+            'name': CharField(desc = "客户姓名", is_required = False),
             'phone': CharField(desc = "客户手机号", is_required = False)
         }
     )
@@ -90,14 +91,13 @@ class Search(AgentStaffAuthorizedApi):
         data_list = [{
                 'id': sale_chance.id,
                 'phone': sale_chance.agent_customer.phone,
-                'name':sale_chance.agent_customer.person.name if \
-                       sale_chance.agent_customer.person else "",
+                'name':sale_chance.agent_customer.name,
                 'wechat':sale_chance.agent_customer.person.wechat if \
                          sale_chance.agent_customer.person else "",
-                'education': sale_chance.education,
+                'education': sale_chance.agent_customer.education,
                 'production_id': sale_chance.production.id,
                 'production_name': sale_chance.production.name,
-                'city':sale_chance.city,
+                'city':sale_chance.agent_customer.city,
                 'staff_id': sale_chance.staff.id,
                 'staff_name': sale_chance.staff.name,
                 'end_time': sale_chance.end_time,
@@ -141,28 +141,37 @@ class Add(AgentStaffAuthorizedApi):
     def execute(self, request):
         auth = self.auth_user
         agent = self.auth_agent
-        # phone = request.sale_chance_info.pop("phone")
+        production_id = request.sale_chance_info.pop("production_id")
+        production = ProductionServer.get(production_id)
         customer = AgentCustomerServer.check_byphone(
             request.sale_chance_info["phone"],
             agent.id
         )
         if customer is None:
-            request.sale_chance_info.update({
+            customer_info = {
                 "agent_id":agent.id,
                 "person_id":0,
-            })
+                "phone":request.sale_chance_info.pop("phone"),
+                "name":request.sale_chance_info.pop("name") if \
+                       "name" in request.sale_chance_info else "",
+                "city":request.sale_chance_info.pop("city") if \
+                       "city" in request.sale_chance_info else "",
+                "education":request.sale_chance_info.pop("education")if \
+                            "education" in request.sale_chance_info else "",
+            }
             customer = AgentCustomerServer.create(
-                **request.sale_chance_info
+                **customer_info
             )
         else:
             if SaleChanceServer.is_exist(customer):
                 raise BusinessError("此客户机会已存在")
-        chance_add_info = {
+        request.sale_chance_info.update({
             "agent_customer":customer,
             "agent_id":agent.id,
             "staff_id":auth.id,
             "founder_id":auth.id,
-            "organization_id":0,
+            "organization_id":0,  # 待修改
+            "production_id":production.id,
             "end_time":(datetime.datetime.now() + \
                         datetime.timedelta(days = 100)).date(),
             "source":SourceTypes.CREATE,
@@ -170,7 +179,7 @@ class Add(AgentStaffAuthorizedApi):
                  t = int(time.time()),
                  r = random.randint(10000, 90000)
              )
-        }
+        })
         SaleChanceServer.create(**request.sale_chance_info)
 
     def fill(self, response):

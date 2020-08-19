@@ -119,6 +119,9 @@ class SaleChanceServer(BaseManager):
 
     @classmethod
     def search_all(cls, **search_info):
+        if "name" in search_info:
+            name = search_info.pop("name")
+            search_info.update({"agent_customer__name":name})
         if "phone" in search_info:
             phone = search_info.pop("phone")
             search_info.update({"agent_customer__phone":phone})
