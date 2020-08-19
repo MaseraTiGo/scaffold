@@ -289,6 +289,7 @@ class Search(CustomerAuthorizedApi):
                             'school_name': CharField(desc = "学校名称"),
                             'major_name': CharField(desc = "专业名称"),
                             'duration': CharField(desc = "学年"),
+                            'category': CharField(desc="类别"),
                             'school_city': CharField(desc = "学校城市"),
                             'brand_name': CharField(desc = "品牌"),
                             'production_name': CharField(desc = "产品名")
@@ -355,6 +356,7 @@ class Search(CustomerAuthorizedApi):
                 'school_name': order_item.school_name,
                 'major_name': order_item.major_name,
                 'duration': order_item.get_duration_display(),
+                'category': order_item.get_category_display(),
                 'school_city': order_item.school_city,
                 'brand_name': order_item.snapshoot.brand_name,
                 'production_name': order_item.snapshoot.production_name
