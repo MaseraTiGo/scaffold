@@ -66,14 +66,14 @@ class AgentCustomerServer(BaseManager):
         ).first()
         if agent_customer:
             agent_customer.update(
-                customer_id = customer.id
+                person_id = person.id
             )
         else:
             AgentCustomer.create(
-                customer_id = customer.id,
                 agent_id = agent_id,
+                person_id = person.id,
                 phone = person.phone,
-                person_id = person.id
+                name = person.name,
             )
         sale_chance = AgentCustomerSaleChance.search(
             agent_customer = agent_customer,

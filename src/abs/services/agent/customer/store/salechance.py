@@ -4,8 +4,7 @@ from abs.common.model import BaseModel, BooleanField, \
         IntegerField, CharField, TextField, DateTimeField, timezone, \
         DateField, ForeignKey, CASCADE
 from abs.services.agent.customer.settings import DB_PREFIX
-from abs.services.agent.customer.utils.constant import SourceTypes, \
-     EducationTypes
+from abs.services.agent.customer.utils.constant import SourceTypes
 from abs.services.agent.customer.store import AgentCustomer
 
 
@@ -16,10 +15,6 @@ class AgentCustomerSaleChance(BaseModel):
     founder_id = IntegerField(verbose_name = "创建机会员工id")
     organization_id = IntegerField(verbose_name = "组织id")
     production_id = IntegerField(verbose_name = "产品id")
-    education = CharField(verbose_name = "学历", max_length = 32, \
-                          choices = EducationTypes.CHOICES, \
-                          default = EducationTypes.OTHER)
-    city = CharField(verbose_name = "地址", max_length = 128, default = '')
     end_time = DateField(verbose_name = "机会截至时间", null = False, \
                          blank = False)
     batch_no = CharField(verbose_name = "批号", max_length = 128, default = '')

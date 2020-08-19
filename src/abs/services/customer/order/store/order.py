@@ -7,9 +7,11 @@ from abs.middleground.business.order.utils.constant import OrderStatus
 
 
 class Order(BaseModel):
-    customer_id = IntegerField(verbose_name = "客户id")
+    agent_customer_id = IntegerField(verbose_name = "代理商客户id", default = 0)
     mg_order_id = IntegerField(verbose_name = "订单id")
-    agent_id = IntegerField(verbose_name = "代理商id", null = True)
+    agent_id = IntegerField(verbose_name = "代理商id", default = 0)
+    person_id = IntegerField(verbose_name = "用户id", default = 0)
+    company_id = IntegerField(verbose_name = "公司id", default = 0)
 
     source = CharField(
         verbose_name = "订单来源",
@@ -18,20 +20,20 @@ class Order(BaseModel):
         default = OrderSource.OTHER
     )
 
-    number = CharField(verbose_name="订单编号", max_length=24, default='')
+    number = CharField(verbose_name = "订单编号", max_length = 24, default = '')
     status = CharField(
-        verbose_name="订单状态",
-        max_length=24,
-        choices=OrderStatus.CHOICES,
-        default=OrderStatus.ORDER_LAUNCHED
+        verbose_name = "订单状态",
+        max_length = 24,
+        choices = OrderStatus.CHOICES,
+        default = OrderStatus.ORDER_LAUNCHED
     )
     last_payment_time = DateTimeField(
-        verbose_name="最后支付时间",
-        null=True,
-        default=None,
+        verbose_name = "最后支付时间",
+        null = True,
+        default = None,
     )
-    name = CharField(verbose_name="姓名", max_length=16, default="")
-    phone = CharField(verbose_name="手机号", max_length=24, default="")
+    name = CharField(verbose_name = "姓名", max_length = 16, default = "")
+    phone = CharField(verbose_name = "手机号", max_length = 24, default = "")
 
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)
