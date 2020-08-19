@@ -6,7 +6,7 @@ from infrastructure.log.base import logger
 from infrastructure.core.exception.business_error import BusinessError
 from abs.services.customer.finance.manager import CustomerFinanceServer
 from abs.middleware.pay import pay_middleware
-from abs.services.customer.order.manager import OrderServer
+from abs.services.agent.order.manager import OrderServer
 
 
 def wechat_top_up_notify(request):

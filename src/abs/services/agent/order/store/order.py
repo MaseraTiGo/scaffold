@@ -1,8 +1,8 @@
 # coding=UTF-8
 
 from abs.common.model import BaseModel, IntegerField, CharField, DateTimeField, timezone
-from abs.services.customer.order.settings import DB_PREFIX
-from abs.services.customer.order.utils.constant import OrderSource
+from abs.services.agent.order.settings import DB_PREFIX
+from abs.services.agent.order.utils.constant import OrderSource
 from abs.middleground.business.order.utils.constant import OrderStatus
 
 

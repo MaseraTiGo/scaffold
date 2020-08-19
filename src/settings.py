@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     'abs.services.crm.staff',
     'abs.services.crm.tool',
     'abs.services.crm.university',
-    'abs.services.customer.order',
+    'abs.services.agent.order',
     'abs.services.crm.agent',
     'abs.services.controller.account',
     'abs.services.controller.staff',

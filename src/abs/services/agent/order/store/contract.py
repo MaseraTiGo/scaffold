@@ -2,7 +2,7 @@
 
 from abs.common.model import BaseModel, timezone, \
         IntegerField, CharField, TextField, DateTimeField
-from abs.services.customer.order.settings import DB_PREFIX
+from abs.services.agent.order.settings import DB_PREFIX
 
 
 class Contract(BaseModel):

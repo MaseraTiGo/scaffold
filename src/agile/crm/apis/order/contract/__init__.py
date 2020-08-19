@@ -8,7 +8,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.agent.manager.api import AgentStaffAuthorizedApi
-from abs.services.customer.order.manager import ContractServer
+from abs.services.agent.order.manager import ContractServer
 from abs.services.crm.agent.manager import AgentServer
 
 

@@ -11,7 +11,7 @@ from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.middleground.business.person.manager import PersonServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from infrastructure.core.exception.business_error import BusinessError
-from abs.services.customer.order.manager import OrderServer, OrderItemServer
+from abs.services.agent.order.manager import OrderServer, OrderItemServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.middleground.business.order.manager import OrderServer as mg_OrderServer
 from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer

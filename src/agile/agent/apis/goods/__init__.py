@@ -13,14 +13,13 @@ from abs.services.agent.goods.utils.constant import DurationTypes, \
 from abs.middleground.business.merchandise.utils.constant import\
      DespatchService, UseStatus
 
-from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.services.crm.university.manager import UniversityServer, \
      UniversityYearsServer
 from abs.services.crm.agent.manager import AgentServer
-from abs.services.customer.order.manager import OrderItemServer
+from abs.services.agent.order.manager import OrderItemServer
 
 
 class Get(AgentStaffAuthorizedApi):

@@ -7,9 +7,9 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.customer.manager.api import CustomerAuthorizedApi
-from abs.services.customer.order.manager import OrderItemServer, OrderServer
+from abs.services.agent.order.manager import OrderItemServer, OrderServer
 from infrastructure.core.exception.business_error import BusinessError
-from abs.services.customer.order.manager import ContractServer
+from abs.services.agent.order.manager import ContractServer
 from abs.services.crm.agent.manager import AgentServer
 
 

@@ -7,13 +7,13 @@ from infrastructure.utils.common.split_page import Splitor
 from abs.common.manager import BaseManager
 from abs.middleground.business.order.manager import \
      OrderServer as mg_OrderServer
-from abs.services.customer.order.store.order import Order
-from abs.services.customer.order.store.orderitem import OrderItem
+from abs.services.agent.order.store.order import Order
+from abs.services.agent.order.store.orderitem import OrderItem
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleware.pay import pay_middleware
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.middleware.image import image_middleware
-from abs.services.customer.order.store.contract import Contract
+from abs.services.agent.order.store.contract import Contract
 
 
 class OrderServer(BaseManager):

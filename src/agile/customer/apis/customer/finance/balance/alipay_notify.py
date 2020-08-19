@@ -5,7 +5,7 @@ from infrastructure.log.base import logger
 from abs.middleware.pay import pay_middleware
 from abs.services.customer.finance.manager import CustomerFinanceServer
 from django.http.response import HttpResponse
-from abs.services.customer.order.manager import OrderServer
+from abs.services.agent.order.manager import OrderServer
 
 
 def alipay_top_up_notify(request):

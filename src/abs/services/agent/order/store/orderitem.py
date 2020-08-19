@@ -1,11 +1,10 @@
 # coding=UTF-8
 
-from abs.common.model import BaseModel, BooleanField, \
-        IntegerField, CharField, TextField, DateTimeField, timezone, \
+from abs.common.model import BaseModel, IntegerField, CharField, DateTimeField, timezone, \
         ForeignKey, CASCADE
 from abs.services.agent.goods.utils.constant import DurationTypes, CategoryTypes
-from abs.services.customer.order.settings import DB_PREFIX
-from abs.services.customer.order.store.order import Order
+from abs.services.agent.order.settings import DB_PREFIX
+from abs.services.agent.order.store.order import Order
 
 
 class OrderItem(BaseModel):
