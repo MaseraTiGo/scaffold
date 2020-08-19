@@ -1,4 +1,4 @@
 # coding=UTF-8
 
 
-DB_PREFIX = "customer_order_"
+DB_PREFIX = "agent_order_"
