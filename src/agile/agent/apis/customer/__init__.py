@@ -10,14 +10,14 @@ from infrastructure.core.exception.business_error import BusinessError
 from agile.agent.manager.api import AgentStaffAuthorizedApi
 
 from abs.services.agent.customer.manager import AgentCustomerServer
-from abs.services.customer.personal.manager import CustomerServer
 
 
 class Search(AgentStaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.current_page = RequestField(IntField, desc = "当前页码")
     request.search_info = RequestField(DictField, desc = "搜索客户条件", conf = {
-        'nick': CharField(desc = "昵称", is_required = False),
+        'name': CharField(desc = "姓名", is_required = False),
+        'phone': CharField(desc = "手机号码", is_required = False),
         'create_time__gte': DatetimeField(
             desc = "注册起始时间",
             is_required = False
@@ -69,9 +69,6 @@ class Search(AgentStaffAuthorizedApi):
         agent_customer_spliter = AgentCustomerServer.search(
             request.current_page,
             **request.search_info
-        )
-        CustomerServer.hung_customer(
-            agent_customer_spliter.data
         )
         return agent_customer_spliter
 

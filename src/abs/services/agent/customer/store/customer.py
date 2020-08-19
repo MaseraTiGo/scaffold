@@ -10,7 +10,6 @@ from abs.services.agent.customer.utils.constant import SourceTypes, \
 class AgentCustomer(BaseModel):
 
     agent_id = IntegerField(verbose_name = "agent_id")
-    customer_id = IntegerField(verbose_name = "customer_id", default = 0)
     person_id = IntegerField(verbose_name = "person_id", default = 0)
     name = CharField(verbose_name = "客户姓名", max_length = 16, default = '')
     phone = CharField(verbose_name = "手机号码", max_length = 16, default = '')

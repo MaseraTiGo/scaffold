@@ -119,10 +119,11 @@ class Add(AgentStaffAuthorizedApi):
         DictField,
         desc = "机会详情",
         conf = {
+            'name': CharField(desc = "客户姓名", is_required = False),
             'phone': CharField(desc = "客户手机号码"),
             'production_id': IntField(desc = "产品id"),
-            'city': CharField(desc = "省市区"),
-            'education': CharField(desc = "学历"),
+            'city': CharField(desc = "省市区", is_required = False),
+            'education': CharField(desc = "学历", is_required = False),
             'remark': CharField(desc = "备注", is_required = False),
         }
     )
@@ -140,21 +141,23 @@ class Add(AgentStaffAuthorizedApi):
     def execute(self, request):
         auth = self.auth_user
         agent = self.auth_agent
-        phone = request.sale_chance_info.pop("phone")
+        # phone = request.sale_chance_info.pop("phone")
         customer = AgentCustomerServer.check_byphone(
-            phone,
+            request.sale_chance_info["phone"],
             agent.id
         )
         if customer is None:
+            request.sale_chance_info.update({
+                "agent_id":agent.id,
+                "person_id":0,
+            })
             customer = AgentCustomerServer.create(
-                agent_id = agent.id,
-                customer_id = 0,
-                phone = phone
+                **request.sale_chance_info
             )
         else:
             if SaleChanceServer.is_exist(customer):
                 raise BusinessError("此客户机会已存在")
-        request.sale_chance_info.update({
+        chance_add_info = {
             "agent_customer":customer,
             "agent_id":agent.id,
             "staff_id":auth.id,
@@ -167,7 +170,7 @@ class Add(AgentStaffAuthorizedApi):
                  t = int(time.time()),
                  r = random.randint(10000, 90000)
              )
-        })
+        }
         SaleChanceServer.create(**request.sale_chance_info)
 
     def fill(self, response):

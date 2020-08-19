@@ -55,6 +55,7 @@ class AgentCustomerServer(BaseManager):
             **search_info
         ).order_by("-create_time")
         splitor = Splitor(current_page, agent_customer_qs)
+        PersonServer.hung_persons(splitor.get_list())
         return splitor
 
     @classmethod
