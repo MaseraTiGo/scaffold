@@ -36,3 +36,24 @@ controller_pc_service.add(Phone, Image)
 
 from agile.controller.apis.staff.account.password import Modify
 controller_pc_service.add(Modify)
+
+from agile.controller.apis.staff.permission import Get
+controller_pc_service.add(Get)
+
+from agile.controller.apis.staff.permission.platform import Add, All, Update, Authorize, Apply, Forbidden, Refresh
+controller_pc_service.add(Add, All, Update, Authorize, Apply, Forbidden, Refresh)
+
+from agile.controller.apis.staff.permission.rule import Add, All, Get, Update, Remove
+controller_pc_service.add(Add, All, Get, Update, Remove)
+
+from agile.controller.apis.staff.permission.organization import Add, All, Get, Update, Remove
+controller_pc_service.add(Add, All, Get, Update, Remove)
+
+from agile.controller.apis.staff.permission.rulegroup import Add, Search, Get, Update, Remove
+controller_pc_service.add(Add, Search, Get, Update, Remove)
+
+from agile.controller.apis.staff.permission.position import Add, All, Get, Update, Remove
+controller_pc_service.add(Add, All, Get, Update, Remove)
+
+from agile.controller.apis.staff.permission.bind import Position, Person
+controller_pc_service.add(Position, Person)

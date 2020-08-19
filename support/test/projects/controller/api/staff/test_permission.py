@@ -1,17 +1,16 @@
 # coding=UTF-8
 
 import json
-import random
 
-from support.common.testcase.middleground_api_test_case import \
-        MiddlegroundAPITestCase
 from abs.middleground.technology.permission.utils.constant import\
         PermissionTypes
+from support.common.testcase.controller_api_test_case import \
+        ControllerAPITestCase
 from support.common.generator.field.model.entity import CrnCompanyEntitry,\
-        CustomerEntity, SpecificationEntity, CrnStaffEntitry
+        CustomerEntity, CrnStaffEntitry
 
 
-class PermissionTestCase(MiddlegroundAPITestCase):
+class PermissionTestCase(ControllerAPITestCase):
 
     def setUp(self):
         self.company = CrnCompanyEntitry().generate()
@@ -64,7 +63,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         self.assertTrue('remark' in platform)
 
     def platform_add(self):
-        api = 'technology.permission.platform.add'
+        api = 'staff.permission.platform.add'
         result = self.access_api(
             api=api,
             authorize_info=json.dumps({
@@ -78,8 +77,8 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['platform_id']
 
     def platform_update(self, platform_id):
-        api = 'technology.permission.platform.update'
-        result = self.access_api(
+        api = 'staff.permission.platform.update'
+        self.access_api(
             api=api,
             platform_id=platform_id,
             update_info=json.dumps({
@@ -89,7 +88,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         )
 
     def platform_all(self):
-        api = 'technology.permission.platform.all'
+        api = 'staff.permission.platform.all'
         result = self.access_api(
             api=api,
         )
@@ -98,7 +97,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
             self.assert_platform_fields(platform)
 
     def platform_authorize(self, platform_id):
-        api = 'technology.permission.platform.authorize'
+        api = 'staff.permission.platform.authorize'
         result = self.access_api(
             api=api,
             platform_id=platform_id,
@@ -111,21 +110,21 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['appkey']
 
     def platform_apply(self, appkey):
-        api = 'technology.permission.platform.apply'
+        api = 'staff.permission.platform.apply'
         self.access_api(
             api=api,
             appkey=appkey,
         )
 
     def platform_forbidden(self, appkey):
-        api = 'technology.permission.platform.forbidden'
+        api = 'staff.permission.platform.forbidden'
         self.access_api(
             api=api,
             appkey=appkey,
         )
 
     def platform_refresh(self, appkey):
-        api = 'technology.permission.platform.refresh'
+        api = 'staff.permission.platform.refresh'
         result = self.access_api(
             api=api,
             appkey=appkey,
@@ -134,7 +133,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['appkey']
 
     def rule_add(self, platform_id, **rule_info):
-        api = 'technology.permission.rule.add'
+        api = 'staff.permission.rule.add'
         result = self.access_api(
             api=api,
             platform_id=platform_id,
@@ -144,7 +143,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['rule_id']
 
     def rule_get(self, rule_id):
-        api = 'technology.permission.rule.get'
+        api = 'staff.permission.rule.get'
         result = self.access_api(
             api=api,
             rule_id=rule_id
@@ -154,7 +153,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['rule_info']
 
     def rule_update(self, rule_id, **update_info):
-        api = 'technology.permission.rule.update'
+        api = 'staff.permission.rule.update'
         self.access_api(
             api=api,
             rule_id=rule_id,
@@ -162,14 +161,14 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         )
 
     def rule_remove(self, rule_id, **update_info):
-        api = 'technology.permission.rule.remove'
+        api = 'staff.permission.rule.remove'
         self.access_api(
             api=api,
             rule_id=rule_id,
         )
 
     def rule_all(self, platform_id):
-        api = 'technology.permission.rule.all'
+        api = 'staff.permission.rule.all'
         result = self.access_api(
             api=api,
             platform_id=platform_id,
@@ -180,7 +179,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['rule_list']
 
     def organization_add(self, appkey, **organization_info):
-        api = 'technology.permission.organization.add'
+        api = 'staff.permission.organization.add'
         result = self.access_api(
             api=api,
             appkey=appkey,
@@ -190,7 +189,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['organization_id']
 
     def organization_get(self, organization_id):
-        api = 'technology.permission.organization.get'
+        api = 'staff.permission.organization.get'
         result = self.access_api(
             api=api,
             organization_id=organization_id
@@ -200,7 +199,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['organization_info']
 
     def organization_update(self, organization_id, **update_info):
-        api = 'technology.permission.organization.update'
+        api = 'staff.permission.organization.update'
         self.access_api(
             api=api,
             organization_id=organization_id,
@@ -208,14 +207,14 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         )
 
     def organization_remove(self, organization_id, **update_info):
-        api = 'technology.permission.organization.remove'
+        api = 'staff.permission.organization.remove'
         self.access_api(
             api=api,
             organization_id=organization_id,
         )
 
     def organization_all(self, appkey):
-        api = 'technology.permission.organization.all'
+        api = 'staff.permission.organization.all'
         result = self.access_api(
             api=api,
             appkey=appkey,
@@ -226,7 +225,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['organization_list']
 
     def position_add(self, appkey, **position_info):
-        api = 'technology.permission.position.add'
+        api = 'staff.permission.position.add'
         result = self.access_api(
             api=api,
             appkey=appkey,
@@ -236,7 +235,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['position_id']
 
     def position_get(self, position_id):
-        api = 'technology.permission.position.get'
+        api = 'staff.permission.position.get'
         result = self.access_api(
             api=api,
             position_id=position_id
@@ -246,7 +245,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['position_info']
 
     def position_update(self, position_id, **update_info):
-        api = 'technology.permission.position.update'
+        api = 'staff.permission.position.update'
         self.access_api(
             api=api,
             position_id=position_id,
@@ -254,14 +253,14 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         )
 
     def position_remove(self, position_id, **update_info):
-        api = 'technology.permission.position.remove'
+        api = 'staff.permission.position.remove'
         self.access_api(
             api=api,
             position_id=position_id,
         )
 
     def position_all(self, appkey):
-        api = 'technology.permission.position.all'
+        api = 'staff.permission.position.all'
         result = self.access_api(
             api=api,
             appkey=appkey,
@@ -272,7 +271,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['position_list']
 
     def rulegroup_add(self, appkey, **rule_group_info):
-        api = 'technology.permission.rulegroup.add'
+        api = 'staff.permission.rulegroup.add'
         result = self.access_api(
             api=api,
             appkey=appkey,
@@ -282,7 +281,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['rule_group_id']
 
     def rulegroup_get(self, rule_group_id):
-        api = 'technology.permission.rulegroup.get'
+        api = 'staff.permission.rulegroup.get'
         result = self.access_api(
             api=api,
             rule_group_id=rule_group_id
@@ -292,7 +291,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         return result['rule_group_info']
 
     def rulegroup_update(self, rule_group_id, **update_info):
-        api = 'technology.permission.rulegroup.update'
+        api = 'staff.permission.rulegroup.update'
         self.access_api(
             api=api,
             rule_group_id=rule_group_id,
@@ -300,14 +299,14 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         )
 
     def rulegroup_remove(self, rule_group_id, **update_info):
-        api = 'technology.permission.rulegroup.remove'
+        api = 'staff.permission.rulegroup.remove'
         self.access_api(
             api=api,
             rule_group_id=rule_group_id,
         )
 
     def rulegroup_search(self, appkey, current_page, **search_info):
-        api = 'technology.permission.rulegroup.search'
+        api = 'staff.permission.rulegroup.search'
         result = self.access_api(
             api=api,
             appkey=appkey,
@@ -328,8 +327,8 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         position_id,
         person_id
     ):
-        api = 'technology.permission.bind.position'
-        result = self.access_api(
+        api = 'staff.permission.bind.position'
+        self.access_api(
             api=api,
             appkey=appkey,
             bind_info=json.dumps({
@@ -340,7 +339,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         )
 
     def get_permission(self, appkey, person_id):
-        api = 'technology.permission.get'
+        api = 'staff.permission.get'
         result = self.access_api(
             api=api,
             appkey=appkey,

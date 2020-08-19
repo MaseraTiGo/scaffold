@@ -12,11 +12,11 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
-from agile.base.api import NoAuthorizedApi
+from agile.controller.manager.api import StaffAuthorizedApi
 from abs.middleground.technology.permission.manager import PermissionServer
 
 
-class Add(NoAuthorizedApi):
+class Add(StaffAuthorizedApi):
     """
     添加组织
     """
@@ -56,7 +56,7 @@ class Add(NoAuthorizedApi):
         return response
 
 
-class All(NoAuthorizedApi):
+class All(StaffAuthorizedApi):
     """
     所有组织
     """
@@ -147,7 +147,7 @@ class All(NoAuthorizedApi):
         return response
 
 
-class Get(NoAuthorizedApi):
+class Get(StaffAuthorizedApi):
     """
     获取组织接口
     """
@@ -194,7 +194,7 @@ class Get(NoAuthorizedApi):
         return response
 
 
-class Update(NoAuthorizedApi):
+class Update(StaffAuthorizedApi):
     """
     修改组织信息
     """
@@ -231,7 +231,7 @@ class Update(NoAuthorizedApi):
         return response
 
 
-class Remove(NoAuthorizedApi):
+class Remove(StaffAuthorizedApi):
     """
     删除组织信息
     """

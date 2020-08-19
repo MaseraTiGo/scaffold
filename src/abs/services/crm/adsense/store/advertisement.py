@@ -1,13 +1,14 @@
 # coding=UTF-8
 
 from abs.common.model import BaseModel, BooleanField, ForeignKey,\
-        IntegerField, CharField, TextField, DateTimeField, timezone
+        IntegerField, CharField, TextField, DateTimeField, timezone,\
+        CASCADE
 from abs.services.crm.adsense.settings import DB_PREFIX
 from .space import Space
 
 
 class Advertisement(BaseModel):
-    space = ForeignKey(Space)
+    space = ForeignKey(Space, CASCADE)
     thumbnail = TextField(verbose_name="缩略图")
     name = CharField(verbose_name="广告名称", max_length=256)
     url = TextField(verbose_name="跳转地址", default='')

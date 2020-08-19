@@ -24,10 +24,10 @@ class PositionHelper(Helper):
 
     ENTITY_CLASS = PositionEntity
 
-    def __init__(self, platform):
-        self.platform = platform
+    def __init__(self, authorization):
+        self.authorization = authorization
 
     def get_entity_list(self):
         return Position.query(
-            platform=self.platform
+            authorization=self.authorization
         )

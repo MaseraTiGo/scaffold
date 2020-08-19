@@ -12,13 +12,13 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
-from agile.base.api import NoAuthorizedApi
+from agile.controller.manager.api import StaffAuthorizedApi
 from abs.middleground.technology.permission.manager import PermissionServer
 from abs.middleground.technology.permission.utils.constant import \
         PermissionTypes
 
 
-class Add(NoAuthorizedApi):
+class Add(StaffAuthorizedApi):
     """
     添加平台
     """
@@ -59,7 +59,7 @@ class Add(NoAuthorizedApi):
         return response
 
 
-class All(NoAuthorizedApi):
+class All(StaffAuthorizedApi):
     """
     获取所有平台列表
     """
@@ -105,7 +105,7 @@ class All(NoAuthorizedApi):
         return response
 
 
-class Update(NoAuthorizedApi):
+class Update(StaffAuthorizedApi):
     """
     更新平台信息
     """
@@ -140,7 +140,7 @@ class Update(NoAuthorizedApi):
         return response
 
 
-class Authorize(NoAuthorizedApi):
+class Authorize(StaffAuthorizedApi):
     """
     添加授权
     """
@@ -178,7 +178,7 @@ class Authorize(NoAuthorizedApi):
         return response
 
 
-class Apply(NoAuthorizedApi):
+class Apply(StaffAuthorizedApi):
     """
     使用授权
     """
@@ -203,7 +203,7 @@ class Apply(NoAuthorizedApi):
         return response
 
 
-class Forbidden(NoAuthorizedApi):
+class Forbidden(StaffAuthorizedApi):
     """
     禁用授权
     """
@@ -228,7 +228,7 @@ class Forbidden(NoAuthorizedApi):
         return response
 
 
-class Refresh(NoAuthorizedApi):
+class Refresh(StaffAuthorizedApi):
     """
     刷新授权
     """

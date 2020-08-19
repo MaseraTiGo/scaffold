@@ -7,11 +7,11 @@ from infrastructure.utils.common.dictwrapper import DictWrapper
 from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
-from abs.middleground.technology.permission.utils.constant import UseStatus,\
-        PermissionTypes
+from abs.middleground.technology.permission.utils.constant import \
+        UseStatus, PermissionTypes
 from abs.middleground.technology.permission.models import PlatForm, Rule,\
         RuleGroup, Organization, Position, PositionPermission, PersonGroup, \
-        PersonPermission
+        PersonPermission, Authorization
 from abs.middleground.technology.permission.manager.rule import \
         RuleHelper
 from abs.middleground.technology.permission.manager.register import \
@@ -21,10 +21,9 @@ from abs.middleground.technology.permission.manager.register import \
 class PermissionServer(BaseManager):
 
     @classmethod
-    def authorize(cls, name, company_id, app_type, prefix, remark, limit=4):
+    def create_platform(cls, name, company_id, app_type, remark, limit=4):
         if PlatForm.query().filter(name=name).count() > 0:
             raise BusinessError("该平台已注册")
-        print(PlatForm.query(name=name))
 
         if PlatForm.query(company_id=company_id).count() > limit:
             raise BusinessError("公司授权次数过多")
@@ -32,44 +31,71 @@ class PermissionServer(BaseManager):
         platform = PlatForm.create(
             name=name,
             company_id=company_id,
-            app_type=app_type,
-            prefix=prefix,
             remark=remark,
+            app_type=app_type,
         )
         return platform
 
     @classmethod
-    def get_platform_byappkey(cls, appkey):
-        platform = PlatForm.get_byappkey(appkey)
+    def get_platform(cls, platform_id):
+        platform = PlatForm.get_byid(platform_id)
         if platform is None:
-            raise BusinessError("授权不存在")
+            raise BusinessError("平台不存在")
         return platform
+
+    @classmethod
+    def all_platform(cls):
+        platform_qs = PlatForm.query()
+        return platform_qs
+
+    @classmethod
+    def update_platform(cls, platform_id, **update_infos):
+        platform = cls.get_platform(platform_id)
+        platform.update(**update_infos)
+        return platform
+
+    @classmethod
+    def authorize(cls, platform_id, company_id, remark):
+        platform = cls.get_platform(platform_id)
+        authorization = Authorization.create(
+            company_id=company_id,
+            platform=platform,
+            remark=remark,
+        )
+        return authorization
+
+    @classmethod
+    def get_authorization_byappkey(cls, appkey):
+        authorization = Authorization.get_byappkey(appkey)
+        if authorization is None:
+            raise BusinessError("授权不存在")
+        return authorization
 
     @classmethod
     def apply(cls, appkey):
-        platform = cls.get_platform_byappkey(appkey)
-        if platform.use_status != UseStatus.ENABLE:
-            platform.update(
+        authorization = cls.get_authorization_byappkey(appkey)
+        if authorization.use_status != UseStatus.ENABLE:
+            authorization.update(
                 use_status=UseStatus.ENABLE
             )
-        return platform
+        return authorization
 
     @classmethod
     def forbidden(cls, appkey):
-        platform = cls.get_platform_byappkey(appkey)
-        if platform.use_status != UseStatus.FORBIDDEN:
-            platform.update(
+        authorization = cls.get_authorization_byappkey(appkey)
+        if authorization.use_status != UseStatus.FORBIDDEN:
+            authorization.update(
                 use_status=UseStatus.FORBIDDEN
             )
-        return platform
+        return authorization
 
     @classmethod
     def refresh(cls, appkey):
-        platform = cls.get_platform_byappkey(appkey)
-        platform.update(
-            appkey=platform.generate_appkey()
+        authorization = cls.get_authorization_byappkey(appkey)
+        authorization.update(
+            appkey=authorization.generate_appkey()
         )
-        return platform
+        return authorization
 
     @classmethod
     def get_rule(cls, rule_id):
@@ -79,13 +105,13 @@ class PermissionServer(BaseManager):
         return rule
 
     @classmethod
-    def get_all_rule_byappkey(cls, appkey):
-        platform = cls.get_platform_byappkey(appkey)
+    def get_all_rule_byplatform(cls, platform_id):
+        platform = cls.get_platform(platform_id)
         return RuleHelper(platform).root.get_tree()
 
     @classmethod
-    def add_rule(cls, appkey, name, parent_id, description, remark):
-        platform = cls.get_platform_byappkey(appkey)
+    def add_rule(cls, platform_id, name, parent_id, description, remark):
+        platform = cls.get_platform(platform_id)
         rule = Rule.create(
             name=name,
             description=description,
@@ -114,8 +140,8 @@ class PermissionServer(BaseManager):
 
     @classmethod
     def get_all_organization_byappkey(cls, appkey):
-        platform = cls.get_platform_byappkey(appkey)
-        helper = permission_register.get_helper(platform).organization
+        authorization = cls.get_authorization_byappkey(appkey)
+        helper = permission_register.get_helper(authorization).organization
         all_organization = []
         if helper.root is not None:
             all_organization = helper.root.get_tree()
@@ -123,15 +149,17 @@ class PermissionServer(BaseManager):
 
     @classmethod
     def add_organization(cls, appkey, parent_id, name, description, remark):
-        platform = cls.get_platform_byappkey(appkey)
+        authorization = cls.get_authorization_byappkey(appkey)
         organization = Organization.create(
             name=name,
             parent_id=parent_id,
             description=description,
             remark=remark,
-            platform=platform,
+            authorization=authorization,
         )
-        permission_register.get_helper(platform).organization.force_refresh()
+        permission_register.get_helper(
+            authorization
+        ).organization.force_refresh()
         return organization
 
     @classmethod
@@ -139,7 +167,7 @@ class PermissionServer(BaseManager):
         organization = cls.get_organization(organization_id)
         organization.update(**update_info)
         permission_register.get_helper(
-            organization.platform
+            organization.authorization
         ).organization.force_refresh()
         return organization
 
@@ -148,7 +176,7 @@ class PermissionServer(BaseManager):
         organization = cls.get_organization(organization_id)
         organization.delete()
         permission_register.get_helper(
-            organization.platform
+            organization.authorization
         ).organization.force_refresh()
         return True
 
@@ -161,22 +189,22 @@ class PermissionServer(BaseManager):
 
     @classmethod
     def search_rule_group(cls, current_page, appkey, **search_info):
-        platform = cls.get_platform_byappkey(appkey)
+        authorization = cls.get_authorization_byappkey(appkey)
         rule_group_qs = RuleGroup.query(
-            platform=platform
+            authorization=authorization
         ).filter(**search_info)
         spliter = Splitor(current_page, rule_group_qs)
         return spliter
 
     @classmethod
     def add_rule_group(cls, appkey, name, description, remark, content):
-        platform = cls.get_platform_byappkey(appkey)
+        authorization = cls.get_authorization_byappkey(appkey)
         rule_group = RuleGroup.create(
             name=name,
             description=description,
             remark=remark,
             content=content,
-            platform=platform,
+            authorization=authorization,
         )
         return rule_group
 
@@ -199,8 +227,8 @@ class PermissionServer(BaseManager):
 
     @classmethod
     def get_all_position_byappkey(cls, appkey):
-        platform = cls.get_platform_byappkey(appkey)
-        helper = permission_register.get_helper(platform).position
+        authorization = cls.get_authorization_byappkey(appkey)
+        helper = permission_register.get_helper(authorization).position
         all_position = []
         if helper.root is not None:
             all_position = helper.root.get_tree()
@@ -217,7 +245,7 @@ class PermissionServer(BaseManager):
         description,
         remark
     ):
-        platform = cls.get_platform_byappkey(appkey)
+        authorization = cls.get_authorization_byappkey(appkey)
         organization = cls.get_organization(organization_id)
         rule_group = cls.get_rule_group(rule_group_id)
         position = Position.create(
@@ -227,9 +255,9 @@ class PermissionServer(BaseManager):
             remark=remark,
             organization=organization,
             rule_group=rule_group,
-            platform=platform,
+            authorization=authorization,
         )
-        permission_register.get_helper(platform).position.force_refresh()
+        permission_register.get_helper(authorization).position.force_refresh()
         return position
 
     @classmethod
@@ -237,7 +265,7 @@ class PermissionServer(BaseManager):
         position = cls.get_position(position_id)
         position.update(**update_info)
         permission_register.get_helper(
-            position.platform
+            position.authorization
         ).position.force_refresh()
         return position
 
@@ -246,7 +274,7 @@ class PermissionServer(BaseManager):
         position = cls.get_position(position_id)
         position.delete()
         permission_register.get_helper(
-            position.platform
+            position.authorization
         ).position.force_refresh()
         return True
 
@@ -266,14 +294,14 @@ class PermissionServer(BaseManager):
         description,
         remark
     ):
-        platform = cls.get_platform_byappkey(appkey)
+        authorization = cls.get_authorization_byappkey(appkey)
         rule_group = cls.get_rule_group(rule_group_id)
         person_group = PersonGroup.create(
             name=name,
             description=description,
             remark=remark,
             rule_group=rule_group,
-            platform=platform,
+            authorization=authorization,
         )
         return person_group
 
@@ -289,70 +317,77 @@ class PermissionServer(BaseManager):
 
     @classmethod
     def bind_position(cls, appkey, organization_id, position_id, person_id):
-        platform = cls.get_platform_byappkey(appkey)
+        authorization = cls.get_authorization_byappkey(appkey)
         organization = cls.get_organization(organization_id)
         position = cls.get_position(position_id)
         permission = PositionPermission.create(
             person_id=person_id,
             organization=organization,
             position=position,
-            platform=platform,
+            authorization=authorization,
         )
         return permission
 
     @classmethod
     def get_position_permission(cls, appkey, person_id):
-        platform = cls.get_platform_byappkey(appkey)
+        authorization = cls.get_authorization_byappkey(appkey)
         position_permission = PositionPermission.get_byposition(
-            platform=platform,
-            person_id=person_id
+            authorization=authorization,
+            person_id=person_id,
         )
+
+        helper = permission_register.get_helper(authorization)
+        organization_id_list = helper.organization.get_children_ids(
+            position_permission.organization.id
+        )
+        position_id_list = helper.position.get_children_ids(
+            position_permission.position.id
+        )
+        person_id_list = [
+            permission['person_id']
+            for permission in PositionPermission.query().filter(
+                organization_id__in=organization_id_list,
+                position_id__in=position_id_list,
+                authorization=authorization,
+            ).values('person_id')
+        ]
+
         permission = DictWrapper({
             'operation': json.loads(
                 position_permission.position.rule_group.content
             ),
             'data': [
-                person_id
+                person_id_list
             ],
         })
         return permission
 
     @classmethod
     def bind_person(cls, appkey, person_group_id, person_id):
-        platform = cls.get_platform_byappkey(appkey)
+        authorization = cls.get_authorization_byappkey(appkey)
         person_group = cls.get_person_group(person_group_id)
         permission = PersonPermission.creaet(
             person_id=person_id,
             person_group=person_group,
-            platform=platform,
+            authorization=authorization,
         )
         return permission
 
     @classmethod
     def get_person_permission(cls, appkey, person_id):
-        platform = cls.get_platform_byappkey(appkey)
+        authorization = cls.get_authorization_byappkey(appkey)
         person_permission = PersonPermission.get_byperson(
-            platform=platform,
+            authorization=authorization,
             person_id=person_id
         )
         if person_permission is None:
             raise BusinessError("个人权限不存在")
-        helper = permission_register.get_helper(platform)
-        organization_id_list = helper.organization.get_children_ids()
-        position_id_list = helper.position_id.get_children_ids()
-        person_id_list = [
-            permission['person_id']
-            for permission in PersonPermission.query().filter(
-                organization_id__in=organization_id_list,
-                position_id__in=position_id_list,
-            ).values('person_id')
-        ]
         permission = DictWrapper({
             'operation': json.loads(
                 person_permission.person_group.rule_group.content
             ),
             'data': [
-                person_id_list
+                person_id
             ],
         })
         return permission
@@ -384,9 +419,9 @@ class PermissionServer(BaseManager):
 
             }
         """
-        platform = cls.get_platform_byappkey(appkey)
-        if platform.app_type == PermissionTypes.POSITION:
+        authorization = cls.get_authorization_byappkey(appkey)
+        if authorization.platform.app_type == PermissionTypes.POSITION:
             return cls.get_position_permission(appkey, person_id)
-        if platform.app_type == PermissionTypes.PERSON:
+        if authorization.platform.app_type == PermissionTypes.PERSON:
             return cls.get_person_permission(appkey, person_id)
         raise BusinessError("权限类型不支持")
