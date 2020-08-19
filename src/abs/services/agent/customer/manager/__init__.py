@@ -34,6 +34,15 @@ class AgentCustomerServer(BaseManager):
         return False, None
 
     @classmethod
+    def get(cls, agent_customer_id):
+        agent_customer = AgentCustomer.get_byid(
+            agent_customer_id
+        )
+        if agent_customer is None:
+            raise BusinessError("此客户不存在")
+        return agent_customer
+
+    @classmethod
     def search_all(cls, **search_info):
         agent_customer_qs = AgentCustomer.search(
             **search_info
@@ -78,9 +87,10 @@ class AgentCustomerServer(BaseManager):
         return agent_customer
 
     @classmethod
-    def check_byphone(cls, phone):
+    def check_byphone(cls, phone, agent_id):
         agent_customer_qs = cls.search_all(
-            phone = phone
+            phone = phone,
+            agent_id = agent_id
         )
         if agent_customer_qs.count() > 0:
             return agent_customer_qs[0]

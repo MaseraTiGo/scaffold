@@ -139,9 +139,12 @@ class Add(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         auth = self.auth_user
-        agent = AgentServer.get(auth.agent_id)
+        agent = self.auth_agent
         phone = request.sale_chance_info.pop("phone")
-        customer = AgentCustomerServer.check_byphone(phone)
+        customer = AgentCustomerServer.check_byphone(
+            phone,
+            agent.id
+        )
         if customer is None:
             customer = AgentCustomerServer.create(
                 agent_id = agent.id,

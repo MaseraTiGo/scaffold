@@ -3,14 +3,13 @@
 import json
 import random
 from support.common.testcase.agent_api_test_case import AgentAPITestCase
-from support.common.generator.field.model.entity import SchoolEntity, \
-     MajorEntity, ProductionEntity
+from support.common.generator.field.model.entity import YearsEntity, \
+     ProductionEntity
 
 class GoodsTestCase(AgentAPITestCase):
 
     def setUp(self):
-        self.school = SchoolEntity().generate()
-        self.major = MajorEntity().generate()
+        self.years = YearsEntity().generate()
         self.production = ProductionEntity().generate()
         self.goods_info = {
             'title': '计算机学与技术' + str(random.randint(0, 100)),
@@ -20,25 +19,9 @@ class GoodsTestCase(AgentAPITestCase):
             'market_price':10000,
             'despatch_type':"eduction_contract",
             'production_id':self.production.id if self.production else 0,
-            'school_id':self.school.id if self.school else 0,
-            'major_id':self.major.id if self.major else 0,
-            "duration":"two_half_year",
             "remark":"这事一个测试商品",
             "description":"这事一个测试商品描述",
-            "category":"specialty",
-            "specification_list":[{
-              "show_image":"/1231/1.png",
-              "sale_price":10200,
-              "stock":30,
-              "specification_value_list":[{
-                 "category":"颜色",
-                 "attribute":"白色"
-               },
-               {
-                 "category":"尺寸",
-                 "attribute":"L"
-               }]
-            }]
+            "years_id":self.years.id
         }
         self.update_info = {
             'title': '计算机学与技术a' + str(random.randint(0, 100)),
@@ -47,27 +30,9 @@ class GoodsTestCase(AgentAPITestCase):
             'detail':json.dumps([]),
             'market_price':10000,
             'despatch_type':"eduction_contract",
-            'production_id':self.production.id if self.production else 0,
-            'school_id':self.school.id if self.school else 0,
-            'major_id':self.major.id if self.major else 0,
-            "duration":"one_half_year",
             "remark":"这事一个测试商品22",
             "description":"这事一个测试商品描述22",
-            "category":"specialty",
-            "use_status":"enable",
-            "specification_list":[{
-              "show_image":"/1231/1.png",
-              "sale_price":10200,
-              "stock":40,
-              "specification_value_list":[{
-                 "category":"颜色2",
-                 "attribute":"白色2"
-               },
-               {
-                 "category":"尺寸2",
-                 "attribute":"ML"
-               }]
-            }]
+            "years_id":self.years.id,
         }
 
     def tearDown(self):
@@ -130,14 +95,20 @@ class GoodsTestCase(AgentAPITestCase):
     def test_update_goods(self):
         goods_list = self.test_search_goods()
         goods_id = goods_list[0]['id']
-        specification_id = goods_list[0]["specification_list"][0]["id"]
         api = "goods.update"
-        self.update_info["specification_list"][0]["id"] = specification_id
         self.access_api(
             api = api,
             goods_id = goods_id,
             goods_info = json.dumps(self.update_info)
         )
+
+    def test_searchall_goods(self):
+        api = 'goods.searchall'
+        result = self.access_api(
+            api = api,
+        )
+        self.assertTrue("data_list" in result)
+
     '''
     def test_setuse_goods(self):
         goods_list = self.test_search_goods()
@@ -146,7 +117,16 @@ class GoodsTestCase(AgentAPITestCase):
         result = self.access_api(
             api = api,
             goods_id = goods_id
-        )    
+        )
+
+    def test_share_goods(self):
+        goods_list = self.test_search_goods()
+        goods_id = goods_list[0]['id']
+        api = 'goods.share'
+        result = self.access_api(
+            api = api,
+            goods_id = goods_id
+        )
     '''
     def test_remove_goods(self):
         goods_list = self.test_search_goods()

@@ -31,7 +31,7 @@ class Add(AgentStaffAuthorizedApi):
         desc = "员工详情",
         conf = {
             'name': CharField(desc = "姓名"),
-            'identification': CharField(desc = "身份证号"),
+            'identification': CharField(desc = "身份证号", is_required = False),
             'phone': CharField(desc = "手机"),
             'organization_id': IntField(desc = "组织id"),
             'position_id': IntField(desc = "身份id"),

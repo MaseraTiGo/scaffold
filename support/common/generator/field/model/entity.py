@@ -172,3 +172,17 @@ class RelationsEntity(BaseHelper):
         if has_none:
             select_enum.append(None)
         return random.choice(select_enum)
+
+class GoodsEntity(BaseHelper):
+
+    def calc(self, has_none = False):
+        if not hasattr(self, '_enume'):
+            from abs.services.agent.goods.store import Goods
+            self._enume = []
+            for goods in Goods.query():
+                self._enume.append(goods)
+
+        select_enum = self._enume.copy()
+        if has_none:
+            select_enum.append(None)
+        return random.choice(select_enum)
