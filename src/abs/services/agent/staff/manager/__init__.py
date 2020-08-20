@@ -45,7 +45,7 @@ class AgentStaffServer(BaseManager):
     @classmethod
     def generate_work_number(cls, company_id):
         count_num = Staff.search(company_id = company_id).count()
-        work_number = "WN" + str(10000000 + count_num)
+        work_number = "CL" + str(10000000 + count_num)
         return work_number
 
     @classmethod

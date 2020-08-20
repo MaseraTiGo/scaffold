@@ -6,7 +6,7 @@ from abs.common.model import BaseModel, BooleanField, \
 
 class EventBase(BaseModel):
     """事件基类表"""
-    agent_staff_id = IntegerField(verbose_name = "代理商员工id")
+    staff_id = IntegerField(verbose_name = "员工id", default = 0)
 
     organization_id = IntegerField(verbose_name = "组织id")
 

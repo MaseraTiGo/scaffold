@@ -42,6 +42,13 @@ class StaffServer(BaseManager):
         is_exsited, staff = Staff.is_exsited(phone)
         return is_exsited, staff
 
+
+    @classmethod
+    def generate_work_number(cls):
+        count_num = Staff.search().count()
+        work_number = "CL" + str(10000000 + count_num)
+        return work_number
+
     @classmethod
     def create(cls, phone, **staff_info):
         is_person_exsited, person = PersonServer.is_exsited(phone)
@@ -51,6 +58,7 @@ class StaffServer(BaseManager):
         person = PersonServer.create(phone = phone, **staff_info)
         company = EnterpriseServer.get_main_company()
         staff = Staff.create(
+            work_number = cls.generate_work_number(),
             person_id = person.id,
             company_id = company.id,
             phone = phone,

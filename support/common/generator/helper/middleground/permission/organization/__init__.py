@@ -2,7 +2,7 @@
 
 from infrastructure.utils.common.dictwrapper import DictWrapper
 from support.common.generator.base import BaseGenerator
-from support.common.generator.helper import PlatformGenerator
+from support.common.generator.helper import AuthorizationGenerator
 from abs.middleground.technology.permission.store import Organization
 
 
@@ -13,13 +13,13 @@ class OrganizationGenerator(BaseGenerator):
         self._organization_infos = self.init(organization_info)
 
     def get_create_list(self, result_mapping):
-        platform_list = result_mapping.get(PlatformGenerator.get_key())
+        authorization_list = result_mapping.get(AuthorizationGenerator.get_key())
         organization_list = []
-        for platform in platform_list:
+        for authorization in authorization_list:
             for organization_info in self._organization_infos:
                 organization = organization_info.copy()
                 organization.update({
-                    "platform":platform
+                    "authorization":authorization
                 })
                 organization_list.append(DictWrapper(organization))
         return organization_list
@@ -27,7 +27,7 @@ class OrganizationGenerator(BaseGenerator):
     def create(self, organization_info, result_mapping):
         organization_qs = Organization.query().filter(
             name = organization_info.name,
-            platform = organization_info.platform,
+            authorization = organization_info.authorization,
         )
         if organization_qs.count():
             organization = organization_qs[0]
@@ -35,7 +35,7 @@ class OrganizationGenerator(BaseGenerator):
             if organization_info.parent:
                 organization = Organization.query(
                     name = organization_info.parent,
-                    platform = organization_info.platform,
+                    authorization = organization_info.authorization,
                 )[0]
                 organization_info.parent_id = parent.id
             else:

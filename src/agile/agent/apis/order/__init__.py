@@ -89,7 +89,7 @@ class Get(AgentStaffAuthorizedApi):
         order = OrderServer.get(request.order_id)
         agent_customer = AgentCustomerServer.get(order.agent_customer_id)
         OrderItemServer.hung_order_item([order])
-        return order, customer
+        return order, agent_customer
 
     def fill(self, response, order, agent_customer):
         response.order_info = {

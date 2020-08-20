@@ -28,8 +28,8 @@ crm_pc_service.add(Get, Update)
 # from agile.apis.staff.token import Renew
 # crm_pc_service.add(Renew)
 
-from agile.crm.apis.staff.account import Login, Logout
-crm_pc_service.add(Login, Logout)
+from agile.crm.apis.staff.account import Login, Logout, Add
+crm_pc_service.add(Login, Logout, Add)
 
 from agile.crm.apis.staff.account.vcode import Phone, Image
 crm_pc_service.add(Phone, Image)
