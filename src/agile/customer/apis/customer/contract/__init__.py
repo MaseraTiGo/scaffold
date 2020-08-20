@@ -41,7 +41,7 @@ class Get(CustomerAuthorizedApi):
         order_item = OrderItemServer.get(
             request.order_item_id
         )
-        if order_item.order.customer_id != self.auth_user.id:
+        if order_item.order.person_id != self.auth_user.person_id:
             raise BusinessError('订单异常')
         contract_list = ContractServer.search_all(
             order_item_id = order_item.id
@@ -85,7 +85,7 @@ class Add(CustomerAuthorizedApi):
         order_item = OrderItemServer.get(
             request.order_item_id
         )
-        if order_item.order.customer_id != self.auth_user.id:
+        if order_item.order.person_id != self.auth_user.person_id:
             raise BusinessError('订单异常')
         agent = AgentServer.get(order_item.order.agent_id)
         order = OrderServer.get(order_item.order.id)
@@ -99,7 +99,6 @@ class Add(CustomerAuthorizedApi):
         ContractServer.create(
             order_item,
             agent,
-            customer_id = order.customer_id,
             **contract_info
         )
 

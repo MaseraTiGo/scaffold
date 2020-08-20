@@ -68,8 +68,7 @@ class OrderServer(BaseManager):
     @classmethod
     def add(
         cls,
-        agent,
-        customer,
+        agent_customer,
         invoice_info,
         source,
         strike_price,
@@ -87,16 +86,16 @@ class OrderServer(BaseManager):
             strike_price,
             '',
             'person',
-            customer.person_id,
+            agent_customer.person_id,
             'company',
-            agent.company_id,
+            agent_customer.agent.company_id,
             **invoice_info
         )
 
         create_info = {
-            'customer_id': customer.id,
+            'agent_customer_id': agent_customer.id,
             'mg_order_id': mg_order.id,
-            'agent_id': agent.id,
+            'agent_id': agent_customer.agent_id,
             'source': source,
             'number': mg_order.number,
             'status': mg_order.status,
@@ -203,6 +202,9 @@ class ContractServer(BaseManager):
             search_info['name']
         )
         search_info.update({
+            'agent_customer_id': order_item.order.agent_customer_id,
+            'person_id': order_item.order.person_id,
+            'company_id': order_item.order.company_id,
             'order_item_id': order_item.id,
             'agent_id': agent.id,
             'autograph': autograph_url,

@@ -59,31 +59,22 @@ class AgentCustomerServer(BaseManager):
         return splitor
 
     @classmethod
-    def create_foradd_order(cls, customer, agent_id, order_id):
+    def create_foradd_order(cls, customer, agent):
         person = PersonServer.get(customer.person_id)
         agent_customer = AgentCustomer.search(
             phone = person.phone,
-            agent_id = agent_id
+            agent_id = agent.id
         ).first()
         if agent_customer:
             agent_customer.update(
                 person_id = person.id
             )
         else:
-            AgentCustomer.create(
-                agent_id = agent_id,
+            agent_customer = AgentCustomer.create(
+                agent_id = agent.id,
                 person_id = person.id,
                 phone = person.phone,
                 name = person.name,
-            )
-        sale_chance = AgentCustomerSaleChance.search(
-            agent_customer = agent_customer,
-            end_time__gt = datetime.date.today()
-        ).first()
-        if sale_chance:
-            SaleChanceOrder.create(
-                sale_chance = sale_chance,
-                order_id = order_id
             )
         return agent_customer
 
@@ -134,3 +125,16 @@ class SaleChanceServer(BaseManager):
         if sale_chance.count() > 0:
             return True
         return False
+
+    @classmethod
+    def create_foradd_order(cls, agent_customer, order_id):
+        sale_chance = AgentCustomerSaleChance.search(
+            agent_customer=agent_customer,
+            end_time__gt=datetime.date.today()
+        ).first()
+        if sale_chance:
+            SaleChanceOrder.create(
+                sale_chance=sale_chance,
+                order_id=order_id
+            )
+        return agent_customer

@@ -17,7 +17,7 @@ from abs.middleground.business.order.manager import OrderServer as mg_OrderServe
 from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleware.pay import pay_middleware
-from abs.services.agent.customer.manager import AgentCustomerServer
+from abs.services.agent.customer.manager import AgentCustomerServer, SaleChanceServer
 from abs.services.crm.agent.manager import AgentServer
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.middleware.extend.yunaccount import yunaccount_extend
@@ -119,20 +119,24 @@ class Add(CustomerAuthorizedApi):
             for specification in specification_list
         ])
         agent = AgentServer.get(specification_list[0].merchandise.goods.agent_id)
-        order = OrderServer.add(
-            agent,
+
+        agent_customer = AgentCustomerServer.create_foradd_order(
             customer,
+            agent
+        )
+        agent_customer.agent = agent
+        order = OrderServer.add(
+            agent_customer,
             invoice_info,
             'app',
             order_info['strike_price'],
             specification_list
         )
-
-        AgentCustomerServer.create_foradd_order(
-            customer,
-            order.agent_id,
+        SaleChanceServer.create_foradd_order(
+            agent_customer,
             order.id
         )
+
         return order
 
     def fill(self, response, order):
@@ -200,7 +204,7 @@ class Get(CustomerAuthorizedApi):
 
     def execute(self, request):
         order = OrderServer.get(request.order_id)
-        if order.customer_id != self.auth_user.id:
+        if order.person_id != self.auth_user.person_id:
             raise BusinessError('订单异常')
         order.order_item_list = OrderItemServer.search_all(order = order)
         mg_OrderServer.hung_snapshoot(order.order_item_list)
@@ -432,7 +436,7 @@ class Cancel(CustomerAuthorizedApi):
 
     def execute(self, request):
         order = OrderServer.get(request.order_id)
-        if order.customer_id != self.auth_user.id:
+        if order.person_id != self.auth_user.person_id:
             raise BusinessError('没有权限取消该订单')
         if order.mg_order.status != OrderStatus.ORDER_LAUNCHED:
             raise BusinessError('待付款订单才能取消')
