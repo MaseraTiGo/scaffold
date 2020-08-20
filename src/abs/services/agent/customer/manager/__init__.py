@@ -159,3 +159,11 @@ class SaleChanceServer(BaseManager):
                 order_id=order_id
             )
         return agent_customer
+
+    def get(cls, sale_chance_id):
+        sale_chance = AgentCustomerSaleChance.get_byid(
+            sale_chance_id
+        )
+        if sale_chance is None:
+            raise BusinessError("此客户机会不存在")
+        return sale_chance

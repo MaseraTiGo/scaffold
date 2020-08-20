@@ -75,3 +75,6 @@ agent_pc_service.add(Add, All, Get, Update, Remove)
 
 from agile.agent.apis.goods.poster import Add
 agent_pc_service.add(Add)
+
+from agile.agent.apis.event.track import Search, Add
+agent_pc_service.add(Search, Add)

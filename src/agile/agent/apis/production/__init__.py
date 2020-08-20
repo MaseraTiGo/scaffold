@@ -140,7 +140,7 @@ class All(AgentStaffAuthorizedApi):
                 'name': production.name,
                 'children': [{
                     'id': goods.id,
-                    'name': goods.name,
+                    'name': goods.merchandise.title,
                     'major_name': goods.major.name
                 } for goods in goods_list]
             })

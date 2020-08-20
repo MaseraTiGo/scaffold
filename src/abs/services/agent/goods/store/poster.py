@@ -29,6 +29,9 @@ class PosterSpecification(BaseModel):
     specification_id = IntegerField(verbose_name="规格id")
     sale_price = IntegerField(verbose_name="价格")
 
+    update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
+    create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)
+
     class Meta:
         db_table = DB_PREFIX + "poster_specification"
 

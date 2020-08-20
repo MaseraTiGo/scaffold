@@ -8,7 +8,6 @@ from abs.services.agent.event.store.eventbase import EventBase
 
 
 class TrackEvent(EventBase):
-    person_id = IntegerField(verbose_name = "用户id", default = 0)
     agent_id = IntegerField(verbose_name = "代理商id")
     agent_customer_id = IntegerField(verbose_name = "代理商客户id", default = 0)
     describe = TextField(verbose_name = "描述")

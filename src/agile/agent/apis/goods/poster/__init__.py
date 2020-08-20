@@ -46,7 +46,7 @@ class Add(StaffAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        goods = GoodsServer.get(request.poster_info.pop('goods_id'))
+        goods = GoodsServer.get_goods(request.poster_info.pop('goods_id'))
         specification_list = request.poster_info.pop('specification_list')
         poster = PosterServer.add(
             specification_list,

@@ -186,3 +186,31 @@ class GoodsEntity(BaseHelper):
         if has_none:
             select_enum.append(None)
         return random.choice(select_enum)
+
+class AgentCustomerEntity(BaseHelper):
+
+    def calc(self, has_none = False):
+        if not hasattr(self, '_enume'):
+            from abs.services.agent.customer.store import AgentCustomer
+            self._enume = []
+            for agent_customer in AgentCustomer.query():
+                self._enume.append(agent_customer)
+
+        select_enum = self._enume.copy()
+        if has_none:
+            select_enum.append(None)
+        return random.choice(select_enum)
+
+class AgentCustomerChanceEntity(BaseHelper):
+
+    def calc(self, has_none = False):
+        if not hasattr(self, '_enume'):
+            from abs.services.agent.customer.store import AgentCustomerSaleChance
+            self._enume = []
+            for sale_chance in AgentCustomerSaleChance.query():
+                self._enume.append(sale_chance)
+
+        select_enum = self._enume.copy()
+        if has_none:
+            select_enum.append(None)
+        return random.choice(select_enum)
