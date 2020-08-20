@@ -44,6 +44,7 @@ class Search(AgentStaffAuthorizedApi):
             desc = "机会列表",
             conf = {
                 'id': IntField(desc = "机会id"),
+                'agent_customer_id': IntField(desc = "客户id"),
                 'phone': CharField(desc = "客户手机号"),
                 'name': CharField(desc = "客户姓名"),
                 'wechat': CharField(desc = "客户微信号"),
@@ -90,6 +91,7 @@ class Search(AgentStaffAuthorizedApi):
     def fill(self, response, spliter):
         data_list = [{
                 'id': sale_chance.id,
+                'agent_customer_id': sale_chance.agent_customer.id,
                 'phone': sale_chance.agent_customer.phone,
                 'name':sale_chance.agent_customer.name,
                 'wechat':sale_chance.agent_customer.person.wechat if \

@@ -72,3 +72,6 @@ agent_pc_service.add(Add, All, Get, Update, Remove)
 from agile.agent.apis.technology.permission.position import Add, All, Get , \
                                                           Update, Remove
 agent_pc_service.add(Add, All, Get, Update, Remove)
+
+from agile.agent.apis.event.track import Search, Add
+agent_pc_service.add(Search, Add)
