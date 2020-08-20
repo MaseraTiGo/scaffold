@@ -3,8 +3,6 @@
 from abs.common.model import BaseModel, BooleanField, ForeignKey, \
         IntegerField, CharField, TextField, DateTimeField, timezone
 from abs.services.agent.goods.settings import DB_PREFIX
-from abs.services.agent.goods.utils.constant import DurationTypes, \
-     CategoryTypes
 
 
 class Goods(BaseModel):

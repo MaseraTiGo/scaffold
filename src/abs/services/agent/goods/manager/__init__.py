@@ -1,5 +1,5 @@
 # coding=UTF-8
-
+import datetime
 
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
@@ -8,6 +8,7 @@ from abs.common.manager import BaseManager
 from abs.services.agent.goods.store.goods import Goods
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.merchandise.utils.constant import UseStatus
+from abs.services.agent.goods.store.poster import Poster, PosterSpecification
 
 
 class GoodsServer(BaseManager):
@@ -127,3 +128,25 @@ class GoodsServer(BaseManager):
         for goods in goods_list:
             years = mapping.get(goods.years_id)
             years.goods_list.append(goods)
+
+
+class PosterServer(BaseManager):
+
+    @classmethod
+    def add(cls, specification_list, **poster_info):
+        poster = Poster.create(
+            expire_date=datetime.date.today() + datetime.timedelta(days=3),
+            **poster_info
+        )
+        poster_specification_list = []
+        for specification in specification_list:
+            poster_specification_list.append(
+                PosterSpecification(
+                    unique_number=PosterSpecification.generate_unique_number(),
+                    poster=poster,
+                    specification_id=specification['id'],
+                    sale_price=specification['sale_price']
+                )
+            )
+        PosterSpecification.objects.bulk_create(poster_specification_list)
+        return poster

@@ -18,9 +18,4 @@ class TrackEvent(EventBase):
                      default = TrackTypes.OTHER)
 
     class Meta:
-        db_table = DB_PREFIX + "base"
-
-    @classmethod
-    def search(cls, **attrs):
-        agent_customer_qs = cls.query().filter(**attrs)
-        return agent_customer_qs
+        db_table = DB_PREFIX + "track"

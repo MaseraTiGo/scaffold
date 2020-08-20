@@ -17,3 +17,8 @@ class EventBase(BaseModel):
 
     class Meta:
         abstract = True
+
+    @classmethod
+    def search(cls, **attrs):
+        event_qs = cls.query().filter(**attrs)
+        return event_qs
