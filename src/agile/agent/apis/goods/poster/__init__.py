@@ -39,7 +39,7 @@ class Add(StaffAuthorizedApi):
 
     @classmethod
     def get_desc(cls):
-        return "商品添加接口"
+        return "海报添加接口"
 
     @classmethod
     def get_author(cls):

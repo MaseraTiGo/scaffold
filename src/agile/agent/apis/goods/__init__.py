@@ -514,39 +514,97 @@ class SearchAll(AgentStaffAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc = "商品列表搜索接口",
-        fmt = DictField(
-            desc = "商品内容",
-            conf = {
-                'id': IntField(desc = "编号"),
-                'title': CharField(desc = "标题"),
+        desc="产品列表",
+        fmt=DictField(
+            desc="产品信息",
+            conf={
+                'id': IntField(desc='产品id'),
+                'name': CharField(desc="产品名称"),
+                'children': ListField(
+                    desc="商品列表",
+                    fmt=DictField(
+                        desc="商品信息",
+                        conf={
+                            'id': IntField(desc="商品id"),
+                            'name': CharField(desc="商品名称"),
+                            'major_name': CharField(desc="专业名称"),
+                            'specification_list': ListField(
+                                desc = "规格列表",
+                                fmt = DictField(
+                                    desc = "规格详情",
+                                    conf = {
+                                        "id": IntField(desc = "规格id"),
+                                        "show_image": CharField(desc="展示图片"),
+                                        "sale_price": IntField(desc = "销售价为，单位：分"),
+                                        "specification_value_list": ListField(
+                                            desc = "属性值列表",
+                                            fmt = DictField(
+                                                desc = "属性详情",
+                                                conf = {
+                                                    "category": CharField(desc = "属性分类"),
+                                                    "attribute": CharField(desc = "属性值"),
+                                                }
+                                            )
+                                        ),
+                                    }
+                                )
+                            )
+                        }
+                    )
+                )
             }
         )
     )
 
     @classmethod
     def get_desc(cls):
-        return "本代理商所有商品搜索"
+        return "产品商品搜索"
 
     @classmethod
     def get_author(cls):
-        return "Fsy"
+        return "xyc"
 
     def execute(self, request):
-        auth = self.auth_user
-        agent = AgentServer.get(auth.agent_id)
-        goods_list = GoodsServer.search_all_goods(
-            use_status = UseStatus.ENABLE,
-            agent_id = agent.id
-        )
+        goods_list = list(GoodsServer.search_all_goods(
+            agent_id=self.auth_user.agent_id
+        ))
         MerchandiseServer.hung_merchandise(goods_list)
+        ProductionServer.hung_production([goods.merchandise for goods in goods_list])
+        UniversityServer.hung_major(goods_list)
         return goods_list
 
     def fill(self, response, goods_list):
-        data_list = [{
-            'id': goods.id,
-            'title': goods.merchandise.title,
-        } for goods in goods_list]
+        mapping = {}
+        for goods in goods_list:
+            production = goods.merchandise.production
+            if production.id not in mapping:
+                production.goods_list = [goods]
+                mapping.update({
+                    production.id: production
+                })
+            else:
+                production = mapping.get(production.id)
+                production.goods_list.append(goods)
+        data_list = []
+        for production in mapping.values():
+            data_list.append({
+                'id': production.id,
+                'name': production.name,
+                'children': [{
+                    'id': goods.id,
+                    'name': goods.merchandise.title,
+                    'major_name': goods.major.name,
+                    'specification_list': [{
+                        "id": specification.id,
+                        'show_image': specification.show_image,
+                        "sale_price": specification.sale_price,
+                        "specification_value_list": [{
+                            "category": specification_value.category,
+                            "attribute": specification_value.attribute
+                        } for specification_value in specification.specification_value_list]
+                    } for specification in goods.merchandise.specification_list]
+                } for goods in goods_list]
+            })
         response.data_list = data_list
         return response
 

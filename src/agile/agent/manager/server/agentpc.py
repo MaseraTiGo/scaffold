@@ -47,8 +47,8 @@ agent_pc_service.add(SearchAll)
 from agile.agent.apis.school.relations.years import All
 agent_pc_service.add(All)
 
-from agile.agent.apis.production import SearchAll, All
-agent_pc_service.add(SearchAll, All)
+from agile.agent.apis.production import SearchAll
+agent_pc_service.add(SearchAll)
 
 from agile.agent.apis.order import Search, Get
 agent_pc_service.add(Search, Get)

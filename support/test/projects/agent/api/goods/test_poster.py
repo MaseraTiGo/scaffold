@@ -11,14 +11,6 @@ class PosterTestCase(AgentAPITestCase):
     def tearDown(self):
         pass
 
-    def test_product_all(self):
-        api = 'production.all'
-        result = self.access_api(
-            api=api
-        )
-        self.assertTrue("data_list" in result)
-        return result['data_list']
-
     def test_create_poster(self):
         api = 'goods.poster.add'
         result = self.access_api(
