@@ -3,7 +3,7 @@
 import random
 from infrastructure.utils.common.dictwrapper import DictWrapper
 from support.common.generator.base import BaseGenerator
-from support.common.generator.helper import PlatformGenerator, \
+from support.common.generator.helper import AuthorizationGenerator, \
 OrganizationGenerator, PositionGenerator, PersonGenerator
 from abs.middleground.technology.permission.store import PositionPermission
 
@@ -13,11 +13,11 @@ class PersonPositionGenerator(BaseGenerator):
 
     def get_create_list(self, result_mapping):
         person_list = result_mapping.get(PersonGenerator.get_key())
-        platform_list = result_mapping.get(PlatformGenerator.get_key())
+        authorization_list = result_mapping.get(AuthorizationGenerator.get_key())
         organization_list = result_mapping.get(OrganizationGenerator.get_key())
         position_list = result_mapping.get(PositionGenerator.get_key())
         person_position_list = []
-        for platform in platform_list:
+        for authorization in authorization_list:
             for person in person_list:
                 if person.name == "admin":
                     organization = None
@@ -34,7 +34,7 @@ class PersonPositionGenerator(BaseGenerator):
 
                 person_position_info = DictWrapper({
                     "person_id": person.id,
-                    "platform": platform,
+                    "authorization": authorization,
                     "organization": organization,
                     "position": position,
                 })
@@ -44,7 +44,7 @@ class PersonPositionGenerator(BaseGenerator):
     def create(self, person_position_info, result_mapping):
         person_position_qs = PositionPermission.query().filter(
             person_id = person_position_info.person_id,
-            platform = person_position_info.platform,
+            authorization = person_position_info.authorization,
             position = person_position_info.position
         )
         if person_position_qs.count():

@@ -2,7 +2,7 @@
 
 from infrastructure.utils.common.dictwrapper import DictWrapper
 from support.common.generator.base import BaseGenerator
-from support.common.generator.helper import PlatformGenerator
+from support.common.generator.helper import AuthorizationGenerator
 from abs.middleground.technology.permission.store import RuleGroup
 
 
@@ -13,13 +13,13 @@ class RuleGroupGenerator(BaseGenerator):
         self._rule_group_infos = self.init(rule_group_infos)
 
     def get_create_list(self, result_mapping):
-        platform_list = result_mapping.get(PlatformGenerator.get_key())
+        authorization_list = result_mapping.get(AuthorizationGenerator.get_key())
         rule_group_list = []
-        for platform in platform_list:
+        for authorization in authorization_list:
             for rule_group_info in self._rule_group_infos:
                 rule_group = rule_group_info.copy()
                 rule_group.update({
-                    "platform":platform
+                    "authorization":authorization
                 })
                 rule_group_list.append(DictWrapper(rule_group))
         return rule_group_list
@@ -27,7 +27,7 @@ class RuleGroupGenerator(BaseGenerator):
     def create(self, rule_group_info, result_mapping):
         rule_group_qs = RuleGroup.query().filter(
             name = rule_group_info.name,
-            platform = rule_group_info.platform,
+            authorization = rule_group_info.authorization,
         )
         if rule_group_qs.count():
             rule_group = rule_group_qs[0]

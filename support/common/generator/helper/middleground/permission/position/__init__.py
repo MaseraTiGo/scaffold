@@ -3,7 +3,7 @@
 import random
 from infrastructure.utils.common.dictwrapper import DictWrapper
 from support.common.generator.base import BaseGenerator
-from support.common.generator.helper import PlatformGenerator, \
+from support.common.generator.helper import AuthorizationGenerator, \
 OrganizationGenerator, RuleGroupGenerator
 from abs.middleground.technology.permission.store import Position
 
@@ -15,11 +15,11 @@ class PositionGenerator(BaseGenerator):
         self._position_infos = self.init(position_info)
 
     def get_create_list(self, result_mapping):
-        platform_list = result_mapping.get(PlatformGenerator.get_key())
+        authorization_list = result_mapping.get(AuthorizationGenerator.get_key())
         organization_list = result_mapping.get(OrganizationGenerator.get_key())
         rule_group_list = result_mapping.get(RuleGroupGenerator.get_key())
         position_list = []
-        for platform in platform_list:
+        for authorization in authorization_list:
             for position_info in self._position_infos:
                 position = position_info.copy()
                 organization_fiter = list(filter(
@@ -30,7 +30,7 @@ class PositionGenerator(BaseGenerator):
                     organization = organization_fiter[0]
                     position.update({
                         "organization":organization,
-                        "platform":platform,
+                        "authorization":authorization,
                         "rule_group":random.choice(rule_group_list)
                     })
                     position_list.append(DictWrapper(position))
@@ -39,7 +39,7 @@ class PositionGenerator(BaseGenerator):
     def create(self, position_info, result_mapping):
         position_qs = Position.query().filter(
             name = position_info.name,
-            platform = position_info.platform
+            authorization = position_info.authorization
         )
         if position_qs.count():
             position = position_qs[0]
@@ -47,7 +47,7 @@ class PositionGenerator(BaseGenerator):
             if position_info.parent:
                 position = Position.query(
                     name = position_info.parent,
-                    platform = position_info.platform
+                    authorization = position_info.authorization
                 )[0]
                 position_info.parent_id = parent.id
             else:

@@ -94,7 +94,7 @@ class Add(AgentStaffAuthorizedApi):
                 choices = TrackTypes.CHOICES
             ),
             'describe': CharField(desc = "拜访结果"),
-            'remark': CharField(desc = "备注"),
+            'remark': CharField(desc = "备注", is_required = False),
         }
     )
 
@@ -115,7 +115,7 @@ class Add(AgentStaffAuthorizedApi):
             request.agent_customer_id
         )
         request.track_info.update({
-            "agent_staff_id":auth.id,
+            "staff_id":auth.id,
             "organization_id":0,
             "agent_customer_id":agent_customer.id,
             "agent_id":auth.agent_id,

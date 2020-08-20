@@ -13,6 +13,7 @@ from support.common.generator.helper.middleground.production import ProductionGe
 from support.common.generator.helper.middleground.merchandise import MerchandiseGenerator
 from support.common.generator.helper.middleground.merchandise.specification import SpecificationGenerator
 from support.common.generator.helper.middleground.permission.platform import PlatformGenerator
+from support.common.generator.helper.middleground.permission.authorization import AuthorizationGenerator
 from support.common.generator.helper.middleground.permission.organization import OrganizationGenerator
 from support.common.generator.helper.middleground.permission.rule import RuleGroupGenerator
 from support.common.generator.helper.middleground.permission.position import PositionGenerator
