@@ -44,13 +44,11 @@ class Add(StaffAuthorizedApi):
     def execute(self, request):
         agent = AgentServer.create(**request.agent_info)
         authorize_info = {
-            'name':agent.name,
+            'platform_id':2,
             'company_id':agent.company_id,
-            'app_type':PermissionTypes.POSITION,
-            'prefix':'',
             'remark':'',
         }
-        platform = PermissionServer.authorize(
+        authorization = PermissionServer.authorize(
             **authorize_info
         )
         organization_info = {
@@ -60,7 +58,7 @@ class Add(StaffAuthorizedApi):
             "remark":""
         }
         organization = PermissionServer.add_organization(
-            appkey = platform.appkey,
+            appkey = authorization.appkey,
             **organization_info
         )
         rule_group_info = {
@@ -70,7 +68,7 @@ class Add(StaffAuthorizedApi):
             "remark":"",
         }
         rule_group = PermissionServer.add_rule_group(
-            appkey = platform.appkey,
+            appkey = authorization.appkey,
             **rule_group_info
         )
         position_info = {
@@ -82,11 +80,11 @@ class Add(StaffAuthorizedApi):
             "remark":"",
         }
         position = PermissionServer.add_position(
-            appkey = platform.appkey,
+            appkey = authorization.appkey,
             **position_info
         )
-        PermissionServer.apply(platform.appkey)
-        agent.update(appkey = platform.appkey)
+        PermissionServer.apply(authorization.appkey)
+        agent.update(appkey = authorization.appkey)
         return agent
 
     def fill(self, response, agent):

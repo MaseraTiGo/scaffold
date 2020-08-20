@@ -37,6 +37,13 @@ class Redis(Single):
         name_key = self.generate_key(name, category)
         return self.helper.delete(name_key)
 
+    def hset(self, name, key, value):
+        return self.helper.hset(name, key, value)
+
+    def hget(self, name, key):
+        data = self.helper.hget(name, key)
+        return None if data is None else data.decode()
+
     def mget(self, name_list, category = None):
         new_name_list = []
         for key in name_list:
