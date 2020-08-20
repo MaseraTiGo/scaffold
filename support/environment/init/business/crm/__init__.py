@@ -2,7 +2,7 @@
 
 from support.common.maker import BaseMaker
 from support.common.generator.helper import EnterpriseGenerator, \
-        StaffGenerator, StaffAccountGenerator, PersonPositionGenerator
+        StaffGenerator, StaffAccountGenerator
 from support.environment.common.middleground.person import PersonMaker
 from support.environment.common.middleground.production import ProductionMaker
 from support.environment.common.middleground.permission import PermissionMaker
@@ -26,12 +26,11 @@ class CrmInitializeMaker(BaseMaker):
         self._production = ProductionMaker().generate_relate()
         self._permission = PermissionMaker().generate_relate()
         self._enterprise = EnterpriseGenerator(EnterpriseLoader().generate())
-        self._person_position = PersonPositionGenerator()
         self._staff = StaffGenerator(StaffLoader().generate())
         self._staff_account = StaffAccountGenerator()
 
     def generate_relate(self):
-        self._person_position.add_inputs(self._person, self._permission)
+        self._person.add_outputs(self._permission)
         self._staff.add_outputs(self._staff_account)
         self._staff.add_inputs(self._enterprise, self._person)
         self._enterprise.add_outputs(self._production, self._permission)
