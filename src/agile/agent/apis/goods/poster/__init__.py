@@ -1,5 +1,5 @@
 # coding=UTF-8
-import json
+import datetime
 from infrastructure.core.field.base import CharField, DictField, \
         IntField, ListField, DatetimeField, BooleanField
 from infrastructure.core.api.utils import with_metaclass
@@ -10,6 +10,7 @@ from infrastructure.core.exception.business_error import BusinessError
 from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.agent.goods.manager import PosterServer
 from abs.services.agent.goods.manager import GoodsServer
+from abs.services.agent.customer.manager import SaleChanceServer
 
 
 class Add(StaffAuthorizedApi):
@@ -18,7 +19,7 @@ class Add(StaffAuthorizedApi):
         DictField,
         desc="商品详情",
         conf={
-            'phone': CharField(desc="手机号", is_required=False),
+            'sale_chance_id': IntField(desc='机会id'),
             'goods_id': IntField(desc="商品id"),
             'remark': CharField(desc="备注"),
             'specification_list': ListField(
@@ -46,11 +47,17 @@ class Add(StaffAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
+        sale_chance = SaleChanceServer.get(request.poster_info.pop('sale_chance_id'))
+        if self.auth_user.id != sale_chance.staff_id:
+            raise BusinessError('只能生成自己客户的海报')
+        if sale_chance.end_time <= datetime.date.today():
+            raise BusinessError('机会已过期')
         goods = GoodsServer.get_goods(request.poster_info.pop('goods_id'))
         specification_list = request.poster_info.pop('specification_list')
         poster = PosterServer.add(
             specification_list,
             goods=goods,
+            phone=sale_chance.agent_customer.phone,
             **request.poster_info
         )
         return poster
