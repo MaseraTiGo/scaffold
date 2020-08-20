@@ -5,7 +5,7 @@ Created on 2020年7月23日
 
 @author: Roy
 '''
-
+import json
 from infrastructure.core.field.base import CharField, DictField, \
         IntField, ListField, DatetimeField
 from infrastructure.core.api.utils import with_metaclass
@@ -47,7 +47,7 @@ class Add(NoAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        appkey = "jlkjklj1231321"
+        appkey = "fbf59ada-cbca-3997-a9e5-b139ac03b72f"
         position = PermissionServer.add_position(
             appkey = request.appkey,
             **request.position_info
@@ -77,7 +77,7 @@ class All(NoAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        appkey = "jlkjklj1231321"
+        appkey = "fbf59ada-cbca-3997-a9e5-b139ac03b72f"
         position_list = PermissionServer.get_all_position_byappkey(
             request.appkey
         )

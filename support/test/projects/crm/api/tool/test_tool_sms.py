@@ -13,7 +13,7 @@ class ToolSmsTestCase(CrmAPITestCase):
     def tearDown(self):
         pass
 
-    def assert_sms_fields(self, sms, need_id=False):
+    def assert_sms_fields(self, sms, need_id = False):
         if need_id:
             self.assertTrue('id' in sms)
         self.assertTrue('phone' in sms)
@@ -28,13 +28,14 @@ class ToolSmsTestCase(CrmAPITestCase):
         api = 'tool.sms.search'
         current_page = 1
         result = self.access_api(
-            api=api,
-            current_page=current_page,
-            search_info=json.dumps({})
+            api = api,
+            current_page = current_page,
+            search_info = json.dumps({})
         )
         self.assertTrue("data_list" in result)
         self.assertTrue("total" in result)
         self.assertTrue("total_page" in result)
         if len(result['data_list']):
-            self.assert_sms_fields(sms, True)
+            for sms in result['data_list']:
+                self.assert_sms_fields(sms, True)
         return result['data_list']
