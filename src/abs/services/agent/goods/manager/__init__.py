@@ -150,3 +150,15 @@ class PosterServer(BaseManager):
             )
         PosterSpecification.objects.bulk_create(poster_specification_list)
         return poster
+
+    @classmethod
+    def get(cls, poster_id):
+        poster = Poster.get_byid(poster_id)
+        if poster:
+            poster_specification_list = PosterSpecification.search(
+                poster=poster
+            )
+            poster.poster_specification_list = poster_specification_list
+            MerchandiseServer.hung_specification(poster_specification_list)
+            return poster
+        raise BusinessError('海报不存在')

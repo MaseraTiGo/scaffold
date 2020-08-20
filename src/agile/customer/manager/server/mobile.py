@@ -72,3 +72,6 @@ customer_mobile_service.add(Get, Add, Search)
 
 from agile.customer.apis.adsense.advertisement import Search
 customer_mobile_service.add(Search)
+
+from agile.customer.apis.production.poster import Get
+customer_mobile_service.add(Get)

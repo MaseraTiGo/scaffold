@@ -566,6 +566,7 @@ class SearchAll(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         goods_list = list(GoodsServer.search_all_goods(
+            use_status=UseStatus.ENABLE,
             agent_id=self.auth_user.agent_id
         ))
         MerchandiseServer.hung_merchandise(goods_list)

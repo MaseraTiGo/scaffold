@@ -37,3 +37,11 @@ class CustomerProductionGoodsTest(CustomerAPITestCase):
         }
         result = self.access_api(api=api, is_auth=False, **params)
         self.assertTrue("data_list" in result)
+
+    def test_product_poster_get(self):
+        api = 'production.poster.get'
+        params = {
+            'poster_id': 1
+        }
+        result = self.access_api(api=api, is_auth=False, **params)
+        self.assertTrue("goods_info" in result)
