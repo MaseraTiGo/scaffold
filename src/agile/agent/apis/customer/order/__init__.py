@@ -8,9 +8,9 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 
 from agile.agent.manager.api import AgentStaffAuthorizedApi
-
+from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.agent.customer.manager import AgentCustomerServer
-from abs.services.customer.personal.manager import CustomerServer
+from abs.services.agent.order.manager import OrderServer
 
 
 class Search(AgentStaffAuthorizedApi):
@@ -61,8 +61,7 @@ class Search(AgentStaffAuthorizedApi):
             request.agent_customer_id
         )
         search_info = {
-            "customer_id":agent_customer.customer_id,
-            "agent_id":agent_customer.agent_id
+            "agent_customer_id":agent_customer.id,
         }
         order_spliter = OrderServer.search(
             request.current_page,
