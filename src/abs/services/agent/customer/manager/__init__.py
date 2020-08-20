@@ -89,6 +89,24 @@ class AgentCustomerServer(BaseManager):
         else:
             return None
 
+    @classmethod
+    def hung_agent_customer(cls, obj_list):
+        agent_customer_mapping = {}
+        for obj in obj_list:
+            obj.agent_customer = None
+            if obj.agent_customer_id not in agent_customer_mapping:
+                agent_customer_mapping[obj.agent_customer_id] = []
+            agent_customer_mapping[obj.agent_customer_id].append(obj)
+        agent_customer_list = list(
+            AgentCustomer.search(id__in = agent_customer_mapping.keys())
+        )
+        PersonServer.hung_persons(agent_customer_list)
+        for agent_customer in agent_customer_list:
+            if agent_customer.id in agent_customer_mapping:
+                for obj in agent_customer_mapping[agent_customer.id]:
+                    obj.agent_customer = agent_customer
+        return obj_list
+
 
 class SaleChanceServer(BaseManager):
 
@@ -110,6 +128,9 @@ class SaleChanceServer(BaseManager):
 
     @classmethod
     def search_all(cls, **search_info):
+        if "name" in search_info:
+            name = search_info.pop("name")
+            search_info.update({"agent_customer__name":name})
         if "phone" in search_info:
             phone = search_info.pop("phone")
             search_info.update({"agent_customer__phone":phone})

@@ -4,10 +4,8 @@ import random
 from support.common.generator.base import BaseGenerator
 from support.common.generator.helper.middleground.merchandise import \
         MerchandiseGenerator
-from support.common.generator.helper.business.crm.university.major import \
-        MajorGenerator
-from support.common.generator.helper.business.crm.university.school import \
-        SchoolGenerator
+from support.common.generator.helper.business.crm.university.years import \
+        YearsGenerator
 from support.common.generator.helper.business.crm.agent import \
         AgentGenerator
 from abs.services.agent.goods.models import Goods
@@ -21,20 +19,20 @@ class GoodsGenerator(BaseGenerator):
 
     def get_create_list(self, result_mapping):
         merchandise_list = result_mapping.get(MerchandiseGenerator.get_key())
-        major_list = result_mapping.get(MajorGenerator.get_key())
-        school_list = result_mapping.get(SchoolGenerator.get_key())
+        years_list = result_mapping.get(YearsGenerator.get_key())
         agent_list = result_mapping.get(AgentGenerator.get_key())
         goods_list = []
         for goods_info in self._goods_info:
             merchandise = random.choice(merchandise_list)
-            major = random.choice(major_list)
-            school = random.choice(school_list)
+            years = random.choice(years_list)
             agent = random.choice(agent_list)
             goods_info.update({
-                "school_id":school.id,
-                "major_id":major.id,
+                "school_id":years.relations.school.id,
+                "major_id":years.relations.major.id,
                 "merchandise_id":merchandise.id,
                 "agent_id":agent.id,
+                "relations_id":years.relations.id,
+                "years_id":years.id
             })
             goods_list.append(goods_info)
         return goods_list

@@ -2,16 +2,18 @@
 
 from support.common.maker import BaseMaker
 from support.common.generator.helper import AgentStaffGenerator, \
-        AgentStaffAccountGenerator, EnterpriseGenerator, SchoolGenerator, \
-        MajorGenerator, GoodsGenerator, AgentGenerator, ContactsGenerator
+        AgentStaffAccountGenerator, EnterpriseGenerator, \
+        GoodsGenerator, AgentGenerator, ContactsGenerator
 
 from support.environment.common.middleground.person import PersonMaker
 from support.environment.common.middleground.production import ProductionMaker
 from support.environment.common.middleground.merchandise import MerchandiseMaker
+from support.environment.common.business.crm.years import YearsMaker
 from support.environment.init.business.controller.enterprise import EnterpriseLoader
 from support.environment.simulate.business.agent.staff import AgentStaffLoader
 from support.environment.simulate.business.crm.school import CrmSchoolLoader
 from support.environment.simulate.business.crm.major import CrmMajorLoader
+from support.environment.simulate.business.crm.years import CrmYearsLoader
 from support.environment.simulate.business.agent.goods import GoodsLoader
 from support.environment.simulate.business.crm.contacts import CrmAgentContactsLoader
 
@@ -36,11 +38,14 @@ class AgentSimulateMaker(BaseMaker):
         staff = AgentStaffGenerator(staff_info)
         staff_account = AgentStaffAccountGenerator()
         person = PersonMaker(staff_info).generate_relate()
-        school = SchoolGenerator(CrmSchoolLoader().generate())
-        major = MajorGenerator(CrmMajorLoader().generate())
+        years = YearsMaker(
+            CrmSchoolLoader().generate(),
+            CrmMajorLoader().generate(),
+            CrmYearsLoader().generate()
+        ).generate_relate()
         goods = GoodsGenerator(goods_info)
         merchandise = MerchandiseMaker(goods_info).generate_relate()
-        goods.add_inputs(merchandise, school, major, agent)
+        goods.add_inputs(merchandise, years, agent)
         merchandise.add_inputs(production)
         agent.add_outputs(contacts)
         enterprise.add_outputs(agent)

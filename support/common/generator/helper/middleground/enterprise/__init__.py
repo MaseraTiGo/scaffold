@@ -16,7 +16,7 @@ class EnterpriseGenerator(BaseGenerator):
 
     def create(self, enterprise_info, result_mapping):
         enterprise_qs = Enterprise.query().filter(
-            license_number=enterprise_info.license_number
+            license_number = enterprise_info.license_number
         )
         if enterprise_qs.count():
             enterprise = enterprise_qs[0]

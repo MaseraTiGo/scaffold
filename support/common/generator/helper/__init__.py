@@ -24,6 +24,8 @@ from support.common.generator.helper.business.crm.staff import StaffGenerator
 from support.common.generator.helper.business.crm.account import StaffAccountGenerator
 from support.common.generator.helper.business.crm.university.school import SchoolGenerator
 from support.common.generator.helper.business.crm.university.major import MajorGenerator
+from support.common.generator.helper.business.crm.university.relations import RelationsGenerator
+from support.common.generator.helper.business.crm.university.years import YearsGenerator
 from support.common.generator.helper.business.crm.agent import AgentGenerator
 from support.common.generator.helper.business.crm.agent.contacts import ContactsGenerator
 

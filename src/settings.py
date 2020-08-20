@@ -71,7 +71,8 @@ INSTALLED_APPS = [
     'abs.services.agent.account',
     'abs.services.agent.goods',
     'abs.services.agent.customer',
-    'abs.services.crm.adsense'
+    'abs.services.crm.adsense',
+    'abs.services.agent.event',
 ]
 
 MIDDLEWARE_CLASSES = [

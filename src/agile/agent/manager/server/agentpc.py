@@ -62,6 +62,9 @@ agent_pc_service.add(Search)
 from agile.agent.apis.customer.salechance import Search, Add
 agent_pc_service.add(Search, Add)
 
+from agile.agent.apis.customer.order import Search
+agent_pc_service.add(Search)
+
 from agile.agent.apis.technology.permission.organization import Add, All, Get , \
                                                               Update, Remove
 agent_pc_service.add(Add, All, Get, Update, Remove)
