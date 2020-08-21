@@ -64,8 +64,8 @@ customer_mobile_service.add(SearchMajor, SearchSchool)
 from agile.customer.apis.production.goods import Search, Get, HotSearch
 customer_mobile_service.add(Search, Get, HotSearch)
 
-from agile.customer.apis.customer.order import Add, Get, Search, Pay, Cancel
-customer_mobile_service.add(Add, Get, Search, Pay, Cancel)
+from agile.customer.apis.customer.order import Add, Get, Search, Pay, Cancel, PosterAdd
+customer_mobile_service.add(Add, Get, Search, Pay, Cancel, PosterAdd)
 
 from agile.customer.apis.customer.contract import Get, Add, Search
 customer_mobile_service.add(Get, Add, Search)

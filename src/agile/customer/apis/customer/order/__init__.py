@@ -21,6 +21,8 @@ from abs.services.agent.customer.manager import AgentCustomerServer, SaleChanceS
 from abs.services.crm.agent.manager import AgentServer
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.middleware.extend.yunaccount import yunaccount_extend
+from abs.services.agent.goods.manager import PosterServer
+from abs.services.agent.event.manager import StaffOrderEventServer
 
 
 class Add(CustomerAuthorizedApi):
@@ -137,6 +139,140 @@ class Add(CustomerAuthorizedApi):
             order.id
         )
 
+        return order
+
+    def fill(self, response, order):
+        response.order_id = order.id
+        return response
+
+
+class PosterAdd(CustomerAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.poster_id = RequestField(
+        IntField,
+        desc="海报id"
+    )
+    request.order_info = RequestField(
+        DictField,
+        desc = "订单详情",
+        conf = {
+            'strike_price': IntField(desc = "金额"),
+            'address_id': IntField(desc = "收货地址id", is_required = False),
+            'invoice_info': DictField(
+                desc="合同信息",
+                is_required=False,
+                conf={
+                    'name': CharField(desc="名称"),
+                    'phone': CharField(desc="电话"),
+                    'identification': CharField(desc="身份证")
+                }
+            ),
+            'goods_list': ListField(
+                desc = '商品列表',
+                fmt = DictField(
+                    desc = '商品信息',
+                    conf = {
+                        'quantity': IntField(desc = "购买数量"),
+                        'specification_id': IntField(desc = "规格id")
+                    }
+                )
+            )
+        }
+    )
+
+    response = with_metaclass(ResponseFieldSet)
+    response.order_id = ResponseField(IntField, desc = "订单id")
+
+    @classmethod
+    def get_desc(cls):
+        return "客户海报下单接口"
+
+    @classmethod
+    def get_author(cls):
+        return "xyc"
+
+    def execute(self, request):
+        poster = PosterServer.get(request.poster_id)
+        order_info = request.order_info
+        customer = self.auth_user
+        invoice_info = {}
+        if 'address_id' in order_info:
+            address = PersonServer.get_address(order_info.pop('address_id'))
+            invoice_info.update({
+                'name': address.contacts,
+                'phone': address.phone,
+                'address': '-'.join([address.city, address.address])
+            })
+        if 'invoice_info' in order_info:
+            invoice_info.update(order_info.pop('invoice_info'))
+            flag, result = yunaccount_extend.verify_identity(
+                invoice_info['name'],
+                invoice_info['identification']
+            )
+            if not flag:
+                raise BusinessError('姓名与身份证号不匹配')
+        if not invoice_info:
+            raise BusinessError('请填写发货信息')
+        specification_list = []
+        for goods_info in order_info['goods_list']:
+            specification = MerchandiseServer.get_specification(goods_info['specification_id'])
+            if specification.stock < goods_info['quantity']:
+                raise BusinessError('库存不足')
+            if specification.merchandise.use_status != 'enable':
+                raise BusinessError('商品已下架')
+            specification.order_count = goods_info['quantity']
+            specification.total_price = goods_info['quantity'] * specification.sale_price
+            specification.production_id = specification.merchandise.production_id
+            specification_list.append(specification)
+        if not specification_list:
+            raise BusinessError('请选择商品')
+        GoodsServer.hung_goods([
+            specification.merchandise
+            for specification in specification_list]
+        )
+        for specification in specification_list:
+            if specification.merchandise.goods.id != poster.goods.id:
+                raise BusinessError('购买商品非海报商品')
+        UniversityServer.hung_school([
+            specification.merchandise.goods
+            for specification in specification_list]
+        )
+        UniversityServer.hung_major([
+            specification.merchandise.goods
+            for specification in specification_list]
+        )
+        ProductionServer.hung_production([
+            specification
+            for specification in specification_list
+        ])
+        UniversityYearsServer.hung_years([
+            specification.merchandise.goods
+            for specification in specification_list
+        ])
+        agent = AgentServer.get(specification_list[0].merchandise.goods.agent_id)
+
+        agent_customer = AgentCustomerServer.create_foradd_order(
+            customer,
+            agent
+        )
+        agent_customer.agent = agent
+        order = OrderServer.add(
+            agent_customer,
+            invoice_info,
+            'app',
+            order_info['strike_price'],
+            specification_list
+        )
+        SaleChanceServer.create_foradd_order(
+            agent_customer,
+            order.id
+        )
+        # todo 获取员工部门
+        # StaffOrderEventServer.create(
+        #     order_id=order.id,
+        #     staff_id=poster.staff_id,
+        #     organization_id=
+        # )
         return order
 
     def fill(self, response, order):

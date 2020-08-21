@@ -6,7 +6,7 @@ from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
 
-from abs.services.agent.event.models import TrackEvent
+from abs.services.agent.event.models import TrackEvent, StaffOrderEvent
 
 
 class TrackEventServer(BaseManager):
@@ -27,3 +27,11 @@ class TrackEventServer(BaseManager):
     def search_all(cls, **search_info):
         track_qs = TrackEvent.search(**search_info)
         return track_qs
+
+
+class StaffOrderEventServer(BaseManager):
+
+    @classmethod
+    def create(cls, **info):
+        event = StaffOrderEvent.create(**info)
+        return event
