@@ -14,6 +14,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.utils.common.jsontools import CJsonEncoder
 
 from agile.base.api import NoAuthorizedApi
+from abs.middleware.config import config_middleware
 from abs.middleground.technology.permission.manager import PermissionServer
 
 
@@ -27,11 +28,11 @@ class Add(NoAuthorizedApi):
         desc = "身份详情",
         conf = {
             'organization_id': IntField(desc = "组织id"),
-            'rule_group_id': IntField(desc = "权限组id"),
+            'rule_group_id': IntField(desc = "权限组id", is_required = False),
             'parent_id': IntField(desc = "上级身份id"),
             'description': CharField(desc = "描述"),
             'name': CharField(desc = "身份名称"),
-            'remark': CharField(desc = "备注"),
+            'remark': CharField(desc = "备注", is_required = False),
         }
     )
 
@@ -47,9 +48,9 @@ class Add(NoAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        appkey = "fbf59ada-cbca-3997-a9e5-b139ac03b72f"
+        appkey = config_middleware.get_value("common", "crm_appkey")
         position = PermissionServer.add_position(
-            appkey = request.appkey,
+            appkey = appkey,
             **request.position_info
         )
         return position
@@ -77,9 +78,9 @@ class All(NoAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        appkey = "fbf59ada-cbca-3997-a9e5-b139ac03b72f"
+        appkey = config_middleware.get_value("common", "crm_appkey")
         position_list = PermissionServer.get_all_position_byappkey(
-            request.appkey
+            appkey
         )
         return position_list
 
@@ -151,11 +152,11 @@ class Update(NoAuthorizedApi):
         DictField,
         desc = "身份修改详情",
         conf = {
-            'name': CharField(desc = "名称", is_required = False),
-            'description': CharField(desc = "描述", is_required = False),
-            'parent_id': IntField(desc = "父级ID", is_required = False),
-            "organization_id": IntField(desc = "组织ID", is_required = False),
-            "rule_group_id": IntField(desc = "权限组ID", is_required = False),
+            'organization_id': IntField(desc = "组织id"),
+            'rule_group_id': IntField(desc = "权限组id", is_required = False),
+            'parent_id': IntField(desc = "上级身份id"),
+            'description': CharField(desc = "描述"),
+            'name': CharField(desc = "身份名称"),
             'remark': CharField(desc = "备注", is_required = False),
         }
     )

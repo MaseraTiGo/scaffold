@@ -17,7 +17,14 @@ class LoaderHelper(object):
 
     @classmethod
     def loading(cls, **search_info):
-        return Config.objects.filter(**search_info).order_by('key')
+        config_list = list(Config.objects.filter(**search_info).order_by('key'))
+        for config in config_list:
+            config.value_type = "text"
+            config.option = []
+            if config.type in LoaderHelper().data and config.key in LoaderHelper().data[config.type]['data']:
+                config.value_type = LoaderHelper().data[config.type]['data'][config.key]["type"]
+                config.option = LoaderHelper().data[config.type]['data'][config.key]["option"]
+        return config_list
 
     @classmethod
     def get_config(cls, type, key):
@@ -33,8 +40,8 @@ class LoaderHelper(object):
     def set_key(self, key, desc):
         self.data.update({key: {'type_desc': desc, 'data': {}}})
 
-    def set_value(self, key, value_key, name, default = ''):
-        self.data[key]['data'].update({value_key: {'name': name, 'value': default}})
+    def set_value(self, key, value_key, name, default = '', type = 'text', option = []):
+        self.data[key]['data'].update({value_key: {'name': name, 'value': default, 'type':type, 'option':option}})
 
     def get_config_data(self):
         self.set_key('common', '通用配置')

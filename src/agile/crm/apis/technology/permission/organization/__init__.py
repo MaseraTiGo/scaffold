@@ -15,6 +15,7 @@ from infrastructure.utils.common.jsontools import CJsonEncoder
 
 from agile.base.api import NoAuthorizedApi
 from agile.crm.manager.api import StaffAuthorizedApi
+from abs.middleware.config import config_middleware
 from abs.middleground.technology.permission.manager import PermissionServer
 
 
@@ -30,7 +31,7 @@ class Add(StaffAuthorizedApi):
             'parent_id': IntField(desc = "上级组织id"),
             'name': CharField(desc = "组织名称"),
             'description': CharField(desc = "描述"),
-            'remark': CharField(desc = "备注"),
+            'remark': CharField(desc = "备注", is_required = False),
         }
     )
 
@@ -46,7 +47,7 @@ class Add(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        appkey = "fbf59ada-cbca-3997-a9e5-b139ac03b72f"
+        appkey = config_middleware.get_value("common", "crm_appkey")
         organization = PermissionServer.add_organization(
             appkey = appkey,
             **request.organization_info
@@ -76,7 +77,7 @@ class All(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        appkey = "fbf59ada-cbca-3997-a9e5-b139ac03b72f"
+        appkey = config_middleware.get_value("common", "crm_appkey")
         organization_list = PermissionServer.get_all_organization_byappkey(
             appkey
         )
