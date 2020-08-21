@@ -22,6 +22,7 @@ from abs.services.crm.agent.manager import AgentServer
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.middleware.extend.yunaccount import yunaccount_extend
 from abs.services.agent.goods.manager import PosterServer
+from abs.services.agent.event.manager import StaffOrderEventServer
 
 
 class Add(CustomerAuthorizedApi):
@@ -266,7 +267,12 @@ class PosterAdd(CustomerAuthorizedApi):
             agent_customer,
             order.id
         )
-
+        # todo 获取员工部门
+        # StaffOrderEventServer.create(
+        #     order_id=order.id,
+        #     staff_id=poster.staff_id,
+        #     organization_id=
+        # )
         return order
 
     def fill(self, response, order):
