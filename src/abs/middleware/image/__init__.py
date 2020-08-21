@@ -19,9 +19,18 @@ class ImageMiddleware(object):
     def get_contract(
             self,
             company_name,
+            contacts_name,
+            contacts_phone,
             official_seal,
             autograph_base64_image,
-            name
+            name,
+            identification,
+            brand_name,
+            production_name,
+            school_name,
+            major_name,
+            phone,
+            price
     ):
         autograph_f = self.get_image(autograph_base64_image)
         autograph_url = file_middleware.save(
@@ -43,45 +52,64 @@ class ImageMiddleware(object):
             220
         )
 
-        back_image_path = os.path.join(path, 'contract.png')
         font_file = os.path.join(path, 'simsun.ttc')
 
-        word_config_list = [
+        config_list = [
             {
-                'font_file': font_file,
-                'font_size': 32,
-                'width': 210,
-                'height': 205,
-                'color_tup': (0, 0, 0),
-                'word': company_name
+                'back_path': 'http://test-b.rong-mi.com/resource/contract/background_1.png',
+                'word_config': [
+                    # {
+                    #     'font_file': font_file,
+                    #     'font_size': 32,
+                    #     'width': 210,
+                    #     'height': 205,
+                    #     'color_tup': (0, 0, 0),
+                    #     'word': company_name
+                    # },
+                    {
+                        'font_file': font_file,
+                        'font_size': 32,
+                        'width': 210,
+                        'height': 255,
+                        'color_tup': (0, 0, 0),
+                        'word': name
+                    },
+                    {
+                        'font_file': font_file,
+                        'font_size': 32,
+                        'width': 210,
+                        'height': 255,
+                        'color_tup': (0, 0, 0),
+                        'word': identification
+                    }
+                ],
+                'img_config': []
             },
             {
-                'font_file': font_file,
-                'font_size': 32,
-                'width': 210,
-                'height': 255,
-                'color_tup': (0, 0, 0),
-                'word': name
+                'back_path': 'http://test-b.rong-mi.com/resource/contract/background_2.png',
+                'word_config': [
+                    {
+
+                    }
+                ],
+                'img_config': [
+                    {
+                        'width': 350,
+                        'height': 3000,
+                        'image_path': company_official_seal
+                    },
+                    {
+                        'width': 1100,
+                        'height': 3020,
+                        'image_path': autograph_f
+                    }
+                ]
             }
         ]
-        img_config_list = [
-            {
-                'width': 350,
-                'height': 3000,
-                'image_path': company_official_seal
-            },
-            {
-                'width': 1100,
-                'height': 3020,
-                'image_path': autograph_f
-            }
-        ]
-        contract_url, contract_img_url = image_process.add(
-            back_image_path,
-            word_config_list,
-            img_config_list
+        contract_url, contract_img_url_list = image_process.add(
+            config_list
         )
-        return autograph_url, contract_url, contract_img_url
+        return autograph_url, contract_url, contract_img_url_list
 
 
 image_middleware = ImageMiddleware()

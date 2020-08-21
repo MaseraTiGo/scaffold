@@ -89,16 +89,20 @@ class Add(CustomerAuthorizedApi):
             raise BusinessError('订单异常')
         agent = AgentServer.get(order_item.order.agent_id)
         order = OrderServer.get(order_item.order.id)
-
+        contacts = AgentServer.search_all(agent=agent).first()
+        if not contacts:
+            raise BusinessError('代理商联系人不存在，请联系客服')
         contract_info = request.contract_info
         contract_info.update({
             'name': order.mg_order.invoice.name,
             'phone': order.mg_order.invoice.phone,
             'identification': order.mg_order.invoice.identification,
         })
+
         ContractServer.create(
             order_item,
             agent,
+            contacts,
             **contract_info
         )
 

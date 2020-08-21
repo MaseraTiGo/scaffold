@@ -6,6 +6,7 @@ from abs.services.agent.order.settings import DB_PREFIX
 
 
 class Contract(BaseModel):
+    number = CharField(verbose_name="合同编号", max_length=64, default='')
     agent_customer_id = IntegerField(verbose_name = "客户id", default = 0)
     agent_id = IntegerField(verbose_name = "代理商id")
     person_id = IntegerField(verbose_name = "用户id", default = 0)
