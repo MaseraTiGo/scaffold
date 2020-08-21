@@ -50,7 +50,6 @@ class ImageProcess(object):
                     color,
                     font=font
                 )
-            result_list.append(back_img)
             for config in item['img_config']:
                 box = (
                     config['width'],
@@ -59,18 +58,21 @@ class ImageProcess(object):
                 img = Image.open(config['image_path']).convert('RGBA')
                 r, g, b, a = img.split()
                 back_img.paste(img, box, a)
+            result_list.append(back_img)
 
         pdf_file_path, pdf_save_path = file_middleware.get_save_path(
             '.pdf',
             'contract'
         )
+
         result_list[0].convert('RGB').save(
             pdf_file_path,
             'PDF',
             resolution=100.0,
             save_all=True,
-            append_images=result_list[1:]
+            append_images=[result.convert('RGB') for result in result_list[1:]]
         )
+        result_list[0].show()
         img_save_path_list = []
         for result in result_list:
             img_file_path, img_save_path = file_middleware.get_save_path(

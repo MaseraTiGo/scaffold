@@ -18,6 +18,7 @@ class ImageMiddleware(object):
 
     def get_contract(
             self,
+            number,
             company_name,
             contacts_name,
             contacts_phone,
@@ -58,6 +59,14 @@ class ImageMiddleware(object):
             {
                 'back_path': 'http://test-b.rong-mi.com/resource/contract/background_1.png',
                 'word_config': [
+                    {
+                        'font_file': font_file,
+                        'font_size': 16,
+                        'width': 535,
+                        'height': 63,
+                        'color_tup': (0, 0, 0),
+                        'word': number
+                    },
                     # {
                     #     'font_file': font_file,
                     #     'font_size': 32,
@@ -68,19 +77,51 @@ class ImageMiddleware(object):
                     # },
                     {
                         'font_file': font_file,
-                        'font_size': 32,
-                        'width': 210,
-                        'height': 255,
+                        'font_size': 18,
+                        'width': 110,
+                        'height': 175,
                         'color_tup': (0, 0, 0),
                         'word': name
                     },
                     {
                         'font_file': font_file,
-                        'font_size': 32,
-                        'width': 210,
-                        'height': 255,
+                        'font_size': 18,
+                        'width': 295,
+                        'height': 175,
                         'color_tup': (0, 0, 0),
                         'word': identification
+                    },
+                    {
+                        'font_file': font_file,
+                        'font_size': 18,
+                        'width': 125,
+                        'height': 455,
+                        'color_tup': (0, 0, 0),
+                        'word': brand_name
+                    },
+                    {
+                        'font_file': font_file,
+                        'font_size': 18,
+                        'width': 125,
+                        'height': 485,
+                        'color_tup': (0, 0, 0),
+                        'word': production_name
+                    },
+                    {
+                        'font_file': font_file,
+                        'font_size': 18,
+                        'width': 125,
+                        'height': 515,
+                        'color_tup': (0, 0, 0),
+                        'word': school_name
+                    },
+                    {
+                        'font_file': font_file,
+                        'font_size': 18,
+                        'width': 125,
+                        'height': 545,
+                        'color_tup': (0, 0, 0),
+                        'word': major_name
                     }
                 ],
                 'img_config': []
@@ -88,9 +129,9 @@ class ImageMiddleware(object):
             {
                 'back_path': 'http://test-b.rong-mi.com/resource/contract/background_2.png',
                 'word_config': [
-                    {
-
-                    }
+                    # {
+                    #
+                    # }
                 ],
                 'img_config': [
                     {
