@@ -160,6 +160,7 @@ class SaleChanceServer(BaseManager):
             )
         return agent_customer
 
+    @classmethod
     def get(cls, sale_chance_id):
         sale_chance = AgentCustomerSaleChance.get_byid(
             sale_chance_id

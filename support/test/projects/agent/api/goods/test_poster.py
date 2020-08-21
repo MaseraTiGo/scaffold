@@ -16,7 +16,7 @@ class PosterTestCase(AgentAPITestCase):
         result = self.access_api(
             api=api,
             poster_info=json.dumps({
-                'phone': '',
+                'sale_chance_id': 1,
                 'goods_id': 1,
                 'remark': '',
                 'specification_list': [
