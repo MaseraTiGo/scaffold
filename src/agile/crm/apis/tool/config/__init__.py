@@ -25,7 +25,9 @@ class Search(StaffAuthorizedApi):
         'data': ListField(desc = "配置", fmt = DictField(desc = '配置', conf = {
             'name': CharField(desc = "名称"),
             'key': CharField(desc = "描述"),
-            'value': CharField(desc = "值")
+            'value': CharField(desc = "值"),
+            'value_type': CharField(desc = "值类型"),
+            'option': ListField(desc = '枚举值', fmt = CharField(desc = '枚举值')),
         }))
     }))
 
@@ -51,11 +53,15 @@ class Search(StaffAuthorizedApi):
                     config_mapping[config.type]["type"] = config.type
                     config_mapping[config.type]["data"] = [{"name":config.name, \
                                                             "key":config.key, \
-                                                            "value":config.value}]
+                                                            "value":config.value, \
+                                                            "value_type":config.value_type, \
+                                                            "option":config.option}]
                 else:
                     config_mapping[config.type]["data"].append({"name":config.name, \
-                                                            "key":config.key, \
-                                                            "value":config.value})
+                                                                "key":config.key, \
+                                                                "value":config.value, \
+                                                                "value_type":config.value_type, \
+                                                                "option":config.option})
 
         response.data_list = list(config_mapping.values())
         return response
