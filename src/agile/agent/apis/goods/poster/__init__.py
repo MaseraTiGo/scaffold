@@ -58,6 +58,7 @@ class Add(StaffAuthorizedApi):
             specification_list,
             goods=goods,
             phone=sale_chance.agent_customer.phone,
+            staff_id=self.auth_user.id,
             **request.poster_info
         )
         return poster

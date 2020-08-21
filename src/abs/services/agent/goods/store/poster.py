@@ -8,6 +8,7 @@ from abs.services.agent.goods.store.goods import Goods
 
 class Poster(BaseModel):
     goods = ForeignKey(Goods)
+    staff_id = IntegerField(verbose_name="员工id", default=0)
     phone = CharField(verbose_name="手机号", max_length=16, default='')
     expire_date = DateField(verbose_name="过期天数")
     remark = TextField(verbose_name="说明")
