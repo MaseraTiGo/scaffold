@@ -254,13 +254,13 @@ class ImageMiddleware(object):
                     'img_config': []
                 }
             )
-        config_list[-1]['img_config'] = [{
+        config_list[-1]['img_config'] = [
             {
                 'width': 1100,
                 'height': 3020,
                 'image_path': autograph_f
             }
-        }]
+        ]
         contract_url, contract_img_url_list = image_process.save_pdf(
             config_list
         )
