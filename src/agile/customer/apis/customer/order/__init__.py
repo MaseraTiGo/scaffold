@@ -268,11 +268,11 @@ class PosterAdd(CustomerAuthorizedApi):
             order.id
         )
         # todo 获取员工部门
-        # StaffOrderEventServer.create(
-        #     order_id=order.id,
-        #     staff_id=poster.staff_id,
-        #     organization_id=
-        # )
+        StaffOrderEventServer.create(
+            order_id=order.id,
+            staff_id=poster.staff_id,
+            organization_id=1
+        )
         return order
 
     def fill(self, response, order):
