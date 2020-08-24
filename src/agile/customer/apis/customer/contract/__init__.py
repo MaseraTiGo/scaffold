@@ -88,18 +88,17 @@ class Add(CustomerAuthorizedApi):
         if order_item.order.person_id != self.auth_user.person_id:
             raise BusinessError('订单异常')
         agent = AgentServer.get(order_item.order.agent_id)
-        order = OrderServer.get(order_item.order.id)
-
+        contacts = AgentServer.search_all_contacts(agent=agent).first()
+        if not contacts:
+            raise BusinessError('代理商联系人不存在，请联系客服')
         contract_info = request.contract_info
-        contract_info.update({
-            'name': order.mg_order.invoice.name,
-            'phone': order.mg_order.invoice.phone,
-            'identification': order.mg_order.invoice.identification,
-        })
+
         ContractServer.create(
             order_item,
             agent,
-            **contract_info
+            contacts,
+            contract_info['autograph'],
+            contract_info['email']
         )
 
     def fill(self, response):
@@ -141,7 +140,7 @@ class Search(CustomerAuthorizedApi):
 
     def execute(self, request):
         data_list = ContractServer.search_all(
-            customer_id = self.auth_user.id
+            person_id = self.auth_user.person_id
         ).order_by('-create_time')
         return data_list
 

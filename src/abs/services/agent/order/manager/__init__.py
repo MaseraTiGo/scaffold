@@ -1,6 +1,8 @@
 # coding=UTF-8
 import json
 import datetime
+import time
+import random
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
@@ -96,6 +98,8 @@ class OrderServer(BaseManager):
             'agent_customer_id': agent_customer.id,
             'mg_order_id': mg_order.id,
             'agent_id': agent_customer.agent_id,
+            'person_id': agent_customer.person_id,
+            'company_id': agent_customer.agent.company_id,
             'source': source,
             'number': mg_order.number,
             'status': mg_order.status,
@@ -193,15 +197,32 @@ class OrderItemServer(BaseManager):
 class ContractServer(BaseManager):
 
     @classmethod
-    def create(cls, order_item, agent, **search_info):
-        base64_image = search_info.pop('autograph')
+    def create(cls, order_item, agent, contacts, autograph, email):
+        number = 'Sn_200' + str(int(time.time())) + str(random.randint(10000, 99999))
+        mg_order = mg_OrderServer.get(order_item.order.mg_order_id)
+        mg_OrderServer.hung_snapshoot([order_item])
         autograph_url, contract_url, contract_img_url = image_middleware.get_contract(
+            number,
             agent.name,
+            contacts.contacts,
+            contacts.phone,
             agent.official_seal,
-            base64_image,
-            search_info['name']
+            autograph,
+            mg_order.invoice.name,
+            mg_order.invoice.identification,
+            order_item.snapshoot.brand_name,
+            order_item.snapshoot.production_name,
+            order_item.school_name,
+            order_item.major_name,
+            mg_order.invoice.phone,
+            str(mg_order.strike_price/100)
         )
-        search_info.update({
+        create_info = {
+            'name': mg_order.invoice.name,
+            'phone': mg_order.invoice.phone,
+            'identification': mg_order.invoice.identification,
+            'email': email,
+            'number': number,
             'agent_customer_id': order_item.order.agent_customer_id,
             'person_id': order_item.order.person_id,
             'company_id': order_item.order.company_id,
@@ -209,9 +230,9 @@ class ContractServer(BaseManager):
             'agent_id': agent.id,
             'autograph': autograph_url,
             'url': json.dumps([contract_url]),
-            'img_url': json.dumps([contract_img_url])
-        })
-        contract = Contract.create(**search_info)
+            'img_url': json.dumps(contract_img_url)
+        }
+        contract = Contract.create(**create_info)
         mg_OrderServer.finish(order_item.order.mg_order_id)
         order_item.order.update(status = OrderStatus.ORDER_FINISHED)
         return contract
