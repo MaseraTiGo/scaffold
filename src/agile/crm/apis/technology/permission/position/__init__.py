@@ -13,12 +13,12 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.utils.common.jsontools import CJsonEncoder
 
-from agile.base.api import NoAuthorizedApi
+from agile.crm.manager.api import StaffAuthorizedApi
 from abs.middleware.config import config_middleware
 from abs.middleground.technology.permission.manager import PermissionServer
 
 
-class Add(NoAuthorizedApi):
+class Add(StaffAuthorizedApi):
     """
     添加身份
     """
@@ -60,7 +60,7 @@ class Add(NoAuthorizedApi):
         return response
 
 
-class All(NoAuthorizedApi):
+class All(StaffAuthorizedApi):
     """
     所有身份
     """
@@ -91,7 +91,7 @@ class All(NoAuthorizedApi):
         return response
 
 
-class Get(NoAuthorizedApi):
+class Get(StaffAuthorizedApi):
     """
     获取身份接口
     """
@@ -142,7 +142,7 @@ class Get(NoAuthorizedApi):
         return response
 
 
-class Update(NoAuthorizedApi):
+class Update(StaffAuthorizedApi):
     """
     修改身份信息
     """
@@ -181,7 +181,7 @@ class Update(NoAuthorizedApi):
         return response
 
 
-class Remove(NoAuthorizedApi):
+class Remove(StaffAuthorizedApi):
     """
     删除身份信息
     """
