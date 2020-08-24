@@ -28,7 +28,7 @@ class OSSRegister(object):
         raise Exception("The {} module is not exist for oss.".format(module))
 
     def get_all_entity(self):
-        return self._register.values() 
+        return self._register.values()
 
     def get_bucket(self, module):
         return self.get_entity(module).bucket
