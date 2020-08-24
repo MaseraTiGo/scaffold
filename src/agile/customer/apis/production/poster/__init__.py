@@ -7,16 +7,17 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
-from agile.base.api import NoAuthorizedApi
+from agile.customer.manager.api import CustomerAuthorizedApi
 from infrastructure.core.exception.business_error import BusinessError
 from abs.services.agent.goods.manager import GoodsServer, PosterServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
 from abs.services.crm.agent.manager import AgentServer
+from abs.middleground.business.person.manager import PersonServer
 
 
-class Get(NoAuthorizedApi):
+class Get(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.poster_id = RequestField(IntField, desc="海报id")
 
@@ -75,6 +76,9 @@ class Get(NoAuthorizedApi):
         poster = PosterServer.get(request.poster_id)
         if poster.expire_date < datetime.date.today():
             raise BusinessError('海报已过期')
+        person = PersonServer.get(self.auth_user.person_id)
+        if not person or person.phone != poster.phone:
+            raise BusinessError('专属二维码，您无权限扫码')
         goods = poster.goods
         UniversityServer.hung_major([goods])
         UniversityServer.hung_school([goods])

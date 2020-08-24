@@ -77,6 +77,7 @@ class Get(AgentStaffAuthorizedApi):
                             'id': IntField(desc = "规格id"),
                             'show_image': CharField(desc = "图片"),
                             'sale_price': IntField(desc = "销售价/分"),
+                            'original_price': IntField(desc="原价"),
                             'stock': IntField(desc = "库存"),
                             "specification_value_list": ListField(
                                 desc = "属性值列表",
@@ -136,6 +137,7 @@ class Get(AgentStaffAuthorizedApi):
                 'id': specification.id,
                 "show_image":specification.show_image,
                 "sale_price":specification.sale_price,
+                'original_price': specification.sale_price,
                 "stock":specification.stock,
                 "specification_value_list":[{
                     "category":specification_value.category,
