@@ -7,6 +7,7 @@ import xmltodict
 import time
 
 from . import utils
+from abs.middleware.config import config_middleware
 
 
 class Mini(object):
@@ -16,7 +17,8 @@ class Mini(object):
 
     @property
     def appid(self):
-        return 'wx22a8fc65e8d220af'
+        return config_middleware.get_value("wechat", "appid")
+        # return 'wx22a8fc65e8d220af'
 
     @property
     def appsecret(self):
@@ -57,19 +59,22 @@ class MiniMch(object):
 
     @property
     def appid(self):
-        return 'wx22a8fc65e8d220af'
+        return config_middleware.get_value("wechat", "appid")
+        # return 'wx22a8fc65e8d220af'
 
     @property
     def mchid(self):
-        return '1517459321'
+        return config_middleware.get_value("wechat", "mchid")
+        # return '1517459321'
 
     @property
     def notify_url(self):
-        return 'http://test-b.rong-mi.com'
+        return config_middleware.get_value("common", "domain")
 
     @property
     def key(self):
-        return 'rongmibiquan20181026172354biquan'
+        return config_middleware.get_value("wechat", "key")
+        # return 'rongmibiquan20181026172354biquan'
 
     def get_sign(self, param):
         # 计算签名

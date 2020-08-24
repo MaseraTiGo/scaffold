@@ -268,11 +268,11 @@ class PosterAdd(CustomerAuthorizedApi):
             order.id
         )
         # todo 获取员工部门
-        # StaffOrderEventServer.create(
-        #     order_id=order.id,
-        #     staff_id=poster.staff_id,
-        #     organization_id=
-        # )
+        StaffOrderEventServer.create(
+            order_id=order.id,
+            staff_id=poster.staff_id,
+            organization_id=1
+        )
         return order
 
     def fill(self, response, order):
@@ -295,15 +295,6 @@ class Get(CustomerAuthorizedApi):
         'last_payment_type': CharField(desc = '付款方式'),
         'last_payment_time': DatetimeField(desc = "付款时间"),
         'last_payment_number': CharField(desc = "最后付款单号"),
-        'contract_background': ListField(
-                    desc = "合同列表",
-                    fmt=DictField(
-                        desc="合同url",
-                        conf={
-                            'url': CharField(desc="链接")
-                        }
-                    )
-                ),
         'despatch_type': CharField(desc = "发货方式"),
         'order_item_list': ListField(
             desc = "商品列表",
@@ -366,14 +357,6 @@ class Get(CustomerAuthorizedApi):
             'create_time': order.mg_order.create_time,
             'last_payment_type': order.mg_order.payment.last_payment_type,
             'last_payment_time': order.mg_order.payment.last_payment_time,
-            'contract_background': [
-                {
-                    'url': 'http://test-b.rong-mi.com/resource/contract/background_1.png'
-                },
-                {
-                    'url': 'http://test-b.rong-mi.com/resource/contract/background_2.png'
-                }
-            ],
             'last_payment_number': '',
             'despatch_type': order.order_item_list[0].snapshoot.despatch_type,
             'order_item_list': [{
@@ -431,15 +414,6 @@ class Search(CustomerAuthorizedApi):
                 'last_payment_time': CharField(desc = "付款时间"),
                 'last_payment_number': CharField(desc = "最后付款单号"),
                 'despatch_type': CharField(desc = "发货类型"),
-                'contract_background': ListField(
-                    desc = "合同列表",
-                    fmt=DictField(
-                        desc="合同url",
-                        conf={
-                            'url': CharField(desc="链接")
-                        }
-                    )
-                ),
                 'order_item_list': ListField(
                     desc = "商品列表",
                     fmt = DictField(
@@ -510,14 +484,6 @@ class Search(CustomerAuthorizedApi):
             'last_payment_time': order.mg_order.payment.last_payment_time,
             'last_payment_number': '',
             'despatch_type': order.orderitem_list[0].snapshoot.despatch_type,
-            'contract_background': [
-                {
-                    'url': 'http://test-b.rong-mi.com/resource/contract/background_1.png'
-                },
-                {
-                    'url': 'http://test-b.rong-mi.com/resource/contract/background_2.png'
-                }
-            ],
             'order_item_list': [{
                 'agent_name': order.agent.name,
                 'sale_price': order_item.snapshoot.sale_price,

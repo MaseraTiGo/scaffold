@@ -21,7 +21,7 @@ class ImageProcess(object):
         byte_io.write(response)
         return byte_io
 
-    def add(
+    def process(
         self,
         config_list
     ):
@@ -59,7 +59,22 @@ class ImageProcess(object):
                 r, g, b, a = img.split()
                 back_img.paste(img, box, a)
             result_list.append(back_img)
+        return result_list
 
+    def save_img(self, config_list):
+        result_list = self.process(config_list)
+        img_save_path_list = []
+        for result in result_list:
+            img_file_path, img_save_path = file_middleware.get_save_path(
+                '.png',
+                'contract_back'
+            )
+            result.save(img_file_path)
+            img_save_path_list.append(img_save_path)
+        return img_save_path_list
+
+    def save_pdf(self, config_list):
+        result_list = self.process(config_list)
         pdf_file_path, pdf_save_path = file_middleware.get_save_path(
             '.pdf',
             'contract'
@@ -72,7 +87,7 @@ class ImageProcess(object):
             save_all=True,
             append_images=[result.convert('RGB') for result in result_list[1:]]
         )
-        result_list[0].show()
+
         img_save_path_list = []
         for result in result_list:
             img_file_path, img_save_path = file_middleware.get_save_path(
