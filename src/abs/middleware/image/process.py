@@ -1,9 +1,8 @@
 # coding=UTF-8
 import io
-import requests
 from PIL import ImageFont, Image, ImageDraw
 from abs.middleware.file import file_middleware
-
+import urllib.request
 
 class ImageProcess(object):
 
@@ -15,8 +14,8 @@ class ImageProcess(object):
         return byte_io
 
     def get_img_byurl(self, img_url):
-        response = requests.get(img_url)
-        response = response.content
+        response = urllib.request.urlopen(img_url)
+        response = response.read()
         byte_io = io.BytesIO()
         byte_io.write(response)
         return byte_io

@@ -45,6 +45,7 @@ class Get(NoAuthorizedApi):
                 conf={
                     'id': IntField(desc="id"),
                     'sale_price': IntField(desc="价格"),
+                    'original_price': IntField(desc="原价"),
                     'stock': IntField(desc="库存"),
                     'show_image': CharField(desc="展示图片"),
                     'specification_value_list': ListField(
@@ -107,6 +108,7 @@ class Get(NoAuthorizedApi):
             'agent_name': goods.agent.name,
             'specification_list': [{
                 'id': poster_specification.specification.id,
+                'original_price': poster_specification.specification.sale_price,
                 'sale_price': poster_specification.sale_price,
                 'stock': poster_specification.specification.stock,
                 'show_image': poster_specification.specification.show_image,
