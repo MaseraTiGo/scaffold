@@ -48,7 +48,7 @@ class RelationsGenerator(BaseGenerator):
         return relations_list
 
     def create(self, relations_info, result_mapping):
-        relations_qs = Relations.query(
+        relations_qs = Relations.search(
             school = relations_info.school,
             major = relations_info.major,
         )

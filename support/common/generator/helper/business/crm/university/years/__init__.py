@@ -41,7 +41,7 @@ class YearsGenerator(BaseGenerator):
         return years_list
 
     def create(self, years_info, result_mapping):
-        years_qs = Years.query(
+        years_qs = Years.search(
             relations = years_info.relations,
             category = years_info.category,
             duration = years_info.duration
