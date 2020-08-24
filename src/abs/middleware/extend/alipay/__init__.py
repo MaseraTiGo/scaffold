@@ -4,20 +4,18 @@ import json
 import os
 import base64
 import rsa
-from urllib.parse import quote_plus, unquote_plus
-from urllib.request import urlopen
-from Crypto.PublicKey import RSA
-from Crypto.Hash import SHA
-from Crypto.Signature import PKCS1_v1_5
+from urllib.parse import quote_plus
+from abs.middleware.config import config_middleware
 
 
 class AlipayExtend(object):
 
     def _get_appid(self):
-        return "2019092767881151"
+        return config_middleware.get_value("alipay", "appid")
+        # return "2019092767881151"
 
     def _get_notify_url(self):
-        return 'http://test-b.rong-mi.com'
+        return config_middleware.get_value("common", "domain")
 
     def _get_priv_key(self):
         cur_path = os.path.dirname(os.path.abspath(__file__))

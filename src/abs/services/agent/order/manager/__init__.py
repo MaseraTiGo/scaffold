@@ -197,17 +197,16 @@ class OrderItemServer(BaseManager):
 class ContractServer(BaseManager):
 
     @classmethod
-    def create(cls, order_item, agent, contacts, autograph, email):
+    def create(cls, order_item, agent, contacts):
         number = 'Sn_200' + str(int(time.time())) + str(random.randint(10000, 99999))
         mg_order = mg_OrderServer.get(order_item.order.mg_order_id)
         mg_OrderServer.hung_snapshoot([order_item])
-        autograph_url, contract_url, contract_img_url = image_middleware.get_contract(
+        contract_img_url = image_middleware.get_contract(
             number,
             agent.name,
             contacts.contacts,
             contacts.phone,
             agent.official_seal,
-            autograph,
             mg_order.invoice.name,
             mg_order.invoice.identification,
             order_item.snapshoot.brand_name,
@@ -221,21 +220,37 @@ class ContractServer(BaseManager):
             'name': mg_order.invoice.name,
             'phone': mg_order.invoice.phone,
             'identification': mg_order.invoice.identification,
-            'email': email,
+            'email': '',
             'number': number,
             'agent_customer_id': order_item.order.agent_customer_id,
             'person_id': order_item.order.person_id,
             'company_id': order_item.order.company_id,
             'order_item_id': order_item.id,
             'agent_id': agent.id,
-            'autograph': autograph_url,
-            'url': json.dumps([contract_url]),
             'img_url': json.dumps(contract_img_url)
         }
         contract = Contract.create(**create_info)
-        mg_OrderServer.finish(order_item.order.mg_order_id)
-        order_item.order.update(status = OrderStatus.ORDER_FINISHED)
+
         return contract
+
+    @classmethod
+    def autograph(cls, contract, autograph_img, email):
+        autograph_url, contract_url, contract_img_url = image_middleware.autograph(
+            autograph_img,
+            json.loads(contract.img_url)
+        )
+        contract.update(**{
+            'email': email,
+            'autograph': autograph_url,
+            'url': json.dumps([contract_url]),
+            'img_url': json.dumps(contract_img_url)
+        })
+        mg_OrderServer.finish(
+            contract.order_item.order.mg_order_id
+        )
+        contract.order_item.order.update(
+            status=OrderStatus.ORDER_FINISHED
+        )
 
     @classmethod
     def search_all(cls, **search_info):
@@ -247,4 +262,11 @@ class ContractServer(BaseManager):
                       order_by("-create_time")
         splitor = Splitor(current_page, contract_qs)
         return splitor
+
+    @classmethod
+    def get(cls, contract_id):
+        contract = Contract.get_byid(contract_id)
+        if contract:
+            return contract
+        raise BusinessError('合同不存在')
 
