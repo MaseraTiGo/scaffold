@@ -47,6 +47,7 @@ class LoaderHelper(object):
         self.set_key('common', '通用配置')
         self.set_value('common', 'crm_appkey', 'CRM总控公司授权appkey')
         self.set_value('common', 'agent_platform_id', 'CRM代理商端平台id')
+        self.set_value('common', "is_login", '禁止登陆', default = 'no', type = 'select', option = ['yes', 'no'])
         self.set_value('common', 'domain', '域名')
 
         self.set_key('alipay', '支付宝')

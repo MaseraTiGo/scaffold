@@ -7,6 +7,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 from agile.crm.manager.api import StaffAuthorizedApi
+from abs.middleware.config import config_middleware
 from abs.services.crm.agent.manager import AgentServer
 from abs.middleground.technology.permission.manager import PermissionServer
 from abs.middleground.technology.permission.utils.constant import \
@@ -44,7 +45,9 @@ class Add(StaffAuthorizedApi):
     def execute(self, request):
         agent = AgentServer.create(**request.agent_info)
         authorize_info = {
-            'platform_id':2,
+            'platform_id':config_middleware.get_value(
+                "common", "agent_platform_id"
+            ),
             'company_id':agent.company_id,
             'remark':'',
         }
