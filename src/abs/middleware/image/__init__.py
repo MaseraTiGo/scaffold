@@ -49,7 +49,7 @@ class ImageMiddleware(object):
 
         config_list = [
             {
-                'back_path': 'http://education.bq.com/resource/contract/template/background_1.jpg',
+                'back_path': 'https://orgdeer.oss-cn-hangzhou.aliyuncs.com/source/contract/template/background_1.jpg',
                 'word_config': [
                     {
                         'font_file': font_file,
@@ -119,7 +119,7 @@ class ImageMiddleware(object):
                 'img_config': []
             },
             {
-                'back_path': 'http://education.bq.com/resource/contract/template/background_2.jpg',
+                'back_path': 'https://orgdeer.oss-cn-hangzhou.aliyuncs.com/source/contract/template/background_2.jpg',
                 'word_config': [
                     {
                         'font_file': font_file,
@@ -168,14 +168,6 @@ class ImageMiddleware(object):
                         'height': 2950,
                         'color_tup': (0, 0, 0),
                         'word': str(datetime.date.today().day)
-                    },
-                    {
-                        'font_file': font_file,
-                        'font_size': 60,
-                        'width': 1766,
-                        'height': 2510,
-                        'color_tup': (0, 0, 0),
-                        'word': name
                     },
                     {
                         'font_file': font_file,
@@ -254,13 +246,13 @@ class ImageMiddleware(object):
                     'img_config': []
                 }
             )
-        config_list[-1]['img_config'] = [{
+        config_list[-1]['img_config'] = [
             {
                 'width': 1100,
                 'height': 3020,
                 'image_path': autograph_f
             }
-        }]
+        ]
         contract_url, contract_img_url_list = image_process.save_pdf(
             config_list
         )
