@@ -18,12 +18,26 @@ class YearsGenerator(BaseGenerator):
     def get_create_list(self, result_mapping):
         relations_list = result_mapping.get(RelationsGenerator.get_key())
         years_list = []
-        for relations in relations_list:
-            for years_info in self._years_infos:
-                years_info.update({
-                    "relations":relations,
-                })
-                years_list.append(DictWrapper(years_info))
+        for years_info in self._years_infos:
+            if "school_name" in years_info:
+                relations_fiter = list(filter(
+                    lambda obj: obj.school.name == years_info.school_name and \
+                                obj.major.name == years_info.major_name,
+                    relations_list
+                ))
+                if relations_fiter:
+                    relations = relations_fiter[0]
+                    years_info.update({
+                        "relations":relations,
+                    })
+                    years_list.append(DictWrapper(years_info))
+            else:
+                for relations in relations_list:
+                    years = years_info.copy()
+                    years.update({
+                        "relations":relations,
+                    })
+                    years_list.append(DictWrapper(years))
         return years_list
 
     def create(self, years_info, result_mapping):

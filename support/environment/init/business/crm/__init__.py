@@ -9,7 +9,9 @@ from support.environment.common.middleground.permission import PermissionMaker
 from support.environment.common.business.crm.years import YearsMaker
 from support.environment.init.business.controller.enterprise import EnterpriseLoader
 from support.environment.init.business.crm.staff import StaffLoader
-
+from support.environment.init.business.crm.school import SchoolLoader
+from support.environment.init.business.crm.major import MajorLoader
+from support.environment.init.business.crm.relations import RelationsLoader
 
 class CrmInitializeMaker(BaseMaker):
     """
@@ -30,11 +32,11 @@ class CrmInitializeMaker(BaseMaker):
         self._staff = StaffGenerator(StaffLoader().generate())
         self._staff_account = StaffAccountGenerator()
         years = YearsMaker(
-            CrmSchoolLoader().generate(),
-            CrmMajorLoader().generate(),
-            CrmYearsLoader().generate()
+            SchoolLoader().generate(),
+            MajorLoader().generate(),
+            RelationsLoader().generate(),
+            RelationsLoader().generate()
         ).generate_relate().generate()
-
 
     def generate_relate(self):
         self._person.add_outputs(self._permission)

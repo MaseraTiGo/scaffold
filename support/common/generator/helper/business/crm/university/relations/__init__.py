@@ -11,18 +11,40 @@ from abs.services.crm.university.models import Relations
 
 class RelationsGenerator(BaseGenerator):
 
+    def __init__(self, relations_infos):
+        super(RelationsGenerator, self).__init__()
+        self._relations_infos = self.init(relations_infos)
 
     def get_create_list(self, result_mapping):
         school_list = result_mapping.get(SchoolGenerator.get_key())
         major_list = result_mapping.get(MajorGenerator.get_key())
         relations_list = []
-        for school in school_list:
-            for major in major_list:
-                relations_info = {
-                    "school":school,
-                    "major":major
-                }
-                relations_list.append(DictWrapper(relations_info))
+        if self._relations_infos:
+            for relations_info in self._relations_infos:
+                school_fiter = list(filter(
+                    lambda obj: obj.name == relations_info.school_name,
+                    school_list
+                ))
+                major_fiter = list(filter(
+                    lambda obj: obj.name == relations_info.major_name,
+                    major_list
+                ))
+                if school_fiter and major_fiter:
+                    school = school_fiter[0]
+                    major = major_fiter[0]
+                    relations_info = {
+                        "school":school,
+                        "major":major
+                    }
+                    relations_list.append(DictWrapper(relations_info))
+        else:
+            for school in school_list:
+                for major in major_list:
+                    relations_info = {
+                        "school":school,
+                        "major":major
+                    }
+                    relations_list.append(DictWrapper(relations_info))
         return relations_list
 
     def create(self, relations_info, result_mapping):

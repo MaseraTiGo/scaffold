@@ -759,12 +759,6 @@ class RelationsLoader(BaseLoader):
                     'duration':'two_half_year',
                 },
                 {
-                    'school_name': '湖北师范大学',
-                    'major_name': '工商管理',
-                    'category':'undergraduate' ,
-                    'duration':'two_half_year',
-                },
-                {
                     'school_name': '武汉工程大学',
                     'major_name': '电子商务',
                     'category':'specialty' ,
@@ -1259,12 +1253,6 @@ class RelationsLoader(BaseLoader):
                 {
                     'school_name': '武汉科技大学',
                     'major_name': '临床医学',
-                    'category':'specialty' ,
-                    'duration':'two_half_year',
-                },
-                {
-                    'school_name': '武汉科技大学',
-                    'major_name': '商务英语',
                     'category':'specialty' ,
                     'duration':'two_half_year',
                 },
@@ -1799,12 +1787,6 @@ class RelationsLoader(BaseLoader):
                 {
                     'school_name': '长江大学',
                     'major_name': '食品科学与工程',
-                    'category':'undergraduate' ,
-                    'duration':'two_half_year',
-                },
-                {
-                    'school_name': '长江大学',
-                    'major_name': '金融学',
                     'category':'undergraduate' ,
                     'duration':'two_half_year',
                 },
