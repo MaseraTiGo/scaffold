@@ -19,13 +19,13 @@ class BrandLoader(BaseLoader):
 
             },
             {
-                'name': '苹果',
-                'industry': '电商',
-                'description': '电商行业',
+                'name': '自考',
+                'industry': '教育',
+                'description': '教育行业',
             },
             {
-                'name': '华为',
-                'industry': '电商',
-                'description': '电商行业',
-            },
+                'name': '国开',
+                'industry': '教育',
+                'description': '教育行业',
+            }
         ]

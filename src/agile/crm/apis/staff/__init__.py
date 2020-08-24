@@ -137,7 +137,7 @@ class Search(StaffAuthorizedApi):
     def fill(self, response, staff_spliter):
         data_list = [{
             'id': staff.id,
-            'name': staff.person.name,
+            'name': staff.name,
             'work_number': staff.work_number,
             'gender': staff.person.gender,
             'birthday': staff.person.birthday,

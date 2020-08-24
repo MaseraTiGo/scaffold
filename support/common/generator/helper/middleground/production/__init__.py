@@ -35,6 +35,7 @@ class ProductionGenerator(BaseGenerator):
         production_qs = Production.query(
             company_id = production_info.company_id,
             name = production_info.name,
+            brand = production_info.brand,
         )
         if production_qs.count():
             production = production_qs[0]

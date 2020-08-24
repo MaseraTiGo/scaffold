@@ -7,13 +7,13 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 
-from agile.crm.manager.api import StaffAuthorizedApi
+from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.agent.goods.manager import PosterServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.services.agent.customer.manager import SaleChanceServer
 
 
-class Add(StaffAuthorizedApi):
+class Add(AgentStaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.poster_info = RequestField(
         DictField,
@@ -54,6 +54,7 @@ class Add(StaffAuthorizedApi):
             raise BusinessError('机会已过期')
         goods = GoodsServer.get_goods(request.poster_info.pop('goods_id'))
         specification_list = request.poster_info.pop('specification_list')
+
         poster = PosterServer.add(
             specification_list,
             goods = goods,
