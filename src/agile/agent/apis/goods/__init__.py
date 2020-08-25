@@ -606,7 +606,7 @@ class SearchAll(AgentStaffAuthorizedApi):
                             "attribute": specification_value.attribute
                         } for specification_value in specification.specification_value_list]
                     } for specification in goods.merchandise.specification_list]
-                } for goods in goods_list]
+                } for goods in production.goods_list]
             })
         response.data_list = data_list
         return response
