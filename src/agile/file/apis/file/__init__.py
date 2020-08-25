@@ -1,5 +1,6 @@
 # coding=UTF-8
 import datetime
+from urllib import parse
 from infrastructure.core.field.base import CharField, FileField, DictField, IntField, ListField, DatetimeField, DateField, BooleanField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
@@ -43,7 +44,7 @@ class Upload(NoAuthorizedApi):
                 time = nowTime
             )
             imgurl = OSSAPI().put_object(store_name, f, "orgdeer")
-            path_list.append(imgurl)
+            path_list.append(parse.unquote(imgurl))
         '''
         path_list = []
         for name, f in request._upload_files.items():
