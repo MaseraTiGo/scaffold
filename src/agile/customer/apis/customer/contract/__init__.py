@@ -67,8 +67,8 @@ class Add(CustomerAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.contract_info = ResponseField(
         DictField,
-        desc="合同信息",
-        conf={
+        desc = "合同信息",
+        conf = {
             'id': IntField(desc = "id"),
             'img_url': ListField(
                 desc = "合同列表png",
@@ -89,16 +89,18 @@ class Add(CustomerAuthorizedApi):
         order_item = OrderItemServer.get(
             request.order_item_id
         )
+        '''
         if order_item.order.person_id != self.auth_user.person_id:
             raise BusinessError('订单异常')
         if order_item.order.status != OrderStatus.PAYMENT_FINISHED:
             raise BusinessError('订单状态异常')
+        '''
         agent = AgentServer.get(order_item.order.agent_id)
-        contacts = AgentServer.search_all_contacts(agent=agent).first()
+        contacts = AgentServer.search_all_contacts(agent = agent).first()
         if not contacts:
             raise BusinessError('代理商联系人不存在，请联系客服')
         contract = ContractServer.search_all(
-            order_item_id=order_item.id
+            order_item_id = order_item.id
         ).first()
         if not contract:
             contract = ContractServer.create(
@@ -121,10 +123,10 @@ class Autograph(CustomerAuthorizedApi):
     request.contract_id = RequestField(IntField, desc = "合同id")
     request.contract_info = RequestField(
         DictField,
-        desc="合同信息",
-        conf={
-            'email': CharField(desc="邮箱"),
-            'autograph': CharField(desc="签名图片")
+        desc = "合同信息",
+        conf = {
+            'email': CharField(desc = "邮箱"),
+            'autograph': CharField(desc = "签名图片")
         }
     )
 
@@ -188,7 +190,7 @@ class Search(CustomerAuthorizedApi):
     def execute(self, request):
         data_list = ContractServer.search_all(
             person_id = self.auth_user.person_id
-        ).exclude(autograph='').order_by('-create_time')
+        ).exclude(autograph = '').order_by('-create_time')
         return data_list
 
     def fill(self, response, data_list):
