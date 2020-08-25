@@ -2,7 +2,8 @@
 import io
 from PIL import ImageFont, Image, ImageDraw
 from abs.middleware.file import file_middleware
-import urllib.request
+import requests
+
 
 class ImageProcess(object):
 
@@ -14,8 +15,10 @@ class ImageProcess(object):
         return byte_io
 
     def get_img_byurl(self, img_url):
-        response = urllib.request.urlopen(img_url)
-        response = response.read()
+        response = requests.get(img_url)
+        response = response.content
+        # response = urllib.request.urlopen(img_url)
+        # response = response.read()
         byte_io = io.BytesIO()
         byte_io.write(response)
         return byte_io
@@ -65,10 +68,10 @@ class ImageProcess(object):
         img_save_path_list = []
         for result in result_list:
             img_file_path, img_save_path = file_middleware.get_save_path(
-                '.png',
+                '.jpeg',
                 'contract_back'
             )
-            result.save(img_file_path)
+            result.save(img_file_path, quality=10)
             img_save_path_list.append(img_save_path)
         return img_save_path_list
 

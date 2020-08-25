@@ -34,17 +34,16 @@ class ImageMiddleware(object):
             production_name,
             school_name,
             major_name,
-            phone,
             price
     ):
-        path = os.path.dirname(os.path.realpath(__file__))
+
         company_official_seal = self.get_image(official_seal)
         company_official_seal = image_process.update_img_size(
             company_official_seal,
             220,
             220
         )
-
+        path = os.path.dirname(os.path.realpath(__file__))
         font_file = os.path.join(path, 'simsun.ttc')
 
         config_list = [
@@ -53,9 +52,9 @@ class ImageMiddleware(object):
                 'word_config': [
                     {
                         'font_file': font_file,
-                        'font_size': 60,
-                        'width': 1660,
-                        'height': 380,
+                        'font_size': 40,
+                        'width': 1680,
+                        'height': 390,
                         'color_tup': (0, 0, 0),
                         'word': number
                     },
@@ -69,49 +68,49 @@ class ImageMiddleware(object):
                     # },
                     {
                         'font_file': font_file,
-                        'font_size': 60,
-                        'width': 503,
-                        'height': 680,
+                        'font_size': 50,
+                        'width': 520,
+                        'height': 687,
                         'color_tup': (0, 0, 0),
                         'word': name
                     },
                     {
                         'font_file': font_file,
-                        'font_size': 60,
+                        'font_size': 50,
                         'width': 1068,
-                        'height': 680,
+                        'height': 687,
                         'color_tup': (0, 0, 0),
                         'word': identification
                     },
                     {
                         'font_file': font_file,
-                        'font_size': 60,
+                        'font_size': 50,
                         'width': 649,
-                        'height': 1070,
+                        'height': 1517,
                         'color_tup': (0, 0, 0),
                         'word': brand_name
                     },
                     {
                         'font_file': font_file,
-                        'font_size': 60,
+                        'font_size': 50,
                         'width': 649,
-                        'height': 1590,
+                        'height': 1592,
                         'color_tup': (0, 0, 0),
                         'word': production_name
                     },
                     {
                         'font_file': font_file,
-                        'font_size': 60,
+                        'font_size': 50,
                         'width': 649,
-                        'height': 1670,
+                        'height': 1666,
                         'color_tup': (0, 0, 0),
                         'word': school_name
                     },
                     {
                         'font_file': font_file,
-                        'font_size': 60,
+                        'font_size': 50,
                         'width': 649,
-                        'height': 1745,
+                        'height': 1743,
                         'color_tup': (0, 0, 0),
                         'word': major_name
                     }
@@ -123,97 +122,41 @@ class ImageMiddleware(object):
                 'word_config': [
                     {
                         'font_file': font_file,
-                        'font_size': 60,
-                        'width': 1599,
-                        'height': 1075,
+                        'font_size': 50,
+                        'width': 1605,
+                        'height': 1071,
                         'color_tup': (0, 0, 0),
                         'word': str(price)
                     },
+                    # {
+                    #     'font_file': font_file,
+                    #     'font_size': 50,
+                    #     'width': 562,
+                    #     'height': 2660,
+                    #     'color_tup': (0, 0, 0),
+                    #     'word': contacts_name
+                    # },
+                    # {
+                    #     'font_file': font_file,
+                    #     'font_size': 50,
+                    #     'width': 712,
+                    #     'height': 2805,
+                    #     'color_tup': (0, 0, 0),
+                    #     'word': contacts_phone
+                    # },
                     {
                         'font_file': font_file,
-                        'font_size': 60,
-                        'width': 562,
-                        'height': 2670,
-                        'color_tup': (0, 0, 0),
-                        'word': contacts_name
-                    },
-                    {
-                        'font_file': font_file,
-                        'font_size': 60,
-                        'width': 612,
-                        'height': 2810,
-                        'color_tup': (0, 0, 0),
-                        'word': contacts_phone
-                    },
-                    {
-                        'font_file': font_file,
-                        'font_size': 60,
+                        'font_size': 50,
                         'width': 517,
-                        'height': 2950,
+                        'height': 2957,
                         'color_tup': (0, 0, 0),
-                        'word': str(datetime.date.today().year)
-                    },
-                    {
-                        'font_file': font_file,
-                        'font_size': 60,
-                        'width': 640,
-                        'height': 2950,
-                        'color_tup': (0, 0, 0),
-                        'word': str(datetime.date.today().month)
-                    },
-                    {
-                        'font_file': font_file,
-                        'font_size': 60,
-                        'width': 740,
-                        'height': 2950,
-                        'color_tup': (0, 0, 0),
-                        'word': str(datetime.date.today().day)
-                    },
-                    {
-                        'font_file': font_file,
-                        'font_size': 60,
-                        'width': 1794,
-                        'height': 2630,
-                        'color_tup': (0, 0, 0),
-                        'word': name
-                    },
-                    {
-                        'font_file': font_file,
-                        'font_size': 60,
-                        'width': 1847,
-                        'height': 2775,
-                        'color_tup': (0, 0, 0),
-                        'word': phone
-                    },
-                    {
-                        'font_file': font_file,
-                        'font_size': 60,
-                        'width': 1684,
-                        'height': 2950,
-                        'color_tup': (0, 0, 0),
-                        'word': str(datetime.date.today().year)
-                    },
-                    {
-                        'font_file': font_file,
-                        'font_size': 60,
-                        'width': 1797,
-                        'height': 2950,
-                        'color_tup': (0, 0, 0),
-                        'word': str(datetime.date.today().month)
-                    },
-                    {
-                        'font_file': font_file,
-                        'font_size': 60,
-                        'width': 1900,
-                        'height': 2950,
-                        'color_tup': (0, 0, 0),
-                        'word': str(datetime.date.today().day)
-                    },
+                        'word': datetime.date.today().strftime('%Y.%m.%d')
+                    }
                 ],
                 'img_config': [
                     {
-                        'width': 350,
-                        'height': 3000,
+                        'width': 860,
+                        'height': 2610,
                         'image_path': company_official_seal
                     }
                 ]
@@ -224,7 +167,10 @@ class ImageMiddleware(object):
         )
         return contract_back_url_list
 
-    def autograph(self, autograph_base64_image, contract_img_url_list):
+    def autograph(self, name, phone, autograph_base64_image, contract_img_url_list):
+        path = os.path.dirname(os.path.realpath(__file__))
+        font_file = os.path.join(path, 'simsun.ttc')
+
         autograph_f = self.get_image(autograph_base64_image)
         autograph_url = file_middleware.save(
             '.png',
@@ -246,13 +192,41 @@ class ImageMiddleware(object):
                     'img_config': []
                 }
             )
-        config_list[-1]['img_config'] = [
-            {
-                'width': 1100,
-                'height': 3020,
-                'image_path': autograph_f
-            }
-        ]
+        config_list[-1].update({
+            'word_config': [
+                {
+                    'font_file': font_file,
+                    'font_size': 50,
+                    'width': 1770,
+                    'height': 2657,
+                    'color_tup': (0, 0, 0),
+                    'word': name
+                },
+                {
+                    'font_file': font_file,
+                    'font_size': 50,
+                    'width': 1820,
+                    'height': 2800,
+                    'color_tup': (0, 0, 0),
+                    'word': phone
+                },
+                {
+                    'font_file': font_file,
+                    'font_size': 50,
+                    'width': 1690,
+                    'height': 2957,
+                    'color_tup': (0, 0, 0),
+                    'word': datetime.date.today().strftime('%Y.%m.%d')
+                }
+            ],
+            'img_config': [
+                {
+                    'width': 1710,
+                    'height': 2430,
+                    'image_path': autograph_f
+                }
+            ]
+        })
         contract_url, contract_img_url_list = image_process.save_pdf(
             config_list
         )

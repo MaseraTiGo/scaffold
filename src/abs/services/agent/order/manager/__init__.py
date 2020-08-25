@@ -213,7 +213,6 @@ class ContractServer(BaseManager):
             order_item.snapshoot.production_name,
             order_item.school_name,
             order_item.major_name,
-            mg_order.invoice.phone,
             str(mg_order.strike_price/100)
         )
         create_info = {
@@ -236,6 +235,8 @@ class ContractServer(BaseManager):
     @classmethod
     def autograph(cls, contract, autograph_img, email):
         autograph_url, contract_url, contract_img_url = image_middleware.autograph(
+            contract.name,
+            contract.phone,
             autograph_img,
             json.loads(contract.img_url)
         )
