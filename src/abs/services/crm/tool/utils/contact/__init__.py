@@ -11,7 +11,8 @@ class StatusTypes(object):
 class SourceTypes(object):
     CRM='crm'
     CUSTOMER='customer'
-    CHOICES=((CRM,'crm'),(CUSTOMER,'客户端'))
+    CUSTOMER_WECHAT='customer_wechat'
+    CHOICES=((CRM,'crm'),(CUSTOMER,'客户端'),(CUSTOMER_WECHAT, '客户端微信小程序'))
 
 
 class SceneTypes(object):
@@ -19,5 +20,7 @@ class SceneTypes(object):
     FORGET='forget'
     BINDCARD='bindcard'
     LOGIN = 'login'
+    WECHAT_REGISTER = 'wechat_register'
     CHOICES=((REGISTER,'注册验证码'),(FORGET,'找回密码验证码'),
-             (BINDCARD,'绑定银行卡'),(LOGIN, '登陆'))
+             (BINDCARD,'绑定银行卡'),(LOGIN, '登陆'),
+             (WECHAT_REGISTER, '微信注册验证码'))

@@ -85,6 +85,12 @@ class SmsMiddleware(Single):
                 'template_id': 'A003',
                 'template_label': 'verify_code',
                 'sign_name': '荷包pro'
+            },
+            SceneTypes.WECHAT_REGISTER: {
+                'company_label': 'local_sms',
+                'template_id': 'A003',
+                'template_label': 'verify_code',
+                'sign_name': '荷包pro'
             }
         }
         return send_info.get(scene)

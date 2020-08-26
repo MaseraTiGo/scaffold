@@ -42,7 +42,7 @@ class Get(NoAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        major = UniversityServer.get_major(**request.major_id)
+        major = UniversityServer.get_major(request.major_id)
         return major
 
     def fill(self, response, major):

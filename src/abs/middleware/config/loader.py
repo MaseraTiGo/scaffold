@@ -55,6 +55,7 @@ class LoaderHelper(object):
 
         self.set_key('wechat', '微信')
         self.set_value('wechat', 'appid', '微信appid')
+        self.set_value('wechat', 'appsecret', '微信appsecret')
         self.set_value('wechat', 'mchid', '微信mchid')
         self.set_value('wechat', 'key', '微信key')
 

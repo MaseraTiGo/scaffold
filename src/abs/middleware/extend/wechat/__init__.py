@@ -12,9 +12,6 @@ from abs.middleware.config import config_middleware
 
 class Mini(object):
 
-    def __init__(self, type):
-        self.type = type
-
     @property
     def appid(self):
         return config_middleware.get_value("wechat", "appid")
@@ -22,7 +19,7 @@ class Mini(object):
 
     @property
     def appsecret(self):
-        return ''
+        return config_middleware.get_value("wechat", "appsecret")
 
     """小程序登录"""
     def login(self, code):
@@ -45,7 +42,7 @@ class Mini(object):
     """手机号数据解密"""
     def get_info(self, encrypted_data, sessionKey, iv):
         result = utils.decrypt_iv(encrypted_data, sessionKey, iv)
-        print(result)
+        return result
         # if result['watermark']['appid'] != self.appid:
         #     raise BusinessError('微信数据异常')
         # return result
@@ -53,9 +50,8 @@ class Mini(object):
 
 class MiniMch(object):
 
-    def __init__(self, type):
+    def __init__(self):
         self.spbill_create_ip = '114.114.114.114'
-        self.type = type
 
     @property
     def appid(self):
@@ -95,10 +91,10 @@ class MiniMch(object):
             out_trade_no,
             price,
             notify_path,
-            product_id='',
+            trade_type,
+            openid='',
             body='',
-            trade_type='NATIVE',
-            openid=''
+            product_id=''
     ):
         url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
         notify_url = self.notify_url + notify_path
@@ -163,8 +159,8 @@ class MiniMch(object):
 
 class MiniMchKey(MiniMch):
 
-    def __init__(self, type):
-        super(MiniMchKey, self).__init__(type)
+    def __init__(self):
+        super(MiniMchKey, self).__init__()
         path = os.path.dirname(os.path.realpath(__file__))
         self.cert_pem = os.path.join(path, 'apiclient_cert.pem')
         self.key_pem = os.path.join(path, 'apiclient_key.pem')

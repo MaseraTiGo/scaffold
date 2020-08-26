@@ -133,7 +133,7 @@ class OrderServer(BaseManager):
         return order
 
     @classmethod
-    def pay(cls, order, pay_type):
+    def pay(cls, order, pay_type, trade_type='APP', openid=''):
         number = mg_OrderServer.pay(
             order.mg_order.id,
             order.mg_order.strike_price,
@@ -143,7 +143,9 @@ class OrderServer(BaseManager):
         prepay_id = pay_middleware.pay_order(
             pay_type,
             number,
-            order.mg_order.strike_price
+            order.mg_order.strike_price,
+            trade_type=trade_type,
+            openid=openid
         )
         return prepay_id
 

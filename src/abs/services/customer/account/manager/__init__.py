@@ -1,9 +1,9 @@
 # coding=UTF-8
 
-
+from abs.common.manager import BaseManager
 from abs.middleware.token import TokenManager
 from abs.middleground.business.account.manager import AccountServer
-from abs.services.customer.account.store import CustomerAccount
+from abs.services.customer.account.store import CustomerAccount, Tripartite
 
 
 class CustomerAccountServer(AccountServer):
@@ -39,3 +39,22 @@ class CustomerAccountServer(AccountServer):
             account.role_id
         )
         return token
+
+
+class TripartiteServer(BaseManager):
+
+    @classmethod
+    def get_byopenid(cls, openid, category):
+        triprtite = Tripartite.search(
+            category=category,
+            openid=openid
+        ).first()
+        return triprtite
+
+    @classmethod
+    def create(cls, **info):
+        return Tripartite.create(**info)
+
+    @classmethod
+    def search_all(cls, **search_info):
+        return Tripartite.search(**search_info)
