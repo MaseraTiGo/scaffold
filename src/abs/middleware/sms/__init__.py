@@ -66,31 +66,31 @@ class SmsMiddleware(Single):
                 'company_label': 'local_sms',
                 'template_id': 'A003',
                 'template_label': 'verify_code',
-                'sign_name': '荷包pro'
+                'sign_name': '橙鹿'
             },
             SceneTypes.FORGET: {
                 'company_label': 'local_sms',
                 'template_id': 'A003',
                 'template_label': 'verify_code',
-                'sign_name': '荷包pro'
+                'sign_name': '橙鹿'
             },
             SceneTypes.BINDCARD: {
                 'company_label': 'local_sms',
                 'template_id': 'A003',
                 'template_label': 'verify_code',
-                'sign_name': '荷包pro'
+                'sign_name': '橙鹿'
             },
             SceneTypes.LOGIN: {
                 'company_label': 'local_sms',
                 'template_id': 'A003',
                 'template_label': 'verify_code',
-                'sign_name': '荷包pro'
+                'sign_name': '橙鹿'
             },
             SceneTypes.WECHAT_REGISTER: {
                 'company_label': 'local_sms',
                 'template_id': 'A003',
                 'template_label': 'verify_code',
-                'sign_name': '荷包pro'
+                'sign_name': '橙鹿'
             }
         }
         return send_info.get(scene)

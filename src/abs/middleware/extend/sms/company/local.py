@@ -16,7 +16,7 @@ class LocalSms(SmsBase):
         return '本地短信平台'
 
     def get_app_key(self):
-        return '7d5735ac290745e4b8babbe69f47c51b'
+        return 'e14af238bf184575b3346856732180a8'
 
     def get_channel_code(self):
         return 'CHL_003'
