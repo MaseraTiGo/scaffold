@@ -9,6 +9,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.agent.order.manager import ContractServer
+from abs.middleware.email import email_middleware
 
 
 class Search(AgentStaffAuthorizedApi):
@@ -85,4 +86,26 @@ class Search(AgentStaffAuthorizedApi):
         response.data_list = data_list
         response.total = contract_spliter.total
         response.total_page = contract_spliter.total_page
+        return response
+
+
+class Send(AgentStaffAuthorizedApi):
+    """给客户发送邮件"""
+    request = with_metaclass(RequestFieldSet)
+    request.contract_id = RequestField(IntField, desc = "合同id")
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_desc(cls):
+        return "合同发送邮件接口"
+
+    @classmethod
+    def get_author(cls):
+        return "Fsy"
+
+    def execute(self, request):
+        ContractServer.send_email(request.contract_id)
+
+    def fill(self, response):
         return response

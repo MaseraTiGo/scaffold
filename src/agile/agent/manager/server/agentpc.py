@@ -53,11 +53,11 @@ agent_pc_service.add(SearchAll)
 from agile.agent.apis.order import Search, Get
 agent_pc_service.add(Search, Get)
 
-from agile.agent.apis.order.contract import Search
-agent_pc_service.add(Search)
+from agile.agent.apis.order.contract import Search, Send
+agent_pc_service.add(Search, Send)
 
-from agile.agent.apis.customer import Search
-agent_pc_service.add(Search)
+from agile.agent.apis.customer import Search, Update
+agent_pc_service.add(Search, Update)
 
 from agile.agent.apis.customer.salechance import Search, Add
 agent_pc_service.add(Search, Add)

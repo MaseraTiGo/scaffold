@@ -16,7 +16,8 @@ from abs.middleware.pay import pay_middleware
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.middleware.image import image_middleware
 from abs.services.agent.order.store.contract import Contract
-
+from abs.middleware.email import email_middleware
+from abs.middleware.config import config_middleware
 
 class OrderServer(BaseManager):
 
@@ -214,7 +215,7 @@ class ContractServer(BaseManager):
             order_item.school_name,
             order_item.major_name,
             mg_order.invoice.phone,
-            str(mg_order.strike_price/100)
+            str(mg_order.strike_price / 100)
         )
         create_info = {
             'name': mg_order.invoice.name,
@@ -249,7 +250,7 @@ class ContractServer(BaseManager):
             contract.order_item.order.mg_order_id
         )
         contract.order_item.order.update(
-            status=OrderStatus.ORDER_FINISHED
+            status = OrderStatus.ORDER_FINISHED
         )
 
     @classmethod
@@ -269,4 +270,27 @@ class ContractServer(BaseManager):
         if contract:
             return contract
         raise BusinessError('合同不存在')
+
+    @classmethod
+    def send_email(cls, contract_id):
+        contract = cls.get(contract_id)
+        if len(json.loads(contract.url)) <= 0:
+            raise BusinessError('合同尚未签署')
+        '''
+        pdf_path = "{a}{b}".format(
+            a = config_middleware.get_value("common", "domain"),
+            b = json.loads(contract.url)[0]
+        )
+        '''
+        pdf_path = json.loads(contract.url)[0]
+        try:
+            email_middleware.send_email(
+                [contract.email],
+                '教育合同',
+                '教育合同',
+                pdf_path
+            )
+        except Exception as e:
+            raise BusinessError('发送失败')
+        return True
 

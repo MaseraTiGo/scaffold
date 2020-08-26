@@ -44,8 +44,8 @@ def send_email(content):
             content,
             _to,
             _from,
-            host='smtp.qq.com',
-            port=465
+            host = 'smtp.qq.com',
+            port = 465
         ):
             self.account = account
             self.passwd = passwd
@@ -114,7 +114,7 @@ class AutoTest(object):
         execute_from_command_line(argv)
 
     def _start_server(self):
-        thread = threading.Thread(target=self._runserver)
+        thread = threading.Thread(target = self._runserver)
         thread.setDaemon(True)
         thread.start()
         import time
@@ -127,9 +127,9 @@ class AutoTest(object):
 
         result = [
             "自动化脚本检测错误报告: 总运行数={total}, 失败数量={fail}, 脚本出错数量={error}".format(
-                total=total,
-                fail=len(failures),
-                error=len(errors)
+                total = total,
+                fail = len(failures),
+                error = len(errors)
             )
         ]
         split_line = '-' * 40
@@ -139,7 +139,7 @@ class AutoTest(object):
             ]
             failures_list.append(
                 ('\n\n{line}\n\n'.format(
-                    line=split_line
+                    line = split_line
                 )).join([fail[1] for fail in failures])
             )
             failures_list.append(
@@ -154,7 +154,7 @@ class AutoTest(object):
             ]
             error_list.append((
                 '\n\n{line}\n\n'.format(
-                    line=split_line)
+                    line = split_line)
             ).join([error[1] for error in errors]))
             error_list.append(
                 "\ ====================  end error ======================= / "
@@ -166,10 +166,10 @@ class AutoTest(object):
     def _execute_ddl_sql(self, sql, database):
         import pymysql
         conn = pymysql.connect(
-            host=database['HOST'],
-            port=int(database['PORT']),
-            user=database['USER'],
-            passwd=database['PASSWORD']
+            host = database['HOST'],
+            port = int(database['PORT']),
+            user = database['USER'],
+            passwd = database['PASSWORD']
         )
         cursor = conn.cursor()
         try:
@@ -183,14 +183,14 @@ class AutoTest(object):
         self._delete_testdb()
         for _, database in DATABASES.items():
             sql = "CREATE DATABASE {db_name} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"\
-                    .format(db_name=database['NAME'])
+                    .format(db_name = database['NAME'])
             self._execute_ddl_sql(sql, database)
 
     def _delete_testdb(self):
         from test_settings import DATABASES
         for _, database in DATABASES.items():
             sql = "DROP DATABASE IF EXISTS {db_name};".format(
-                db_name=database['NAME']
+                db_name = database['NAME']
             )
             self._execute_ddl_sql(sql, database)
 
@@ -218,7 +218,7 @@ class AutoTest(object):
         logger.info('start server...')
         self._start_server()
         logger.info('excute test case...')
-        program = unittest.TestProgram(defaultTest="load", exit=False)
+        program = unittest.TestProgram(defaultTest = "load", exit = False)
         logger.info('get test result...')
         result = self._generate_result(program)
         if result:

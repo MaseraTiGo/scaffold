@@ -91,3 +91,37 @@ class Search(AgentStaffAuthorizedApi):
         response.total = agent_customer_spliter.total
         response.total_page = agent_customer_spliter.total_page
         return response
+
+
+class Update(AgentStaffAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.agent_customer_id = RequestField(IntField, desc = "代理商客户id")
+    request.update_info = RequestField(
+        DictField,
+        desc = "需要更新的产品信息",
+        conf = {
+            'name': CharField(desc = "客户姓名", is_required = False),
+            'city': CharField(desc = "客户地址", is_required = False),
+            'education': CharField(desc = "客户学历", is_required = False),
+        }
+    )
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_desc(cls):
+        return "完善客户接口"
+
+    @classmethod
+    def get_author(cls):
+        return "Fsy"
+
+    def execute(self, request):
+        agent_customer = AgentCustomerServer.update(
+            request.agent_customer_id,
+            **request.update_info
+        )
+
+
+    def fill(self, response, address_list):
+        return response
