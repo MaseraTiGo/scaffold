@@ -26,6 +26,7 @@ from abs.services.agent.event.manager import StaffOrderEventServer
 from abs.services.customer.account.manager import CustomerAccountServer, TripartiteServer
 from abs.services.customer.account.utils.constant import CategoryTypes
 from abs.middleground.business.transaction.utils.constant import PayTypes
+from abs.services.agent.order.utils.constant import OrderSource
 
 
 class Add(WechatAuthorizedApi):
@@ -133,7 +134,7 @@ class Add(WechatAuthorizedApi):
         order = OrderServer.add(
             agent_customer,
             invoice_info,
-            'app',
+            OrderSource.WECHAT,
             order_info['strike_price'],
             specification_list
         )
@@ -521,7 +522,7 @@ class Pay(WechatAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.pay_info = ResponseField(DictField, desc = '支付信息', conf = {
         'timestamp': CharField(desc = "时间"),
-        'prepayid': CharField(desc = "微信预支付id"),
+        'package': CharField(desc = "微信预支付id"),
         'noncestr': CharField(desc = "随机字符串"),
         'sign': CharField(desc = "签名")
     })
@@ -553,11 +554,18 @@ class Pay(WechatAuthorizedApi):
             'JSAPI',
             openid=tripartite.openid
         )
-        pay_info = pay_middleware.parse_pay_info(prepay_id, PayTypes.WECHAT)
+        if not prepay_id:
+            raise BusinessError('付款失败')
+        pay_info = pay_middleware.parse_mini_pay_info(prepay_id)
         return pay_info
 
     def fill(self, response, pay_info):
-        response.pay_info = pay_info
+        response.pay_info = {
+            'timestamp': pay_info.get('timeStamp'),
+            'package': pay_info.get('package'),
+            'noncestr': pay_info.get('nonceStr'),
+            'sign': pay_info.get('paySign')
+        }
         return response
 
 

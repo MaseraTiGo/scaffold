@@ -95,6 +95,9 @@ class PayMiddleware(object):
             })
         return pay_info
 
+    def parse_mini_pay_info(self, prepay_id):
+        return mini_mch_server.get_pay_param(prepay_id)
+
     def wechat_handle(self, data, out_trade_no):
         if data.get('return_code') != 'SUCCESS':
             logger.error('统一下单接口调用失败，订单号（{out_trade_no}），{return_msg}'.format(

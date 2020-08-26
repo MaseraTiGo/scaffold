@@ -102,7 +102,6 @@ class MiniMch(object):
             'appid': self.appid,
             'mch_id': self.mchid,
             'nonce_str': utils.get_nonce_str(),
-            'device_info': 'WEB',
             'sign_type': 'MD5',
             'body': body,
             'out_trade_no': out_trade_no,
