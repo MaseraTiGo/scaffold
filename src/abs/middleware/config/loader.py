@@ -59,3 +59,10 @@ class LoaderHelper(object):
         self.set_value('wechat', 'mchid', '微信mchid')
         self.set_value('wechat', 'key', '微信key')
 
+        self.set_key('email', '邮件配置')
+        self.set_value('email', 'sender', '邮件发送方email')
+        self.set_value('email', 'account', '邮件发送方账号')
+        self.set_value('email', 'passwd', '邮件发送方密码')
+        self.set_value('email', 'host', 'SMTP服务器主机')
+        self.set_value('email', 'port', 'SMTP服务使用的端口号')
+

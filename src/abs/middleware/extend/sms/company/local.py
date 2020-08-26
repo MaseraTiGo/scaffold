@@ -36,7 +36,7 @@ class LocalSms(SmsBase):
         logger.error('短信发送失败，原因：{reason}'.format(reason = result.get('msg', '')))
         return False
 
-    def get_nonce_str(self, length=32):
+    def get_nonce_str(self, length = 32):
         chars = "abcdefghijklmnopqrstuvwxyz0123456789"
         nonce_str = ""
         for i in range(length):
