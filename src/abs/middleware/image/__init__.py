@@ -6,6 +6,7 @@ from io import BytesIO
 from .process import image_process
 from abs.middleware.file import file_middleware
 from abs.middleware.config import config_middleware
+from infrastructure.utils.common.convertrmb import convert_rmb_util
 
 
 class ImageMiddleware(object):
@@ -127,6 +128,14 @@ class ImageMiddleware(object):
                         'height': 1071,
                         'color_tup': (0, 0, 0),
                         'word': str(price)
+                    },
+                    {
+                        'font_file': font_file,
+                        'font_size': 50,
+                        'width': 445,
+                        'height': 1147,
+                        'color_tup': (0, 0, 0),
+                        'word': convert_rmb_util.cwchange(price)
                     },
                     # {
                     #     'font_file': font_file,

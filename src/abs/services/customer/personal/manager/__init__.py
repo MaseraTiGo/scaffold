@@ -7,7 +7,7 @@ from infrastructure.utils.common.split_page import Splitor
 from abs.common.manager import BaseManager
 from abs.middleground.business.person.manager import PersonServer
 from abs.services.customer.personal.models import Customer
-from infrastructure.core.api.utils import filter_emoji
+from infrastructure.utils.common.filterstr import filter_emoji
 
 
 class CustomerServer(BaseManager):
