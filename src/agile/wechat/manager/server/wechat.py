@@ -73,3 +73,6 @@ customer_wechat_service.add(Add, Get, Search, Pay, Cancel, PosterAdd)
 
 from agile.wechat.apis.customer.contract import Get, Add, Search, Autograph
 customer_wechat_service.add(Get, Add, Search, Autograph)
+
+from agile.wechat.apis.production.poster import Get
+customer_wechat_service.add(Get)

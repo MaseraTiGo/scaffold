@@ -104,6 +104,9 @@ class PhoneRegister(NoAuthorizedApi):
                 request.phone,
                 '',
             )
+            account = CustomerAccountServer.get_customer_account_byusername(
+                request.phone
+            )
         TripartiteServer.create(
             customer_account=account,
             category=CategoryTypes.WECHAT,
