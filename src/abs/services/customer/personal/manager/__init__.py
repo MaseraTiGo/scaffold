@@ -7,6 +7,7 @@ from infrastructure.utils.common.split_page import Splitor
 from abs.common.manager import BaseManager
 from abs.middleground.business.person.manager import PersonServer
 from abs.services.customer.personal.models import Customer
+from infrastructure.core.api.utils import filter_emoji
 
 
 class CustomerServer(BaseManager):
@@ -59,6 +60,11 @@ class CustomerServer(BaseManager):
     def update(cls, customer_id, **update_info):
         customer = cls.get(customer_id)
         PersonServer.update(customer.person_id, **update_info)
+        if 'nick' in update_info:
+            nick = update_info.pop('nick')
+            update_info.update({
+                'nick': filter_emoji(nick)
+            })
         customer.update(**update_info)
         return customer
 
