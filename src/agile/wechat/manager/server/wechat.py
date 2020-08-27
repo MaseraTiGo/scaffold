@@ -35,8 +35,8 @@ customer_wechat_service.add(SearchMajor, SearchSchool)
 from agile.wechat.apis.production.goods import Search, Get, HotSearch
 customer_wechat_service.add(Search, Get, HotSearch)
 
-from agile.wechat.apis.customer.account import AutoLogin, PhoneRegister, WechatRegister
-customer_wechat_service.add(AutoLogin, PhoneRegister, WechatRegister)
+from agile.wechat.apis.customer.account import AutoLogin, PhoneRegister, WechatRegister, Unbind
+customer_wechat_service.add(AutoLogin, PhoneRegister, WechatRegister, Unbind)
 
 from agile.wechat.apis.customer.account.vcode import Phone
 customer_wechat_service.add(Phone)

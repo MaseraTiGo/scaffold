@@ -13,6 +13,7 @@ from abs.services.customer.account.manager import TripartiteServer
 from abs.services.customer.account.manager import CustomerAccountServer
 from abs.services.customer.personal.manager import CustomerServer
 from abs.services.crm.tool.manager import SmsServer
+from agile.wechat.manager.api import WechatAuthorizedApi
 
 
 class AutoLogin(NoAuthorizedApi):
@@ -182,4 +183,28 @@ class WechatRegister(NoAuthorizedApi):
     def fill(self, response, token):
         response.access_token = token.auth_token
         response.renew_flag = token.renew_flag
+        return response
+
+
+class Unbind(WechatAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_desc(cls):
+        return "解绑"
+
+    @classmethod
+    def get_author(cls):
+        return "xyc"
+
+    def execute(self, request):
+        account = CustomerAccountServer.get(self.auth_user.id)
+        TripartiteServer.search_all(
+            customer_account=account,
+            category=CategoryTypes.WECHAT
+        ).delete()
+
+    def fill(self, response):
         return response
