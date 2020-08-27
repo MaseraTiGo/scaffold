@@ -88,7 +88,7 @@ class PhoneRegister(NoAuthorizedApi):
         if not SmsServer.check_code(
             request.phone,
             "wechat_register",
-            request.code
+            request.verify_code
         ):
             raise BusinessError('验证码错误')
         if account:
