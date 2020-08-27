@@ -97,8 +97,10 @@ class Search(AgentStaffAuthorizedApi):
                 'wechat':sale_chance.agent_customer.person.wechat if \
                          sale_chance.agent_customer.person else "",
                 'education': sale_chance.agent_customer.education,
-                'production_id': sale_chance.production.id,
-                'production_name': sale_chance.production.name,
+                'production_id': sale_chance.production.id if \
+                                 sale_chance.production else "",
+                'production_name': sale_chance.production.name if \
+                                   sale_chance.production else "",
                 'city':sale_chance.agent_customer.city,
                 'staff_id': sale_chance.staff.id,
                 'staff_name': sale_chance.staff.name,

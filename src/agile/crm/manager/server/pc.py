@@ -49,6 +49,9 @@ crm_pc_service.add(Search)
 from agile.crm.apis.customer.transaction import Search
 crm_pc_service.add(Search)
 
+from agile.crm.apis.customer.order import Search
+crm_pc_service.add(Search)
+
 from agile.crm.apis.production.brand import Get, Search, SearchAll, Update, \
                                             Add, Remove
 crm_pc_service.add(Search, SearchAll, Get, Update, Add, Remove)

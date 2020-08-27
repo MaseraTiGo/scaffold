@@ -107,6 +107,12 @@ class AgentCustomerServer(BaseManager):
                     obj.agent_customer = agent_customer
         return obj_list
 
+    @classmethod
+    def update(cls, agent_customer_id, **update_info):
+        agent_customer = cls.get(agent_customer_id)
+        agent_customer.update(**update_info)
+        return agent_customer
+
 
 class SaleChanceServer(BaseManager):
 
@@ -150,13 +156,13 @@ class SaleChanceServer(BaseManager):
     @classmethod
     def create_foradd_order(cls, agent_customer, order_id):
         sale_chance = AgentCustomerSaleChance.search(
-            agent_customer=agent_customer,
-            end_time__gt=datetime.date.today()
+            agent_customer = agent_customer,
+            end_time__gt = datetime.date.today()
         ).first()
         if sale_chance:
             SaleChanceOrder.create(
-                sale_chance=sale_chance,
-                order_id=order_id
+                sale_chance = sale_chance,
+                order_id = order_id
             )
         return agent_customer
 

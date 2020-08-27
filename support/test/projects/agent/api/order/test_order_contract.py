@@ -22,7 +22,6 @@ class ContractTestCase(AgentAPITestCase):
         self.assertTrue('identification' in contract)
         self.assertTrue('create_time' in contract)
 
-
     def test_search_contract(self):
         api = 'order.contract.search'
         current_page = 1
@@ -38,3 +37,13 @@ class ContractTestCase(AgentAPITestCase):
         for contract in result['data_list']:
             self.assert_contract_fields(contract, True)
         return result['data_list']
+
+    def test_send_contract(self):
+        contract_list = self.test_search_contract()
+        api = 'order.contract.send'
+        contract_id = contract_list[0]["id"]
+        result = self.access_api(
+            api = api,
+            contract_id = contract_id,
+        )
+

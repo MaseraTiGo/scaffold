@@ -16,28 +16,28 @@ from abs.middleground.business.merchandise.manager import MerchandiseServer
 class Get(StaffAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.production_id = RequestField(IntField, desc="产品id")
+    request.production_id = RequestField(IntField, desc = "产品id")
 
     response = with_metaclass(ResponseFieldSet)
     response.production_info = ResponseField(
         DictField,
-        desc="产品信息",
-        conf={
-            'id': IntField(desc="产品id"),
-            'name': CharField(desc="产品名称"),
-            'description': CharField(desc="产品描述"),
+        desc = "产品信息",
+        conf = {
+            'id': IntField(desc = "产品id"),
+            'name': CharField(desc = "产品名称"),
+            'description': CharField(desc = "产品描述"),
             'attribute_list': ListField(
-                desc="属性列表",
-                fmt=DictField(
-                    desc="分类信息",
-                    conf={
-                        'category': CharField(desc="分类名称"),
+                desc = "属性列表",
+                fmt = DictField(
+                    desc = "分类信息",
+                    conf = {
+                        'category': CharField(desc = "分类名称"),
                         'attribute_list': ListField(
-                            desc="分类名称",
-                            fmt=DictField(
-                                desc="属性标签",
-                                conf={
-                                    'name': CharField(desc="属性名称"),
+                            desc = "分类名称",
+                            fmt = DictField(
+                                desc = "属性标签",
+                                conf = {
+                                    'name': CharField(desc = "属性名称"),
                                 }
                             )
                         ),
@@ -45,21 +45,21 @@ class Get(StaffAuthorizedApi):
                 )
             ),
             'workflow_list': ListField(
-                desc="工作流列表",
-                fmt=DictField(
-                    desc="工作流信息",
-                    conf={
-                        'name': CharField(desc="名称"),
-                        'type': CharField(desc="类型"),
-                        'description': CharField(desc="描述"),
+                desc = "工作流列表",
+                fmt = DictField(
+                    desc = "工作流信息",
+                    conf = {
+                        'name': CharField(desc = "名称"),
+                        'type': CharField(desc = "类型"),
+                        'description': CharField(desc = "描述"),
                     }
                 )
             ),
-            'brand_id': IntField(desc="品牌Id"),
-            'brand_name': CharField(desc="品牌名称"),
-            'company_id': IntField(desc="所属公司"),
-            'update_time': DatetimeField(desc="更新时间"),
-            'create_time': DatetimeField(desc="创建时间"),
+            'brand_id': IntField(desc = "品牌Id"),
+            'brand_name': CharField(desc = "品牌名称"),
+            'company_id': IntField(desc = "所属公司"),
+            'update_time': DatetimeField(desc = "更新时间"),
+            'create_time': DatetimeField(desc = "创建时间"),
         }
     )
 
@@ -95,39 +95,39 @@ class Get(StaffAuthorizedApi):
 
 class Search(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.current_page = RequestField(IntField, desc="当前页面")
+    request.current_page = RequestField(IntField, desc = "当前页面")
     request.search_info = RequestField(
         DictField,
-        desc="搜索产品",
-        conf={
-              'name': CharField(desc="产品名称", is_required=False),
+        desc = "搜索产品",
+        conf = {
+              'name': CharField(desc = "产品名称", is_required = False),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
     response.data_list = ResponseField(
         ListField,
-        desc="产品列表",
-        fmt=DictField(
-            desc="产品内容",
-            conf={
-                'id': IntField(desc="产品id"),
-                'name': CharField(desc="产品名称"),
-                'description': CharField(desc="产品描述"),
+        desc = "产品列表",
+        fmt = DictField(
+            desc = "产品内容",
+            conf = {
+                'id': IntField(desc = "产品id"),
+                'name': CharField(desc = "产品名称"),
+                'description': CharField(desc = "产品描述"),
                 'attribute_list': ListField(
-                    desc="属性列表",
-                    fmt=DictField(
-                        desc="分类信息",
-                        conf={
-                            'category': CharField(desc="分类名称"),
+                    desc = "属性列表",
+                    fmt = DictField(
+                        desc = "分类信息",
+                        conf = {
+                            'category': CharField(desc = "分类名称"),
                             'attribute_list': ListField(
-                                desc="分类名称",
-                                fmt=DictField(
-                                    desc="属性标签",
-                                    conf={
-                                        'name': CharField(desc="属性名称"),
+                                desc = "分类名称",
+                                fmt = DictField(
+                                    desc = "属性标签",
+                                    conf = {
+                                        'name': CharField(desc = "属性名称"),
                                     }
                                 )
                             ),
@@ -135,21 +135,21 @@ class Search(StaffAuthorizedApi):
                     )
                 ),
                 'workflow_list': ListField(
-                    desc="工作流列表",
-                    fmt=DictField(
-                        desc="工作流信息",
-                        conf={
-                            'name': CharField(desc="名称"),
-                            'type': CharField(desc="类型"),
-                            'description': CharField(desc="描述"),
+                    desc = "工作流列表",
+                    fmt = DictField(
+                        desc = "工作流信息",
+                        conf = {
+                            'name': CharField(desc = "名称"),
+                            'type': CharField(desc = "类型"),
+                            'description': CharField(desc = "描述"),
                         }
                     )
                 ),
-                'brand_id': IntField(desc="品牌Id"),
-                'brand_name': CharField(desc="品牌名称"),
-                'company_id': IntField(desc="所属公司"),
-                'update_time': DatetimeField(desc="更新时间"),
-                'create_time': DatetimeField(desc="创建时间"),
+                'brand_id': IntField(desc = "品牌Id"),
+                'brand_name': CharField(desc = "品牌名称"),
+                'company_id': IntField(desc = "所属公司"),
+                'update_time': DatetimeField(desc = "更新时间"),
+                'create_time': DatetimeField(desc = "创建时间"),
             }
         )
     )
@@ -192,25 +192,25 @@ class Search(StaffAuthorizedApi):
 
 class Add(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.brand_id = RequestField(IntField, desc="品牌Id")
+    request.brand_id = RequestField(IntField, desc = "品牌Id")
     request.production_info = RequestField(
         DictField,
-        desc="产品信息",
-        conf={
-            'name': CharField(desc="产品名称"),
-            'description': CharField(desc="产品描述"),
+        desc = "产品信息",
+        conf = {
+            'name': CharField(desc = "产品名称"),
+            'description': CharField(desc = "产品描述"),
             'attribute_list': ListField(
-                desc="属性列表",
-                fmt=DictField(
-                    desc="分类信息",
-                    conf={
-                        'category': CharField(desc="分类名称"),
+                desc = "属性列表",
+                fmt = DictField(
+                    desc = "分类信息",
+                    conf = {
+                        'category': CharField(desc = "分类名称"),
                         'attribute_list': ListField(
-                            desc="分类名称",
-                            fmt=DictField(
-                                desc="属性标签",
-                                conf={
-                                    'name': CharField(desc="属性名称"),
+                            desc = "分类名称",
+                            fmt = DictField(
+                                desc = "属性标签",
+                                conf = {
+                                    'name': CharField(desc = "属性名称"),
                                 }
                             )
                         ),
@@ -218,13 +218,13 @@ class Add(StaffAuthorizedApi):
                 )
             ),
             'workflow_list': ListField(
-                desc="工作流列表",
-                fmt=DictField(
-                    desc="工作流信息",
-                    conf={
-                        'name': CharField(desc="名称"),
-                        'type': CharField(desc="类型"),
-                        'description': CharField(desc="描述"),
+                desc = "工作流列表",
+                fmt = DictField(
+                    desc = "工作流信息",
+                    conf = {
+                        'name': CharField(desc = "名称"),
+                        'type': CharField(desc = "类型"),
+                        'description': CharField(desc = "描述"),
                     }
                 )
             )
@@ -232,7 +232,7 @@ class Add(StaffAuthorizedApi):
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.production_id = ResponseField(IntField, desc="产品ID")
+    response.production_id = ResponseField(IntField, desc = "产品ID")
 
     @classmethod
     def get_desc(cls):
@@ -248,8 +248,8 @@ class Add(StaffAuthorizedApi):
         add_info.attribute_list = json.dumps(add_info.attribute_list)
         add_info.workflow_list = json.dumps(add_info.workflow_list)
         production = ProductionServer.generate(
-            company_id=company.id,
-            brand_id=request.brand_id,
+            company_id = company.id,
+            brand_id = request.brand_id,
             **add_info
         )
         return production
@@ -261,25 +261,25 @@ class Add(StaffAuthorizedApi):
 
 class Update(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.production_id = RequestField(IntField, desc="产品id")
+    request.production_id = RequestField(IntField, desc = "产品id")
     request.update_info = RequestField(
         DictField,
-        desc="需要更新的产品信息",
-        conf={
-            'name': CharField(desc="产品名称"),
-            'description': CharField(desc="产品描述"),
+        desc = "需要更新的产品信息",
+        conf = {
+            'name': CharField(desc = "产品名称"),
+            'description': CharField(desc = "产品描述"),
             'attribute_list': ListField(
-                desc="属性列表",
-                fmt=DictField(
-                    desc="分类信息",
-                    conf={
-                        'category': CharField(desc="分类名称"),
+                desc = "属性列表",
+                fmt = DictField(
+                    desc = "分类信息",
+                    conf = {
+                        'category': CharField(desc = "分类名称"),
                         'attribute_list': ListField(
-                            desc="分类名称",
-                            fmt=DictField(
-                                desc="属性标签",
-                                conf={
-                                    'name': CharField(desc="属性名称"),
+                            desc = "分类名称",
+                            fmt = DictField(
+                                desc = "属性标签",
+                                conf = {
+                                    'name': CharField(desc = "属性名称"),
                                 }
                             )
                         ),
@@ -287,13 +287,13 @@ class Update(StaffAuthorizedApi):
                 )
             ),
             'workflow_list': ListField(
-                desc="工作流列表",
-                fmt=DictField(
-                    desc="工作流信息",
-                    conf={
-                        'name': CharField(desc="名称"),
-                        'type': CharField(desc="类型"),
-                        'description': CharField(desc="描述"),
+                desc = "工作流列表",
+                fmt = DictField(
+                    desc = "工作流信息",
+                    conf = {
+                        'name': CharField(desc = "名称"),
+                        'type': CharField(desc = "类型"),
+                        'description': CharField(desc = "描述"),
                     }
                 )
             )
@@ -315,7 +315,7 @@ class Update(StaffAuthorizedApi):
         update_info.attribute_list = json.dumps(update_info.attribute_list)
         update_info.workflow_list = json.dumps(update_info.workflow_list)
         ProductionServer.update(
-            production_id=request.production_id,
+            production_id = request.production_id,
             **update_info
         )
 
@@ -326,7 +326,7 @@ class Update(StaffAuthorizedApi):
 class Remove(StaffAuthorizedApi):
     """删除产品信息"""
     request = with_metaclass(RequestFieldSet)
-    request.production_id = RequestField(IntField, desc="产品id")
+    request.production_id = RequestField(IntField, desc = "产品id")
 
 
     response = with_metaclass(ResponseFieldSet)
@@ -342,8 +342,7 @@ class Remove(StaffAuthorizedApi):
     def execute(self, request):
         production = ProductionServer.get(request.production_id)
         merchandise_qs = MerchandiseServer.search_all(
-            company_id=production.company_id,
-            production_id=production.id
+            production_id = production.id
         )
         if merchandise_qs.count() > 0:
             raise BusinessError("产品已绑定商品禁止删除")
@@ -359,25 +358,25 @@ class SearchAll(StaffAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="产品列表",
-        fmt=DictField(
-            desc="产品内容",
-            conf={
-                'id': IntField(desc="产品id"),
-                'name': CharField(desc="产品名称"),
-                'description': CharField(desc="产品描述"),
+        desc = "产品列表",
+        fmt = DictField(
+            desc = "产品内容",
+            conf = {
+                'id': IntField(desc = "产品id"),
+                'name': CharField(desc = "产品名称"),
+                'description': CharField(desc = "产品描述"),
                 'attribute_list': ListField(
-                    desc="属性列表",
-                    fmt=DictField(
-                        desc="分类信息",
-                        conf={
-                            'category': CharField(desc="分类名称"),
+                    desc = "属性列表",
+                    fmt = DictField(
+                        desc = "分类信息",
+                        conf = {
+                            'category': CharField(desc = "分类名称"),
                             'attribute_list': ListField(
-                                desc="分类名称",
-                                fmt=DictField(
-                                    desc="属性标签",
-                                    conf={
-                                        'name': CharField(desc="属性名称"),
+                                desc = "分类名称",
+                                fmt = DictField(
+                                    desc = "属性标签",
+                                    conf = {
+                                        'name': CharField(desc = "属性名称"),
                                     }
                                 )
                             ),
@@ -385,21 +384,21 @@ class SearchAll(StaffAuthorizedApi):
                     )
                 ),
                 'workflow_list': ListField(
-                    desc="工作流列表",
-                    fmt=DictField(
-                        desc="工作流信息",
-                        conf={
-                            'name': CharField(desc="名称"),
-                            'type': CharField(desc="类型"),
-                            'description': CharField(desc="描述"),
+                    desc = "工作流列表",
+                    fmt = DictField(
+                        desc = "工作流信息",
+                        conf = {
+                            'name': CharField(desc = "名称"),
+                            'type': CharField(desc = "类型"),
+                            'description': CharField(desc = "描述"),
                         }
                     )
                 ),
-                'brand_id': IntField(desc="品牌Id"),
-                'brand_name': CharField(desc="品牌名称"),
-                'company_id': IntField(desc="所属公司"),
-                'update_time': DatetimeField(desc="更新时间"),
-                'create_time': DatetimeField(desc="创建时间"),
+                'brand_id': IntField(desc = "品牌Id"),
+                'brand_name': CharField(desc = "品牌名称"),
+                'company_id': IntField(desc = "所属公司"),
+                'update_time': DatetimeField(desc = "更新时间"),
+                'create_time': DatetimeField(desc = "创建时间"),
             }
         )
     )
@@ -415,7 +414,7 @@ class SearchAll(StaffAuthorizedApi):
     def execute(self, request):
         company = EnterpriseServer.get_crm__company()
         production_qs = ProductionServer.search_all(
-            company_id=company.id,
+            company_id = company.id,
             **{}
         )
         return production_qs
