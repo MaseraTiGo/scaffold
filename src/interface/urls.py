@@ -17,13 +17,15 @@ Including another URLconf
 """
 
 from django.conf.urls import url
-from interface.main import router, api_doc, premise_doc, access_token
+from interface.main import router, api_doc, premise_doc, access_token, \
+                           app_router, app_api_doc
 from agile.customer.apis.customer.finance.balance.wechat_notify import wechat_top_up_notify, \
     wechat_order_pay_notify
 from agile.customer.apis.customer.finance.balance.yunaccount_notify import yunaccount_transfer_notify
 from agile.customer.apis.customer.finance.balance.alipay_notify import alipay_top_up_notify, alipay_order_pay_notify
 
 urlpatterns = [
+    url(r'app_api_doc', app_api_doc),
     url(r'api_doc', api_doc),
     url(r'premise_doc', premise_doc),
     url(r'access_token/[0-9]{10}', access_token),
@@ -32,5 +34,7 @@ urlpatterns = [
     url(r'alipay_top_up_notify', alipay_top_up_notify),
     url(r'yunaccount_transfer_notify', yunaccount_transfer_notify),
     url(r'wechat_order_pay_notify', wechat_order_pay_notify),
-    url(r'alipay_order_pay_notify', alipay_order_pay_notify)
+    url(r'alipay_order_pay_notify', alipay_order_pay_notify),
+    url(r'app_router', app_router),
+
 ]

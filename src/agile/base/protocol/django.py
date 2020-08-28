@@ -51,7 +51,7 @@ class DjangoProtocol(BaseProtocol):
         return True
 
     def _check_sign(self, pro_parms, all_parms):
-        return True
+        # return True
         if pro_parms.sign != _generate_signature(all_parms):
             raise pro_errors(ProtocolCodes.PROTOCOL_DATA_EXCHANGE)
         return True

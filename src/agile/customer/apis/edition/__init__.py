@@ -13,13 +13,19 @@ from infrastructure.core.exception.business_error import BusinessError
 
 class Get(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
+    request.type = RequestField(CharField, desc = "类型")
 
     response = with_metaclass(ResponseFieldSet)
-    response.edition_info = ResponseField(DictField, desc = "版本信息", conf = {
-        'number': CharField(desc = "版本号"),
-        'is_force_update': BooleanField(desc = "是否强制更新"),
-        'url': CharField(desc = "更新连接")
-    })
+    response.edition_info = ResponseField(
+        DictField,
+        desc = "版本信息",
+        conf = {
+            'number': CharField(desc = "版本号"),
+            'url': CharField(desc = "版本更新连接"),
+            'is_force_update': BooleanField(desc = "是否强制更新"),
+            'content': CharField(desc = "更新描述")
+        }
+    )
 
     @classmethod
     def get_desc(cls):
@@ -30,12 +36,14 @@ class Get(NoAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        return None
+        return []
 
-    def fill(self, response):
-        response.edition_info = {
-            "number":"2.0",
+    def fill(self, response, edition):
+        edition_info = {
+            "number":"1.0",
+            "url":"www.baidu.com",
             "is_force_update":True,
-            "url":"www.baidu.com"
+            "content":"请更新最新版本"
         }
+        response.edition_info = edition_info
         return response

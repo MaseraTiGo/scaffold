@@ -23,6 +23,7 @@ from infrastructure.core.exception.system_error import SysError
 from infrastructure.log.base import logger
 
 from agile.base.protocol.django import DjangoProtocol
+from agile.customer.manager.protocol import AppProtocol
 from agile.crm.manager.server import crm_pc_service
 from agile.customer.manager.server import customer_mobile_service
 from agile.wechat.manager.server import customer_wechat_service
@@ -36,11 +37,13 @@ from abs.middleware.xml import XMLHandler
 protocol = DjangoProtocol()
 protocol.add(crm_pc_service)
 protocol.add(file_service)
-protocol.add(customer_mobile_service)
+# protocol.add(customer_mobile_service)
 protocol.add(middleground_service)
 protocol.add(controller_pc_service)
 protocol.add(agent_pc_service)
 protocol.add(customer_wechat_service)
+app_protocol = AppProtocol()
+app_protocol.add(customer_mobile_service)
 
 def router(request):
     result = protocol.run(request)
@@ -64,6 +67,34 @@ def api_doc(request):
     error_list = [(err.get_flag(), err.get_code(), err.get_desc()) for err in error_list]
 
     return render(request, 'api_index.html', {
+        'api_signature_doc': api_signature_doc,
+        'services': services,
+        'error_list': error_list,
+    })
+
+
+def app_router(request):
+    result = app_protocol.run(request)
+    resp = HttpResponse(json.dumps(result))
+    resp['Access-Control-Allow-Origin'] = '*'  # 处理跨域请求
+    return resp
+
+
+def app_api_doc(request):
+    api_signature_doc = signature.__doc__
+    services = app_protocol.get_services()
+    for service in services:
+        apis = service.get_apis()
+        service.api_docs = [TextApiDoc(api) for api in apis]
+
+    error_list = []
+    error_list.append(SysError)
+    error_list.extend(pro_errors.get_errors())
+    error_list.extend(api_errors.get_errors())
+    error_list.append(BusinessError)
+    error_list = [(err.get_flag(), err.get_code(), err.get_desc()) for err in error_list]
+
+    return render(request, 'app_api_index.html', {
         'api_signature_doc': api_signature_doc,
         'services': services,
         'error_list': error_list,
