@@ -75,3 +75,6 @@ customer_mobile_service.add(Search)
 
 from agile.customer.apis.production.poster import Get
 customer_mobile_service.add(Get)
+
+from agile.customer.apis.edition import Get
+customer_mobile_service.add(Get)
