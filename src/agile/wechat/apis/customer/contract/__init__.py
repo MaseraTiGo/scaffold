@@ -174,7 +174,8 @@ class Search(WechatAuthorizedApi):
                 'img_url': ListField(
                     desc = "合同列表png",
                     fmt = CharField(desc = "合同信息")
-                )
+                ),
+                'status_name': CharField(desc = "合同状态名称"),
             }
         )
     )
@@ -199,7 +200,8 @@ class Search(WechatAuthorizedApi):
             'name': '教育合同-{name}'.format(name = contract.name),
             'create_time': contract.create_time,
             'url': json.loads(contract.url),
-            'img_url': json.loads(contract.img_url)
+            'img_url': json.loads(contract.img_url),
+            'status_name':"已完成"
         } for contract in data_list]
         return response
 

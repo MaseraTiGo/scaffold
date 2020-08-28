@@ -8,7 +8,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.base.api import NoAuthorizedApi
 from abs.services.crm.university.manager import UniversityServer
-from abs.services.agent.goods.utils.constant import DurationTypes
+from abs.services.crm.university.utils.constant import DurationTypes
 from abs.services.crm.university.manager import UniversityRelationsServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.services.crm.agent.manager import AgentServer
@@ -228,11 +228,11 @@ class HotSearch(NoAuthorizedApi):
 
     def execute(self, request):
         major_id_list = UniversityRelationsServer.search_all_major_list(
-            major__is_hot=True,
+            major__is_hot = True,
             **request.search_info
         )
         major_list = UniversityServer.search_all_major(
-            id__in=major_id_list
+            id__in = major_id_list
         ).order_by('create_time')
         return major_list
 

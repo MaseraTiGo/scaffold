@@ -10,7 +10,7 @@ from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.agent.order.utils.constant import OrderSource
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.agent.order.manager import OrderServer, OrderItemServer
-from abs.services.agent.goods.utils.constant import DurationTypes
+from abs.services.crm.university.utils.constant import DurationTypes
 from abs.services.customer.personal.manager import CustomerServer
 from abs.services.crm.agent.manager import AgentServer
 from abs.services.agent.customer.manager import AgentCustomerServer

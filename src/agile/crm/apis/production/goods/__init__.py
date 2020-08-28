@@ -8,11 +8,10 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 
 from agile.crm.manager.api import StaffAuthorizedApi
-from abs.services.agent.goods.utils.constant import DurationTypes
+from abs.services.crm.university.utils.constant import DurationTypes, \
+     CategoryTypes
 from abs.middleground.business.merchandise.utils.constant import\
      DespatchService, UseStatus
-from abs.services.agent.goods.utils.constant import\
-     CategoryTypes
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.production.manager import ProductionServer
