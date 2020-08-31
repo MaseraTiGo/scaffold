@@ -47,8 +47,10 @@ class PermissionMaker(BaseMaker):
         self._person_position = PersonPositionGenerator()
     def generate_relate(self):
         self._position.add_inputs(
-            self._organization,
             self._rule_group
+        )
+        self._organization.add_inputs(
+            self._position
         )
         self._authorization.add_outputs(
             self._organization,

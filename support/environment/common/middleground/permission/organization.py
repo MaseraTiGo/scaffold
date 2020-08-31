@@ -11,5 +11,6 @@ class OrganizationLoader(BaseLoader):
                 'name': '公司',
                 'parent': "",
                 'describe': "公司",
-            },
+                'position_name_list':['超级管理员']
+            }
         ]

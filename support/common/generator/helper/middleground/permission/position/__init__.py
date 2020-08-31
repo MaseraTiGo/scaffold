@@ -4,7 +4,7 @@ import random
 from infrastructure.utils.common.dictwrapper import DictWrapper
 from support.common.generator.base import BaseGenerator
 from support.common.generator.helper import AuthorizationGenerator, \
-OrganizationGenerator, RuleGroupGenerator
+     RuleGroupGenerator
 from abs.middleground.technology.permission.store import Position
 
 
@@ -16,22 +16,21 @@ class PositionGenerator(BaseGenerator):
 
     def get_create_list(self, result_mapping):
         authorization_list = result_mapping.get(AuthorizationGenerator.get_key())
-        organization_list = result_mapping.get(OrganizationGenerator.get_key())
         rule_group_list = result_mapping.get(RuleGroupGenerator.get_key())
         position_list = []
         for authorization in authorization_list:
             for position_info in self._position_infos:
                 position = position_info.copy()
-                organization_fiter = list(filter(
-                    lambda obj: obj.name == position["organization"],
-                    organization_list
+                rule_group_fiter = list(filter(
+                    lambda obj: obj.name == position["rule_group"] and \
+                                obj.authorization == authorization,
+                    rule_group_list
                 ))
-                if organization_fiter:
-                    organization = organization_fiter[0]
+                if rule_group_fiter:
+                    rule_group = rule_group_fiter[0]
                     position.update({
-                        "organization":organization,
                         "authorization":authorization,
-                        "rule_group":random.choice(rule_group_list)
+                        "rule_group":rule_group
                     })
                     position_list.append(DictWrapper(position))
         return position_list
