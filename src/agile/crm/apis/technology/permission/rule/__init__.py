@@ -63,10 +63,9 @@ class All(StaffAuthorizedApi):
     所有规则
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc = "appkey")
 
     response = with_metaclass(ResponseFieldSet)
-    response.rule_list = ResponseField(
+    response.data_list = ResponseField(
         ListField,
         desc = "一级规则",
         fmt = IterationField(
@@ -103,7 +102,7 @@ class All(StaffAuthorizedApi):
         return rule_list
 
     def fill(self, response, rule_list):
-        response.rule_list = rule_list
+        response.data_list = rule_list
         return response
 
 
