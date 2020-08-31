@@ -68,7 +68,7 @@ class ImageProcess(object):
         img_save_path_list = []
         for result in result_list:
             img_file_path, img_save_path = file_middleware.get_save_path(
-                '.jpeg',
+                '.jpg',
                 'contract_back'
             )
             result.save(img_file_path, quality=10)
