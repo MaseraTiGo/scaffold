@@ -60,7 +60,10 @@ class PermissionTestCase(ControllerAPITestCase):
         self.assertTrue('id' in platform)
         self.assertTrue('name' in platform)
         self.assertTrue('company_id' in platform)
+        self.assertTrue('company_name' in platform)
         self.assertTrue('remark' in platform)
+        self.assertTrue('update_time' in platform)
+        self.assertTrue('create_time' in platform)
 
     def platform_add(self):
         api = 'staff.permission.platform.add'
@@ -84,15 +87,31 @@ class PermissionTestCase(ControllerAPITestCase):
             update_info=json.dumps({
                 'name': "必圈CRM平台-更新",
                 'remark': '必圈公司-更新',
+                'company_id': 2,
+                'app_type': "person",
             })
         )
 
-    def platform_all(self):
-        api = 'staff.permission.platform.all'
+    def platform_get(self, platform_id):
+        api = 'staff.permission.platform.get'
         result = self.access_api(
             api=api,
+            platform_id=platform_id,
+        )
+        self.assertTrue('platform_info' in result)
+        self.assert_platform_fields(result['platform_info'])
+
+    def platform_all(self):
+        api = 'staff.permission.platform.search'
+        result = self.access_api(
+            api=api,
+            current_page=1,
+            search_info=json.dumps({
+            }),
         )
         self.assertTrue('data_list' in result)
+        self.assertTrue('total' in result)
+        self.assertTrue('total_page' in result)
         for platform in result['data_list']:
             self.assert_platform_fields(platform)
 
@@ -352,6 +371,7 @@ class PermissionTestCase(ControllerAPITestCase):
         # 1. 创建平台
         platform_id = self.platform_add()
         self.platform_update(platform_id)
+        self.platform_get(platform_id)
         self.platform_all()
         appkey = self.platform_authorize(platform_id)
 

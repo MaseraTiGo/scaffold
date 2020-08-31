@@ -1,6 +1,7 @@
 # coding=UTF-8
 
-from infrastructure.core.field.base import ListField, DictField
+from infrastructure.core.field.base import \
+        ListField, DictField, IterationField
 
 
 class ApiDocBuilder(object):
@@ -12,17 +13,14 @@ class ApiDocBuilder(object):
         return self._api
 
     def generate(self):
-        raise NotImplementedError('Please imporlement this interface in subclass')
+        raise NotImplementedError(
+            'Please imporlement this interface in subclass'
+        )
 
 
 class TextApiDoc(ApiDocBuilder):
 
     def generate(self):
-        content_list = [
-            self.generate_author(),
-            self.generate_version(),
-            "",
-        ]
         return '\n'.join([
             self.generate_author(),
             self.generate_version(),
@@ -48,7 +46,9 @@ class TextApiDoc(ApiDocBuilder):
         tmp_str = fmt_str.format(field.get_type(), field.get_desc())
         choices = field.get_choices()
         if choices:
-            tmp_str += " 例：" + ' 、 '.join(" -> ".join(map(str, [key, value])) for key, value in choices)
+            tmp_str += " 例：" + ' 、 '.join(" -> ".join(
+                map(str, [key, value])) for key, value in choices
+            )
 
         return tmp_str
 
@@ -57,7 +57,9 @@ class TextApiDoc(ApiDocBuilder):
         tmp_str = fmt_str.format(field.get_type(), field.get_desc())
         choices = field.get_choices()
         if choices:
-            tmp_str += " 例：" + ' 、 '.join(" -> ".join(map(str, [key, value])) for key, value in choices)
+            tmp_str += " 例：" + ' 、 '.join(
+                " -> ".join(map(str, [key, value])) for key, value in choices
+            )
 
         default = field.get_default()
         if default:
@@ -78,15 +80,31 @@ class TextApiDoc(ApiDocBuilder):
             fields.append(cur_flag + '{  # ' + field.get_desc())
             for sub_name, sub_field in field.get_fields().items():
                 fmt_str = next_flag + "{} : {}"
-                tmp_str = fmt_str.format(sub_name, self.generate_param_desc(sub_field))
+                tmp_str = fmt_str.format(
+                    sub_name, self.generate_param_desc(sub_field)
+                )
                 fields.append(tmp_str)
                 self.generate_field(sub_field, fields, level + 1)
             fields.append(cur_flag + '}')
-
+        elif isinstance(field, IterationField):
+            fields.append(
+                cur_flag + '{  # ' + field.get_desc()
+                + " 迭代字段：" + field.get_flag()
+            )
+            for sub_name, sub_field in field.get_fields().items():
+                fmt_str = next_flag + "{} : {}"
+                tmp_str = fmt_str.format(
+                    sub_name, self.generate_param_desc(sub_field)
+                )
+                fields.append(tmp_str)
+                self.generate_field(sub_field, fields, level + 1)
+            fields.append(cur_flag + '}')
         elif isinstance(field, ListField):
             fields.append(cur_flag + '[')
             sub_field = field.get_fmt()
-            if not isinstance(sub_field, DictField) and not isinstance(sub_field, ListField):
+            if not isinstance(sub_field, DictField) \
+               and not isinstance(sub_field, ListField) \
+               and not isinstance(sub_field, IterationField):
                 tmp_str = next_flag + self.generate_param_desc(sub_field)
                 fields.append(tmp_str)
             else:
@@ -103,7 +121,7 @@ class TextApiDoc(ApiDocBuilder):
             fields.append(tmp_str)
 
             org_field = field.get_field()
-            self.generate_field(org_field, fields, level = 1)
+            self.generate_field(org_field, fields, level=1)
 
         return '\n'.join(fields)
 
@@ -115,6 +133,6 @@ class TextApiDoc(ApiDocBuilder):
             tmp_str = fmt_str.format(name, self.generate_return_desc(field))
             org_field = field.get_field()
             fields.append(tmp_str)
-            self.generate_field(org_field, fields, level = 1)
+            self.generate_field(org_field, fields, level=1)
 
         return '\n'.join(fields)

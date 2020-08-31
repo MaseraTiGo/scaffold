@@ -10,17 +10,23 @@ from infrastructure.core.exception.debug_error import DebugError
 
 class BaseField(object):
 
-    def __init__(self,desc,choices=None,is_required=True,default=None,\
-                 reprocess=None):
-        self._desc=desc
-        self._choices=choices
-        self._default=default
-        self._is_required=is_required
-        self._choice_mapping=dict(self._choices) if self._choices else None
+    def __init__(
+        self,
+        desc,
+        choices=None,
+        is_required=True,
+        default=None,
+        reprocess=None
+    ):
+        self._desc = desc
+        self._choices = choices
+        self._default = default
+        self._is_required = is_required
+        self._choice_mapping = dict(self._choices) if self._choices else None
         if reprocess is None:
-            self._reprocess=[]
+            self._reprocess = []
         else:
-            self._reprocess=reprocess if type(reprocess)==list else [reprocess]
+            self._reprocess = reprocess if type(reprocess)==list else [reprocess]
 
     def json_loads(self,value):
         try:
@@ -38,7 +44,7 @@ class BaseField(object):
         return value
 
     def get_type(self):
-        return self.__class__.__name__.lower().replace("field","")
+        return self.__class__.__name__.lower().replace("field", "")
 
     def get_desc(self):
         return self._desc
@@ -56,7 +62,9 @@ class BaseField(object):
         return value
 
     def parsing(self,value):
-        raise NotImplementedError('Please imporlement this interface in subclass')
+        raise NotImplementedError(
+            'Please imporlement this interface in subclass'
+        )
 
     def parse_after(self,value):
         return self._check_choices(value)
@@ -71,7 +79,9 @@ class BaseField(object):
         return value
 
     def formatting(self,value):
-        raise NotImplementedError('Please imporlement this interface in subclass')
+        raise NotImplementedError(
+            'Please imporlement this interface in subclass'
+        )
 
     def format_after(self,value):
         value=self._check_choices(value)
@@ -146,7 +156,11 @@ class DateField(BaseField):
 
     def parsing(self,value):
         value_time=datetime.datetime.strptime(value,'%Y-%m-%d')
-        value_time_day=datetime.date(value_time.year,value_time.month,value_time.day)
+        value_time_day=datetime.date(
+            value_time.year,
+            value_time.month,
+            value_time.day
+        )
         return value_time_day
 
     def formatting(self,value):
@@ -201,14 +215,19 @@ class DictField(BaseField):
             for key,helper in fields.items():
                 if key not in value:
                     if helper._is_required:
-                        raise Exception("paramter '{}' losted".format(key))
+                        raise Exception("paramter '{key}' losted".format(key=key))
                     else:
                         continue
 
                 try:
                     cur_value=helper.parsing(value[key])
                 except Exception as e:
-                    raise Exception("paramter '{}' format error".format(key))
+                    raise Exception(
+                        "paramter '{key}' format error, e = {e}".format(
+                            key=key,
+                            e=e
+                        )
+                    )
                 else:
                     result[key]=cur_value
             return DictWrapper(result)
@@ -224,14 +243,19 @@ class DictField(BaseField):
         for key,helper in fields.items():
             if key not in value:
                 if self._is_required:
-                    raise Exception("paramter '{}' losted".format(key))
+                    raise Exception("paramter '{key}' losted".format(key=key))
                 else:
                     continue
 
             try:
                 cur_value=helper.formatting(value[key])
             except Exception as e:
-                raise Exception("paramter '{}' format error, e = {}".format(key,e))
+                raise Exception(
+                    "paramter '{key}' format error, e = {e}".format(
+                        key=key,
+                        e=e
+                    )
+                )
             else:
                 result[key]=cur_value
         return DictWrapper(result)
@@ -246,7 +270,12 @@ class DictField(BaseField):
             try:
                 cur_value=helper.reprocess(value[key])
             except Exception as e:
-                raise Exception("paramter '{}' format error, e = {}".format(key,e))
+                raise Exception(
+                    "paramter '{key}' format error, e = {e}".format(
+                        key=key,
+                        e=e
+                    )
+                )
             else:
                 result[key]=cur_value
         return DictWrapper(result)
@@ -278,6 +307,51 @@ class ListField(BaseField):
 
     def reprocess(self,value):
         return [self._fmt.reprocess(cur_value) for cur_value in value]
+
+
+class IterationField(BaseField):
+
+    DEFAULT_FLAG = "children"
+
+    def __init__(self, fmt, flag = "children", *args, **kwargs):
+        super(IterationField, self).__init__(*args,**kwargs)
+        self._flag = flag
+        self._fmt = fmt
+
+    def get_fields(self):
+        if not hasattr(self,'_fields'):
+            self._fields={key: value for key,value in self._fmt.items() if
+                            isinstance(value,BaseField)}
+        return self._fields
+
+    def get_flag(self):
+        return self._flag
+
+    def parsing(self,value):
+        raise NotImplementedError("this interface is need to implemented!!!")
+
+    def formatting(self,value):
+        def _iter(item):
+            result =  DictWrapper({})
+            for attr, field in self._fmt.items():
+                if not hasattr(item, attr) and field.is_required:
+                    raise Exception(
+                        "paramter '{key}' format error".format(
+                            key=attr,
+                        )
+                    )
+                field_value = field.format(getattr(item, attr))
+                setattr(result, attr, field_value)
+
+            if hasattr(item, self.get_flag()):
+                children = getattr(item, self.get_flag())
+                result.children = []
+                for child in children:
+                    result.children.append(_iter(child))
+            return result
+
+        result = _iter(value)
+        return result
 
 
 class FileField(BaseField):
@@ -314,4 +388,3 @@ class HideField(BaseField):
             hide_str=value[6:-4]
             value=re.sub(hide_str,len(hide_str)*'*',value)
         return value
-

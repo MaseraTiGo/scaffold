@@ -19,7 +19,7 @@ class ApiInterface(object):
 
     @classmethod
     def get_desc(cls):
-        return "这是一个测试的desc"
+        return cls.__doc__.strip()
 
     @classmethod
     def get_author(cls):

@@ -19,6 +19,9 @@ class ControllerPcService(BaseAPIService):
 
 
 controller_pc_service = ControllerPcService()
+from agile.controller.apis.enterprise import Search
+controller_pc_service.add(Search)
+
 from agile.controller.apis.staff import Add, Get, Update, Search
 controller_pc_service.add(Add, Get, Update, Search)
 
@@ -40,20 +43,23 @@ controller_pc_service.add(Modify)
 from agile.controller.apis.staff.permission import Get
 controller_pc_service.add(Get)
 
-from agile.controller.apis.staff.permission.platform import Add, All, Update, Authorize, Apply, Forbidden, Refresh
-controller_pc_service.add(Add, All, Update, Authorize, Apply, Forbidden, Refresh)
+from agile.controller.apis.staff.permission.platform import Add, Get, Remove, Search, Update
+controller_pc_service.add(Add, Get, Search, Update, Remove)
+
+from agile.controller.apis.staff.permission.authorization import Get, Remove, Search, Update, Authorize, Apply, Forbidden, Refresh
+controller_pc_service.add(Get, Search, Update, Remove, Authorize, Apply, Forbidden, Refresh)
 
 from agile.controller.apis.staff.permission.rule import Add, All, Get, Update, Remove
 controller_pc_service.add(Add, All, Get, Update, Remove)
 
-from agile.controller.apis.staff.permission.organization import Add, All, Get, Update, Remove
-controller_pc_service.add(Add, All, Get, Update, Remove)
+from agile.controller.apis.staff.permission.organization import Add, All, Search, Get, Update, Remove
+controller_pc_service.add(Add, All, Search, Get, Update, Remove)
 
 from agile.controller.apis.staff.permission.rulegroup import Add, Search, Get, Update, Remove
 controller_pc_service.add(Add, Search, Get, Update, Remove)
 
-from agile.controller.apis.staff.permission.position import Add, All, Get, Update, Remove
-controller_pc_service.add(Add, All, Get, Update, Remove)
+from agile.controller.apis.staff.permission.position import Add, All, Search, Get, Update, Remove
+controller_pc_service.add(Add, All, Search, Get, Update, Remove)
 
 from agile.controller.apis.staff.permission.bind import Position, Person
 controller_pc_service.add(Position, Person)

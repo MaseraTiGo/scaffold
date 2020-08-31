@@ -1,14 +1,13 @@
 # coding=UTF-8
 
 import json
-import random
 
 from support.common.testcase.middleground_api_test_case import \
         MiddlegroundAPITestCase
 from abs.middleground.technology.permission.utils.constant import\
         PermissionTypes
 from support.common.generator.field.model.entity import CrnCompanyEntitry,\
-        CustomerEntity, SpecificationEntity, CrnStaffEntitry
+        CustomerEntity, CrnStaffEntitry
 
 
 class PermissionTestCase(MiddlegroundAPITestCase):
@@ -61,7 +60,10 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         self.assertTrue('id' in platform)
         self.assertTrue('name' in platform)
         self.assertTrue('company_id' in platform)
+        self.assertTrue('company_name' in platform)
         self.assertTrue('remark' in platform)
+        self.assertTrue('create_time' in platform)
+        self.assertTrue('update_time' in platform)
 
     def platform_add(self):
         api = 'technology.permission.platform.add'
@@ -79,7 +81,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
 
     def platform_update(self, platform_id):
         api = 'technology.permission.platform.update'
-        result = self.access_api(
+        self.access_api(
             api=api,
             platform_id=platform_id,
             update_info=json.dumps({
@@ -88,12 +90,16 @@ class PermissionTestCase(MiddlegroundAPITestCase):
             })
         )
 
-    def platform_all(self):
-        api = 'technology.permission.platform.all'
+    def platform_search(self):
+        api = 'technology.permission.platform.search'
         result = self.access_api(
             api=api,
+            current_page=1,
+            search_info=json.dumps({}),
         )
         self.assertTrue('data_list' in result)
+        self.assertTrue('total' in result)
+        self.assertTrue('total_page' in result)
         for platform in result['data_list']:
             self.assert_platform_fields(platform)
 
@@ -329,7 +335,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         person_id
     ):
         api = 'technology.permission.bind.position'
-        result = self.access_api(
+        self.access_api(
             api=api,
             appkey=appkey,
             bind_info=json.dumps({
@@ -353,7 +359,7 @@ class PermissionTestCase(MiddlegroundAPITestCase):
         # 1. 创建平台
         platform_id = self.platform_add()
         self.platform_update(platform_id)
-        self.platform_all()
+        self.platform_search()
         appkey = self.platform_authorize(platform_id)
 
         # 2. 启动授权

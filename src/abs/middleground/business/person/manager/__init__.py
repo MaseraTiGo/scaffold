@@ -233,8 +233,9 @@ class PersonServer(BaseManager):
         """
         获取所有银行卡
         """
-        bankcard = BankCard.search(person=person_id).\
-                 order_by("-create_time")
+        bankcard = BankCard.search(
+            person=person_id
+        ).order_by("-create_time")
         return bankcard
 
     @classmethod
