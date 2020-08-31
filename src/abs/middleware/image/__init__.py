@@ -7,6 +7,7 @@ from .process import image_process
 from abs.middleware.file import file_middleware
 from abs.middleware.config import config_middleware
 from infrastructure.utils.common.convertrmb import convert_rmb_util
+from abs.middleware.oss.apihelper import OSSAPI
 
 
 class ImageMiddleware(object):
@@ -181,22 +182,23 @@ class ImageMiddleware(object):
         font_file = os.path.join(path, 'simsun.ttc')
 
         autograph_f = self.get_image(autograph_base64_image)
-        autograph_url = file_middleware.save(
-            '.png',
-            autograph_f,
-            'autograph'
-        )
         autograph_f = image_process.update_img_size(
             autograph_f,
             250,
             150
         )
+        store_name = image_process.get_store_name('autograph', '.png')
+        autograph_url = OSSAPI().put_object(
+            store_name,
+            autograph_f.getvalue(),
+            "orgdeer"
+        )
+
         config_list = []
-        domain = self.get_domain()
         for img_url in contract_img_url_list:
             config_list.append(
                 {
-                    'back_path': domain + img_url,
+                    'back_path': img_url,
                     'word_config': [],
                     'img_config': []
                 }

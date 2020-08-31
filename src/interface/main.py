@@ -44,6 +44,8 @@ protocol.add(agent_pc_service)
 protocol.add(customer_wechat_service)
 app_protocol = AppProtocol()
 app_protocol.add(customer_mobile_service)
+app_protocol.add(file_service)
+
 
 def router(request):
     result = protocol.run(request)

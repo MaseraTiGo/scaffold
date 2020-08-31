@@ -3,6 +3,7 @@ import io
 from PIL import ImageFont, Image, ImageDraw
 from abs.middleware.file import file_middleware
 import requests
+from abs.middleware.oss.apihelper import OSSAPI
 
 
 class ImageProcess(object):
@@ -22,6 +23,13 @@ class ImageProcess(object):
         byte_io = io.BytesIO()
         byte_io.write(response)
         return byte_io
+
+    def get_store_name(self, type, ext_name='.jpeg'):
+        store_name = "source/contract/{type}/{name}".format(
+            type=type,
+            name=file_middleware.get_save_file_name(ext_name)
+        )
+        return store_name
 
     def process(
         self,
@@ -67,36 +75,32 @@ class ImageProcess(object):
         result_list = self.process(config_list)
         img_save_path_list = []
         for result in result_list:
-            img_file_path, img_save_path = file_middleware.get_save_path(
-                '.jpg',
-                'contract_back'
-            )
-            result.save(img_file_path, quality=10)
+            f = io.BytesIO()
+            result.save(f, quality=10, format='JPEG')
+            store_name = self.get_store_name('contract_back')
+            img_save_path = OSSAPI().put_object(store_name, f.getvalue(), "orgdeer")
             img_save_path_list.append(img_save_path)
         return img_save_path_list
 
     def save_pdf(self, config_list):
         result_list = self.process(config_list)
-        pdf_file_path, pdf_save_path = file_middleware.get_save_path(
-            '.pdf',
-            'contract'
-        )
-
+        f = io.BytesIO()
         result_list[0].convert('RGB').save(
-            pdf_file_path,
+            f,
             'PDF',
             resolution=100.0,
             save_all=True,
             append_images=[result.convert('RGB') for result in result_list[1:]]
         )
+        store_name = self.get_store_name('contract', '.pdf')
+        pdf_save_path = OSSAPI().put_object(store_name, f.getvalue(), "orgdeer")
 
         img_save_path_list = []
         for result in result_list:
-            img_file_path, img_save_path = file_middleware.get_save_path(
-                '.png',
-                'contract_img'
-            )
-            result.save(img_file_path)
+            tmp_f = io.BytesIO()
+            result.save(tmp_f, format='JPEG')
+            store_name = self.get_store_name('contract_img')
+            img_save_path = OSSAPI().put_object(store_name, f.getvalue(), "orgdeer")
             img_save_path_list.append(img_save_path)
         return pdf_save_path, img_save_path_list
 
