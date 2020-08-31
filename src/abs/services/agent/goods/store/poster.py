@@ -1,13 +1,14 @@
 # coding=UTF-8
 
 from abs.common.model import BaseModel, DateField, ForeignKey, \
-        IntegerField, CharField, TextField, DateTimeField, timezone
+        IntegerField, CharField, TextField, DateTimeField, timezone, \
+        CASCADE
 from abs.services.agent.goods.settings import DB_PREFIX
 from abs.services.agent.goods.store.goods import Goods
 
 
 class Poster(BaseModel):
-    goods = ForeignKey(Goods)
+    goods = ForeignKey(Goods, on_delete=CASCADE)
     staff_id = IntegerField(verbose_name="员工id", default=0)
     phone = CharField(verbose_name="手机号", max_length=16, default='')
     expire_date = DateField(verbose_name="过期天数")
@@ -26,7 +27,7 @@ class Poster(BaseModel):
 
 
 class PosterSpecification(BaseModel):
-    poster = ForeignKey(Poster)
+    poster = ForeignKey(Poster, on_delete=CASCADE)
     specification_id = IntegerField(verbose_name="规格id")
     sale_price = IntegerField(verbose_name="价格")
 

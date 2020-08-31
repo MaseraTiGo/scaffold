@@ -7,6 +7,8 @@ from infrastructure.utils.common.dictwrapper import DictWrapper
 class Entity(object):
 
     def __init__(self, model):
+        if model is None:
+            model = self.get_root_model()
         self._model = model
         self._parent_entity = None
         self._children_entitys = []
@@ -63,6 +65,9 @@ class Entity(object):
 
         return all_children
 
+    def get_root_model(self):
+        raise NotImplemented("this interface is need to implemented!")
+
     def get_attr_fiels(self):
         raise NotImplemented("this interface is need to implemented!")
 
@@ -70,23 +75,44 @@ class Entity(object):
         def _get_attrs(entity):
             attr_list = self.get_attr_fiels()
             result = {}
-            for attr in attr_list:
-                if hasattr(entity.model, attr):
+            for field in attr_list:
+                if type(field) == str:
+                    attr, transfer = field, field
+                else:
+                    attr, transfer = field
+
+                spliter = attr.split(".")
+                if len(spliter) > 1:
+                    last = entity.model
+                    for tmp in spliter:
+                        if not hasattr(last, tmp):
+                            raise Exception(
+                                "losed attribute [ {field} ]".format(
+                                    field=attr
+                                )
+                            )
+                        last = getattr(last, tmp)
                     result.update({
-                        attr: getattr(entity.model, attr)
+                        transfer: last
                     })
                 else:
-                    raise Exception(
-                        "losed attribute [ {field} ]".format(
-                            field=attr
+                    if hasattr(entity.model, attr):
+                        result.update({
+                            transfer: getattr(entity.model, attr)
+                        })
+                    else:
+                        raise Exception(
+                            "losed attribute [ {field} ]".format(
+                                field=attr
+                            )
                         )
-                    )
             return result
 
         def _get_child_list(parent_entity, parent):
             for sub_entity in parent_entity.get_children():
                 child = DictWrapper({
-                    'id': sub_entity.model.id
+                    'id': sub_entity.model.id,
+                    'name': sub_entity.model.name,
                 })
                 child.update(_get_attrs(sub_entity))
                 child.update({'children': []})
@@ -108,7 +134,7 @@ class Entity(object):
             root["children"].append(child)
             _get_child_list(sub_entity, child)
 
-        return [root]
+        return root
 
     def remove(self, model, *models):
         for dp in ([model] + models):
@@ -133,7 +159,7 @@ class Helper(object):
             for entiry in self.get_entity_list()
         }
 
-        root = None
+        root = self.ENTITY_CLASS(None)
         for ro_id, entity in entity_mapping.items():
             parent_id = entity.model.parent_id
             parent_entity = entity_mapping.get(parent_id)
@@ -141,7 +167,8 @@ class Helper(object):
                 entity.set_parent(parent_entity)
                 parent_entity.add_children(entity)
             else:
-                root = entity
+                root.add_children(entity)
+                entity.set_parent(root)
 
         self._record(root, entity_mapping)
         return root, entity_mapping

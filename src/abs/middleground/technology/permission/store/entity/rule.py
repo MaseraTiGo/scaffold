@@ -46,6 +46,12 @@ class Rule(BaseModel):
             **rule_info
         )
 
+    def get_children(self):
+        rule_qs = self.query().filter(
+            parent_id=self.id
+        )
+        return list(rule_qs)
+
 
 class RuleGroup(BaseModel):
     """

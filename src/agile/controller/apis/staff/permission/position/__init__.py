@@ -7,7 +7,7 @@ Created on 2020年7月23日
 '''
 
 from infrastructure.core.field.base import CharField, DictField, \
-        IntField, ListField, DatetimeField
+        IntField, ListField, DatetimeField, IterationField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -26,8 +26,10 @@ class Add(StaffAuthorizedApi):
         DictField,
         desc="身份详情",
         conf={
-            'organization_id': IntField(desc="组织id"),
-            'rule_group_id': IntField(desc="权限组id"),
+            'rule_group_id': IntField(
+                desc="权限组id",
+                is_required=False
+            ),
             'parent_id': IntField(desc="上级身份id"),
             'description': CharField(desc="描述"),
             'name': CharField(desc="身份名称"),
@@ -37,10 +39,6 @@ class Add(StaffAuthorizedApi):
 
     response = with_metaclass(ResponseFieldSet)
     response.position_id = ResponseField(IntField, desc="身份Id")
-
-    @classmethod
-    def get_desc(cls):
-        return "添加身份"
 
     @classmethod
     def get_author(cls):
@@ -58,6 +56,65 @@ class Add(StaffAuthorizedApi):
         return response
 
 
+class Search(StaffAuthorizedApi):
+    """
+    搜索身份
+    """
+    request = with_metaclass(RequestFieldSet)
+    request.appkey = RequestField(CharField, desc="当前页码")
+    request.current_page = RequestField(
+        IntField,
+        desc="当前页码"
+    )
+    request.search_info = RequestField(
+        DictField,
+        desc="搜索规则组",
+        conf={
+            'name': CharField(desc="名称", is_required=False),
+        }
+    )
+
+    response = with_metaclass(ResponseFieldSet)
+    response.total = ResponseField(IntField, desc="数据总数")
+    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.data_list = ResponseField(
+        ListField,
+        desc="身份列表",
+        fmt=DictField(
+            desc="身份详情",
+            conf={
+                "id": IntField(desc="ID"),
+                "name": CharField(desc="名称"),
+                "description": CharField(desc="描述"),
+                "remark": CharField(desc="备注"),
+            }
+        )
+    )
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self, request):
+        spliter = PermissionServer.search_position_byappkey(
+            request.appkey,
+            request.current_page,
+            **request.search_info,
+        )
+        return spliter
+
+    def fill(self, response, spliter):
+        response.data_list = [{
+            'id': position.id,
+            'name': position.name,
+            'description': position.description,
+            'remark': position.remark,
+        } for position in spliter.get_list()]
+        response.total = spliter.total
+        response.total_page = spliter.total_page
+        return response
+
+
 class All(StaffAuthorizedApi):
     """
     所有身份
@@ -69,65 +126,22 @@ class All(StaffAuthorizedApi):
     response.position_list = ResponseField(
         ListField,
         desc="身份列表",
-        fmt=DictField(
+        fmt=IterationField(
             desc="身份详情",
-            conf={
+            flag="children",
+            fmt={
                 "id": IntField(desc="名称"),
                 "name": CharField(desc="名称"),
                 "remark": CharField(desc="备注"),
                 "description": CharField(desc="描述"),
                 "parent_id": IntField(desc="父级ID"),
-                "organization_id": IntField(desc="组织ID"),
                 "rule_group_id": IntField(desc="权限组ID"),
+                "rule_group_name": CharField(desc="权限组名称"),
                 "create_time": DatetimeField(desc="创建时间"),
-                'children': ListField(
-                    desc="规格列表",
-                    is_required=False,
-                    fmt=DictField(
-                        desc="身份详情",
-                        conf={
-                            "id": IntField(
-                                desc="名称",
-                                is_required=False
-                            ),
-                            "name": CharField(
-                                desc="名称",
-                                is_required=False
-                            ),
-                            "description": CharField(
-                                desc="描述",
-                                is_required=False
-                            ),
-                            "parent_id": IntField(
-                                desc="父级ID",
-                                is_required=False
-                            ),
-                            "organization_id": IntField(
-                                desc="组织ID",
-                                is_required=False
-                            ),
-                            "rule_group_id": IntField(
-                                desc="权限组ID",
-                                is_required=False
-                            ),
-                            "remark": CharField(
-                                desc="备注",
-                                is_required=False,
-                            ),
-                            "create_time": DatetimeField(
-                                desc="创建时间",
-                                is_required=False
-                            ),
-                        }
-                    )
-                )
+                "update_time": DatetimeField(desc="更新时间"),
             }
         )
     )
-
-    @classmethod
-    def get_desc(cls):
-        return "所有身份"
 
     @classmethod
     def get_author(cls):
@@ -140,26 +154,8 @@ class All(StaffAuthorizedApi):
         return position_list
 
     def fill(self, response, position_list):
-        response.position_list = [{
-            'id': position.id,
-            'name': position.name,
-            'parent_id': position.parent_id,
-            'organization_id': position.organization_id,
-            'rule_group_id': position.rule_group_id,
-            'description': position.description,
-            'remark': position.remark,
-            'create_time': position.create_time,
-            'children': [{
-                'id': sub_position.id,
-                'name': sub_position.name,
-                'parent_id': sub_position.parent_id,
-                'organization_id': sub_position.organization_id,
-                'rule_group_id': sub_position.rule_group_id,
-                'description': sub_position.description,
-                'remark': sub_position.remark,
-                'create_time': sub_position.create_time,
-            } for sub_position in position.children]
-        } for position in position_list]
+        print(position_list)
+        response.position_list = position_list
         return response
 
 
@@ -180,15 +176,12 @@ class Get(StaffAuthorizedApi):
             "description": CharField(desc="描述"),
             "remark": CharField(desc="备注"),
             "parent_id": IntField(desc="父级ID"),
-            "organization_id": IntField(desc="组织ID"),
             "rule_group_id": IntField(desc="权限组ID"),
+            "rule_group_name": CharField(desc="权限组名称"),
             "create_time": DatetimeField(desc="创建时间"),
+            "update_time": DatetimeField(desc="更新时间"),
         }
     )
-
-    @classmethod
-    def get_desc(cls):
-        return "获取身份详情接口"
 
     @classmethod
     def get_author(cls):
@@ -205,11 +198,12 @@ class Get(StaffAuthorizedApi):
             'id': position.id,
             'name': position.name,
             'parent_id': position.parent_id,
-            'organization_id': position.organization_id,
-            'position_id': position.position_id,
+            'rule_group_id': position.rule_group_id,
+            'rule_group_name': position.rule_group.name,
             'description': position.description,
             'remark': position.remark,
             'create_time': position.create_time,
+            'update_time': position.update_time,
         }
         return response
 
@@ -227,17 +221,12 @@ class Update(StaffAuthorizedApi):
             'name': CharField(desc="名称", is_required=False),
             'description': CharField(desc="描述", is_required=False),
             'parent_id': IntField(desc="父级ID", is_required=False),
-            "organization_id": IntField(desc="组织ID", is_required=False),
             "rule_group_id": IntField(desc="权限组ID", is_required=False),
             'remark': CharField(desc="备注", is_required=False),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
-
-    @classmethod
-    def get_desc(cls):
-        return "修改身份信息"
 
     @classmethod
     def get_author(cls):
@@ -261,10 +250,6 @@ class Remove(StaffAuthorizedApi):
     request.position_id = RequestField(IntField, desc="身份id")
 
     response = with_metaclass(ResponseFieldSet)
-
-    @classmethod
-    def get_desc(cls):
-        return "删除身份"
 
     @classmethod
     def get_author(cls):

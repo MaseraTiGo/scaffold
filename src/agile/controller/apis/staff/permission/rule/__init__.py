@@ -7,7 +7,7 @@ Created on 2020年7月23日
 '''
 
 from infrastructure.core.field.base import CharField, DictField, \
-        IntField, ListField, DatetimeField
+        IntField, ListField, DatetimeField, IterationField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -66,23 +66,20 @@ class All(StaffAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.rule_list = ResponseField(
         ListField,
-        desc="规则列表",
-        fmt=DictField(
-            desc="规则详情",
-            conf={
+        desc="一级规则",
+        fmt=IterationField(
+            desc="规则",
+            flag="children",
+            fmt={
+                'id': IntField(desc="编号I"),
+                'platform_id': IntField(desc="平台id"),
                 'name': CharField(desc="名称I"),
                 'code': CharField(desc="编码"),
-                'children': ListField(
-                    desc="规格列表",
-                    is_required=False,
-                    fmt=DictField(
-                        desc="规则详情",
-                        conf={
-                            "name": CharField(desc="名称"),
-                            "code": CharField(desc="展示图片"),
-                        }
-                    )
-                )
+                'parent_id': IntField(desc="父级ID"),
+                'remark': CharField(desc="备注"),
+                'description': CharField(desc="描述"),
+                'create_time': DatetimeField(desc="创建时间"),
+                'update_time': DatetimeField(desc="创建时间"),
             }
         )
     )
@@ -102,14 +99,7 @@ class All(StaffAuthorizedApi):
         return rule_list
 
     def fill(self, response, rule_list):
-        response.rule_list = [{
-            'name': rule.name,
-            'code': rule.code,
-            'children': [{
-                'name': sub_rule.name,
-                'code': sub_rule.code,
-            } for sub_rule in rule.children]
-        } for rule in rule_list]
+        response.rule_list = rule_list
         return response
 
 
@@ -126,11 +116,14 @@ class Get(StaffAuthorizedApi):
         desc="规则详情",
         conf={
             'id': IntField(desc="ID"),
+            'platform_id': IntField(desc="平台id"),
             'name': CharField(desc="名称"),
             'code': CharField(desc="编码"),
             'parent_id': IntField(desc="父级ID"),
+            'description': CharField(desc="描述"),
             'remark': CharField(desc="备注"),
             'create_time': DatetimeField(desc="创建时间"),
+            'update_time': DatetimeField(desc="创建时间"),
         }
     )
 
@@ -149,11 +142,14 @@ class Get(StaffAuthorizedApi):
     def fill(self, response, rule):
         response.rule_info = {
             'id': rule.id,
+            'platform_id': rule.platform_id,
             'name': rule.name,
             'code': rule.code,
             'remark': rule.remark,
+            'description': rule.description,
             'parent_id': rule.parent_id,
             'create_time': rule.create_time,
+            'update_time': rule.update_time,
         }
         return response
 
@@ -170,6 +166,7 @@ class Update(StaffAuthorizedApi):
         conf={
             'name': CharField(desc="名称", is_required=False),
             'parent_id': IntField(desc="父级ID", is_required=False),
+            'description': CharField(desc="描述", is_required=False),
             'remark': CharField(desc="备注", is_required=False),
         }
     )

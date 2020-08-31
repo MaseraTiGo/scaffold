@@ -246,7 +246,7 @@ class Update(StaffAuthorizedApi):
     """
     request = with_metaclass(RequestFieldSet)
     request.staff_id = RequestField(IntField, desc="员工id")
-    request.staff_info = RequestField(
+    request.updatef_info = RequestField(
         DictField,
         desc="员工修改详情",
         conf={
