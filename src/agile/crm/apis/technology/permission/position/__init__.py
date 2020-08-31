@@ -7,7 +7,7 @@ Created on 2020年7月23日
 '''
 import json
 from infrastructure.core.field.base import CharField, DictField, \
-        IntField, ListField, DatetimeField
+        IntField, ListField, DatetimeField, IterationField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -27,12 +27,11 @@ class Add(StaffAuthorizedApi):
         DictField,
         desc = "身份详情",
         conf = {
-            'organization_id': IntField(desc = "组织id"),
-            'rule_group_id': IntField(desc = "权限组id", is_required = False),
+            'rule_group_id': IntField(desc = "权限组id"),
             'parent_id': IntField(desc = "上级身份id"),
             'description': CharField(desc = "描述"),
             'name': CharField(desc = "身份名称"),
-            'remark': CharField(desc = "备注", is_required = False),
+            'remark': CharField(desc = "备注"),
         }
     )
 
@@ -67,7 +66,25 @@ class All(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
 
     response = with_metaclass(ResponseFieldSet)
-    response.data_list_json = ResponseField(CharField, desc = "身份结构")
+    response.position_list = ResponseField(
+        ListField,
+        desc = "身份列表",
+        fmt = IterationField(
+            desc = "身份详情",
+            flag = "children",
+            fmt = {
+                "id": IntField(desc = "名称"),
+                "name": CharField(desc = "名称"),
+                "remark": CharField(desc = "备注"),
+                "description": CharField(desc = "描述"),
+                "parent_id": IntField(desc = "父级ID"),
+                "rule_group_id": IntField(desc = "权限组ID"),
+                "rule_group_name": CharField(desc = "权限组名称"),
+                "create_time": DatetimeField(desc = "创建时间"),
+                "update_time": DatetimeField(desc = "更新时间"),
+            }
+        )
+    )
 
     @classmethod
     def get_desc(cls):
@@ -85,9 +102,7 @@ class All(StaffAuthorizedApi):
         return position_list
 
     def fill(self, response, position_list):
-        response.data_list_json = json.dumps(
-            CJsonEncoder(position_list)
-        )
+        response.position_list = position_list
         return response
 
 
@@ -108,8 +123,8 @@ class Get(StaffAuthorizedApi):
             "description": CharField(desc = "描述"),
             "remark": CharField(desc = "备注"),
             "parent_id": IntField(desc = "父级ID"),
-            "organization_id": IntField(desc = "组织ID"),
             "rule_group_id": IntField(desc = "权限组ID"),
+            "rule_group_name": CharField(desc = "权限组名称"),
             "create_time": DatetimeField(desc = "创建时间"),
         }
     )
@@ -133,8 +148,8 @@ class Get(StaffAuthorizedApi):
             'id': position.id,
             'name': position.name,
             'parent_id': position.parent_id,
-            'organization_id': position.organization_id,
             'position_id': position.position_id,
+            'rule_group_name': position.rule_group.name,
             'description': position.description,
             'remark': position.remark,
             'create_time': position.create_time,
@@ -152,7 +167,6 @@ class Update(StaffAuthorizedApi):
         DictField,
         desc = "身份修改详情",
         conf = {
-            'organization_id': IntField(desc = "组织id"),
             'rule_group_id': IntField(desc = "权限组id", is_required = False),
             'parent_id': IntField(desc = "上级身份id"),
             'description': CharField(desc = "描述"),

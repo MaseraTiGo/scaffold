@@ -7,7 +7,7 @@ Created on 2020年7月23日
 '''
 import json
 from infrastructure.core.field.base import CharField, DictField, \
-        IntField, ListField, DatetimeField
+        IntField, ListField, DatetimeField, IterationField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -27,10 +27,14 @@ class Add(StaffAuthorizedApi):
         DictField,
         desc = "组织详情",
         conf = {
+            'position_id_list': ListField(
+                desc = "身份列表",
+                fmt = IntField(desc = "身份id")
+            ),
             'parent_id': IntField(desc = "上级组织id"),
             'name': CharField(desc = "组织名称"),
             'description': CharField(desc = "描述"),
-            'remark': CharField(desc = "备注", is_required = False),
+            'remark': CharField(desc = "备注"),
         }
     )
 
@@ -65,7 +69,23 @@ class All(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
 
     response = with_metaclass(ResponseFieldSet)
-    response.data_list_json = ResponseField(CharField, desc = "身份结构")
+    response.organization_list = ResponseField(
+        ListField,
+        desc = "组织列表",
+        fmt = IterationField(
+            desc = "组织详情",
+            flag = "children",
+            fmt = {
+                "id": IntField(desc = "id"),
+                "name": CharField(desc = "名称"),
+                "remark": CharField(desc = "备注"),
+                "description": CharField(desc = "描述"),
+                "parent_id": IntField(desc = "父级ID"),
+                "update_time": DatetimeField(desc = "更新时间"),
+                "create_time": DatetimeField(desc = "创建时间"),
+            }
+        )
+    )
 
     @classmethod
     def get_desc(cls):
@@ -83,9 +103,7 @@ class All(StaffAuthorizedApi):
         return organization_list
 
     def fill(self, response, organization_list):
-        response.data_list_json = json.dumps(
-            CJsonEncoder(organization_list)
-        )
+        response.organization_list = organization_list
         return response
 
 
@@ -106,6 +124,16 @@ class Get(StaffAuthorizedApi):
             "description": CharField(desc = "描述"),
             "remark": CharField(desc = "备注"),
             "parent_id": IntField(desc = "父级ID"),
+            'position_list':ListField(
+                desc = "身份列表",
+                fmt = DictField(
+                    desc = "身份详情",
+                    conf = {
+                        "id": IntField(desc = "身份id"),
+                        "name": CharField(desc = "身份名称"),
+                    }
+                )
+            ),
             "create_time": DatetimeField(desc = "创建时间"),
         }
     )
@@ -131,6 +159,10 @@ class Get(StaffAuthorizedApi):
             'parent_id': organization.parent_id,
             'description': organization.description,
             'remark': organization.remark,
+            'position_list':[{
+                "id":position.id,
+                "name":position.name
+             } for position in organization.position_list],
             'create_time': organization.create_time,
         }
         return response
@@ -146,6 +178,10 @@ class Update(StaffAuthorizedApi):
         DictField,
         desc = "组织修改详情",
         conf = {
+            'position_id_list': ListField(
+                desc = "身份列表",
+                fmt = IntField(desc = "身份id")
+            ),
             'name': CharField(desc = "名称", is_required = False),
             'description': CharField(desc = "描述", is_required = False),
             'parent_id': IntField(desc = "父级ID", is_required = False),

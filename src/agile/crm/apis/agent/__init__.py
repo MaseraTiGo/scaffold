@@ -49,12 +49,35 @@ class Add(StaffAuthorizedApi):
                 "common", "agent_platform_id"
             ),
             'company_id':agent.company_id,
+            'company_name':agent.name,
             'remark':'',
         }
         authorization = PermissionServer.authorize(
             **authorize_info
         )
+        rule_group_info = {
+            "name":"超级管理员权限",
+            "description":"超级管理员权限",
+            "remark":"",
+            "content":"",
+        }
+        rule_group = PermissionServer.add_rule_group(
+            appkey = authorization.appkey,
+            **rule_group_info
+        )
+        position_info = {
+            "rule_group_id":rule_group.id,
+            "parent_id":0,
+            "name":"超级管理员",
+            "description":"超级管理员",
+            "remark":"",
+        }
+        position = PermissionServer.add_position(
+            appkey = authorization.appkey,
+            **position_info
+        )
         organization_info = {
+            "position_id_list":[position.id],
             "parent_id":0,
             "name":"公司",
             "description":"公司",
@@ -64,28 +87,7 @@ class Add(StaffAuthorizedApi):
             appkey = authorization.appkey,
             **organization_info
         )
-        rule_group_info = {
-            "name":"超级管理员权限",
-            "content":"",
-            "description":"超级管理员权限",
-            "remark":"",
-        }
-        rule_group = PermissionServer.add_rule_group(
-            appkey = authorization.appkey,
-            **rule_group_info
-        )
-        position_info = {
-            "organization_id":organization.id,
-            "rule_group_id":rule_group.id,
-            "parent_id":0,
-            "description":"超级管理员",
-            "name":"超级管理员",
-            "remark":"",
-        }
-        position = PermissionServer.add_position(
-            appkey = authorization.appkey,
-            **position_info
-        )
+
         PermissionServer.apply(authorization.appkey)
         agent.update(appkey = authorization.appkey)
         return agent

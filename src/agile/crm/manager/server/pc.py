@@ -104,6 +104,12 @@ from agile.crm.apis.technology.permission.position import Add, All, Get , \
                                                           Update, Remove
 crm_pc_service.add(Add, All, Get, Update, Remove)
 
+from agile.crm.apis.technology.permission.rule import All
+crm_pc_service.add(All)
+
+from agile.crm.apis.technology.permission.rulegroup import Add, Search, Get
+crm_pc_service.add(Add, Search, Get, Update, Remove)
+
 from agile.crm.apis.adsense.space import Search, Add, Update, SearchAll
 crm_pc_service.add(Search, Add, Update, SearchAll)
 
