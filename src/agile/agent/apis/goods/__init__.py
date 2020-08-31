@@ -8,7 +8,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 
 from agile.agent.manager.api import AgentStaffAuthorizedApi
-from abs.services.agent.goods.utils.constant import DurationTypes, \
+from abs.services.crm.university.utils.constant import DurationTypes, \
      CategoryTypes
 from abs.middleground.business.merchandise.utils.constant import\
      DespatchService, UseStatus
@@ -77,6 +77,7 @@ class Get(AgentStaffAuthorizedApi):
                             'id': IntField(desc = "规格id"),
                             'show_image': CharField(desc = "图片"),
                             'sale_price': IntField(desc = "销售价/分"),
+                            'original_price': IntField(desc = "原价"),
                             'stock': IntField(desc = "库存"),
                             "specification_value_list": ListField(
                                 desc = "属性值列表",
@@ -136,6 +137,7 @@ class Get(AgentStaffAuthorizedApi):
                 'id': specification.id,
                 "show_image":specification.show_image,
                 "sale_price":specification.sale_price,
+                'original_price': specification.sale_price,
                 "stock":specification.stock,
                 "specification_value_list":[{
                     "category":specification_value.category,
@@ -514,27 +516,27 @@ class SearchAll(AgentStaffAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="产品列表",
-        fmt=DictField(
-            desc="产品信息",
-            conf={
-                'id': IntField(desc='产品id'),
-                'name': CharField(desc="产品名称"),
+        desc = "产品列表",
+        fmt = DictField(
+            desc = "产品信息",
+            conf = {
+                'id': IntField(desc = '产品id'),
+                'name': CharField(desc = "产品名称"),
                 'children': ListField(
-                    desc="商品列表",
-                    fmt=DictField(
-                        desc="商品信息",
-                        conf={
-                            'id': IntField(desc="商品id"),
-                            'name': CharField(desc="商品名称"),
-                            'major_name': CharField(desc="专业名称"),
+                    desc = "商品列表",
+                    fmt = DictField(
+                        desc = "商品信息",
+                        conf = {
+                            'id': IntField(desc = "商品id"),
+                            'name': CharField(desc = "商品名称"),
+                            'major_name': CharField(desc = "专业名称"),
                             'specification_list': ListField(
                                 desc = "规格列表",
                                 fmt = DictField(
                                     desc = "规格详情",
                                     conf = {
                                         "id": IntField(desc = "规格id"),
-                                        "show_image": CharField(desc="展示图片"),
+                                        "show_image": CharField(desc = "展示图片"),
                                         "sale_price": IntField(desc = "销售价为，单位：分"),
                                         "specification_value_list": ListField(
                                             desc = "属性值列表",
@@ -566,8 +568,8 @@ class SearchAll(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         goods_list = list(GoodsServer.search_all_goods(
-            use_status=UseStatus.ENABLE,
-            agent_id=self.auth_user.agent_id
+            use_status = UseStatus.ENABLE,
+            agent_id = self.auth_user.agent_id
         ))
         MerchandiseServer.hung_merchandise(goods_list)
         ProductionServer.hung_production([goods.merchandise for goods in goods_list])
@@ -604,7 +606,7 @@ class SearchAll(AgentStaffAuthorizedApi):
                             "attribute": specification_value.attribute
                         } for specification_value in specification.specification_value_list]
                     } for specification in goods.merchandise.specification_list]
-                } for goods in goods_list]
+                } for goods in production.goods_list]
             })
         response.data_list = data_list
         return response

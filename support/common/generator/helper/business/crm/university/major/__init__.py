@@ -18,8 +18,8 @@ class MajorGenerator(BaseGenerator):
         return self._major_infos
 
     def create(self, major_info, result_mapping):
-        major_qs = Major.query(
-            name=major_info.name,
+        major_qs = Major.search(
+            name = major_info.name,
         )
         if major_qs.count():
             major = major_qs[0]

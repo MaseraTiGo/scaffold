@@ -2,12 +2,17 @@
 
 from support.common.maker import BaseMaker
 from support.common.generator.helper import EnterpriseGenerator, \
-        StaffGenerator, StaffAccountGenerator
+        StaffGenerator, StaffAccountGenerator, SpaceGenerator
 from support.environment.common.middleground.person import PersonMaker
 from support.environment.common.middleground.production import ProductionMaker
 from support.environment.common.middleground.permission import PermissionMaker
+from support.environment.common.business.crm.years import YearsMaker
 from support.environment.init.business.controller.enterprise import EnterpriseLoader
 from support.environment.init.business.crm.staff import StaffLoader
+from support.environment.init.business.crm.school import SchoolLoader
+from support.environment.init.business.crm.major import MajorLoader
+from support.environment.init.business.crm.relations import RelationsLoader
+from support.environment.init.business.crm.space import SpaceLoader
 
 
 class CrmInitializeMaker(BaseMaker):
@@ -28,10 +33,17 @@ class CrmInitializeMaker(BaseMaker):
         self._enterprise = EnterpriseGenerator(EnterpriseLoader().generate())
         self._staff = StaffGenerator(StaffLoader().generate())
         self._staff_account = StaffAccountGenerator()
+        years = YearsMaker(
+            SchoolLoader().generate(),
+            MajorLoader().generate(),
+            RelationsLoader().generate(),
+            RelationsLoader().generate()
+        ).generate_relate().generate()
+        self._space = SpaceGenerator(SpaceLoader().generate())
 
     def generate_relate(self):
         self._person.add_outputs(self._permission)
-        self._staff.add_outputs(self._staff_account)
+        self._staff.add_outputs(self._staff_account, self._space)
         self._staff.add_inputs(self._enterprise, self._person)
         self._enterprise.add_outputs(self._production, self._permission)
         return self._staff

@@ -1,6 +1,8 @@
 # coding=UTF-8
 import json
 import datetime
+import time
+import random
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
@@ -14,7 +16,8 @@ from abs.middleware.pay import pay_middleware
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.middleware.image import image_middleware
 from abs.services.agent.order.store.contract import Contract
-
+from abs.middleware.email import email_middleware
+from abs.middleware.config import config_middleware
 
 class OrderServer(BaseManager):
 
@@ -96,6 +99,8 @@ class OrderServer(BaseManager):
             'agent_customer_id': agent_customer.id,
             'mg_order_id': mg_order.id,
             'agent_id': agent_customer.agent_id,
+            'person_id': agent_customer.person_id,
+            'company_id': agent_customer.agent.company_id,
             'source': source,
             'number': mg_order.number,
             'status': mg_order.status,
@@ -129,7 +134,7 @@ class OrderServer(BaseManager):
         return order
 
     @classmethod
-    def pay(cls, order, pay_type):
+    def pay(cls, order, pay_type, trade_type = 'APP', openid = ''):
         number = mg_OrderServer.pay(
             order.mg_order.id,
             order.mg_order.strike_price,
@@ -139,7 +144,9 @@ class OrderServer(BaseManager):
         prepay_id = pay_middleware.pay_order(
             pay_type,
             number,
-            order.mg_order.strike_price
+            order.mg_order.strike_price,
+            trade_type = trade_type,
+            openid = openid
         )
         return prepay_id
 
@@ -193,28 +200,61 @@ class OrderItemServer(BaseManager):
 class ContractServer(BaseManager):
 
     @classmethod
-    def create(cls, order_item, agent, **search_info):
-        base64_image = search_info.pop('autograph')
-        autograph_url, contract_url, contract_img_url = image_middleware.get_contract(
+    def create(cls, order_item, agent, contacts):
+        number = 'Sn_200' + str(int(time.time())) + str(random.randint(10000, 99999))
+        mg_order = mg_OrderServer.get(order_item.order.mg_order_id)
+        mg_OrderServer.hung_snapshoot([order_item])
+        contract_img_url = image_middleware.get_contract(
+            number,
             agent.name,
+            contacts.contacts,
+            contacts.phone,
             agent.official_seal,
-            base64_image,
-            search_info['name']
+            mg_order.invoice.name,
+            mg_order.invoice.identification,
+            order_item.snapshoot.brand_name,
+            order_item.snapshoot.production_name,
+            order_item.school_name,
+            order_item.major_name,
+            str(mg_order.strike_price / 100)
         )
-        search_info.update({
+        create_info = {
+            'name': mg_order.invoice.name,
+            'phone': mg_order.invoice.phone,
+            'identification': mg_order.invoice.identification,
+            'email': '',
+            'number': number,
             'agent_customer_id': order_item.order.agent_customer_id,
             'person_id': order_item.order.person_id,
             'company_id': order_item.order.company_id,
             'order_item_id': order_item.id,
             'agent_id': agent.id,
+            'img_url': json.dumps(contract_img_url)
+        }
+        contract = Contract.create(**create_info)
+
+        return contract
+
+    @classmethod
+    def autograph(cls, contract, autograph_img, email):
+        autograph_url, contract_url, contract_img_url = image_middleware.autograph(
+            contract.name,
+            contract.phone,
+            autograph_img,
+            json.loads(contract.img_url)
+        )
+        contract.update(**{
+            'email': email,
             'autograph': autograph_url,
             'url': json.dumps([contract_url]),
-            'img_url': json.dumps([contract_img_url])
+            'img_url': json.dumps(contract_img_url)
         })
-        contract = Contract.create(**search_info)
-        mg_OrderServer.finish(order_item.order.mg_order_id)
-        order_item.order.update(status = OrderStatus.ORDER_FINISHED)
-        return contract
+        mg_OrderServer.finish(
+            contract.order_item.order.mg_order_id
+        )
+        contract.order_item.order.update(
+            status = OrderStatus.ORDER_FINISHED
+        )
 
     @classmethod
     def search_all(cls, **search_info):
@@ -226,4 +266,34 @@ class ContractServer(BaseManager):
                       order_by("-create_time")
         splitor = Splitor(current_page, contract_qs)
         return splitor
+
+    @classmethod
+    def get(cls, contract_id):
+        contract = Contract.get_byid(contract_id)
+        if contract:
+            return contract
+        raise BusinessError('合同不存在')
+
+    @classmethod
+    def send_email(cls, contract_id):
+        contract = cls.get(contract_id)
+        if len(json.loads(contract.url)) <= 0:
+            raise BusinessError('合同尚未签署')
+        '''
+        pdf_path = "{a}{b}".format(
+            a = config_middleware.get_value("common", "domain"),
+            b = json.loads(contract.url)[0]
+        )
+        '''
+        pdf_path = json.loads(contract.url)[0]
+        try:
+            email_middleware.send_email(
+                [contract.email],
+                '教育合同',
+                '教育合同',
+                pdf_path
+            )
+        except Exception as e:
+            raise BusinessError('发送失败')
+        return True
 

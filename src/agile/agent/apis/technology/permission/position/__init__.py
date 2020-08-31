@@ -28,11 +28,11 @@ class Add(AgentStaffAuthorizedApi):
         desc = "身份详情",
         conf = {
             'organization_id': IntField(desc = "组织id"),
-            'rule_group_id': IntField(desc = "权限组id"),
+            'rule_group_id': IntField(desc = "权限组id", is_required = False),
             'parent_id': IntField(desc = "上级身份id"),
             'description': CharField(desc = "描述"),
             'name': CharField(desc = "身份名称"),
-            'remark': CharField(desc = "备注"),
+            'remark': CharField(desc = "备注", is_required = False),
         }
     )
 
@@ -152,11 +152,11 @@ class Update(AgentStaffAuthorizedApi):
         DictField,
         desc = "身份修改详情",
         conf = {
-            'name': CharField(desc = "名称", is_required = False),
-            'description': CharField(desc = "描述", is_required = False),
-            'parent_id': IntField(desc = "父级ID", is_required = False),
-            "organization_id": IntField(desc = "组织ID", is_required = False),
-            "rule_group_id": IntField(desc = "权限组ID", is_required = False),
+            'organization_id': IntField(desc = "组织id"),
+            'rule_group_id': IntField(desc = "权限组id", is_required = False),
+            'parent_id': IntField(desc = "上级身份id"),
+            'description': CharField(desc = "描述"),
+            'name': CharField(desc = "身份名称"),
             'remark': CharField(desc = "备注", is_required = False),
         }
     )

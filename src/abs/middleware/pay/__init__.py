@@ -5,7 +5,7 @@ from abs.middleware.extend.wechat import MiniMch
 
 from abs.middleware.extend.alipay import alipay_extend
 
-mini_mch_server = MiniMch('rongmi')
+mini_mch_server = MiniMch()
 
 
 class PayMiddleware(object):
@@ -17,7 +17,8 @@ class PayMiddleware(object):
         amount,
         notify_path,
         body,
-        trade_type=''
+        trade_type,
+        openid=''
     ):
         prepay_id = ''
         if pay_type == 'wechat':
@@ -25,8 +26,9 @@ class PayMiddleware(object):
                 number,
                 amount,
                 notify_path,
-                body=body,
-                trade_type=trade_type
+                trade_type,
+                openid=openid,
+                body=body
             )
             result = self.wechat_handle(data, number)
             if result:
@@ -58,7 +60,7 @@ class PayMiddleware(object):
         )
         return prepay_id
 
-    def pay_order(self, pay_type, number, amount, trade_type='APP'):
+    def pay_order(self, pay_type, number, amount, trade_type, openid):
         notify_path = ''
         if pay_type == 'wechat':
             notify_path = '/interface/wechat_order_pay_notify'
@@ -71,7 +73,8 @@ class PayMiddleware(object):
             amount,
             notify_path,
             body='订单付款',
-            trade_type=trade_type
+            trade_type=trade_type,
+            openid=openid
         )
         return prepay_id
 
@@ -91,6 +94,9 @@ class PayMiddleware(object):
                 'sign': pay_info.get('sign')
             })
         return pay_info
+
+    def parse_mini_pay_info(self, prepay_id):
+        return mini_mch_server.get_pay_param(prepay_id)
 
     def wechat_handle(self, data, out_trade_no):
         if data.get('return_code') != 'SUCCESS':

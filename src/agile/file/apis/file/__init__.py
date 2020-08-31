@@ -1,13 +1,15 @@
 # coding=UTF-8
-
+import datetime
+from urllib import parse
 from infrastructure.core.field.base import CharField, FileField, DictField, IntField, ListField, DatetimeField, DateField, BooleanField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
+from infrastructure.core.exception.business_error import BusinessError
 
 from agile.base.api import NoAuthorizedApi
 from abs.middleware.file import file_middleware
-
+from abs.middleware.oss import OSSAPI
 
 class Upload(NoAuthorizedApi):
     """上传文件"""
@@ -29,11 +31,27 @@ class Upload(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        store_type = {"school", "major", "goods", "video", \
+                      "adsense", "person", "contract", \
+                      "agent", "idimg", "other"}
+        if request.store_type not in store_type:
+            raise BusinessError("此上传分类不存在")
+        path_list = []
+        for name, f in request._upload_files.items():
+            nowTime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+            store_name = "source/{type}/{time}.jpeg".format(
+                type = request.store_type,
+                time = nowTime
+            )
+            imgurl = OSSAPI().put_object(store_name, f, "orgdeer")
+            path_list.append(parse.unquote(imgurl))
+        '''
         path_list = []
         for name, f in request._upload_files.items():
             path = file_middleware.save(name, f, request.store_type)
             host_url = ""
             path_list.append(host_url + path)
+        '''
         return path_list
 
     def fill(self, response, path_list):

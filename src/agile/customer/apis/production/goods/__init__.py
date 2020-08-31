@@ -11,7 +11,7 @@ from abs.services.agent.goods.manager import GoodsServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
-from abs.services.agent.goods.utils.constant import CategoryTypes
+from abs.services.crm.university.utils.constant import CategoryTypes
 from abs.services.crm.agent.manager import AgentServer
 
 

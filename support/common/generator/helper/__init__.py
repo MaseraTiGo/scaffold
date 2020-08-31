@@ -29,6 +29,7 @@ from support.common.generator.helper.business.crm.university.relations import Re
 from support.common.generator.helper.business.crm.university.years import YearsGenerator
 from support.common.generator.helper.business.crm.agent import AgentGenerator
 from support.common.generator.helper.business.crm.agent.contacts import ContactsGenerator
+from support.common.generator.helper.business.crm.adsense.space import SpaceGenerator
 
 # customer service generate
 from support.common.generator.helper.business.customer.customer import CustomerGenerator

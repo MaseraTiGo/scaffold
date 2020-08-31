@@ -41,14 +41,16 @@ class Add(AgentStaffAuthorizedApi):
             'emergency_phone': CharField(desc = "紧急联系人电话", is_required = False),
             'education': CharField(
                 desc = "学历",
-                choices = EducationTypes.CHOICES
+                choices = EducationTypes.CHOICES,
+                is_required = False
             ),
             'bank_number': CharField(desc = "银行卡号", is_required = False),
             'contract': CharField(desc = "合同编号", is_required = False),
             'email': CharField(desc = "邮箱", is_required = False),
             'gender': CharField(
                 desc = "性别",
-                choices = GenderTypes.CHOICES
+                choices = GenderTypes.CHOICES,
+                is_required = False
             ),
             'diploma_img':ListField(
                 desc = '毕业证书',

@@ -10,9 +10,9 @@ from support.environment.init import CustomerInitializeMaker, \
 class InitManager(Single):
 
     def run(self):
-        ControllerInitializeMaker().run()
+        # ControllerInitializeMaker().run()
         CrmInitializeMaker().run()
-        CustomerInitializeMaker().run()
+        # CustomerInitializeMaker().run()
 
 
 if __name__ == "__main__":

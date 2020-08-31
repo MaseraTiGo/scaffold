@@ -122,7 +122,7 @@ class BaseProtocol(Single, IService, IChecker):
             logger.exception(e)
             return self.failed(e)
         except BusinessError as e:
-            logger.exception(e)
+            # logger.exception(e)
             return self.failed(e)
         except Exception as e:
             logger.exception(e)

@@ -10,7 +10,7 @@ from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.agent.order.utils.constant import OrderSource
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.agent.order.manager import OrderServer, OrderItemServer
-from abs.services.agent.goods.utils.constant import DurationTypes
+from abs.services.crm.university.utils.constant import DurationTypes
 from abs.services.customer.personal.manager import CustomerServer
 from abs.services.crm.agent.manager import AgentServer
 from abs.services.agent.customer.manager import AgentCustomerServer
@@ -90,7 +90,7 @@ class Get(StaffAuthorizedApi):
         order = OrderServer.get(request.order_id)
         agent_customer = AgentCustomerServer.get(order.agent_customer_id)
         OrderItemServer.hung_order_item([order])
-        return order, customer
+        return order, agent_customer
 
     def fill(self, response, order, agent_customer):
         response.order_info = {

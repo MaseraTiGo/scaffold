@@ -13,7 +13,6 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.utils.common.jsontools import CJsonEncoder
 
-from agile.base.api import NoAuthorizedApi
 from agile.crm.manager.api import StaffAuthorizedApi
 from abs.middleware.config import config_middleware
 from abs.middleground.technology.permission.manager import PermissionServer

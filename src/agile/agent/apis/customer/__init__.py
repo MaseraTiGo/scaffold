@@ -38,8 +38,6 @@ class Search(AgentStaffAuthorizedApi):
             desc = "用户详情",
             conf = {
                 'id': IntField(desc = "客户编号"),
-                'nick': CharField(desc = "昵称"),
-                'head_url': CharField(desc = "头像"),
                 'name': CharField(desc = "姓名"),
                 'gender': CharField(desc = "性别"),
                 'birthday': CharField(desc = "生日"),
@@ -75,26 +73,55 @@ class Search(AgentStaffAuthorizedApi):
     def fill(self, response, agent_customer_spliter):
         data_list = [{
             'id': agent_customer.id,
-            'nick': agent_customer.customer.nick if \
-                    agent_customer.customer else '',
-            'head_url': agent_customer.customer.head_url if \
-                        agent_customer.customer else '',
-            'name': agent_customer.customer.person.name if \
-                    agent_customer.customer else '',
-            'gender': agent_customer.customer.person.gender if \
-                      agent_customer.customer else '',
-            'birthday': agent_customer.customer.person.birthday if \
-                        agent_customer.customer else '',
+            'name': agent_customer.name,
+            'gender': agent_customer.person.gender if \
+                      agent_customer.person else '',
+            'birthday': agent_customer.person.birthday if \
+                        agent_customer.person else '',
             'phone': agent_customer.phone,
-            'email': agent_customer.customer.person.email if \
-                     agent_customer.customer else '',
-            'wechat': agent_customer.customer.person.wechat if \
-                      agent_customer.customer else '',
-            'qq': agent_customer.customer.person.qq if \
-                  agent_customer.customer else '',
+            'email': agent_customer.person.email if \
+                     agent_customer.person else '',
+            'wechat': agent_customer.person.wechat if \
+                      agent_customer.person else '',
+            'qq': agent_customer.person.qq if \
+                  agent_customer.person else '',
             'create_time': agent_customer.create_time
         } for agent_customer in agent_customer_spliter.data]
         response.data_list = data_list
         response.total = agent_customer_spliter.total
         response.total_page = agent_customer_spliter.total_page
+        return response
+
+
+class Update(AgentStaffAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.agent_customer_id = RequestField(IntField, desc = "代理商客户id")
+    request.update_info = RequestField(
+        DictField,
+        desc = "需要更新的产品信息",
+        conf = {
+            'name': CharField(desc = "客户姓名", is_required = False),
+            'city': CharField(desc = "客户地址", is_required = False),
+            'education': CharField(desc = "客户学历", is_required = False),
+        }
+    )
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_desc(cls):
+        return "完善客户接口"
+
+    @classmethod
+    def get_author(cls):
+        return "Fsy"
+
+    def execute(self, request):
+        agent_customer = AgentCustomerServer.update(
+            request.agent_customer_id,
+            **request.update_info
+        )
+
+
+    def fill(self, response, address_list):
         return response

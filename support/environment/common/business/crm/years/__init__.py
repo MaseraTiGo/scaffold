@@ -11,17 +11,19 @@ class YearsMaker(BaseMaker):
     学校专业学年信息初始化
     """
 
-    def __init__(self, school_info, major_info, years_info):
+    def __init__(self, school_info, major_info, relations_info, years_info):
         self._school = SchoolGenerator(
             school_info
         )
         self._major = MajorGenerator(
             major_info
         )
+        self._relations = RelationsGenerator(
+            relations_info
+        )
         self._years = YearsGenerator(
             years_info
         )
-        self._relations = RelationsGenerator()
 
 
     def generate_relate(self):

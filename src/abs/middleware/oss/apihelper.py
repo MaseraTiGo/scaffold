@@ -14,10 +14,13 @@ import oss2
 # import my project package
 
 
-access_key_id = 'LTAIZOIZXlWJV3C5'
-access_key_secret = 'HRHgNkqSncPbuf7AGzRcAMSDjewECy'
+# access_key_id = 'LTAIZOIZXlWJV3C5'
+# access_key_secret = 'HRHgNkqSncPbuf7AGzRcAMSDjewECy'
+access_key_id = 'LTAI4Fvi4E1dp1v76WYrFzXK'
+access_key_secret = 'oK6ATqICGlNdgUGYY9VieTuHXPBCYN'
 
-endpoint = "http://oss-cn-beijing.aliyuncs.com"
+endpoint = "http://oss-cn-hangzhou.aliyuncs.com"
+# endpoint = 'oss-cn-beijing-internal.aliyuncs.com'
 
 class OSSAPI(object):
 
@@ -43,8 +46,8 @@ class OSSAPI(object):
 
 if __name__ == "__main__":
     oss = OSSAPI()
-    bucket_name = 'bq-crm-resouce'
-    store_name = 'QQ截图20180803191412.png'
+    bucket_name = 'bq-crm'
+    store_name = '20-interview-topic.jpeg'
     with open(store_name, 'rb') as f:
-        url = oss.put_object("通讯头像/{store}".format(store = store_name), f, bucket_name)
+        url = oss.put_object(store_name, f, bucket_name)
         print(url)
