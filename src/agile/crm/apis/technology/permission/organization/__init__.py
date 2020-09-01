@@ -69,7 +69,7 @@ class All(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
 
     response = with_metaclass(ResponseFieldSet)
-    response.organization_list = ResponseField(
+    response.data_list = ResponseField(
         ListField,
         desc = "组织列表",
         fmt = IterationField(
@@ -103,7 +103,7 @@ class All(StaffAuthorizedApi):
         return organization_list
 
     def fill(self, response, organization_list):
-        response.organization_list = organization_list
+        response.data_list = organization_list
         return response
 
 

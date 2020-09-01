@@ -66,7 +66,7 @@ class All(StaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
 
     response = with_metaclass(ResponseFieldSet)
-    response.position_list = ResponseField(
+    response.data_list = ResponseField(
         ListField,
         desc = "身份列表",
         fmt = IterationField(
@@ -102,7 +102,7 @@ class All(StaffAuthorizedApi):
         return position_list
 
     def fill(self, response, position_list):
-        response.position_list = position_list
+        response.data_list = position_list
         return response
 
 

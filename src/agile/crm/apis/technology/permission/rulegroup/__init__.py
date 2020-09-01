@@ -68,8 +68,9 @@ class Search(StaffAuthorizedApi):
     )
     request.search_info = RequestField(
         DictField,
-        desc = "搜索商品条件",
+        desc = "搜索规则组",
         conf = {
+            'name': CharField(desc = "名称", is_required = False),
         }
     )
 

@@ -3,6 +3,7 @@ import os
 import base64
 import datetime
 from io import BytesIO
+from urllib import parse
 from .process import image_process
 from abs.middleware.file import file_middleware
 from abs.middleware.config import config_middleware
@@ -188,11 +189,11 @@ class ImageMiddleware(object):
             150
         )
         store_name = image_process.get_store_name('autograph', '.png')
-        autograph_url = OSSAPI().put_object(
+        autograph_url = parse.unquote(OSSAPI().put_object(
             store_name,
             autograph_f.getvalue(),
             "orgdeer"
-        )
+        ))
 
         config_list = []
         for img_url in contract_img_url_list:
