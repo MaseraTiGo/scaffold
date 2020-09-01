@@ -30,9 +30,9 @@ class Search(NoAuthorizedApi):
             'duration': CharField(desc = "学年", is_required = False),
             'production_id': IntField(desc = "产品id", is_required = False),
             'category': CharField(
-                desc="类型",
-                choices=CategoryTypes.CHOICES,
-                is_required=False
+                desc = "类型",
+                choices = CategoryTypes.CHOICES,
+                is_required = False
             )
         }
     )
@@ -50,12 +50,12 @@ class Search(NoAuthorizedApi):
                 'school_name': CharField(desc = "学校名称"),
                 'major_name': CharField(desc = "专业名称"),
                 'duration': CharField(desc = "学年"),
-                'category': CharField(desc="类别"),
+                'category': CharField(desc = "类别"),
                 'school_city': CharField(desc = "学校所在城市"),
                 'production_name': CharField(desc = "产品名称"),
                 'brand_name': CharField(desc = "品牌名"),
                 'sale_price': IntField(desc = "售价"),
-                'agent_name': CharField(desc="代理商名称"),
+                'agent_name': CharField(desc = "代理商名称"),
             }
         )
     )
@@ -173,7 +173,7 @@ class HotSearch(NoAuthorizedApi):
                 'school_city': CharField(desc = "学校所在城市"),
                 'production_name': CharField(desc = "产品名称"),
                 'brand_name': CharField(desc = "品牌名称"),
-                'agent_name': CharField(desc="代理商名称"),
+                'agent_name': CharField(desc = "代理商名称"),
                 'sale_price': IntField(desc = "售价")
             }
         )
@@ -261,9 +261,10 @@ class Get(NoAuthorizedApi):
         'school_name': CharField(desc = "学校名称"),
         'major_name': CharField(desc = "专业名称"),
         'duration': CharField(desc = "学年"),
+        'category': CharField(desc = "类别"),
         'brand_name': CharField(desc = "品牌"),
         'production_name': CharField(desc = "产品名"),
-        'agent_name': CharField(desc="代理商名称"),
+        'agent_name': CharField(desc = "代理商名称"),
         'specification_list': ListField(
             desc = "规格列表",
             fmt = DictField(
@@ -323,6 +324,7 @@ class Get(NoAuthorizedApi):
             'school_name': goods.school.name,
             'major_name': goods.major.name,
             'duration': goods.years.get_duration_display(),
+            'category': goods.years.get_category_display(),
             'brand_name': goods.merchandise.production.brand.name,
             'production_name': goods.merchandise.production.name,
             'agent_name': goods.agent.name,

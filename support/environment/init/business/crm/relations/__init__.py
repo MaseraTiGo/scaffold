@@ -1800,7 +1800,7 @@ class RelationsLoader(BaseLoader):
                     'school_name': '长江大学',
                     'major_name': '法学',
                     'category':'specialty' ,
-                    'duration':'five_year',
+                    'duration':'two_half_year',
                 },
                 {
                     'school_name': '长江大学',

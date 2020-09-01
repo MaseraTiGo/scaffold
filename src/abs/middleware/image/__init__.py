@@ -43,8 +43,8 @@ class ImageMiddleware(object):
         company_official_seal = self.get_image(official_seal)
         company_official_seal = image_process.update_img_size(
             company_official_seal,
-            220,
-            220
+            500,
+            500
         )
         path = os.path.dirname(os.path.realpath(__file__))
         font_file = os.path.join(path, 'simsun.ttc')
@@ -185,7 +185,7 @@ class ImageMiddleware(object):
         autograph_f = self.get_image(autograph_base64_image)
         autograph_f = image_process.update_img_size(
             autograph_f,
-            250,
+            300,
             150
         )
         store_name = image_process.get_store_name('autograph', '.png')
