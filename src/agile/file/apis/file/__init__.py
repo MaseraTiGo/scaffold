@@ -38,10 +38,12 @@ class Upload(NoAuthorizedApi):
             raise BusinessError("此上传分类不存在")
         path_list = []
         for name, f in request._upload_files.items():
+            suffix = name.split(".")[-1]
             nowTime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-            store_name = "source/{type}/{time}.jpeg".format(
+            store_name = "source/{type}/{time}.{suffix}".format(
                 type = request.store_type,
-                time = nowTime
+                time = nowTime,
+                suffix = suffix
             )
             imgurl = OSSAPI().put_object(store_name, f, "orgdeer")
             path_list.append(parse.unquote(imgurl))

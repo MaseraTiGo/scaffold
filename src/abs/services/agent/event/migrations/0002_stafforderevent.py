@@ -14,18 +14,18 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='StaffOrderEvent',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('unique_number', models.CharField(max_length=64, unique=True, verbose_name='唯一逻辑码')),
-                ('staff_id', models.IntegerField(default=0, verbose_name='员工id')),
-                ('organization_id', models.IntegerField(verbose_name='组织id')),
-                ('remark', models.TextField(default='', null=True, verbose_name='备注')),
-                ('update_time', models.DateTimeField(auto_now=True, verbose_name='更新时间')),
-                ('create_time', models.DateTimeField(default=django.utils.timezone.now, verbose_name='创建时间')),
-                ('order_id', models.IntegerField(verbose_name='订单id')),
+            name = 'StaffOrderEvent',
+            fields = [
+                ('id', models.AutoField(auto_created = True, primary_key = True, serialize = False, verbose_name = 'ID')),
+                ('unique_number', models.CharField(max_length = 64, unique = True, verbose_name = '唯一逻辑码')),
+                ('staff_id', models.IntegerField(default = 0, verbose_name = '员工id')),
+                ('organization_id', models.IntegerField(verbose_name = '组织id')),
+                ('remark', models.TextField(default = '', null = True, verbose_name = '备注')),
+                ('update_time', models.DateTimeField(auto_now = True, verbose_name = '更新时间')),
+                ('create_time', models.DateTimeField(default = django.utils.timezone.now, verbose_name = '创建时间')),
+                ('order_id', models.IntegerField(verbose_name = '订单id')),
             ],
-            options={
+            options = {
                 'db_table': 'agent_event_staff_order',
             },
         ),

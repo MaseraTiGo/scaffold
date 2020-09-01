@@ -12,29 +12,29 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
-from agile.base.api import NoAuthorizedApi
+from agile.crm.manager.api import StaffAuthorizedApi
+from abs.middleware.config import config_middleware
 from abs.middleground.technology.permission.manager import PermissionServer
 
 
-class Add(NoAuthorizedApi):
+class Add(StaffAuthorizedApi):
     """
     添加规则组
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="appkey")
     request.rule_group_info = RequestField(
         DictField,
-        desc="规则组详情",
-        conf={
-            'name': CharField(desc="规则组名称"),
-            'content': CharField(desc="内容, 格式参照获取全部规则"),
-            'description': CharField(desc="描述"),
-            'remark': CharField(desc="备注"),
+        desc = "规则组详情",
+        conf = {
+            'name': CharField(desc = "规则组名称"),
+            'content': CharField(desc = "内容, 格式参照获取全部规则"),
+            'description': CharField(desc = "描述"),
+            'remark': CharField(desc = "备注"),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.rule_group_id = ResponseField(IntField, desc="规则组Id")
+    response.rule_group_id = ResponseField(IntField, desc = "规则组Id")
 
     @classmethod
     def get_desc(cls):
@@ -45,8 +45,9 @@ class Add(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        appkey = config_middleware.get_value("common", "crm_appkey")
         rule_group = PermissionServer.add_rule_group(
-            appkey=request.appkey,
+            appkey = appkey,
             **request.rule_group_info
         )
         return rule_group
@@ -56,39 +57,39 @@ class Add(NoAuthorizedApi):
         return response
 
 
-class Search(NoAuthorizedApi):
+class Search(StaffAuthorizedApi):
     """
     所有规则组
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="当前页码")
     request.current_page = RequestField(
         IntField,
-        desc="当前页码"
+        desc = "当前页码"
     )
     request.search_info = RequestField(
         DictField,
-        desc="搜索商品条件",
-        conf={
+        desc = "搜索规则组",
+        conf = {
+            'name': CharField(desc = "名称", is_required = False),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
     response.data_list = ResponseField(
         ListField,
-        desc="规则组列表",
-        fmt=DictField(
-            desc="规则组详情",
-            conf={
-                'id': IntField(desc="IDI"),
-                'name': CharField(desc="名称I"),
-                'content': CharField(desc="内容"),
-                'description': CharField(desc="描述"),
-                'remark': CharField(desc="备注"),
-                'create_time': DatetimeField(desc="创建时间"),
-                'update_time': DatetimeField(desc="更新时间"),
+        desc = "规则组列表",
+        fmt = DictField(
+            desc = "规则组详情",
+            conf = {
+                'id': IntField(desc = "IDI"),
+                'name': CharField(desc = "名称I"),
+                'content': CharField(desc = "内容"),
+                'description': CharField(desc = "描述"),
+                'remark': CharField(desc = "备注"),
+                'create_time': DatetimeField(desc = "创建时间"),
+                'update_time': DatetimeField(desc = "更新时间"),
             }
         )
     )
@@ -102,9 +103,10 @@ class Search(NoAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        appkey = config_middleware.get_value("common", "crm_appkey")
         spliter = PermissionServer.search_rule_group(
             request.current_page,
-            request.appkey,
+            appkey,
             **request.search_info
         )
         return spliter
@@ -124,25 +126,25 @@ class Search(NoAuthorizedApi):
         return response
 
 
-class Get(NoAuthorizedApi):
+class Get(StaffAuthorizedApi):
     """
     获取规则组接口
     """
     request = with_metaclass(RequestFieldSet)
-    request.rule_group_id = RequestField(IntField, desc="规则组id")
+    request.rule_group_id = RequestField(IntField, desc = "规则组id")
 
     response = with_metaclass(ResponseFieldSet)
     response.rule_group_info = ResponseField(
         DictField,
-        desc="规则组详情",
-        conf={
-            'id': IntField(desc="IDI"),
-            'name': CharField(desc="名称I"),
-            'content': CharField(desc="内容"),
-            'description': CharField(desc="描述"),
-            'remark': CharField(desc="备注"),
-            'create_time': DatetimeField(desc="创建时间"),
-            'update_time': DatetimeField(desc="更新时间"),
+        desc = "规则组详情",
+        conf = {
+            'id': IntField(desc = "IDI"),
+            'name': CharField(desc = "名称I"),
+            'content': CharField(desc = "内容"),
+            'description': CharField(desc = "描述"),
+            'remark': CharField(desc = "备注"),
+            'create_time': DatetimeField(desc = "创建时间"),
+            'update_time': DatetimeField(desc = "更新时间"),
         }
     )
 
@@ -173,20 +175,20 @@ class Get(NoAuthorizedApi):
         return response
 
 
-class Update(NoAuthorizedApi):
+class Update(StaffAuthorizedApi):
     """
     修改规则组信息
     """
     request = with_metaclass(RequestFieldSet)
-    request.rule_group_id = RequestField(IntField, desc="规则组id")
+    request.rule_group_id = RequestField(IntField, desc = "规则组id")
     request.update_info = RequestField(
         DictField,
-        desc="规则组修改详情",
-        conf={
-            'name': CharField(desc="名称", is_required=False),
-            'remark': CharField(desc="备注", is_required=False),
-            'content': CharField(desc="内容", is_required=False),
-            'description': CharField(desc="描述", is_required=False),
+        desc = "规则组修改详情",
+        conf = {
+            'name': CharField(desc = "名称", is_required = False),
+            'remark': CharField(desc = "备注", is_required = False),
+            'content': CharField(desc = "内容", is_required = False),
+            'description': CharField(desc = "描述", is_required = False),
         }
     )
 
@@ -210,12 +212,12 @@ class Update(NoAuthorizedApi):
         return response
 
 
-class Remove(NoAuthorizedApi):
+class Remove(StaffAuthorizedApi):
     """
     删除规则组信息
     """
     request = with_metaclass(RequestFieldSet)
-    request.rule_group_id = RequestField(IntField, desc="规则组id")
+    request.rule_group_id = RequestField(IntField, desc = "规则组id")
 
     response = with_metaclass(ResponseFieldSet)
 

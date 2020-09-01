@@ -18,11 +18,11 @@ from agile.wechat.manager.api import WechatAuthorizedApi
 
 class AutoLogin(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.code = RequestField(CharField, desc='code')
+    request.code = RequestField(CharField, desc = 'code')
 
     response = with_metaclass(ResponseFieldSet)
-    response.access_token = ResponseField(CharField, desc="用户访问令牌")
-    response.renew_flag = ResponseField(CharField, desc="续签访问令牌标识")
+    response.access_token = ResponseField(CharField, desc = "用户访问令牌")
+    response.renew_flag = ResponseField(CharField, desc = "续签访问令牌标识")
 
     @classmethod
     def get_desc(cls):
@@ -54,13 +54,13 @@ class AutoLogin(NoAuthorizedApi):
 
 class PhoneRegister(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.phone = RequestField(CharField, desc='手机号')
-    request.verify_code = RequestField(CharField, desc='手机验证码')
-    request.code = RequestField(CharField, desc='微信code')
+    request.phone = RequestField(CharField, desc = '手机号')
+    request.verify_code = RequestField(CharField, desc = '手机验证码')
+    request.code = RequestField(CharField, desc = '微信code')
 
     response = with_metaclass(ResponseFieldSet)
-    response.access_token = ResponseField(CharField, desc="用户访问令牌")
-    response.renew_flag = ResponseField(CharField, desc="续签访问令牌标识")
+    response.access_token = ResponseField(CharField, desc = "用户访问令牌")
+    response.renew_flag = ResponseField(CharField, desc = "续签访问令牌标识")
 
     @classmethod
     def get_desc(cls):
@@ -80,8 +80,8 @@ class PhoneRegister(NoAuthorizedApi):
         )
         if account:
             if TripartiteServer.search_all(
-                    customer_account=account,
-                    category=CategoryTypes.WECHAT
+                    customer_account = account,
+                    category = CategoryTypes.WECHAT
             ):
                 raise BusinessError('该手机号账号已绑定其他微信')
 
@@ -108,9 +108,9 @@ class PhoneRegister(NoAuthorizedApi):
                 request.phone
             )
         TripartiteServer.create(
-            customer_account=account,
-            category=CategoryTypes.WECHAT,
-            openid=openid
+            customer_account = account,
+            category = CategoryTypes.WECHAT,
+            openid = openid
         )
         return token
 
@@ -123,15 +123,15 @@ class PhoneRegister(NoAuthorizedApi):
 class WechatRegister(NoAuthorizedApi):
     """获取用户微信手机号"""
     request = with_metaclass(RequestFieldSet)
-    request.data_info = RequestField(DictField, desc='微信信息', conf={
-        'encrypted_data': CharField(desc="encryptedData"),
-        'iv': CharField(desc="iv"),
-        'code': CharField(desc="jsCode")
+    request.data_info = RequestField(DictField, desc = '微信信息', conf = {
+        'encrypted_data': CharField(desc = "encryptedData"),
+        'iv': CharField(desc = "iv"),
+        'code': CharField(desc = "jsCode")
     })
 
     response = with_metaclass(ResponseFieldSet)
-    response.access_token = ResponseField(CharField, desc="用户访问令牌")
-    response.renew_flag = ResponseField(CharField, desc="续签访问令牌标识")
+    response.access_token = ResponseField(CharField, desc = "用户访问令牌")
+    response.renew_flag = ResponseField(CharField, desc = "续签访问令牌标识")
 
     @classmethod
     def get_desc(cls):
@@ -154,11 +154,14 @@ class WechatRegister(NoAuthorizedApi):
         )
 
         if account:
-            if TripartiteServer.search_all(
-                    customer_account=account,
-                    category=CategoryTypes.WECHAT
-            ):
-                raise BusinessError('该手机号账号已绑定其他微信')
+            tripartite_qs = TripartiteServer.search_all(
+                    customer_account = account,
+                    category = CategoryTypes.WECHAT
+            )
+            if tripartite_qs.count() > 0:
+                tripartite = tripartite_qs[0]
+                if tripartite.openid != openid:
+                    raise BusinessError('该手机号账号已绑定其他微信')
 
         if account:
             token = CustomerAccountServer.account_login(
@@ -177,9 +180,9 @@ class WechatRegister(NoAuthorizedApi):
                 phone
             )
         TripartiteServer.create(
-            customer_account=account,
-            category=CategoryTypes.WECHAT,
-            openid=openid
+            customer_account = account,
+            category = CategoryTypes.WECHAT,
+            openid = openid
         )
         return token
 
@@ -205,8 +208,8 @@ class Unbind(WechatAuthorizedApi):
     def execute(self, request):
         account = CustomerAccountServer.get(self.auth_user.id)
         TripartiteServer.search_all(
-            customer_account=account,
-            category=CategoryTypes.WECHAT
+            customer_account = account,
+            category = CategoryTypes.WECHAT
         ).delete()
 
     def fill(self, response):

@@ -11,6 +11,6 @@ class PositionLoader(BaseLoader):
                 'name': '超级管理员',
                 'parent': "",
                 'describe': "超级角色",
-                'organization': "公司",
+                'rule_group':"超级管理员权限"
             }
         ]
