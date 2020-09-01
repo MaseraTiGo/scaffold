@@ -37,10 +37,6 @@ class Add(StaffAuthorizedApi):
     response.rule_group_id = ResponseField(IntField, desc="规则组Id")
 
     @classmethod
-    def get_desc(cls):
-        return "添加规则组"
-
-    @classmethod
     def get_author(cls):
         return "Roy"
 
@@ -58,7 +54,7 @@ class Add(StaffAuthorizedApi):
 
 class Search(StaffAuthorizedApi):
     """
-    所有规则组
+    搜索规则组
     """
     request = with_metaclass(RequestFieldSet)
     request.appkey = RequestField(CharField, desc="当前页码")
@@ -95,10 +91,6 @@ class Search(StaffAuthorizedApi):
     )
 
     @classmethod
-    def get_desc(cls):
-        return "所有规则组"
-
-    @classmethod
     def get_author(cls):
         return "Roy"
 
@@ -122,6 +114,58 @@ class Search(StaffAuthorizedApi):
         } for rule_group in spliter.get_list()]
         response.total = spliter.total
         response.total_page = spliter.total_page
+        return response
+
+
+class All(StaffAuthorizedApi):
+    """
+    所有规则组
+    """
+    request = with_metaclass(RequestFieldSet)
+    request.appkey = RequestField(CharField, desc="当前页码")
+
+    response = with_metaclass(ResponseFieldSet)
+    response.rule_group_list = ResponseField(
+        ListField,
+        desc="规则组列表",
+        fmt=DictField(
+            desc="规则组详情",
+            conf={
+                'id': IntField(desc="IDI"),
+                'name': CharField(desc="名称I"),
+                'content': CharField(desc="内容"),
+                'description': CharField(desc="描述"),
+                'remark': CharField(desc="备注"),
+                'create_time': DatetimeField(desc="创建时间"),
+                'update_time': DatetimeField(desc="更新时间"),
+            }
+        )
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "所有规则组"
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self, request):
+        rule_group_list = PermissionServer.all_rule_group(
+            request.appkey,
+        )
+        return rule_group_list
+
+    def fill(self, response, rule_group_list):
+        response.rule_group_list = [{
+            'id': rule_group.id,
+            'name': rule_group.name,
+            'content': rule_group.content,
+            'description': rule_group.description,
+            'remark': rule_group.remark,
+            'create_time': rule_group.create_time,
+            'update_time': rule_group.update_time,
+        } for rule_group in rule_group_list]
         return response
 
 

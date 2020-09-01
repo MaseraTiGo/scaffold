@@ -46,7 +46,7 @@ class Organization(BaseModel):
     parent_id = IntegerField(verbose_name="上级组织", default=0)
     remark = TextField(verbose_name="备注")
 
-    position_id_list = TextField(verbose_name="身份列表", default="")  # 身份列表
+    position_id_list = TextField(verbose_name="身份列表", default="[]")  # 身份列表
     authorization = ForeignKey(Authorization, on_delete=CASCADE)
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)

@@ -52,14 +52,14 @@ controller_pc_service.add(Get, Search, Update, Remove, Authorize, Apply, Forbidd
 from agile.controller.apis.staff.permission.rule import Add, All, Get, Update, Remove
 controller_pc_service.add(Add, All, Get, Update, Remove)
 
-from agile.controller.apis.staff.permission.organization import Add, All, Search, Get, Update, Remove
+from agile.controller.apis.staff.permission.organization import Add, All, Search,Tree, Get, Update, Remove
+controller_pc_service.add(Add, All, Search, Tree, Get, Update, Remove)
+
+from agile.controller.apis.staff.permission.rulegroup import Add, All, Search, Get, Update, Remove
 controller_pc_service.add(Add, All, Search, Get, Update, Remove)
 
-from agile.controller.apis.staff.permission.rulegroup import Add, Search, Get, Update, Remove
-controller_pc_service.add(Add, Search, Get, Update, Remove)
-
-from agile.controller.apis.staff.permission.position import Add, All, Search, Get, Update, Remove
-controller_pc_service.add(Add, All, Search, Get, Update, Remove)
+from agile.controller.apis.staff.permission.position import Add, All, Search, Tree, Get, Update, Remove
+controller_pc_service.add(Add, All, Tree, Search, Get, Update, Remove)
 
 from agile.controller.apis.staff.permission.bind import Position, Person
 controller_pc_service.add(Position, Person)

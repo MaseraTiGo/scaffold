@@ -6,6 +6,7 @@ Created on 2016年7月23日
 @author: Administrator
 '''
 
+import hashlib
 from infrastructure.core.field.base import CharField, DictField, \
         IntField, ListField, DateField, BooleanField, MobileField,\
         DatetimeField
@@ -17,6 +18,7 @@ from agile.controller.manager.api import StaffAuthorizedApi
 from abs.middleground.business.account.utils.constant import StatusTypes
 from abs.middleground.business.person.utils.constant import GenderTypes
 from abs.middleground.business.enterprise.manager import EnterpriseServer
+from abs.middleground.technology.permission.manager import PermissionServer
 from abs.services.controller.staff.manager import StaffServer
 from abs.services.controller.account.manager import StaffAccountServer
 
@@ -26,13 +28,16 @@ class Add(StaffAuthorizedApi):
     添加员工
     """
     request = with_metaclass(RequestFieldSet)
+    request.appkey = RequestField(CharField, desc="appkey")
     request.staff_info = RequestField(
         DictField,
         desc="员工详情",
         conf={
             'name': CharField(desc="姓名"),
+            'phone': MobileField(desc="手机"),
+            'organization_id': IntField(desc="组织ID"),
+            'position_id': IntField(desc="身份ID"),
             'birthday': DateField(desc="生日", is_required=False),
-            'phone': MobileField(desc="手机", is_required=False),
             'email': CharField(desc="邮箱", is_required=False),
             'gender': CharField(
                 desc="性别",
@@ -44,6 +49,7 @@ class Add(StaffAuthorizedApi):
     )
 
     response = with_metaclass(ResponseFieldSet)
+    response.staff_id = ResponseField(IntField, desc="员工id")
 
     @classmethod
     def get_desc(cls):
@@ -54,9 +60,25 @@ class Add(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        print(request.staff_info)
+        organization_id = reqeuset.staff_info.pop('organization_id')
+        position_id = reqeuset.staff_info.pop('position_id')
+    
 
-    def fill(self, response):
+        staff = StaffServer.create(
+            **request.staff_info
+        )
+        password = hashlib.md5(
+            staff.phone[-6:]
+        ).hexdigest()
+        StaffAccountServer.create(
+            staff.id,
+            staff.phone,
+            password
+        )
+        return staff
+
+    def fill(self, response, staff):
+        response.staff_id = staff.id
         return response
 
 
@@ -100,6 +122,8 @@ class Search(StaffAuthorizedApi):
                 'email': CharField(desc="邮箱"),
                 'work_number': CharField(desc="员工工号"),
                 'is_admin': BooleanField(desc="是否是管理员"),
+                'create_time': DatetimeField(desc="创建时间"),
+                'update_time': DatetimeField(desc="更新时间"),
             }
         )
     )
@@ -133,6 +157,8 @@ class Search(StaffAuthorizedApi):
             'phone': staff.person.phone,
             'email': staff.person.email,
             'is_admin': staff.is_admin,
+            'create_time': staff.create_time,
+            'update_time': staff.update_time,
         } for staff in staff_spliter.data]
         response.data_list = data_list
         response.total = staff_spliter.total
@@ -162,6 +188,8 @@ class Get(StaffAuthorizedApi):
             'email': CharField(desc="邮箱"),
             'work_number': CharField(desc="员工工号"),
             'is_admin': BooleanField(desc="是否是管理员"),
+            'update_time': DatetimeField(desc="更新时间"),
+            'create_time': DatetimeField(desc="创建时间"),
             'account_info': DictField(
                 desc="账号信息",
                 conf={
@@ -219,6 +247,8 @@ class Get(StaffAuthorizedApi):
             'phone': staff.person.phone,
             'email': staff.person.email,
             'is_admin': staff.is_admin,
+            'update_time': staff.update_time,
+            'create_time': staff.create_time,
             'account_info': {
                 'nick': staff.account.nick,
                 'username': staff.account.username,

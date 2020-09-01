@@ -1,6 +1,7 @@
 # coding=UTF-8
 
 import datetime
+import hashlib
 
 from infrastructure.core.exception.business_error import BusinessError
 from abs.common.manager import BaseManager

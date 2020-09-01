@@ -14,6 +14,22 @@ class AbstractStaffServer(BaseManager):
     STAFF_MODEL = None
 
     @classmethod
+    def create(cls, phone, **staff_info):
+        is_person_exsited, person = PersonServer.is_exsited(phone)
+        if is_person_exsited:
+            raise BusinessError('客户已存在，不能创建')
+
+        person = PersonServer.create(phone=phone, **staff_info)
+        company = EnterpriseServer.get_main_company()
+        staff = cls.STAFF_MODEL.create(
+            person_id=person.id,
+            company_id=company.id,
+            phone=phone,
+            **staff_info
+        )
+        return staff
+
+    @classmethod
     def _hung_permission(cls, staff_list):
         for staff in staff_list:
             staff.department_role_list = []
@@ -42,22 +58,6 @@ class AbstractStaffServer(BaseManager):
     def is_exsited(cls, phone):
         is_exsited, staff = cls.STAFF_MODEL.is_exsited(phone)
         return is_exsited, staff
-
-    @classmethod
-    def create(cls, phone, **staff_info):
-        is_person_exsited, person = PersonServer.is_exsited(phone)
-        if is_person_exsited:
-            raise BusinessError('客户已存在，不能创建')
-
-        person = PersonServer.create(phone=phone, **staff_info)
-        company = EnterpriseServer.get_main_company()
-        staff = cls.STAFF_MODEL.create(
-            person_id=person.id,
-            company_id=company.id,
-            phone=phone,
-            **staff_info
-        )
-        return staff
 
     @classmethod
     def update(cls, staff_id, **update_info):

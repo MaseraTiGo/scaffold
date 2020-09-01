@@ -41,10 +41,6 @@ class Add(StaffAuthorizedApi):
     response.organization_id = ResponseField(IntField, desc="组织Id")
 
     @classmethod
-    def get_desc(cls):
-        return "添加组织"
-
-    @classmethod
     def get_author(cls):
         return "Roy"
 
@@ -71,6 +67,70 @@ class All(StaffAuthorizedApi):
     response.organization_list = ResponseField(
         ListField,
         desc="组织列表",
+        fmt=DictField(
+            desc="组织详情",
+            conf={
+                "id": IntField(desc="id"),
+                "name": CharField(desc="名称"),
+                "remark": CharField(desc="备注"),
+                "description": CharField(desc="描述"),
+                "parent_id": IntField(desc="父级ID"),
+                "position_list": ListField(
+                    desc="职位列表",
+                    fmt=DictField(
+                        desc="身份详情",
+                        conf={
+                            'id': IntField(desc="职位id"),
+                            'name': CharField(desc="职位名称"),
+                        }
+                    )
+                ),
+            }
+        )
+    )
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self, request):
+        organization_list = PermissionServer.get_all_organization_byappkey(
+            request.appkey
+        )
+        return organization_list
+
+    def fill(self, response, organization_list):
+        response.organization_list = [
+            {
+                'id': organization.id,
+                'name': organization.name,
+                'remark': organization.remark,
+                'description': organization.description,
+                'parent_id': organization.parent_id,
+                'position_list': [
+                    {
+                        "id": position.id,
+                        "name": position.name,
+                    }
+                    for position in organization.position_list
+                ],
+            }
+            for organization in organization_list
+        ]
+        return response
+
+
+class Tree(StaffAuthorizedApi):
+    """
+    树状组织结构图
+    """
+    request = with_metaclass(RequestFieldSet)
+    request.appkey = RequestField(CharField, desc="appkey")
+
+    response = with_metaclass(ResponseFieldSet)
+    response.organization_list = ResponseField(
+        ListField,
+        desc="组织列表",
         fmt=IterationField(
             desc="组织详情",
             flag="children",
@@ -82,20 +142,26 @@ class All(StaffAuthorizedApi):
                 "parent_id": IntField(desc="父级ID"),
                 "update_time": DatetimeField(desc="更新时间"),
                 "create_time": DatetimeField(desc="创建时间"),
+                "position_list": ListField(
+                    desc="职位列表",
+                    fmt=DictField(
+                        desc="身份详情",
+                        conf={
+                            'id': IntField(desc="职位id"),
+                            'name': CharField(desc="职位名称"),
+                        }
+                    )
+                ),
             }
         )
     )
-
-    @classmethod
-    def get_desc(cls):
-        return "所有组织"
 
     @classmethod
     def get_author(cls):
         return "Roy"
 
     def execute(self, request):
-        organization_list = PermissionServer.get_all_organization_byappkey(
+        organization_list = PermissionServer.get_tree_organization_byappkey(
             request.appkey
         )
         return organization_list
@@ -196,6 +262,7 @@ class Get(StaffAuthorizedApi):
             "id": IntField(desc="名称"),
             "name": CharField(desc="名称"),
             "description": CharField(desc="描述"),
+            "position_id_list": CharField(desc="身份列表"),
             "position_list": ListField(
                 desc="职位列表",
                 fmt=DictField(
@@ -214,10 +281,6 @@ class Get(StaffAuthorizedApi):
     )
 
     @classmethod
-    def get_desc(cls):
-        return "获取组织详情接口"
-
-    @classmethod
     def get_author(cls):
         return "Roy"
 
@@ -232,6 +295,7 @@ class Get(StaffAuthorizedApi):
             'id': organization.id,
             'name': organization.name,
             'parent_id': organization.parent_id,
+            'position_id_list': organization.position_id_list,
             'position_list': [
                 {
                     "id": position.id,
@@ -271,10 +335,6 @@ class Update(StaffAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
 
     @classmethod
-    def get_desc(cls):
-        return "修改组织信息"
-
-    @classmethod
     def get_author(cls):
         return "Roy"
 
@@ -296,10 +356,6 @@ class Remove(StaffAuthorizedApi):
     request.organization_id = RequestField(IntField, desc="组织id")
 
     response = with_metaclass(ResponseFieldSet)
-
-    @classmethod
-    def get_desc(cls):
-        return "删除组织"
 
     @classmethod
     def get_author(cls):

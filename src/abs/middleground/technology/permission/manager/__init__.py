@@ -271,6 +271,16 @@ class PermissionServer(BaseManager):
         authorization = cls.get_authorization_byappkey(appkey)
         helper = permission_register.get_helper(authorization).organization
         all_organization = [
+            entity
+            for entity in helper.get_all_list()
+        ]
+        return all_organization
+
+    @classmethod
+    def get_tree_organization_byappkey(cls, appkey):
+        authorization = cls.get_authorization_byappkey(appkey)
+        helper = permission_register.get_helper(authorization).organization
+        all_organization = [
             entity.get_tree()
             for entity in helper.root.get_children()
         ]
@@ -300,6 +310,14 @@ class PermissionServer(BaseManager):
         if rule_group is None:
             raise BusinessError("权限组没有配置")
         return rule_group
+
+    @classmethod
+    def all_rule_group(cls, appkey):
+        authorization = cls.get_authorization_byappkey(appkey)
+        rule_group_qs = RuleGroup.query(
+            authorization=authorization,
+        ).filter()
+        return rule_group_qs
 
     @classmethod
     def search_rule_group(cls, current_page, appkey, **search_info):
@@ -352,6 +370,16 @@ class PermissionServer(BaseManager):
 
     @classmethod
     def get_all_position_byappkey(cls, appkey):
+        authorization = cls.get_authorization_byappkey(appkey)
+        helper = permission_register.get_helper(authorization).position
+        all_position = [
+            entity
+            for entity in helper.get_all_list()
+        ]
+        return all_position
+
+    @classmethod
+    def get_tree_position_byappkey(cls, appkey):
         authorization = cls.get_authorization_byappkey(appkey)
         helper = permission_register.get_helper(authorization).position
         all_position = [

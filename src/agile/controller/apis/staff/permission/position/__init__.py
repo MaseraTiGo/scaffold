@@ -56,6 +56,48 @@ class Add(StaffAuthorizedApi):
         return response
 
 
+class All(StaffAuthorizedApi):
+    """
+    所有身份
+    """
+    request = with_metaclass(RequestFieldSet)
+    request.appkey = RequestField(CharField, desc="当前页码")
+
+    response = with_metaclass(ResponseFieldSet)
+    response.position_list = ResponseField(
+        ListField,
+        desc="身份列表",
+        fmt=DictField(
+            desc="身份详情",
+            conf={
+                "id": IntField(desc="ID"),
+                "name": CharField(desc="名称"),
+                "description": CharField(desc="描述"),
+                "remark": CharField(desc="备注"),
+            }
+        )
+    )
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self, request):
+        position_list = PermissionServer.get_all_position_byappkey(
+            request.appkey,
+        )
+        return position_list
+
+    def fill(self, response, position_list):
+        response.position_list = [{
+            'id': position.id,
+            'name': position.name,
+            'description': position.description,
+            'remark': position.remark,
+        } for position in position_list]
+        return response
+
+
 class Search(StaffAuthorizedApi):
     """
     搜索身份
@@ -115,9 +157,9 @@ class Search(StaffAuthorizedApi):
         return response
 
 
-class All(StaffAuthorizedApi):
+class Tree(StaffAuthorizedApi):
     """
-    所有身份
+    树状所有身份
     """
     request = with_metaclass(RequestFieldSet)
     request.appkey = RequestField(CharField, desc="当前页码")
@@ -148,13 +190,12 @@ class All(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        position_list = PermissionServer.get_all_position_byappkey(
+        position_list = PermissionServer.get_tree_position_byappkey(
             request.appkey
         )
         return position_list
 
     def fill(self, response, position_list):
-        print(position_list)
         response.position_list = position_list
         return response
 
