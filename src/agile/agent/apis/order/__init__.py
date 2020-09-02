@@ -13,6 +13,8 @@ from abs.services.agent.order.manager import OrderServer, OrderItemServer
 from abs.services.crm.university.utils.constant import DurationTypes
 from abs.middleground.business.person.manager import PersonServer
 from abs.services.agent.customer.manager import AgentCustomerServer
+from abs.services.agent.staff.manager import AgentStaffServer
+from abs.services.agent.event.manager import StaffOrderEventServer
 
 
 class Get(AgentStaffAuthorizedApi):
@@ -227,6 +229,18 @@ class Search(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         auth = self.auth_user
+        agent = self.auth_agent
+
+        if not auth.is_admin:
+            permission = AgentStaffServer.get_permission(
+                auth, agent
+            )
+            order_ids = StaffOrderEventServer.get_order_ids(
+                staff_id__in = permission.staff_ids
+            )
+            request.search_info.update({
+                "id__in":order_ids
+            })
         request.search_info.update({
             "agent_id":auth.agent_id
         })

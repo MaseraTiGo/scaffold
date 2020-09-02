@@ -65,13 +65,20 @@ agent_pc_service.add(Search, Add)
 from agile.agent.apis.customer.order import Search
 agent_pc_service.add(Search)
 
-from agile.agent.apis.technology.permission.organization import Add, All, Get , \
-                                                              Update, Remove
-agent_pc_service.add(Add, All, Get, Update, Remove)
+from agile.agent.apis.technology.permission.organization import Add, All, Tree, \
+                                                            Get, Update, Remove
+agent_pc_service.add(Add, All, Tree, Get, Update, Remove)
 
-from agile.agent.apis.technology.permission.position import Add, All, Get , \
-                                                          Update, Remove
-agent_pc_service.add(Add, All, Get, Update, Remove)
+from agile.agent.apis.technology.permission.position import Add, All, Tree, \
+                                                            Get, Update, Remove
+agent_pc_service.add(Add, All, Tree, Get, Update, Remove)
+
+from agile.agent.apis.technology.permission.rulegroup import Add, Search, All, \
+                                                             Get, Update, Remove
+agent_pc_service.add(Add, Search, All, Get, Update, Remove)
+
+from agile.agent.apis.technology.permission.rule import All
+agent_pc_service.add(All)
 
 from agile.agent.apis.goods.poster import Add
 agent_pc_service.add(Add)

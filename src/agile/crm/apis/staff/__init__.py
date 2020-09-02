@@ -14,8 +14,10 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.crm.manager.api import StaffAuthorizedApi
+from abs.middleware.config import config_middleware
 from abs.services.crm.staff.manager import StaffServer
 from abs.services.crm.account.manager import StaffAccountServer
+from abs.middleground.technology.permission.manager import PermissionServer
 
 
 class Add(StaffAuthorizedApi):
@@ -36,6 +38,8 @@ class Add(StaffAuthorizedApi):
                 is_required = False,
                 choices = [("男", "man"), ("女", "woman")]
             ),
+            'organization_id': IntField(desc = "组织id"),
+            'position_id': IntField(desc = "身份id"),
             'remark': CharField(desc = "备注", is_required = False),
         }
     )
@@ -51,9 +55,18 @@ class Add(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
+        organization_id = request.staff_info.pop("organization_id")
+        position_id = request.staff_info.pop("position_id")
         staff = StaffServer.create(
             request.staff_info.pop("phone"), \
             **request.staff_info
+        )
+        appkey = config_middleware.get_value("common", "crm_appkey")
+        PermissionServer.bind_position(
+            appkey,
+            organization_id,
+            position_id,
+            staff.person_id
         )
 
     def fill(self, response):

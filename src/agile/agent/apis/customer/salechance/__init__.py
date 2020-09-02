@@ -71,9 +71,13 @@ class Search(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         auth = self.auth_user
+        agent = self.auth_agent
         if not auth.is_admin:
+            permission = AgentStaffServer.get_permission(
+                auth, agent
+            )
             request.search_info.update({
-                "staff_id":auth.id
+                "staff_id__in":permission.staff_ids
             })
         request.search_info.update({
             "agent_id":auth.agent_id

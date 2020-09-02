@@ -495,12 +495,14 @@ class PermissionServer(BaseManager):
         )
 
         helper = permission_register.get_helper(authorization)
-        organization_id_list = helper.organization.get_children_ids(
+        organization_id_list = helper.organization.get_all_children_ids(
             position_permission.organization.id
         )
-        position_id_list = helper.position.get_children_ids(
+        organization_id_list.append(position_permission.organization.id)
+        position_id_list = helper.position.get_all_children_ids(
             position_permission.position.id
         )
+        position_id_list.append(position_permission.position.id)
         person_id_list = [
             permission['person_id']
             for permission in PositionPermission.query().filter(

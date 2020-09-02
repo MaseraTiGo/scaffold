@@ -35,3 +35,11 @@ class StaffOrderEventServer(BaseManager):
     def create(cls, **info):
         event = StaffOrderEvent.create(**info)
         return event
+
+    @classmethod
+    def get_order_ids(cls, **search_info):
+        order_ids = StaffOrderEvent.search(**search_info).values_list(
+            'order_id',
+            flat = True
+        )
+        return order_ids

@@ -78,10 +78,18 @@ class Add(AgentStaffAuthorizedApi):
             request.staff_info.update({
                 "diploma_img":json.dumps(diploma_img)
             })
+        organization_id = request.staff_info.pop("organization_id")
+        position_id = request.staff_info.pop("position_id")
         agent_staff = AgentStaffServer.create(
             request.staff_info.pop("phone"), \
             agent, \
             **request.staff_info
+        )
+        PermissionServer.bind_position(
+            agent.appkey,
+            organization_id,
+            position_id,
+            agent_staff.person_id
         )
         return agent_staff
 
@@ -155,12 +163,20 @@ class Search(AgentStaffAuthorizedApi):
 
     @classmethod
     def get_author(cls):
-        return "Roy"
+        return "Fsy"
 
     def execute(self, request):
         auth = self.auth_user
+        agent = self.auth_agent
+        if not auth.is_admin:
+            permission = AgentStaffServer.get_permission(
+                auth, agent
+            )
+            request.search_info.update({
+                "id__in":permission.staff_ids
+            })
         request.search_info.update({
-            "agent_id":auth.agent_id
+            "agent_id":agent.id
         })
         staff_spliter = AgentStaffServer.search(
             request.current_page,

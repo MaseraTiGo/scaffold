@@ -126,6 +126,58 @@ class Search(StaffAuthorizedApi):
         return response
 
 
+class All(StaffAuthorizedApi):
+    """
+    所有规则组
+    """
+    request = with_metaclass(RequestFieldSet)
+
+    response = with_metaclass(ResponseFieldSet)
+    response.data_list = ResponseField(
+        ListField,
+        desc = "规则组列表",
+        fmt = DictField(
+            desc = "规则组详情",
+            conf = {
+                'id': IntField(desc = "IDI"),
+                'name': CharField(desc = "名称I"),
+                'content': CharField(desc = "内容"),
+                'description': CharField(desc = "描述"),
+                'remark': CharField(desc = "备注"),
+                'create_time': DatetimeField(desc = "创建时间"),
+                'update_time': DatetimeField(desc = "更新时间"),
+            }
+        )
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "所有规则组"
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self, request):
+        appkey = config_middleware.get_value("common", "crm_appkey")
+        rule_group_list = PermissionServer.all_rule_group(
+            appkey
+        )
+        return rule_group_list
+
+    def fill(self, response, rule_group_list):
+        response.data_list = [{
+            'id': rule_group.id,
+            'name': rule_group.name,
+            'content': rule_group.content,
+            'description': rule_group.description,
+            'remark': rule_group.remark,
+            'create_time': rule_group.create_time,
+            'update_time': rule_group.update_time,
+        } for rule_group in rule_group_list]
+        return response
+
+
 class Get(StaffAuthorizedApi):
     """
     获取规则组接口

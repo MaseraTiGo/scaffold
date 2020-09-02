@@ -96,20 +96,20 @@ crm_pc_service.add(Add, Search, Get, Update, SearchAll)
 from agile.crm.apis.agent.contacts import Add, Search, Update, AddAccount
 crm_pc_service.add(Add, Search, Update, AddAccount)
 
-from agile.crm.apis.technology.permission.organization import Add, All, Get , \
+from agile.crm.apis.technology.permission.organization import Add, All, Tree, Get , \
                                                               Update, Remove
-crm_pc_service.add(Add, All, Get, Update, Remove)
+crm_pc_service.add(Add, All, Tree, Get, Update, Remove)
 
-from agile.crm.apis.technology.permission.position import Add, All, Get , \
+from agile.crm.apis.technology.permission.position import Add, All, Tree, Get , \
                                                           Update, Remove
-crm_pc_service.add(Add, All, Get, Update, Remove)
+crm_pc_service.add(Add, All, Tree, Get, Update, Remove)
 
 from agile.crm.apis.technology.permission.rule import All
 crm_pc_service.add(All)
 
-from agile.crm.apis.technology.permission.rulegroup import Add, Search, Get, \
+from agile.crm.apis.technology.permission.rulegroup import Add, Search, All, Get, \
      Update, Remove
-crm_pc_service.add(Add, Search, Get, Update, Remove)
+crm_pc_service.add(Add, Search, All, Get, Update, Remove)
 
 from agile.crm.apis.adsense.space import Search, Add, Update, SearchAll
 crm_pc_service.add(Search, Add, Update, SearchAll)

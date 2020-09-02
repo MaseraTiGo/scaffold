@@ -72,6 +72,70 @@ class All(StaffAuthorizedApi):
     response.data_list = ResponseField(
         ListField,
         desc = "组织列表",
+        fmt = DictField(
+            desc = "组织详情",
+            conf = {
+                "id": IntField(desc = "id"),
+                "name": CharField(desc = "名称"),
+                "remark": CharField(desc = "备注"),
+                "description": CharField(desc = "描述"),
+                "parent_id": IntField(desc = "父级ID"),
+                "position_list": ListField(
+                    desc = "职位列表",
+                    fmt = DictField(
+                        desc = "身份详情",
+                        conf = {
+                            'id': IntField(desc = "职位id"),
+                            'name': CharField(desc = "职位名称"),
+                        }
+                    )
+                ),
+            }
+        )
+    )
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self, request):
+        appkey = config_middleware.get_value("common", "crm_appkey")
+        organization_list = PermissionServer.get_all_organization_byappkey(
+            appkey
+        )
+        return organization_list
+
+    def fill(self, response, organization_list):
+        response.data_list = [
+            {
+                'id': organization.id,
+                'name': organization.name,
+                'remark': organization.remark,
+                'description': organization.description,
+                'parent_id': organization.parent_id,
+                'position_list': [
+                    {
+                        "id": position["id"],
+                        "name": position["name"],
+                    }
+                    for position in organization.position_list
+                ],
+            }
+            for organization in organization_list
+        ]
+        return response
+
+
+class Tree(StaffAuthorizedApi):
+    """
+    树状组织结构图
+    """
+    request = with_metaclass(RequestFieldSet)
+
+    response = with_metaclass(ResponseFieldSet)
+    response.data_list = ResponseField(
+        ListField,
+        desc = "组织列表",
         fmt = IterationField(
             desc = "组织详情",
             flag = "children",
@@ -83,21 +147,27 @@ class All(StaffAuthorizedApi):
                 "parent_id": IntField(desc = "父级ID"),
                 "update_time": DatetimeField(desc = "更新时间"),
                 "create_time": DatetimeField(desc = "创建时间"),
+                "position_list": ListField(
+                    desc = "职位列表",
+                    fmt = DictField(
+                        desc = "身份详情",
+                        conf = {
+                            'id': IntField(desc = "职位id"),
+                            'name': CharField(desc = "职位名称"),
+                        }
+                    )
+                ),
             }
         )
     )
 
     @classmethod
-    def get_desc(cls):
-        return "所有组织"
-
-    @classmethod
     def get_author(cls):
-        return "Fsy"
+        return "Roy"
 
     def execute(self, request):
         appkey = config_middleware.get_value("common", "crm_appkey")
-        organization_list = PermissionServer.get_all_organization_byappkey(
+        organization_list = PermissionServer.get_tree_organization_byappkey(
             appkey
         )
         return organization_list

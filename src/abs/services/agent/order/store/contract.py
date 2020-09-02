@@ -12,6 +12,7 @@ class Contract(BaseModel):
     person_id = IntegerField(verbose_name = "用户id", default = 0)
     company_id = IntegerField(verbose_name = "公司id", default = 0)
     order_item_id = IntegerField(verbose_name = "订单商品详情id", default = 0)
+    order_id = IntegerField(verbose_name = "订单id", default = 0)
     name = CharField(verbose_name = "名称", max_length = 32)
     phone = CharField(verbose_name = "联系电话", max_length = 16, default = "")
     email = CharField(verbose_name = "emali", max_length = 128, default = "")

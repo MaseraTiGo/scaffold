@@ -226,6 +226,7 @@ class ContractServer(BaseManager):
             'number': number,
             'agent_customer_id': order_item.order.agent_customer_id,
             'person_id': order_item.order.person_id,
+            'order_id':order_item.order.id,
             'company_id': order_item.order.company_id,
             'order_item_id': order_item.id,
             'agent_id': agent.id,

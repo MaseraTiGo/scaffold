@@ -7,10 +7,26 @@ from infrastructure.utils.common.split_page import Splitor
 from abs.common.manager import BaseManager
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.person.manager import PersonServer
+from abs.middleground.technology.permission.manager import PermissionServer
 from abs.services.agent.staff.models import Staff
 
 
 class AgentStaffServer(BaseManager):
+
+    @classmethod
+    def get_permission(self, staff, agent):
+        permission = PermissionServer.get_permission(
+                agent.appkey,
+                staff.person_id
+            )
+        staff_ids = Staff.search(
+            person_id__in = permission.data[0]
+        ).values_list(
+            'id',
+            flat = True
+        )
+        permission.staff_ids = staff_ids
+        return permission
 
     @classmethod
     def hung_permission(cls, staff_list):
