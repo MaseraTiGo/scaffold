@@ -3,6 +3,7 @@ import json
 import datetime
 import time
 import random
+from django.db.models import *
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
@@ -18,6 +19,10 @@ from abs.middleware.image import image_middleware
 from abs.services.agent.order.store.contract import Contract
 from abs.middleware.email import email_middleware
 from abs.middleware.config import config_middleware
+from abs.middleground.business.merchandise.utils.constant import \
+     DespatchService
+from abs.services.agent.order.utils.constant import ContractStatus
+
 
 class OrderServer(BaseManager):
 
@@ -165,6 +170,30 @@ class OrderServer(BaseManager):
     def pay_fail_callback(cls, output_record_number):
         mg_OrderServer.pay_fail_callback(output_record_number)
 
+    @classmethod
+    def delivery(cls, order_item, despatch_id):
+        mg_order = mg_OrderServer.get(
+            order_item.order.mg_order_id, is_hung = True
+        )
+        if mg_order.status != OrderStatus.PAYMENT_FINISHED:
+            raise BusinessError('订单状态异常')
+        delivery_snapshoot = None
+        for snapshoot in mg_order.requirement.snapshoot_list:
+            if snapshoot.id == order_item.merchandise_snapshoot_id:
+                delivery_snapshoot = snapshoot
+        delivery_record = mg_OrderServer.delivery(
+            mg_order.id,
+            delivery_snapshoot.despatch_type,  # 发货方式
+            despatch_id,
+            "",
+            {delivery_snapshoot.id:1},
+            **{}
+        )
+        if delivery_record:
+            order_item.order.update(
+                status = OrderStatus.DELIVERY_FINISHED
+            )
+
 
 class OrderItemServer(BaseManager):
 
@@ -256,6 +285,7 @@ class ContractServer(BaseManager):
         contract.order_item.order.update(
             status = OrderStatus.ORDER_FINISHED
         )
+        contract.update(status = ContractStatus.SIGNED)
 
     @classmethod
     def search_all(cls, **search_info):
@@ -296,5 +326,6 @@ class ContractServer(BaseManager):
             )
         except Exception as e:
             raise BusinessError('发送失败')
+        contract.update(send_email_number = F("send_email_number") + 1)
         return True
 

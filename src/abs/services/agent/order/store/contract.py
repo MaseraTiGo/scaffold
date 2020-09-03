@@ -3,6 +3,7 @@
 from abs.common.model import BaseModel, timezone, \
         IntegerField, CharField, TextField, DateTimeField
 from abs.services.agent.order.settings import DB_PREFIX
+from abs.services.agent.order.utils.constant import ContractStatus
 
 
 class Contract(BaseModel):
@@ -20,6 +21,13 @@ class Contract(BaseModel):
     autograph = TextField(verbose_name = "签名URL", default = "")
     url = TextField(verbose_name = "合同url", default = "[]")
     img_url = TextField(verbose_name = "合同图片", default = '[]')
+    status = CharField(
+        verbose_name = "合同状态",
+        max_length = 64,
+        choices = ContractStatus.CHOICES,
+        default = ContractStatus.WAIT_SEND
+    )
+    send_email_number = IntegerField(verbose_name = "发送邮件次数", default = 0)
 
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)

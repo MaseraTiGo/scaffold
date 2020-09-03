@@ -67,8 +67,8 @@ customer_mobile_service.add(Search, Get, HotSearch)
 from agile.customer.apis.customer.order import Add, Get, Search, Pay, Cancel, PosterAdd
 customer_mobile_service.add(Add, Get, Search, Pay, Cancel, PosterAdd)
 
-from agile.customer.apis.customer.contract import Get, Add, Search, Autograph
-customer_mobile_service.add(Get, Add, Search, Autograph)
+from agile.customer.apis.customer.contract import Get, Search, Autograph
+customer_mobile_service.add(Get, Search, Autograph)
 
 from agile.customer.apis.adsense.advertisement import Search
 customer_mobile_service.add(Search)

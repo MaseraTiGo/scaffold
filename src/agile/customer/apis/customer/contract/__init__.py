@@ -20,101 +20,55 @@ class Get(CustomerAuthorizedApi):
     request.order_item_id = RequestField(IntField, desc = "订单详情id")
 
     response = with_metaclass(ResponseFieldSet)
-    response.contract_list = ResponseField(
-        ListField,
-        desc = "合同列表",
-        fmt = CharField(desc = "合同信息")
-    )
-    response.contract_img_list = ResponseField(
-        ListField,
-        desc = "合同列表",
-        fmt = CharField(desc = "合同信息")
-    )
-
-    @classmethod
-    def get_desc(cls):
-        return "合同列表"
-
-    @classmethod
-    def get_author(cls):
-        return "xyc"
-
-    def execute(self, request):
-        order_item = OrderItemServer.get(
-            request.order_item_id
-        )
-        if order_item.order.person_id != self.auth_user.person_id:
-            raise BusinessError('订单异常')
-        contract_list = ContractServer.search_all(
-            order_item_id = order_item.id
-        )
-        return contract_list
-
-    def fill(self, response, contract_list):
-        url_list = []
-        img_url_list = []
-        for contract in contract_list:
-            url_list.extend(json.loads(contract.url))
-            img_url_list.extend(json.loads(contract.img_url))
-        response.contract_list = url_list
-        response.contract_img_list = img_url_list
-        return response
-
-
-class Add(CustomerAuthorizedApi):
-    request = with_metaclass(RequestFieldSet)
-    request.order_item_id = RequestField(IntField, desc = "订单详情id")
-
-    response = with_metaclass(ResponseFieldSet)
     response.contract_info = ResponseField(
         DictField,
         desc = "合同信息",
         conf = {
             'id': IntField(desc = "id"),
+            'url': ListField(
+                desc = "合同列表png",
+                fmt = CharField(desc = "合同ptf信息")
+            ),
             'img_url': ListField(
                 desc = "合同列表png",
-                fmt = CharField(desc = "合同信息")
-            )
+                fmt = CharField(desc = "合同图片信息")
+            ),
+            'name': CharField(desc = "签署人姓名"),
+            'phone': CharField(desc = "签署人手机号"),
+            'identification': CharField(desc = "签署人身份证号"),
         }
     )
 
     @classmethod
     def get_desc(cls):
-        return "创建合同"
+        return "根据订单详情查询合同接口"
 
     @classmethod
     def get_author(cls):
-        return "xyc"
+        return "Fsy"
 
     def execute(self, request):
         order_item = OrderItemServer.get(
             request.order_item_id
         )
-        '''
         if order_item.order.person_id != self.auth_user.person_id:
             raise BusinessError('订单异常')
-        if order_item.order.status != OrderStatus.PAYMENT_FINISHED:
-            raise BusinessError('订单状态异常')
-        '''
-        agent = AgentServer.get(order_item.order.agent_id)
-        contacts = AgentServer.search_all_contacts(agent = agent).first()
-        if not contacts:
-            raise BusinessError('代理商联系人不存在，请联系客服')
-        contract = ContractServer.search_all(
+        contract = None
+        contract_list = ContractServer.search_all(
             order_item_id = order_item.id
-        ).first()
-        if not contract:
-            contract = ContractServer.create(
-                order_item,
-                agent,
-                contacts
-            )
+        )
+        if contract_list.count() > 0:
+            contract = contract_list[0]
         return contract
 
     def fill(self, response, contract):
         response.contract_info = {
-            'id': contract.id,
-            'img_url': json.loads(contract.img_url)
+            "id":contract.id,
+            "contract_list":json.loads(contract.url),
+            "contract_img_list":json.loads(contract.img_url),
+            "name":contract.name,
+            "phone":contract.phone,
+            "identification":contract.identification,
         }
         return response
 
@@ -143,6 +97,8 @@ class Autograph(CustomerAuthorizedApi):
 
     def execute(self, request):
         contract = ContractServer.get(request.contract_id)
+        if contract.status != ContractStatus.WAIT_SIGNED:
+            raise BusinessError("请不要重复签署")
         order_item = OrderItemServer.get(contract.order_item_id)
         contract.order_item = order_item
         autograph = parse.unquote(
@@ -169,7 +125,7 @@ class Search(CustomerAuthorizedApi):
             desc = "合同信息",
             conf = {
                 'id': IntField(desc = "id"),
-                'name': CharField(desc = "名称"),
+                'contract_name': CharField(desc = "名称"),
                 'create_time': DatetimeField(desc = "创建时间"),
                 'url': ListField(
                     desc = "合同列表pdf",
@@ -179,7 +135,11 @@ class Search(CustomerAuthorizedApi):
                     desc = "合同列表png",
                     fmt = CharField(desc = "合同信息")
                 ),
+                'status': CharField(desc = "合同状态"),
                 'status_name': CharField(desc = "合同状态名称"),
+                'name': CharField(desc = "签署人姓名"),
+                'phone': CharField(desc = "签署人手机号"),
+                'identification': CharField(desc = "签署人身份证号"),
             }
         )
     )
@@ -201,11 +161,15 @@ class Search(CustomerAuthorizedApi):
     def fill(self, response, data_list):
         response.data_list = [{
             'id': contract.id,
-            'name': '教育合同-{name}'.format(name = contract.name),
+            'contract_name': '教育合同-{name}'.format(name = contract.name),
             'create_time': contract.create_time,
             'url': json.loads(contract.url),
             'img_url': json.loads(contract.img_url),
-            'status_name':"已完成"
+            'status':contract.status,
+            'status_name':contract.get_status_display(),
+            'name': contract.name,
+            'phone': contract.phone,
+            'identification':contract.identification,
         } for contract in data_list]
         return response
 

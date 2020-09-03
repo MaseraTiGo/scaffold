@@ -4,7 +4,8 @@ from abs.common.model import BaseModel, IntegerField, CharField, DateTimeField, 
 from abs.services.agent.order.settings import DB_PREFIX
 from abs.services.agent.order.utils.constant import OrderSource
 from abs.middleground.business.order.utils.constant import OrderStatus
-
+from abs.middleground.business.transaction.utils.constant import PayTypes, \
+        PayService
 
 class Order(BaseModel):
     agent_customer_id = IntegerField(verbose_name = "代理商客户id", default = 0)
@@ -12,7 +13,12 @@ class Order(BaseModel):
     agent_id = IntegerField(verbose_name = "代理商id", default = 0)
     person_id = IntegerField(verbose_name = "用户id", default = 0)
     company_id = IntegerField(verbose_name = "公司id", default = 0)
-
+    pay_services = CharField(
+        verbose_name = "订单支付服务",
+        max_length = 128,
+        choices = PayService.CHOICES,
+        default = PayService.FULL_PAYMENT
+    )
     source = CharField(
         verbose_name = "订单来源",
         max_length = 64,

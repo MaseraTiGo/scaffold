@@ -1,4 +1,5 @@
 # coding=UTF-8
+import json
 import datetime
 from infrastructure.core.field.base import CharField, DictField, \
         IntField, ListField, DatetimeField, BooleanField
@@ -22,6 +23,8 @@ class Add(AgentStaffAuthorizedApi):
             'sale_chance_id': IntField(desc = '机会id'),
             'goods_id': IntField(desc = "商品id"),
             'remark': CharField(desc = "备注", is_required = False),
+            'pay_services': CharField(desc = "支付类型"),
+            'deposit': IntField(desc = "首付款金额"),
             'specification_list': ListField(
                 desc = "规格列表",
                 fmt = DictField(
@@ -29,6 +32,16 @@ class Add(AgentStaffAuthorizedApi):
                     conf = {
                         'id': IntField(desc = "规格id"),
                         'sale_price': IntField(desc = "价格")
+                    }
+                )
+            ),
+            'pay_plan': ListField(
+                desc = "回款计划",
+                fmt = DictField(
+                    desc = "规格信息",
+                    conf = {
+                        'plan_amount': IntField(desc = "金额"),
+                        'plan_time': DatetimeField(desc = "时间")
                     }
                 )
             )
@@ -47,14 +60,20 @@ class Add(AgentStaffAuthorizedApi):
         return "xyc"
 
     def execute(self, request):
-        sale_chance = SaleChanceServer.get(request.poster_info.pop('sale_chance_id'))
+        if len(request.poster_info["specification_list"]) > 1:
+            raise BusinessError('海报的规格只能选择一个')
+        sale_chance = SaleChanceServer.get(
+            request.poster_info.pop('sale_chance_id')
+        )
         if self.auth_user.id != sale_chance.staff_id:
             raise BusinessError('只能生成自己客户的海报')
         if sale_chance.end_time <= datetime.date.today():
             raise BusinessError('机会已过期')
         goods = GoodsServer.get_goods(request.poster_info.pop('goods_id'))
         specification_list = request.poster_info.pop('specification_list')
-
+        request.poster_info["pay_plan"] = json.dumps(
+            request.poster_info["pay_plan"]
+        )
         poster = PosterServer.add(
             specification_list,
             goods = goods,

@@ -527,27 +527,46 @@ class SearchAll(AgentStaffAuthorizedApi):
                     fmt = DictField(
                         desc = "商品信息",
                         conf = {
-                            'id': IntField(desc = "商品id"),
-                            'name': CharField(desc = "商品名称"),
-                            'major_name': CharField(desc = "专业名称"),
-                            'specification_list': ListField(
-                                desc = "规格列表",
+                            'id':IntField(desc = '学校id'),
+                            'name':CharField(desc = '学校名称'),
+                            'children':ListField(
+                                desc = '专业列表',
                                 fmt = DictField(
-                                    desc = "规格详情",
+                                    desc = '专业信息',
                                     conf = {
-                                        "id": IntField(desc = "规格id"),
-                                        "show_image": CharField(desc = "展示图片"),
-                                        "sale_price": IntField(desc = "销售价为，单位：分"),
-                                        "specification_value_list": ListField(
-                                            desc = "属性值列表",
+                                        'id':IntField(desc = '专业id'),
+                                        'name':CharField(desc = '专业名称'),
+                                        'children':ListField(
+                                            desc = '商品列表',
                                             fmt = DictField(
-                                                desc = "属性详情",
+                                                desc = '商品信息',
                                                 conf = {
-                                                    "category": CharField(desc = "属性分类"),
-                                                    "attribute": CharField(desc = "属性值"),
+                                                    'id': IntField(desc = "商品id"),
+                                                    'name': CharField(desc = "商品名称"),
+                                                    'specification_list': ListField(
+                                                        desc = "规格列表",
+                                                        fmt = DictField(
+                                                            desc = "规格详情",
+                                                            conf = {
+                                                                "id": IntField(desc = "规格id"),
+                                                                "show_image": CharField(desc = "展示图片"),
+                                                                "sale_price": IntField(desc = "销售价为，单位：分"),
+                                                                "specification_value_list": ListField(
+                                                                    desc = "属性值列表",
+                                                                    fmt = DictField(
+                                                                        desc = "属性详情",
+                                                                        conf = {
+                                                                            "category": CharField(desc = "属性分类"),
+                                                                            "attribute": CharField(desc = "属性值"),
+                                                                        }
+                                                                    )
+                                                                ),
+                                                            }
+                                                        )
+                                                    )
                                                 }
                                             )
-                                        ),
+                                        )
                                     }
                                 )
                             )
@@ -573,9 +592,85 @@ class SearchAll(AgentStaffAuthorizedApi):
         ))
         MerchandiseServer.hung_merchandise(goods_list)
         ProductionServer.hung_production([goods.merchandise for goods in goods_list])
+        UniversityServer.hung_school(goods_list)
         UniversityServer.hung_major(goods_list)
         return goods_list
 
+    def fill(self, response, goods_list):
+        mapping = {}
+        for goods in goods_list:
+            production = goods.merchandise.production
+            school = goods.school
+            major = goods.major
+            if production.id not in mapping:
+                mapping[production.id] = {
+                    "id":production.id,
+                    "name":production.name,
+                    "school_ids":[],
+                    "children":{}
+                }
+            if school.id not in mapping[production.id]["school_ids"]:
+                mapping[production.id]["school_ids"].append(school.id)
+                mapping[production.id]["children"][school.id] = {
+                    "id":school.id,
+                    "name":school.name,
+                    "major_ids":[],
+                    "children":{}
+                }
+            if major.id not in mapping[production.id]["children"][school.id]["major_ids"]:
+                mapping[production.id]["children"][school.id]["major_ids"].append(major.id)
+                mapping[production.id]["children"][school.id]["children"][major.id] = {
+                    "id":major.id,
+                    "name":major.name,
+                    "children":[]
+                }
+            mapping[production.id]["children"][school.id]["children"][major.id]["children"].append(goods)
+
+        data_list = []
+        for k, v in mapping.items():
+            product_children = []
+            for s_id, school in v["children"].items():
+                school_children = []
+                for m_id, major in school["children"].items():
+                    major_children = []
+                    for goods in major["children"]:
+                        specification_list = [{
+                            "id": specification.id,
+                            'show_image': specification.show_image,
+                            "sale_price": specification.sale_price,
+                            "specification_value_list": [{
+                                "category": specification_value.category,
+                                "attribute": specification_value.attribute
+                            } for specification_value in specification.specification_value_list]
+                        } for specification in goods.merchandise.specification_list]
+                        goods_dic = {
+                            "id":goods.id,
+                            "name":goods.merchandise.title,
+                            "specification_list":specification_list,
+                        }
+                        major_children.append(goods_dic)
+                    major_dic = {
+                       "id":major["id"],
+                       "name":major["name"],
+                       "children":major_children,
+                    }
+                    school_children.append(major_dic)
+                school_dic = {
+                   "id":school["id"],
+                   "name":school["name"],
+                   "children":school_children,
+                }
+                product_children.append(school_dic)
+            product_dic = {
+                "id":v["id"],
+                "name":v["name"],
+                "children":product_children,
+            }
+            data_list.append(product_dic)
+        response.data_list = data_list
+        return response
+
+    '''
     def fill(self, response, goods_list):
         mapping = {}
         for goods in goods_list:
@@ -610,7 +705,7 @@ class SearchAll(AgentStaffAuthorizedApi):
             })
         response.data_list = data_list
         return response
-
+    '''
 
 class Share(AgentStaffAuthorizedApi):
     """商品信息分享"""

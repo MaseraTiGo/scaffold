@@ -7,9 +7,10 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.agent.manager.api import AgentStaffAuthorizedApi
-from abs.services.agent.order.utils.constant import OrderSource
+from abs.services.agent.order.utils.constant import OrderSource, ContractStatus
 from abs.middleground.business.order.utils.constant import OrderStatus
-from abs.services.agent.order.manager import OrderServer, OrderItemServer
+from abs.services.agent.order.manager import OrderServer, OrderItemServer, \
+     ContractServer
 from abs.services.crm.university.utils.constant import DurationTypes
 from abs.middleground.business.person.manager import PersonServer
 from abs.services.agent.customer.manager import AgentCustomerServer
@@ -291,4 +292,31 @@ class Search(AgentStaffAuthorizedApi):
         response.data_list = data_list
         response.total = order_spliter.total
         response.total_page = order_spliter.total_page
+        return response
+
+
+class Deliver(AgentStaffAuthorizedApi):
+
+    request = with_metaclass(RequestFieldSet)
+    request.order_item_id = RequestField(IntField, desc = "订单详情id")
+    request.despatch_id = RequestField(IntField, desc = "合同id")
+
+    response = with_metaclass(ResponseFieldSet)
+    @classmethod
+    def get_desc(cls):
+        return "订单发货接口"
+
+    @classmethod
+    def get_author(cls):
+        return "Fsy"
+
+    def execute(self, request):
+        order_item = OrderItemServer.get(
+            request.order_item_id
+        )
+        contract = ContractServer.get(request.despatch_id)
+        OrderServer.delivery(order_item, contract.id)
+        contract.update(status = ContractStatus.WAIT_SIGNED)
+
+    def fill(self, response):
         return response

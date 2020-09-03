@@ -19,6 +19,7 @@ from abs.middleground.business.person.utils.constant import\
 
 from abs.services.agent.staff.manager import AgentStaffServer
 from abs.services.agent.account.manager import AgentStaffAccountServer
+from abs.middleground.technology.permission.manager import PermissionServer
 
 
 class Add(AgentStaffAuthorizedApi):
