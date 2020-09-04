@@ -135,17 +135,18 @@ class PosterServer(BaseManager):
     @classmethod
     def add(cls, specification_list, **poster_info):
         poster = Poster.create(
-            expire_date=datetime.date.today() + datetime.timedelta(days=3),
+            expire_date = datetime.date.today() + datetime.timedelta(days = 3),
             **poster_info
         )
         poster_specification_list = []
         for specification in specification_list:
             poster_specification_list.append(
                 PosterSpecification(
-                    unique_number=PosterSpecification.generate_unique_number(),
-                    poster=poster,
-                    specification_id=specification['id'],
-                    sale_price=specification['sale_price']
+                    unique_number = PosterSpecification.generate_unique_number(),
+                    poster = poster,
+                    specification_id = specification['id'],
+                    sale_price = specification['sale_price'],
+                    original_price = specification['original_price']
                 )
             )
         PosterSpecification.objects.bulk_create(poster_specification_list)
@@ -156,7 +157,7 @@ class PosterServer(BaseManager):
         poster = Poster.get_byid(poster_id)
         if poster:
             poster_specification_list = PosterSpecification.search(
-                poster=poster
+                poster = poster
             )
             poster.poster_specification_list = poster_specification_list
             MerchandiseServer.hung_specification(poster_specification_list)

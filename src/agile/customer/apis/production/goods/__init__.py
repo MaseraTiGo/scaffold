@@ -272,6 +272,7 @@ class Get(NoAuthorizedApi):
                 conf = {
                     'id': IntField(desc = "id"),
                     'sale_price': IntField(desc = "价格"),
+                    'original_price': IntField(desc = "原价"),
                     'stock': IntField(desc = "库存"),
                     'show_image': CharField(desc = "展示图片"),
                     'specification_value_list': ListField(
@@ -331,6 +332,7 @@ class Get(NoAuthorizedApi):
             'specification_list': [{
                 'id': specification.id,
                 'sale_price': specification.sale_price,
+                'original_price': specification.sale_price,
                 'stock': specification.stock,
                 'show_image': specification.show_image,
                 'specification_value_list': [{

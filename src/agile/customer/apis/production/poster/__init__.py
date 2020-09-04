@@ -9,6 +9,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.customer.manager.api import CustomerAuthorizedApi
 from infrastructure.core.exception.business_error import BusinessError
+from abs.middleground.business.transaction.utils.constant import PayService
 from abs.services.agent.goods.manager import GoodsServer, PosterServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
@@ -19,43 +20,48 @@ from abs.middleground.business.person.manager import PersonServer
 
 class Get(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.poster_id = RequestField(IntField, desc="海报id")
+    request.poster_id = RequestField(IntField, desc = "海报id")
 
     response = with_metaclass(ResponseFieldSet)
-    response.goods_info = ResponseField(DictField, desc="商品信息", conf={
-        'id': IntField(desc="商品id"),
-        'slideshow': ListField(desc="轮播图", fmt=CharField(desc="url")),
-        'video_display': CharField(desc="展示视频"),
-        'detail': ListField(desc="商品详情", fmt=CharField(desc="url")),
-        'min_price': IntField(desc="价格"),
-        'title': CharField(desc="标题"),
-        'description': CharField(desc="描述"),
-        'despatch_type': CharField(desc="发货方式"),
-        'school_city': CharField(desc="学校城市"),
-        'month_quantity': IntField(desc="月销数量"),
-        'school_name': CharField(desc="学校名称"),
-        'major_name': CharField(desc="专业名称"),
-        'duration': CharField(desc="学年"),
-        'brand_name': CharField(desc="品牌"),
-        'production_name': CharField(desc="产品名"),
-        'agent_name': CharField(desc="代理商名称"),
+    response.goods_info = ResponseField(DictField, desc = "商品信息", conf = {
+        'id': IntField(desc = "商品id"),
+        'slideshow': ListField(desc = "轮播图", fmt = CharField(desc = "url")),
+        'video_display': CharField(desc = "展示视频"),
+        'detail': ListField(desc = "商品详情", fmt = CharField(desc = "url")),
+        'min_price': IntField(desc = "价格"),
+        'title': CharField(desc = "标题"),
+        'description': CharField(desc = "描述"),
+        'despatch_type': CharField(desc = "发货方式"),
+        'school_city': CharField(desc = "学校城市"),
+        'month_quantity': IntField(desc = "月销数量"),
+        'school_name': CharField(desc = "学校名称"),
+        'major_name': CharField(desc = "专业名称"),
+        'duration': CharField(desc = "学年"),
+        'brand_name': CharField(desc = "品牌"),
+        'production_name': CharField(desc = "产品名"),
+        'agent_name': CharField(desc = "代理商名称"),
+        'deposit':IntField(desc = "首付金额"),
+        'pay_services':CharField(
+            desc = "支付类型",
+            choices = PayService.CHOICES
+        ),
         'specification_list': ListField(
-            desc="规格列表",
-            fmt=DictField(
-                desc="规格",
-                conf={
-                    'id': IntField(desc="id"),
-                    'sale_price': IntField(desc="价格"),
-                    'original_price': IntField(desc="原价"),
-                    'stock': IntField(desc="库存"),
-                    'show_image': CharField(desc="展示图片"),
+            desc = "规格列表",
+            fmt = DictField(
+                desc = "规格",
+                conf = {
+                    'id': IntField(desc = "id"),
+                    'sale_price': IntField(desc = "价格"),
+                    'original_price': IntField(desc = "原价"),
+                    'stock': IntField(desc = "库存"),
+                    'show_image': CharField(desc = "展示图片"),
                     'specification_value_list': ListField(
-                        desc="商品规格值",
-                        fmt=DictField(
-                            desc='规格值',
-                            conf={
-                                'category': CharField(desc="属性分类"),
-                                'attribute': CharField(desc="属性值")
+                        desc = "商品规格值",
+                        fmt = DictField(
+                            desc = '规格值',
+                            conf = {
+                                'category': CharField(desc = "属性分类"),
+                                'attribute': CharField(desc = "属性值")
                             }
                         )
                     )
@@ -110,9 +116,11 @@ class Get(CustomerAuthorizedApi):
             'brand_name': goods.merchandise.production.brand.name,
             'production_name': goods.merchandise.production.name,
             'agent_name': goods.agent.name,
+            'deposit':poster.deposit,
+            'pay_services':poster.pay_services,
             'specification_list': [{
                 'id': poster_specification.specification.id,
-                'original_price': poster_specification.specification.sale_price,
+                'original_price': poster_specification.original_price,
                 'sale_price': poster_specification.sale_price,
                 'stock': poster_specification.specification.stock,
                 'show_image': poster_specification.specification.show_image,

@@ -2,7 +2,7 @@
 import json
 import datetime
 from infrastructure.core.field.base import CharField, DictField, \
-        IntField, ListField, DatetimeField, BooleanField
+        IntField, ListField, DatetimeField, BooleanField, DateField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -12,6 +12,9 @@ from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.agent.goods.manager import PosterServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.services.agent.customer.manager import SaleChanceServer
+from abs.services.crm.university.manager import UniversityServer
+from abs.middleground.business.production.manager import ProductionServer
+from abs.middleground.business.merchandise.manager import MerchandiseServer
 
 
 class Add(AgentStaffAuthorizedApi):
@@ -31,7 +34,8 @@ class Add(AgentStaffAuthorizedApi):
                     desc = "规格信息",
                     conf = {
                         'id': IntField(desc = "规格id"),
-                        'sale_price': IntField(desc = "价格")
+                        'sale_price': IntField(desc = "折后价"),
+                        'original_price': IntField(desc = "原价")
                     }
                 )
             ),
@@ -41,7 +45,7 @@ class Add(AgentStaffAuthorizedApi):
                     desc = "规格信息",
                     conf = {
                         'plan_amount': IntField(desc = "金额"),
-                        'plan_time': DatetimeField(desc = "时间")
+                        'plan_time': CharField(desc = "时间")
                     }
                 )
             )
@@ -49,7 +53,17 @@ class Add(AgentStaffAuthorizedApi):
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.url = ResponseField(CharField, desc = "url")
+    response.poster_info = ResponseField(
+        DictField,
+        desc = "海报详情",
+        conf = {
+            'id':IntField(desc = '海报id'),
+            'product_name':CharField(desc = '产品名称'),
+            'school_name':CharField(desc = '学校名称'),
+            'major_name':CharField(desc = '专业名称'),
+            'url':CharField(desc = '海报二维码连接'),
+        }
+    )
 
     @classmethod
     def get_desc(cls):
@@ -81,11 +95,20 @@ class Add(AgentStaffAuthorizedApi):
             staff_id = self.auth_user.id,
             **request.poster_info
         )
+        UniversityServer.hung_school([poster.goods])
+        UniversityServer.hung_major([poster.goods])
+        MerchandiseServer.hung_merchandise([poster.goods])
+        ProductionServer.hung_production([poster.goods.merchandise])
         return poster
 
     def fill(self, response, poster):
-        url = "type=poster&poster_id={poster_id}".format(
-            poster_id = poster.id
-        )
-        response.url = url
+        response.poster_info = {
+            "id":poster.id,
+            "product_name":poster.goods.merchandise.production.name,
+            "school_name":poster.goods.school.name,
+            "major_name":poster.goods.major.name,
+            "url":"type=poster&poster_id={poster_id}".format(
+                poster_id = poster.id
+            )
+        }
         return response

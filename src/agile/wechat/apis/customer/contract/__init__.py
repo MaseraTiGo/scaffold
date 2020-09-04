@@ -1,5 +1,6 @@
 # coding=UTF-8
 import json
+from urllib import parse
 from infrastructure.core.field.base import CharField, DictField, ListField, \
     IntField, DatetimeField
 from infrastructure.core.api.utils import with_metaclass
@@ -101,9 +102,12 @@ class Autograph(WechatAuthorizedApi):
             raise BusinessError("请不要重复签署")
         order_item = OrderItemServer.get(contract.order_item_id)
         contract.order_item = order_item
+        autograph = parse.unquote(
+            request.contract_info.pop('autograph')
+        )
         ContractServer.autograph(
             contract,
-            request.contract_info['autograph'],
+            autograph,
             request.contract_info['email']
         )
 

@@ -8,6 +8,7 @@ from abs.middleground.business.transaction.utils.constant import PayTypes, \
         PayService
 
 class Order(BaseModel):
+    deposit = IntegerField(verbose_name = "首付款", default = 0)
     agent_customer_id = IntegerField(verbose_name = "代理商客户id", default = 0)
     mg_order_id = IntegerField(verbose_name = "订单id")
     agent_id = IntegerField(verbose_name = "代理商id", default = 0)

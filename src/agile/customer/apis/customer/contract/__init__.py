@@ -13,6 +13,7 @@ from infrastructure.core.exception.business_error import BusinessError
 from abs.services.agent.order.manager import ContractServer
 from abs.services.crm.agent.manager import AgentServer
 from abs.middleground.business.order.utils.constant import OrderStatus
+from abs.services.agent.order.utils.constant import ContractStatus
 
 
 class Get(CustomerAuthorizedApi):
@@ -64,8 +65,8 @@ class Get(CustomerAuthorizedApi):
     def fill(self, response, contract):
         response.contract_info = {
             "id":contract.id,
-            "contract_list":json.loads(contract.url),
-            "contract_img_list":json.loads(contract.img_url),
+            "url":json.loads(contract.url),
+            "img_url":json.loads(contract.img_url),
             "name":contract.name,
             "phone":contract.phone,
             "identification":contract.identification,
@@ -154,8 +155,9 @@ class Search(CustomerAuthorizedApi):
 
     def execute(self, request):
         data_list = ContractServer.search_all(
-            person_id = self.auth_user.person_id
-        ).exclude(autograph = '').order_by('-create_time')
+            person_id = self.auth_user.person_id,
+            status__in = [ContractStatus.WAIT_SIGNED, ContractStatus.SIGNED]
+        ).order_by('-create_time')
         return data_list
 
     def fill(self, response, data_list):

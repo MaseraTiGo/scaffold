@@ -84,32 +84,34 @@ class OrderServer(BaseManager):
         return spliter
 
     @classmethod
-    def _generate_requirement(cls, specification_list, strike_price):
+    def _generate_requirement(cls, specification_list):
+        sale_price = 0
         requirement = Requirement.create(
-            sale_price=strike_price
+            sale_price = sale_price
         )
-        snapshoot_list = [
-            MerchandiseSnapShoot(
-                production_id=specification.merchandise.production_id,
-                merchandise_id=specification.merchandise.id,
-                despatch_type=specification.merchandise.despatch_type,
-                specification_id=specification.id,
-                title=specification.merchandise.title,
-                show_image=specification.show_image,
-                sale_price=specification.sale_price,
-                production_name=specification.production.name,
-                brand_name=specification.production.brand.name,
-                count=specification.order_count,
-                total_price=specification.total_price,
-                requirement=requirement,
-                unique_number=MerchandiseSnapShoot.generate_unique_number(),
-                remark=','.join([
-                    (sv.category + '|' + sv.attribute)
-                    for sv in specification.specification_value_list
-                ]),
-            )
-            for specification in specification_list
-        ]
+        snapshoot_list = []
+        for specification in specification_list:
+            sale_price += specification.total_price
+            snapshoot_list.append(MerchandiseSnapShoot(
+               production_id = specification.merchandise.production_id,
+               merchandise_id = specification.merchandise.id,
+               despatch_type = specification.merchandise.despatch_type,
+               specification_id = specification.id,
+               title = specification.merchandise.title,
+               show_image = specification.show_image,
+               sale_price = specification.sale_price,
+               production_name = specification.production.name,
+               brand_name = specification.production.brand.name,
+               count = specification.order_count,
+               total_price = specification.total_price,
+               requirement = requirement,
+               unique_number = MerchandiseSnapShoot.generate_unique_number(),
+               remark = ','.join([
+                   (sv.category + '|' + sv.attribute)
+                   for sv in specification.specification_value_list
+               ]),
+            ))
+        requirement.update(sale_price = sale_price)
         MerchandiseSnapShoot.objects.bulk_create(snapshoot_list)
         return requirement
 
@@ -132,10 +134,11 @@ class OrderServer(BaseManager):
         """
         requirement = cls._generate_requirement(
             specification_list,
-            strike_price
+            #strike_price
         )
         payment = Payment.create(
-            actual_amount=requirement.sale_price
+            #actual_amount=requirement.sale_price
+            actual_amount=0
         )
         invoice = Invoice.create(
             requirement=requirement,
@@ -143,7 +146,7 @@ class OrderServer(BaseManager):
         )
         order = Order.create(
             remark=remark,
-            strike_price=payment.actual_amount,
+            strike_price=strike_price,
             payment=payment,
             requirement=requirement,
             invoice=invoice,

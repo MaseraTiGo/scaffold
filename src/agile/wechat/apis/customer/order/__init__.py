@@ -1,5 +1,5 @@
 # coding=UTF-8
-
+import datetime
 
 from infrastructure.core.field.base import CharField, DictField, ListField, \
     IntField, DatetimeField
@@ -38,12 +38,12 @@ class Add(WechatAuthorizedApi):
             'strike_price': IntField(desc = "金额"),
             'address_id': IntField(desc = "收货地址id", is_required = False),
             'invoice_info': DictField(
-                desc="合同信息",
-                is_required=False,
-                conf={
-                    'name': CharField(desc="名称"),
-                    'phone': CharField(desc="电话"),
-                    'identification': CharField(desc="身份证")
+                desc = "合同信息",
+                is_required = False,
+                conf = {
+                    'name': CharField(desc = "名称"),
+                    'phone': CharField(desc = "电话"),
+                    'identification': CharField(desc = "身份证")
                 }
             ),
             'goods_list': ListField(
@@ -136,6 +136,7 @@ class Add(WechatAuthorizedApi):
             invoice_info,
             OrderSource.WECHAT,
             order_info['strike_price'],
+            order_info['strike_price'],
             specification_list
         )
         SaleChanceServer.create_foradd_order(
@@ -154,21 +155,22 @@ class PosterAdd(WechatAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.poster_id = RequestField(
         IntField,
-        desc="海报id"
+        desc = "海报id"
     )
     request.order_info = RequestField(
         DictField,
         desc = "订单详情",
         conf = {
-            'strike_price': IntField(desc = "金额"),
+            'deposit': IntField(desc = "首付款金额"),
+            'strike_price': IntField(desc = "成交价金额"),
             'address_id': IntField(desc = "收货地址id", is_required = False),
             'invoice_info': DictField(
-                desc="合同信息",
-                is_required=False,
-                conf={
-                    'name': CharField(desc="名称"),
-                    'phone': CharField(desc="电话"),
-                    'identification': CharField(desc="身份证")
+                desc = "合同信息",
+                is_required = False,
+                conf = {
+                    'name': CharField(desc = "名称"),
+                    'phone': CharField(desc = "电话"),
+                    'identification': CharField(desc = "身份证")
                 }
             ),
             'goods_list': ListField(
@@ -197,8 +199,13 @@ class PosterAdd(WechatAuthorizedApi):
 
     def execute(self, request):
         poster = PosterServer.get(request.poster_id)
-        order_info = request.order_info
+        if poster.expire_date < datetime.date.today():
+            raise BusinessError('海报已过期')
         customer = self.auth_user
+        person = PersonServer.get(customer.person_id)
+        if not person or person.phone != poster.phone:
+            raise BusinessError('专属二维码，您无权限扫码')
+        order_info = request.order_info
         invoice_info = {}
         if 'address_id' in order_info:
             address = PersonServer.get_address(order_info.pop('address_id'))
@@ -217,6 +224,10 @@ class PosterAdd(WechatAuthorizedApi):
                 raise BusinessError('姓名与身份证号不匹配')
         if not invoice_info:
             raise BusinessError('请填写发货信息')
+        poster_specification_mapping = {}
+        for poster_specification in poster.poster_specification_list:
+            if poster_specification.specification_id not in poster_specification_mapping:
+                poster_specification_mapping[poster_specification.specification_id] = poster_specification
         specification_list = []
         for goods_info in order_info['goods_list']:
             specification = MerchandiseServer.get_specification(goods_info['specification_id'])
@@ -224,8 +235,10 @@ class PosterAdd(WechatAuthorizedApi):
                 raise BusinessError('库存不足')
             if specification.merchandise.use_status != 'enable':
                 raise BusinessError('商品已下架')
+            specification.sale_price = poster_specification_mapping[specification.id].original_price
             specification.order_count = goods_info['quantity']
-            specification.total_price = goods_info['quantity'] * specification.sale_price
+            specification.total_price = goods_info['quantity'] * \
+                    specification.sale_price
             specification.production_id = specification.merchandise.production_id
             specification_list.append(specification)
         if not specification_list:
@@ -263,7 +276,8 @@ class PosterAdd(WechatAuthorizedApi):
         order = OrderServer.add(
             agent_customer,
             invoice_info,
-            'app',
+            OrderSource.WECHAT,
+            order_info['deposit'],
             order_info['strike_price'],
             specification_list
         )
@@ -273,9 +287,9 @@ class PosterAdd(WechatAuthorizedApi):
         )
         # todo 获取员工部门
         StaffOrderEventServer.create(
-            order_id=order.id,
-            staff_id=poster.staff_id,
-            organization_id=1
+            order_id = order.id,
+            staff_id = poster.staff_id,
+            organization_id = 1
         )
         return order
 
@@ -294,19 +308,26 @@ class Get(WechatAuthorizedApi):
         'number': CharField(desc = "订单编号"),
         'status': CharField(desc = "订单状态"),
         'status_name': CharField(desc = "订单状态"),
-        'strike_price': IntField(desc = "价格"),
+        'sale_price': IntField(desc = "销售总金额"),
+        'strike_price': IntField(desc = "成交金额"),
+        'discount': IntField(desc = "优惠金额"),
+        'deposit': IntField(desc = "需付款金额"),
+        'arrears': IntField(desc = "欠费金额"),
+        'actual_amount': IntField(desc = "实际支付金额"),
         'create_time': DatetimeField(desc = "下单时间"),
         'last_payment_type': CharField(desc = '付款方式'),
         'last_payment_time': DatetimeField(desc = "付款时间"),
         'last_payment_number': CharField(desc = "最后付款单号"),
+        'last_payment_amount': IntField(desc = "最后支付金额"),
         'despatch_type': CharField(desc = "发货方式"),
+        'pay_services': CharField(desc = "订单支付服务"),
         'order_item_list': ListField(
             desc = "商品列表",
             fmt = DictField(
                 desc = "商品",
                 conf = {
                     'id': IntField(desc = "订单商品详情id"),
-                    'agent_name': CharField(desc="代理商"),
+                    'agent_name': CharField(desc = "代理商"),
                     'sale_price': IntField(desc = "单价"),
                     'total_price': IntField(desc = "总价"),
                     'quantity': IntField(desc = "数量"),
@@ -315,7 +336,7 @@ class Get(WechatAuthorizedApi):
                     'school_name': CharField(desc = "学校名称"),
                     'major_name': CharField(desc = "专业名称"),
                     'duration': CharField(desc = "学年"),
-                    'category': CharField(desc="类别"),
+                    'category': CharField(desc = "类别"),
                     'school_city': CharField(desc = "学校城市"),
                     'brand_name': CharField(desc = "品牌"),
                     'production_name': CharField(desc = "产品名"),
@@ -324,14 +345,28 @@ class Get(WechatAuthorizedApi):
             )
         ),
         'invoice_info': DictField(
-            desc="发货信息",
-            conf={
-                'name': CharField(desc="姓名"),
-                'phone': CharField(desc="手机号"),
-                'address': CharField(desc="地址"),
-                'identification': CharField(desc="身份证号")
+            desc = "发货信息",
+            conf = {
+                'name': CharField(desc = "姓名"),
+                'phone': CharField(desc = "手机号"),
+                'address': CharField(desc = "地址"),
+                'identification': CharField(desc = "身份证号")
             }
-        )
+        ),
+       'payment_list': ListField(
+            desc = "支付列表",
+            fmt = DictField(
+                desc = "支付详情",
+                conf = {
+                    'id': IntField(desc = "id"),
+                    'amount': CharField(desc = "支付金额"),
+                    'pay_type': CharField(desc = "支付方式"),
+                    'status': CharField(desc = "支付状态"),
+                    'number': CharField(desc = "支付单号"),
+                    'create_time':  DatetimeField(desc = "支付时间"),
+                }
+            )
+        ),
     })
 
     @classmethod
@@ -357,12 +392,21 @@ class Get(WechatAuthorizedApi):
             'number': order.mg_order.number,
             'status': order.mg_order.status,
             'status_name': order.mg_order.get_status_display(),
-            'strike_price': order.mg_order.strike_price,
+            'sale_price': order.mg_order.requirement.sale_price,
+            'strike_price':order.mg_order.strike_price,
+            'discount': order.mg_order.requirement.sale_price - \
+                        order.mg_order.strike_price,
+            'deposit':order.deposit,
+            'arrears': order.mg_order.strike_price - order.deposit,
+            'actual_amount':order.mg_order.payment.actual_amount,
             'create_time': order.mg_order.create_time,
             'last_payment_type': order.mg_order.payment.last_payment_type,
             'last_payment_time': order.mg_order.payment.last_payment_time,
             'last_payment_number': '',
+            'last_payment_amount':order.mg_order.payment.last_payment_amount,
             'despatch_type': order.order_item_list[0].snapshoot.despatch_type,
+            'pay_services':order.get_pay_services_display(),
+            'payment_id':order.mg_order.payment.id,
             'order_item_list': [{
                 'id': order_item.id,
                 'agent_name': order.agent.name,
@@ -385,7 +429,15 @@ class Get(WechatAuthorizedApi):
                 'phone': order.mg_order.invoice.phone,
                 'address': order.mg_order.invoice.address,
                 'identification': order.mg_order.invoice.identification
-            }
+            },
+           'payment_list': [{
+                'id': payment_record.id,
+                'amount': payment_record.amount,
+                'pay_type': payment_record.get_pay_type_display(),
+                'status': payment_record.get_status_display(),
+                'number': "",
+                'create_time': payment_record.create_time,
+            } for payment_record in order.mg_order.payment.payment_list],
         }
         return response
 
@@ -412,7 +464,12 @@ class Search(WechatAuthorizedApi):
                 'number': CharField(desc = "订单编号"),
                 'status': CharField(desc = "订单状态"),
                 'status_name': CharField(desc = "订单状态"),
-                'strike_price': IntField(desc = "价格"),
+                'sale_price': IntField(desc = "销售总金额"),
+                'strike_price': IntField(desc = "成交金额"),
+                'discount': IntField(desc = "优惠金额"),
+                'deposit': IntField(desc = "需付款金额"),
+                'arrears': IntField(desc = "欠费金额"),
+                'actual_amount': IntField(desc = "实际支付金额"),
                 'create_time': DatetimeField(desc = "下单时间"),
                 'last_payment_type': CharField(desc = '付款方式'),
                 'last_payment_time': CharField(desc = "付款时间"),
@@ -423,7 +480,7 @@ class Search(WechatAuthorizedApi):
                     fmt = DictField(
                         desc = "商品",
                         conf = {
-                            'agent_name': CharField(desc="代理商名称"),
+                            'agent_name': CharField(desc = "代理商名称"),
                             'sale_price': IntField(desc = "单价"),
                             'total_price': IntField(desc = "总价"),
                             'quantity': IntField(desc = "数量"),
@@ -432,7 +489,7 @@ class Search(WechatAuthorizedApi):
                             'school_name': CharField(desc = "学校名称"),
                             'major_name': CharField(desc = "专业名称"),
                             'duration': CharField(desc = "学年"),
-                            'category': CharField(desc="类别"),
+                            'category': CharField(desc = "类别"),
                             'school_city': CharField(desc = "学校城市"),
                             'brand_name': CharField(desc = "品牌"),
                             'production_name': CharField(desc = "产品名")
@@ -440,12 +497,12 @@ class Search(WechatAuthorizedApi):
                     )
                 ),
                 'invoice_info': DictField(
-                    desc="发货信息",
-                    conf={
-                        'name': CharField(desc="姓名"),
-                        'phone': CharField(desc="手机号"),
-                        'address': CharField(desc="地址"),
-                        'identification': CharField(desc="身份证号")
+                    desc = "发货信息",
+                    conf = {
+                        'name': CharField(desc = "姓名"),
+                        'phone': CharField(desc = "手机号"),
+                        'address': CharField(desc = "地址"),
+                        'identification': CharField(desc = "身份证号")
                     }
                 )
             }
@@ -482,7 +539,13 @@ class Search(WechatAuthorizedApi):
             'number': order.mg_order.number,
             'status': order.mg_order.status,
             'status_name': order.mg_order.get_status_display(),
-            'strike_price': order.mg_order.strike_price,
+            'sale_price': order.mg_order.requirement.sale_price,
+            'strike_price':order.mg_order.strike_price,
+            'discount': order.mg_order.requirement.sale_price - \
+                        order.mg_order.strike_price,
+            'deposit':order.deposit,
+            'arrears': order.mg_order.strike_price - order.deposit,
+            'actual_amount':order.mg_order.payment.actual_amount,
             'create_time': order.mg_order.create_time,
             'last_payment_type': order.mg_order.payment.last_payment_type,
             'last_payment_time': order.mg_order.payment.last_payment_time,
@@ -543,8 +606,8 @@ class Pay(WechatAuthorizedApi):
         if not account:
             raise BusinessError('账号异常')
         tripartite = TripartiteServer.search_all(
-            customer_account=account,
-            category=CategoryTypes.WECHAT
+            customer_account = account,
+            category = CategoryTypes.WECHAT
         ).first()
         if not tripartite:
             raise BusinessError('账号异常')
@@ -552,7 +615,7 @@ class Pay(WechatAuthorizedApi):
             order,
             PayTypes.WECHAT,
             'JSAPI',
-            openid=tripartite.openid
+            openid = tripartite.openid
         )
         if not prepay_id:
             raise BusinessError('付款失败')

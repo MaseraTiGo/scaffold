@@ -37,6 +37,7 @@ class PosterSpecification(BaseModel):
     poster = ForeignKey(Poster, on_delete = CASCADE)
     specification_id = IntegerField(verbose_name = "规格id")
     sale_price = IntegerField(verbose_name = "价格")
+    original_price = IntegerField(verbose_name = "原价", default = 0)
 
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)

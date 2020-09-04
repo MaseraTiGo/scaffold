@@ -79,6 +79,7 @@ class OrderServer(BaseManager):
         agent_customer,
         invoice_info,
         source,
+        deposit,
         strike_price,
         specification_list
     ):
@@ -101,6 +102,7 @@ class OrderServer(BaseManager):
         )
 
         create_info = {
+            'deposit':deposit,
             'agent_customer_id': agent_customer.id,
             'mg_order_id': mg_order.id,
             'agent_id': agent_customer.agent_id,
@@ -142,14 +144,14 @@ class OrderServer(BaseManager):
     def pay(cls, order, pay_type, trade_type = 'APP', openid = ''):
         number = mg_OrderServer.pay(
             order.mg_order.id,
-            order.mg_order.strike_price,
+            order.deposit,
             pay_type,
             ''
         )
         prepay_id = pay_middleware.pay_order(
             pay_type,
             number,
-            order.mg_order.strike_price,
+            order.deposit,
             trade_type = trade_type,
             openid = openid
         )
