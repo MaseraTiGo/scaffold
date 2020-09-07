@@ -25,6 +25,7 @@ from abs.services.agent.goods.manager import PosterServer
 from abs.services.agent.event.manager import StaffOrderEventServer
 from abs.services.customer.account.manager import CustomerAccountServer, TripartiteServer
 from abs.services.customer.account.utils.constant import CategoryTypes
+from abs.middleground.business.transaction.utils.constant import PayService
 from abs.middleground.business.transaction.utils.constant import PayTypes
 from abs.services.agent.order.utils.constant import OrderSource
 
@@ -137,6 +138,7 @@ class Add(WechatAuthorizedApi):
             OrderSource.WECHAT,
             order_info['strike_price'],
             order_info['strike_price'],
+            PayService.FULL_PAYMENT,
             specification_list
         )
         SaleChanceServer.create_foradd_order(
@@ -279,6 +281,7 @@ class PosterAdd(WechatAuthorizedApi):
             OrderSource.WECHAT,
             order_info['deposit'],
             order_info['strike_price'],
+            poster.pay_services,
             specification_list
         )
         SaleChanceServer.create_foradd_order(

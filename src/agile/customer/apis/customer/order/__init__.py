@@ -24,6 +24,7 @@ from abs.middleware.extend.yunaccount import yunaccount_extend
 from abs.services.agent.goods.manager import PosterServer
 from abs.services.agent.event.manager import StaffOrderEventServer
 from abs.services.agent.order.utils.constant import OrderSource
+from abs.middleground.business.transaction.utils.constant import PayService
 
 
 class Add(CustomerAuthorizedApi):
@@ -134,6 +135,7 @@ class Add(CustomerAuthorizedApi):
             OrderSource.APP,
             order_info['strike_price'],
             order_info['strike_price'],
+            PayService.FULL_PAYMENT,
             specification_list
         )
         SaleChanceServer.create_foradd_order(
@@ -276,6 +278,7 @@ class PosterAdd(CustomerAuthorizedApi):
             OrderSource.APP,
             order_info['deposit'],
             order_info['strike_price'],
+            poster.pay_services,
             specification_list
         )
         SaleChanceServer.create_foradd_order(

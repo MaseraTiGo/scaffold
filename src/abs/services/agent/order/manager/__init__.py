@@ -80,6 +80,7 @@ class OrderServer(BaseManager):
         source,
         deposit,
         strike_price,
+        pay_services,
         specification_list
     ):
         # invoice_baseinfos = {}
@@ -111,7 +112,8 @@ class OrderServer(BaseManager):
             'number': mg_order.number,
             'status': mg_order.status,
             'name': invoice_info.get('name'),
-            'phone': invoice_info.get('phone')
+            'phone': invoice_info.get('phone'),
+            'pay_services':pay_services
         }
         order = Order.create(**create_info)
         mapping = {}
@@ -348,13 +350,13 @@ class OrderPlanServer(BaseManager):
         return plan
 
     @classmethod
-    def batch_create(cls, order, staff, plan_list):
+    def batch_create(cls, order, staff_id, plan_list):
         create_list = []
         for obj in plan_list:
             create_list.append(Plan(
                 order = order,
                 number = cls.generate_number(),
-                staff_id = staff.id,
+                staff_id = staff_id,
                 plan_time = obj["plan_time"],
                 plan_amount = obj["plan_amount"],
             ))

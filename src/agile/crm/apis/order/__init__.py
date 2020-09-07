@@ -44,6 +44,7 @@ class Get(StaffAuthorizedApi):
             'deposit': IntField(desc = "需付款金额"),
             'arrears': IntField(desc = "欠费金额"),
             'actual_amount': IntField(desc = "实际支付金额"),
+            'pay_services_name': CharField(desc = "订单支付服务"),
             'pay_services': CharField(desc = "订单支付服务"),
 
             'source':CharField(
@@ -126,7 +127,7 @@ class Get(StaffAuthorizedApi):
             'arrears': order.mg_order.strike_price - order.deposit,
             'actual_amount':order.mg_order.payment.actual_amount,
             'pay_services':order.get_pay_services_display(),
-
+            'pay_services_name':order.get_pay_services_display(),
             'source': order.source,
             'description': order.mg_order.description,
             'remark': order.mg_order.remark,
