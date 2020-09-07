@@ -31,7 +31,7 @@ class Mini(object):
         }
         res = requests.get(
             'https://api.weixin.qq.com/sns/jscode2session',
-            params=params
+            params = params
         ).json()
         return res
         # if res.get('openid'):
@@ -92,9 +92,9 @@ class MiniMch(object):
             price,
             notify_path,
             trade_type,
-            openid='',
-            body='',
-            product_id=''
+            openid = '',
+            body = '',
+            product_id = ''
     ):
         url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
         notify_url = self.notify_url + notify_path

@@ -10,18 +10,16 @@ from infrastructure.utils.common.split_page import Splitor
 from abs.common.manager import BaseManager
 from abs.middleground.business.order.manager import \
      OrderServer as mg_OrderServer
-from abs.services.agent.order.store.order import Order
-from abs.services.agent.order.store.orderitem import OrderItem
+from abs.services.agent.order.store import Order, OrderItem, Contract, Plan
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleware.pay import pay_middleware
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.middleware.image import image_middleware
-from abs.services.agent.order.store.contract import Contract
 from abs.middleware.email import email_middleware
 from abs.middleware.config import config_middleware
 from abs.middleground.business.merchandise.utils.constant import \
      DespatchService
-from abs.services.agent.order.utils.constant import ContractStatus
+from abs.services.agent.order.utils.constant import ContractStatus, PlanStatus
 
 
 class OrderServer(BaseManager):
@@ -331,3 +329,74 @@ class ContractServer(BaseManager):
         contract.update(send_email_number = F("send_email_number") + 1)
         return True
 
+
+class OrderPlanServer(BaseManager):
+
+    @classmethod
+    def generate_number(cls):
+        return "PL" + str(time.time()).replace('.', '')
+
+    @classmethod
+    def create(cls, **info):
+        info.update({
+            "number":cls.generate_number()
+        })
+        plan = Plan.create(**info)
+        if plan is None:
+            raise BusinessError("回款计划添加失败")
+        return plan
+
+    @classmethod
+    def batch_create(cls, order, staff, **plan_list):
+        create_list = []
+        for obj in plan_list:
+            create_list.append(Plan(
+                order = order,
+                number = cls.generate_number(),
+                staff_id = staff.id,
+                plan_time = obj["plan_time"],
+                plan_amount = obj["plan_amount"],
+            ))
+        Plan.objects.bulk_create(create_list)
+
+    @classmethod
+    def check_money(cls, surplus_money, order, plan_amount, plan = None):
+        plan_surplus_money = 0
+        total_surplus_money = cls.search_all(
+            order = order,
+            status__in = [PlanStatus.WAIT_PAY, PlanStatus.PAYING],
+        )
+        if plan is not None:
+            total_surplus_money = total_surplus_money.exclude(id = plan.id)
+        total_surplus_money = total_surplus_money.\
+                              aggregate(total_money = Sum("plan_amount"))
+        if total_surplus_money["total_money"] is not None:
+            plan_surplus_money = total_surplus_money["total_money"]
+        if plan_surplus_money + plan_amount > surplus_money:
+            raise BusinessError("回款计划金额大于实际待付款金额")
+        return True
+
+    @classmethod
+    def search_all(cls, **search_info):
+        plan_qs = Plan.search(**search_info)
+        return plan_qs
+
+    @classmethod
+    def get(cls, plan_id):
+        plan = Plan.get_byid(plan_id)
+        if plan is None:
+            raise BusinessError("此回款计划不存在")
+        return plan
+
+    @classmethod
+    def remove(cls, plan_id):
+        plan = Plan.get_byid(plan_id)
+        if plan.status == PlanStatus.PAID:
+            raise BusinessError("已回款计划禁止删除")
+        plan.delete()
+        return True
+
+    @classmethod
+    def update(cls, plan, **update_info):
+        plan.update(**update_info)
+        return plan

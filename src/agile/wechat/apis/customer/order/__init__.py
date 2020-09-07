@@ -1,6 +1,6 @@
 # coding=UTF-8
 import datetime
-
+import json
 from infrastructure.core.field.base import CharField, DictField, ListField, \
     IntField, DatetimeField
 from infrastructure.core.api.utils import with_metaclass
@@ -11,7 +11,7 @@ from agile.wechat.manager.api import WechatAuthorizedApi
 from abs.middleground.business.person.manager import PersonServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from infrastructure.core.exception.business_error import BusinessError
-from abs.services.agent.order.manager import OrderServer, OrderItemServer
+from abs.services.agent.order.manager import OrderServer, OrderItemServer, OrderPlanServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.middleground.business.order.manager import OrderServer as mg_OrderServer
 from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
@@ -291,6 +291,14 @@ class PosterAdd(WechatAuthorizedApi):
             staff_id = poster.staff_id,
             organization_id = 1
         )
+        # 添加回款计划
+        plan_list = json.loads(poster.pay_plan)
+        if len(plan_list) > 0:
+            OrderPlanServer.batch_create(
+                order,
+                poster.staff_id,
+                **plan_list
+            )
         return order
 
     def fill(self, response, order):
