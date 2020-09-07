@@ -294,7 +294,7 @@ class PosterAdd(CustomerAuthorizedApi):
             OrderPlanServer.batch_create(
                 order,
                 poster.staff_id,
-                **plan_list
+                plan_list
             )
         return order
 
@@ -324,7 +324,6 @@ class Get(CustomerAuthorizedApi):
         'last_payment_time': DatetimeField(desc = "付款时间"),
         'last_payment_number': CharField(desc = "最后付款单号"),
         'last_payment_amount': IntField(desc = "最后支付金额"),
-        'despatch_type': CharField(desc = "发货方式"),
         'pay_services': CharField(desc = "订单支付服务"),
         'order_item_list': ListField(
             desc = "商品列表",
@@ -345,7 +344,8 @@ class Get(CustomerAuthorizedApi):
                     'school_city': CharField(desc = "学校城市"),
                     'brand_name': CharField(desc = "品牌"),
                     'production_name': CharField(desc = "产品名"),
-                    'remark': CharField(desc = "备注")
+                    'remark': CharField(desc = "备注"),
+                    'despatch_type': CharField(desc = "发货方式"),
                 }
             )
         ),
@@ -409,7 +409,6 @@ class Get(CustomerAuthorizedApi):
             'last_payment_time': order.mg_order.payment.last_payment_time,
             'last_payment_amount':order.mg_order.payment.last_payment_amount,
             'last_payment_number': '',
-            'despatch_type': order.order_item_list[0].snapshoot.despatch_type,
             'pay_services':order.get_pay_services_display(),
             'payment_id':order.mg_order.payment.id,
             'order_item_list': [{
@@ -427,7 +426,8 @@ class Get(CustomerAuthorizedApi):
                 'school_city': order_item.school_city,
                 'brand_name': order_item.snapshoot.brand_name,
                 'production_name': order_item.snapshoot.production_name,
-                'remark': order_item.snapshoot.remark
+                'remark': order_item.snapshoot.remark,
+                'despatch_type': order_item.snapshoot.despatch_type,
             } for order_item in order.order_item_list],
             'invoice_info': {
                 'name': order.mg_order.invoice.name,

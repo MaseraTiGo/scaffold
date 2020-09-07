@@ -498,11 +498,11 @@ class PermissionServer(BaseManager):
         organization_id_list = helper.organization.get_all_children_ids(
             position_permission.organization.id
         )
-        organization_id_list.append(position_permission.organization.id)
+        #organization_id_list.append(position_permission.organization.id)
         position_id_list = helper.position.get_all_children_ids(
             position_permission.position.id
         )
-        position_id_list.append(position_permission.position.id)
+        #position_id_list.append(position_permission.position.id)
         person_id_list = [
             permission['person_id']
             for permission in PositionPermission.query().filter(
@@ -511,7 +511,7 @@ class PermissionServer(BaseManager):
                 authorization=authorization,
             ).values('person_id')
         ]
-
+        person_id_list.append(person_id)
         permission = DictWrapper({
             'operation': json.loads(
                 position_permission.position.rule_group.content

@@ -185,6 +185,7 @@ class paycode(AgentStaffAuthorizedApi):
     request.plan_id = RequestField(IntField, desc = "计划id")
 
     response = with_metaclass(ResponseFieldSet)
+    request.url = ResponseField(CharField, desc = "url")
 
     @classmethod
     def get_desc(cls):
@@ -198,4 +199,5 @@ class paycode(AgentStaffAuthorizedApi):
         pass
 
     def fill(self, response):
+        response.url = "www.baidu.com"
         return response

@@ -6,6 +6,7 @@ import hashlib
 import datetime
 import requests
 from infrastructure.utils.common.dictwrapper import DictWrapper
+from abs.middleware.config import config_middleware
 
 
 class SaobeiExtend(object):
@@ -18,16 +19,16 @@ class SaobeiExtend(object):
         return  "http://gk7s82.natappfree.cc"  # 回调地址
 
     def get_merchant_no(self):  # 商户号
-        return  "852107375000003"  #
+        return config_middleware.get_value("saobei", "merchant_no")  #
 
     def get_terminal_id(self):
-        return  "11718626"  # 终端号
+        return  config_middleware.get_value("saobei", "terminal_id")  # 终端号
 
     def get_access_token(self):
-        return  "ecd84189573343cca3035b8c4fafb556"  # access_token
+        return config_middleware.get_value("saobei", "access_token")  # access_token
 
     def get_fromal_url(self):
-        return  "http://pay.lcsw.cn/lcsw"  # 请求连接
+        return config_middleware.get_value("saobei", "fromal_url")  # 请求连接
 
     def _md5(self, md5_str):
         return hashlib.md5(md5_str.encode("utf-8")).hexdigest()

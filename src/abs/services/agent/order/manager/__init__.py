@@ -58,6 +58,7 @@ class OrderServer(BaseManager):
                 snapshoot.specification_id
             )
             specification.update(stock = specification.stock + snapshoot.count)
+        order.update(status = OrderStatus.ORDER_CLOSED)
 
     @classmethod
     def auto_cancel(cls):
@@ -347,7 +348,7 @@ class OrderPlanServer(BaseManager):
         return plan
 
     @classmethod
-    def batch_create(cls, order, staff, **plan_list):
+    def batch_create(cls, order, staff, plan_list):
         create_list = []
         for obj in plan_list:
             create_list.append(Plan(
