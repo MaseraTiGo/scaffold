@@ -354,6 +354,7 @@ class OrderPlanServer(BaseManager):
         create_list = []
         for obj in plan_list:
             create_list.append(Plan(
+                unique_number = Plan.generate_unique_number(),
                 order = order,
                 number = cls.generate_number(),
                 staff_id = staff_id,
