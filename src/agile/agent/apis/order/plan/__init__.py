@@ -10,6 +10,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from agile.agent.manager.api import AgentStaffAuthorizedApi
 from infrastructure.core.exception.business_error import BusinessError
 from abs.services.agent.order.utils.constant import PlanStatus
+from abs.middleground.business.transaction.utils.constant import PayService
 from abs.services.agent.order.manager import OrderServer, OrderPlanServer
 from abs.services.agent.staff.manager import AgentStaffServer
 
@@ -42,6 +43,8 @@ class Add(AgentStaffAuthorizedApi):
     def execute(self, request):
         auth = self.auth_user
         order = OrderServer.get(request.order_id)
+        if order.pay_services == PayService.FULL_PAYMENT:
+            raise BusinessError('全款订单不允许添加回款计划')
         surplus_money = order.mg_order.strike_price - \
                         order.mg_order.payment.actual_amount
         OrderPlanServer.check_money(
@@ -185,7 +188,7 @@ class paycode(AgentStaffAuthorizedApi):
     request.plan_id = RequestField(IntField, desc = "计划id")
 
     response = with_metaclass(ResponseFieldSet)
-    request.url = ResponseField(CharField, desc = "url")
+    response.url = ResponseField(CharField, desc = "url")
 
     @classmethod
     def get_desc(cls):
@@ -196,8 +199,20 @@ class paycode(AgentStaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        pass
+        plan = OrderPlanServer.get(request.plan_id)
+        if plan.order.status in (OrderStatus.ORDER_LAUNCHED, OrderStatus.ORDER_CLOSED):
+            raise BusinessError('此订单状态异常')
+        if plan.status == PlanStatus.PAID:
+            raise BusinessError('已回款订单无法查看二维码')
+        else:
+            url = OrderServer.pay(plan.order, "saobei", 'PC', '', plan.plan_amount)
+            if url:
+                plan.update(status = PlanStatus.PAYING)
+            else:
+                raise BusinessError('获取付款码失败')
+        return url
 
-    def fill(self, response):
-        response.url = "www.baidu.com"
+
+    def fill(self, response, url):
+        response.url = url
         return response
