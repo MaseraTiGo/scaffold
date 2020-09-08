@@ -125,7 +125,8 @@ class Get(AgentStaffAuthorizedApi):
             'discount': order.mg_order.requirement.sale_price - \
                         order.mg_order.strike_price,
             'deposit':order.deposit,
-            'arrears': order.mg_order.strike_price - order.deposit,
+            'arrears': order.mg_order.strike_price - \
+                       order.mg_order.payment.actual_amount,
             'actual_amount':order.mg_order.payment.actual_amount,
             'pay_services':order.pay_services,
             'pay_services_name':order.get_pay_services_display(),

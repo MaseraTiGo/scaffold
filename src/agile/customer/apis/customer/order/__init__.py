@@ -405,7 +405,8 @@ class Get(CustomerAuthorizedApi):
             'discount': order.mg_order.requirement.sale_price - \
                         order.mg_order.strike_price,
             'deposit':order.deposit,
-            'arrears': order.mg_order.strike_price - order.deposit,
+            'arrears': order.mg_order.strike_price - \
+                       order.mg_order.payment.actual_amount,
             'actual_amount':order.mg_order.payment.actual_amount,
             'create_time': order.mg_order.create_time,
             'last_payment_type': order.mg_order.payment.last_payment_type,
@@ -553,7 +554,8 @@ class Search(CustomerAuthorizedApi):
             'discount': order.mg_order.requirement.sale_price - \
                         order.mg_order.strike_price,
             'deposit':order.deposit,
-            'arrears': order.mg_order.strike_price - order.deposit,
+            'arrears': order.mg_order.strike_price - \
+                       order.mg_order.payment.actual_amount,
             'actual_amount':order.mg_order.payment.actual_amount,
             'create_time': order.mg_order.create_time,
             'last_payment_type': order.mg_order.payment.last_payment_type,
