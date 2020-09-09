@@ -56,6 +56,9 @@ agent_pc_service.add(Search, Get, Deliver)
 from agile.agent.apis.order.contract import Search, Send, Add, Get
 agent_pc_service.add(Search, Send, Add, Get)
 
+from agile.agent.apis.order.plan import Add, All, Update, Remove, paycode
+agent_pc_service.add(Add, All, Update, Remove, paycode)
+
 from agile.agent.apis.customer import Search, Update
 agent_pc_service.add(Search, Update)
 

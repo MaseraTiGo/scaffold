@@ -6,6 +6,7 @@ import hashlib
 import datetime
 import requests
 from infrastructure.utils.common.dictwrapper import DictWrapper
+from abs.middleware.config import config_middleware
 
 
 class SaobeiExtend(object):
@@ -18,16 +19,20 @@ class SaobeiExtend(object):
         return  "http://gk7s82.natappfree.cc"  # 回调地址
 
     def get_merchant_no(self):  # 商户号
-        return  "852107375000003"  #
+        return config_middleware.get_value("saobei", "merchant_no")  #
 
     def get_terminal_id(self):
-        return  "11718626"  # 终端号
+        return  config_middleware.get_value("saobei", "terminal_id")  # 终端号
 
     def get_access_token(self):
-        return  "ecd84189573343cca3035b8c4fafb556"  # access_token
+        return config_middleware.get_value("saobei", "access_token")  # access_token
 
     def get_fromal_url(self):
-        return  "http://pay.lcsw.cn/lcsw"  # 请求连接
+        return config_middleware.get_value("saobei", "fromal_url")  # 请求连接
+
+    def get_body_describe(self):
+        return config_middleware.get_value("saobei", "order_body")
+
 
     def _md5(self, md5_str):
         return hashlib.md5(md5_str.encode("utf-8")).hexdigest()
@@ -74,20 +79,17 @@ class SaobeiExtend(object):
        result_str = result.content  # .decode("utf-8")
        return result_str
 
-    def get_qrpay_url(self, order, body):
+    def get_qrpay_url(self, number, price, notify_url, body = None):
         """获取聚合码支付二维码url"""
         notify_url = self.get_notify_url() + '/interface/saobei_notify'
         url = "/pay/110/qrpay"
-        '''
+
         test_data = {"pay_ver":"130", "pay_type":"000", "service_id":"016", \
                      "merchant_no":self.get_merchant_no(), "terminal_id":self.get_terminal_id(), \
-                     "terminal_trace": order.order_sn, "terminal_time": order.create_time.strftime("%Y%m%d%H%M%S"), \
-                     "total_fee": order.real_price, "order_body": body, "notify_url": notify_url}
-        '''
-        test_data = {"pay_ver":"130", "pay_type":"000", "service_id":"016", \
-                     "merchant_no":self.get_merchant_no(), "terminal_id":self.get_terminal_id(), \
-                     "terminal_trace": "kfc202009030001", "terminal_time": "20200901143623", \
-                     "total_fee": "100", "order_body": "测试", "notify_url": notify_url}
+                     "terminal_trace": number, "total_fee": price, \
+                     "terminal_time": datetime.datetime.now().strftime("%Y%m%d%H%M%S"), \
+                     "order_body": body if body else self.get_body_describe(), \
+                     "notify_url": notify_url}
         result = self._request_api(url, **test_data)
         return result
 

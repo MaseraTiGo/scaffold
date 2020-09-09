@@ -27,3 +27,16 @@ class ContractStatus(object):
         (WAIT_SIGNED, "待签署"),
         (SIGNED, '已签署'),
     )
+
+
+class PlanStatus(object):
+
+    WAIT_PAY = "wait_pay"
+    PAYING = "paying"
+    PAID = "paid"
+
+    CHOICES = (
+        (WAIT_PAY, "欠缴费"),
+        (PAYING, "回款中"),
+        (PAID, '已回款'),
+    )

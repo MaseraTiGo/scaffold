@@ -39,8 +39,15 @@ class Get(AgentStaffAuthorizedApi):
 
             'mg_order_id':IntField(desc = "中台订单id"),
             'number': CharField(desc = "订单编号"),
-            'strike_price': IntField(desc = "成交金额，单位：分"),
-            'actual_amount': CharField(desc = "实付金额,单位：分"),
+
+            'sale_price': IntField(desc = "销售总金额"),
+            'strike_price': IntField(desc = "成交金额"),
+            'discount': IntField(desc = "优惠金额"),
+            'deposit': IntField(desc = "需付款金额"),
+            'arrears': IntField(desc = "欠费金额"),
+            'actual_amount': IntField(desc = "实际支付金额"),
+            'pay_services_name': CharField(desc = "订单支付服务"),
+            'pay_services': CharField(desc = "订单支付服务"),
             'source':CharField(
                             desc = "订单来源类型",
                             choices = OrderSource.CHOICES
@@ -73,6 +80,7 @@ class Get(AgentStaffAuthorizedApi):
                         ),
                         'total_price': IntField(desc = "总价"),
                         'remark': CharField(desc = "属性"),
+                        'despatch_type': CharField(desc = "发货方式"),
                     }
                 )
             ),
@@ -111,9 +119,18 @@ class Get(AgentStaffAuthorizedApi):
 
             'mg_order_id':order.mg_order.id,
             'number': order.mg_order.number,
-            'strike_price': order.mg_order.strike_price,
-            'actual_amount': order.mg_order.payment.actual_amount if \
-                             order.mg_order.payment else 0,
+
+            'sale_price': order.mg_order.requirement.sale_price,
+            'strike_price':order.mg_order.strike_price,
+            'discount': order.mg_order.requirement.sale_price - \
+                        order.mg_order.strike_price,
+            'deposit':order.deposit,
+            'arrears': order.mg_order.strike_price - \
+                       order.mg_order.payment.actual_amount,
+            'actual_amount':order.mg_order.payment.actual_amount,
+            'pay_services':order.pay_services,
+            'pay_services_name':order.get_pay_services_display(),
+
             'source': order.source,
             'description': order.mg_order.description,
             'remark': order.mg_order.remark,
@@ -134,6 +151,7 @@ class Get(AgentStaffAuthorizedApi):
                     'duration':orderitem.duration,
                     'total_price': orderitem.snapshoot.total_price,
                     'remark': orderitem.snapshoot.remark,
+                    'despatch_type': orderitem.snapshoot.despatch_type,
                 }
                 for orderitem in order.orderitem_list
             ],

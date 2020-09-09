@@ -1,6 +1,6 @@
 # coding=UTF-8
 import datetime
-
+import json
 from infrastructure.core.field.base import CharField, DictField, ListField, \
     IntField, DatetimeField
 from infrastructure.core.api.utils import with_metaclass
@@ -11,7 +11,7 @@ from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.middleground.business.person.manager import PersonServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from infrastructure.core.exception.business_error import BusinessError
-from abs.services.agent.order.manager import OrderServer, OrderItemServer
+from abs.services.agent.order.manager import OrderServer, OrderItemServer, OrderPlanServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.middleground.business.order.manager import OrderServer as mg_OrderServer
 from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
@@ -24,6 +24,7 @@ from abs.middleware.extend.yunaccount import yunaccount_extend
 from abs.services.agent.goods.manager import PosterServer
 from abs.services.agent.event.manager import StaffOrderEventServer
 from abs.services.agent.order.utils.constant import OrderSource
+from abs.middleground.business.transaction.utils.constant import PayService
 
 
 class Add(CustomerAuthorizedApi):
@@ -134,6 +135,7 @@ class Add(CustomerAuthorizedApi):
             OrderSource.APP,
             order_info['strike_price'],
             order_info['strike_price'],
+            PayService.FULL_PAYMENT,
             specification_list
         )
         SaleChanceServer.create_foradd_order(
@@ -276,6 +278,7 @@ class PosterAdd(CustomerAuthorizedApi):
             OrderSource.APP,
             order_info['deposit'],
             order_info['strike_price'],
+            poster.pay_services,
             specification_list
         )
         SaleChanceServer.create_foradd_order(
@@ -288,6 +291,14 @@ class PosterAdd(CustomerAuthorizedApi):
             staff_id = poster.staff_id,
             organization_id = 1
         )
+        # 添加回款计划
+        plan_list = json.loads(poster.pay_plan)
+        if len(plan_list) > 0:
+            OrderPlanServer.batch_create(
+                order,
+                poster.staff_id,
+                plan_list
+            )
         return order
 
     def fill(self, response, order):
@@ -316,7 +327,6 @@ class Get(CustomerAuthorizedApi):
         'last_payment_time': DatetimeField(desc = "付款时间"),
         'last_payment_number': CharField(desc = "最后付款单号"),
         'last_payment_amount': IntField(desc = "最后支付金额"),
-        'despatch_type': CharField(desc = "发货方式"),
         'pay_services': CharField(desc = "订单支付服务"),
         'order_item_list': ListField(
             desc = "商品列表",
@@ -337,7 +347,8 @@ class Get(CustomerAuthorizedApi):
                     'school_city': CharField(desc = "学校城市"),
                     'brand_name': CharField(desc = "品牌"),
                     'production_name': CharField(desc = "产品名"),
-                    'remark': CharField(desc = "备注")
+                    'remark': CharField(desc = "备注"),
+                    'despatch_type': CharField(desc = "发货方式"),
                 }
             )
         ),
@@ -394,14 +405,14 @@ class Get(CustomerAuthorizedApi):
             'discount': order.mg_order.requirement.sale_price - \
                         order.mg_order.strike_price,
             'deposit':order.deposit,
-            'arrears': order.mg_order.strike_price - order.deposit,
+            'arrears': order.mg_order.strike_price - \
+                       order.mg_order.payment.actual_amount,
             'actual_amount':order.mg_order.payment.actual_amount,
             'create_time': order.mg_order.create_time,
             'last_payment_type': order.mg_order.payment.last_payment_type,
             'last_payment_time': order.mg_order.payment.last_payment_time,
             'last_payment_amount':order.mg_order.payment.last_payment_amount,
             'last_payment_number': '',
-            'despatch_type': order.order_item_list[0].snapshoot.despatch_type,
             'pay_services':order.get_pay_services_display(),
             'payment_id':order.mg_order.payment.id,
             'order_item_list': [{
@@ -419,7 +430,8 @@ class Get(CustomerAuthorizedApi):
                 'school_city': order_item.school_city,
                 'brand_name': order_item.snapshoot.brand_name,
                 'production_name': order_item.snapshoot.production_name,
-                'remark': order_item.snapshoot.remark
+                'remark': order_item.snapshoot.remark,
+                'despatch_type': order_item.snapshoot.despatch_type,
             } for order_item in order.order_item_list],
             'invoice_info': {
                 'name': order.mg_order.invoice.name,
@@ -542,7 +554,8 @@ class Search(CustomerAuthorizedApi):
             'discount': order.mg_order.requirement.sale_price - \
                         order.mg_order.strike_price,
             'deposit':order.deposit,
-            'arrears': order.mg_order.strike_price - order.deposit,
+            'arrears': order.mg_order.strike_price - \
+                       order.mg_order.payment.actual_amount,
             'actual_amount':order.mg_order.payment.actual_amount,
             'create_time': order.mg_order.create_time,
             'last_payment_type': order.mg_order.payment.last_payment_type,
