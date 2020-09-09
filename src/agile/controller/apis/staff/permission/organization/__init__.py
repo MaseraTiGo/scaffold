@@ -109,8 +109,8 @@ class All(StaffAuthorizedApi):
                 'parent_id': organization.parent_id,
                 'position_list': [
                     {
-                        "id": position.id,
-                        "name": position.name,
+                        "id": position['id'],
+                        "name": position['name'],
                     }
                     for position in organization.position_list
                 ],

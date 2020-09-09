@@ -22,8 +22,8 @@ controller_pc_service = ControllerPcService()
 from agile.controller.apis.enterprise import Search
 controller_pc_service.add(Search)
 
-from agile.controller.apis.staff import Add, Get, Update, Search
-controller_pc_service.add(Add, Get, Update, Search)
+from agile.controller.apis.staff import Add, Get, Update, Search, Bind
+controller_pc_service.add(Add, Get, Update, Search, Bind)
 
 from agile.controller.apis.staff.myself import Get, Update
 controller_pc_service.add(Get, Update)
@@ -37,8 +37,8 @@ controller_pc_service.add(Login, Logout, Get, Update)
 from agile.controller.apis.staff.account.vcode import Phone, Image
 controller_pc_service.add(Phone, Image)
 
-from agile.controller.apis.staff.account.password import Modify
-controller_pc_service.add(Modify)
+from agile.controller.apis.staff.account.password import Modify, Reset
+controller_pc_service.add(Modify, Reset)
 
 from agile.controller.apis.staff.permission import Get
 controller_pc_service.add(Get)

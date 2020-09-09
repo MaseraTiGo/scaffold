@@ -11,6 +11,7 @@ class AbstractStaff(BaseModel):
 
     person_id = IntegerField(verbose_name="用户id")
     company_id = IntegerField(verbose_name="企业id")
+    permission_id = IntegerField(verbose_name="权限id", default=None, null=True)
 
     remark = TextField(verbose_name="备注")
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)

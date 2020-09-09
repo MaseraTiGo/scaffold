@@ -5,6 +5,7 @@ from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
+from abs.middleground.technology.permission.manager import PermissionServer
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.person.manager import PersonServer
 
@@ -31,8 +32,25 @@ class AbstractStaffServer(BaseManager):
 
     @classmethod
     def _hung_permission(cls, staff_list):
+        permission_id_list = [
+            staff.permission_id
+            for staff in staff_list
+        ]
+
+        position_permission_mapping = {
+            pp.id: pp
+            for pp in PermissionServer.get_position_permission_byids(
+                permission_id_list
+            )
+        }
+
         for staff in staff_list:
-            staff.department_role_list = []
+            pp = position_permission_mapping.get(
+                staff.permission_id
+            )
+            staff.position = pp.position if pp else None
+            staff.organization = pp.organization if pp else None
+
         return staff_list
 
     @classmethod

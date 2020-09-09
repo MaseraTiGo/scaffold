@@ -125,6 +125,18 @@ class AccountServer(BaseManager):
         return True
 
     @classmethod
+    def reset_password(cls, role_id):
+        """
+        重置密码接口
+        """
+        account = cls.APPLY_CLS.get_byrole(role_id)
+        password = hashlib.md5(
+            "123456".encode(encoding="utf-8")
+        ).hexdigest()
+        account.update(password=password)
+        return True
+
+    @classmethod
     def logout(cls,  auth_str):
         """
         注销接口

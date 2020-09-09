@@ -478,12 +478,23 @@ class PermissionServer(BaseManager):
         authorization = cls.get_authorization_byappkey(appkey)
         organization = cls.get_organization(organization_id)
         position = cls.get_position(position_id)
-        permission = PositionPermission.create(
-            person_id=person_id,
-            organization=organization,
-            position=position,
+        pp_qs = PositionPermission.search(
             authorization=authorization,
+            person_id=person_id
         )
+        if pp_qs.count() > 0:
+            permission = pp_qs[0]
+            permission.update(
+                organization=organization,
+                position=position
+            )
+        else:
+            permission = PositionPermission.create(
+                person_id=person_id,
+                organization=organization,
+                position=position,
+                authorization=authorization,
+            )
         return permission
 
     @classmethod
@@ -495,14 +506,12 @@ class PermissionServer(BaseManager):
         )
 
         helper = permission_register.get_helper(authorization)
-        organization_id_list = helper.organization.get_all_children_ids(
+        organization_id_list = helper.organization.get_children_ids(
             position_permission.organization.id
         )
-        organization_id_list.append(position_permission.organization.id)
-        position_id_list = helper.position.get_all_children_ids(
+        position_id_list = helper.position.get_children_ids(
             position_permission.position.id
         )
-        position_id_list.append(position_permission.position.id)
         person_id_list = [
             permission['person_id']
             for permission in PositionPermission.query().filter(
@@ -521,6 +530,13 @@ class PermissionServer(BaseManager):
             ],
         })
         return permission
+
+    @classmethod
+    def get_position_permission_byids(cls, permission_id_list):
+        pp_qs = PositionPermission.query().filter(
+            id__in=permission_id_list
+        )
+        return pp_qs
 
     @classmethod
     def bind_person(cls, appkey, person_group_id, person_id):
