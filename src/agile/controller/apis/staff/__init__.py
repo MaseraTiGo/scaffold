@@ -39,6 +39,8 @@ class Add(StaffAuthorizedApi):
             'position_id': IntField(desc="身份ID"),
             'birthday': DateField(desc="生日", is_required=False),
             'email': CharField(desc="邮箱", is_required=False),
+            'qq': CharField(desc="qq", is_required=False),
+            'wechat': CharField(desc="微信", is_required=False),
             'gender': CharField(
                 desc="性别",
                 is_required=False,

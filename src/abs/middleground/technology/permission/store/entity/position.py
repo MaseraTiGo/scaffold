@@ -54,6 +54,10 @@ class Organization(BaseModel):
     class Meta:
         db_table = DB_PREFIX + "organization"
 
+    def get_children(self):
+        cls_qs = self.search(parent_id=self.id)
+        return cls_qs
+
 
 class PositionPermission(BaseModel):
     """

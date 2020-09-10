@@ -23,7 +23,7 @@ class CustomerServer(BaseManager):
         if "nick" in search_info:
             nick = search_info.pop("nick")
             search_info.update({
-                "nick__contains":nick
+                "nick__contains": nick
             })
         customer_qs = Customer.search(**search_info).order_by('-create_time')
         splitor = Splitor(current_page, customer_qs)
@@ -38,10 +38,12 @@ class CustomerServer(BaseManager):
     @classmethod
     def create(cls, phone, **customer_info):
         is_person_exsited, person = PersonServer.is_exsited(phone)
-        if is_person_exsited:
+        if not is_person_exsited:
+            person = PersonServer.create(phone=phone, **customer_info)
+
+        if Customer.search(person_id=person.id).count() > 0:
             raise BusinessError('客户已存在，不能创建')
 
-        person = PersonServer.create(phone = phone, **customer_info)
         if 'nick' not in customer_info:
             nick = '用户CL_{random_num}'.format(
                 random_num=str(random.randint(10000, 99999))
@@ -49,9 +51,10 @@ class CustomerServer(BaseManager):
             customer_info.update({
                 'nick': nick
             })
+
         customer = Customer.create(
-            person_id = person.id,
-            phone = phone,
+            person_id=person.id,
+            phone=phone,
             **customer_info
         )
         return customer
@@ -88,7 +91,7 @@ class CustomerServer(BaseManager):
             if obj.customer_id not in customer_mapping:
                 customer_mapping[obj.customer_id] = []
             customer_mapping[obj.customer_id].append(obj)
-        customer_list = list(Customer.search(id__in = customer_mapping.keys()))
+        customer_list = list(Customer.search(id__in=customer_mapping.keys()))
         PersonServer.hung_persons(customer_list)
         for customer in customer_list:
             if customer.id in customer_mapping:

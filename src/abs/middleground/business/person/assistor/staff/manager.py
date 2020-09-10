@@ -17,11 +17,16 @@ class AbstractStaffServer(BaseManager):
     @classmethod
     def create(cls, phone, **staff_info):
         is_person_exsited, person = PersonServer.is_exsited(phone)
-        if is_person_exsited:
-            raise BusinessError('客户已存在，不能创建')
-
-        person = PersonServer.create(phone=phone, **staff_info)
+        if not is_person_exsited:
+            person = PersonServer.create(phone=phone, **staff_info)
         company = EnterpriseServer.get_main_company()
+
+        if cls.STAFF_MODEL.search(
+            person_id=person.id,
+            company_id=company.id
+        ).count() > 0:
+            raise BusinessError('员工已存在，不能创建')
+
         staff = cls.STAFF_MODEL.create(
             person_id=person.id,
             company_id=company.id,
