@@ -135,7 +135,8 @@ class OrderServer(BaseManager):
                 school_city = specification.merchandise.goods.school.city,
                 major_name = specification.merchandise.goods.major.name,
                 duration = specification.merchandise.goods.years.duration,
-                category = specification.merchandise.goods.years.category
+                category = specification.merchandise.goods.years.category,
+                template_id = specification.merchandise.goods.template_id,
             )
             specification.update(
                 stock = specification.stock - specification.order_count

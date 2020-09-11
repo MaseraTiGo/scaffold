@@ -6,7 +6,6 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
-from infrastructure.utils.common.dictwrapper import DictWrapper
 from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.crm.contract.utils.contact import ValueSource, KeyType
 from abs.services.crm.contract.manager import ParamServer

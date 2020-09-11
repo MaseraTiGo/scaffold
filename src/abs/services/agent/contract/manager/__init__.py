@@ -42,8 +42,7 @@ class TemplateServer(BaseManager):
         return template
 
     @classmethod
-    def remove(cls, template_id):
-        template = cls.get(template_id)
+    def remove(cls, template):
         TemplateParamServer.search_all(template = template).delete()
         template.delete()
         return True

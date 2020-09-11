@@ -137,7 +137,6 @@ class Send(AgentStaffAuthorizedApi):
 class Add(AgentStaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.order_item_id = RequestField(IntField, desc = "订单详情id")
-    request.template_id = RequestField(IntField, desc = "合同模板id")
     request.contract_info_list = RequestField(
         ListField,
         desc = "合同内容列表",

@@ -35,10 +35,18 @@ class Search(StaffAuthorizedApi):
             conf = {
                'id': IntField(desc = "合同模板id"),
                'name': CharField(desc = "合同模板名称"),
-               'background_img_url': ListField(
+               'background_img_url':ListField(
                     desc = '合同模板图片',
-                    fmt = CharField(desc = "图片地址")
-               ),
+                    fmt = DictField(
+                        desc = "背景图详情",
+                        conf = {
+                            'page_number': IntField(desc = "背景图编号"),
+                            'path_url': CharField(desc = "背景图地址"),
+                            'width': IntField(desc = "背景图宽度"),
+                            'height': IntField(desc = "背景图高度"),
+                        }
+                    )
+                ),
                'status':CharField(
                     desc = "状态",
                     choices = TemplateStatus.CHOICES
@@ -70,7 +78,12 @@ class Search(StaffAuthorizedApi):
         data_list = [{
                'id': template.id,
                'name': template.name,
-               'background_img_url':json.loads(template.background_img_url),
+               'background_img_url':[{
+                    'page_number': obj['page_number'],
+                    'path_url':obj['path_url'],
+                    'width': obj['width'],
+                    'height':obj['height'],
+                } for obj in json.loads(template.background_img_url)],
                'status':template.status,
                'create_time': template.create_time,
           }  for template in template_spliter.data]
@@ -91,10 +104,18 @@ class Get(StaffAuthorizedApi):
         conf = {
                'id': IntField(desc = "合同模板id"),
                'name': CharField(desc = "合同模板名称"),
-               'background_img_url': ListField(
+               'background_img_url':ListField(
                     desc = '合同模板图片',
-                    fmt = CharField(desc = "图片地址")
-               ),
+                    fmt = DictField(
+                        desc = "背景图详情",
+                        conf = {
+                            'page_number': IntField(desc = "背景图编号"),
+                            'path_url': CharField(desc = "背景图地址"),
+                            'width': IntField(desc = "背景图宽度"),
+                            'height': IntField(desc = "背景图高度"),
+                        }
+                    )
+                ),
                'status':CharField(
                     desc = "状态",
                     choices = TemplateStatus.CHOICES
@@ -140,7 +161,12 @@ class Get(StaffAuthorizedApi):
         response.template_info = {
             'id': template.id,
             'name':template.name,
-            'background_img_url':json.loads(template.background_img_url),
+            'background_img_url':[{
+                'page_number': obj['page_number'],
+                'path_url':obj['path_url'],
+                'width': obj['width'],
+                'height':obj['height'],
+            } for obj in json.loads(template.background_img_url)],
             'status':template.status,
             'create_time':template.create_time,
             'param_list': [

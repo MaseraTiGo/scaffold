@@ -20,6 +20,8 @@ from abs.services.crm.university.manager import UniversityServer, \
      UniversityYearsServer
 from abs.services.crm.agent.manager import AgentServer
 from abs.services.agent.order.manager import OrderItemServer
+from abs.services.agent.contract.manager import TemplateServer
+from abs.services.agent.contract.utils.constant import TemplateStatus
 
 
 class Get(AgentStaffAuthorizedApi):
@@ -325,6 +327,7 @@ class Add(AgentStaffAuthorizedApi):
                 choices = DespatchService.CHOICES
             ),
             'production_id': IntField(desc = "产品ID"),
+            'template_id': IntField(desc = "合同模板ID"),
             'years_id': IntField(desc = "学年id"),
             'description':CharField(desc = "商品描述"),
             'remark': CharField(desc = "备注", is_required = False),
@@ -351,6 +354,11 @@ class Add(AgentStaffAuthorizedApi):
         production = ProductionServer.get(
             request.goods_info.pop('production_id')
         )
+        template = TemplateServer.get(
+            request.goods_info.pop('template_id')
+        )
+        if template.status != TemplateStatus.ADOPT:
+            raise BusinessError("合同模板存在异常")
         merchandise_info = {
             "title":request.goods_info.pop('title'),
             "company_id":agent.company_id,

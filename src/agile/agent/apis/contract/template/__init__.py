@@ -6,12 +6,15 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
-
+from infrastructure.utils.common.dictwrapper import DictWrapper
 from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.agent.contract.utils.constant import TemplateStatus
+from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.agent.contract.manager import TemplateServer, \
      TemplateParamServer
 from abs.services.crm.contract.manager import ParamServer
+from abs.services.agent.goods.manager import GoodsServer
+from abs.services.agent.order.manager import OrderItemServer
 
 
 class Add(AgentStaffAuthorizedApi):
@@ -23,7 +26,15 @@ class Add(AgentStaffAuthorizedApi):
            'name': CharField(desc = "合同模板名称"),
            'background_img_url':ListField(
                 desc = '合同模板图片',
-                fmt = CharField(desc = "图片地址")
+                fmt = DictField(
+                    desc = "背景图详情",
+                    conf = {
+                        'page_number': IntField(desc = "背景图编号"),
+                        'path_url': CharField(desc = "背景图地址"),
+                        'width': IntField(desc = "背景图宽度"),
+                        'height': IntField(desc = "背景图高度"),
+                    }
+                )
             ),
             'status': CharField(desc = "合同模板状态(draft:草稿,wait:待审核)"),
             'template_param_list':ListField(
@@ -98,10 +109,18 @@ class Search(AgentStaffAuthorizedApi):
             conf = {
                'id': IntField(desc = "合同模板id"),
                'name': CharField(desc = "合同模板名称"),
-               'background_img_url': ListField(
+               'background_img_url':ListField(
                     desc = '合同模板图片',
-                    fmt = CharField(desc = "图片地址")
-               ),
+                    fmt = DictField(
+                        desc = "背景图详情",
+                        conf = {
+                            'page_number': IntField(desc = "背景图编号"),
+                            'path_url': CharField(desc = "背景图地址"),
+                            'width': IntField(desc = "背景图宽度"),
+                            'height': IntField(desc = "背景图高度"),
+                        }
+                    )
+                ),
                'status':CharField(
                     desc = "状态",
                     choices = TemplateStatus.CHOICES
@@ -134,13 +153,62 @@ class Search(AgentStaffAuthorizedApi):
         data_list = [{
                'id': template.id,
                'name': template.name,
-               'background_img_url':json.loads(template.background_img_url),
+               'background_img_url':[{
+                    'page_number': obj['page_number'],
+                    'path_url':obj['path_url'],
+                    'width': obj['width'],
+                    'height':obj['height'],
+                } for obj in json.loads(template.background_img_url)],
                'status':template.status,
                'create_time': template.create_time,
           }  for template in template_spliter.data]
         response.data_list = data_list
         response.total = template_spliter.total
         response.total_page = template_spliter.total_page
+        return response
+
+
+class SearchAll(AgentStaffAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+
+    response = with_metaclass(ResponseFieldSet)
+    response.data_list = ResponseField(
+        ListField,
+        desc = "合同参数列表",
+        fmt = DictField(
+            desc = "合同参数内容",
+            conf = {
+               'id': IntField(desc = "合同模板id"),
+               'name': CharField(desc = "合同模板名称"),
+            }
+        )
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "所有合同模板搜索接口"
+
+    @classmethod
+    def get_author(cls):
+        return "Fsy"
+
+    def execute(self, request):
+        agent = self.auth_agent
+        request.search_info.update({
+            "agent_id":agent.id,
+            "status":TemplateStatus.ADOPT
+        })
+        template_list = TemplateServer.search_all(
+             **request.search_info
+        )
+        return template_list
+
+    def fill(self, response, template_list):
+        data_list = [{
+               'id': template.id,
+               'name': template.name,
+          }  for template in template_list]
+        response.data_list = data_list
         return response
 
 
@@ -155,10 +223,18 @@ class Get(AgentStaffAuthorizedApi):
         conf = {
                'id': IntField(desc = "合同模板id"),
                'name': CharField(desc = "合同模板名称"),
-               'background_img_url': ListField(
+               'background_img_url':ListField(
                     desc = '合同模板图片',
-                    fmt = CharField(desc = "图片地址")
-               ),
+                    fmt = DictField(
+                        desc = "背景图详情",
+                        conf = {
+                            'page_number': IntField(desc = "背景图编号"),
+                            'path_url': CharField(desc = "背景图地址"),
+                            'width': IntField(desc = "背景图宽度"),
+                            'height': IntField(desc = "背景图高度"),
+                        }
+                    )
+                ),
                'status':CharField(
                     desc = "状态",
                     choices = TemplateStatus.CHOICES
@@ -204,7 +280,12 @@ class Get(AgentStaffAuthorizedApi):
         response.template_info = {
             'id': template.id,
             'name':template.name,
-            'background_img_url':json.loads(template.background_img_url),
+            'background_img_url':[{
+                'page_number': obj['page_number'],
+                'path_url':obj['path_url'],
+                'width': obj['width'],
+                'height':obj['height'],
+            } for obj in json.loads(template.background_img_url)],
             'status':template.status,
             'create_time':template.create_time,
             'param_list': [
@@ -237,8 +318,15 @@ class Update(AgentStaffAuthorizedApi):
            'name': CharField(desc = "合同模板名称", is_required = False),
            'background_img_url':ListField(
                 desc = '合同模板图片',
-                fmt = CharField(desc = "图片地址"),
-                is_required = False
+                fmt = DictField(
+                    desc = "背景图详情",
+                    conf = {
+                        'page_number': IntField(desc = "背景图编号"),
+                        'path_url': CharField(desc = "背景图地址"),
+                        'width': IntField(desc = "背景图宽度"),
+                        'height': IntField(desc = "背景图高度"),
+                    }
+                )
             ),
             'status': CharField(
                 desc = "合同模板名称(draft:草稿,wait:待审核)",
@@ -279,7 +367,11 @@ class Update(AgentStaffAuthorizedApi):
         (TemplateStatus.DRAFT, TemplateStatus.WAIT):
             raise BusinessError("合同状态异常，禁止添加")
         param_list = request.template_info.pop("template_param_list")
+        if "background_img_url" in request.template_info:
+            request.template_info["background_img_url"] = \
+                json.dumps(request.template_info["background_img_url"])
         template = TemplateServer.update(
+            template,
             **request.template_info
         )
 
@@ -308,10 +400,20 @@ class Remove(AgentStaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        # 有商品使用得时候不能删
-        TemplateServer.remove(
-            request.template_id,
+        template = TemplateServer.get(request.template_id)
+        goods_qs = GoodsServer.search_all_goods(
+            template_id = template.id
         )
+        if goods_qs.count() > 0:
+            raise BusinessError("存在商品禁止删除")
+        order_item_qs = OrderItemServer.search_all(
+            template_id = template.id,
+            order__status__in = (OrderStatus.ORDER_LAUNCHED, \
+                                 OrderStatus.PAYMENT_FINISHED)
+        )
+        if order_item_qs.count() > 0:
+            raise BusinessError("存在此合同交易中得订单禁止删除")
+        TemplateServer.remove(template)
 
     def fill(self, response):
         return response
@@ -338,8 +440,6 @@ class Submit(AgentStaffAuthorizedApi):
         if template.status != TemplateStatus.DRAFT:
             raise BusinessError("此合同模板状态不允许提交")
         template.update(status = TemplateStatus.WAIT)
-
-
 
     def fill(self, response):
         return response

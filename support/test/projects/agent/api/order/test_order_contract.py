@@ -24,7 +24,7 @@ class ContractTestCase(AgentAPITestCase):
         self.assertTrue('create_time' in contract)
 
     def test_add_contract(self):
-        result = image_process.get_remote_pic_size("http://orgdeer.oss-cn-hangzhou.aliyuncs.com/source/goods/8520_1599789122.jpeg")
+        result = image_process.get_remote_pic_size("http://orgdeer.oss-cn-hangzhou.aliyuncs.com/source/goods/20200911141554.jpg")
         print("==>>>result", result, type(result))
         return
         api = 'order.contract.add'
