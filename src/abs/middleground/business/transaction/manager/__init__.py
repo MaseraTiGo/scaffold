@@ -174,23 +174,25 @@ class TransactionServer(BaseManager):
         return TransactionOutputRecord.search(number=number).first()
 
     @classmethod
-    def finished_output_record_bynumber(cls, number):
+    def finished_output_record_bynumber(cls, number, **record_info):
         """
         完成出账单通过出账编号
         """
         output_record = cls.get_output_record_bynumber(number)
         output_record.update(
-            status=TransactionStatus.ACCOUNT_FINISH
+            status=TransactionStatus.ACCOUNT_FINISH,
+            **record_info
         )
         return output_record
 
     @classmethod
-    def failure_output_record_bynumber(cls, number):
+    def failure_output_record_bynumber(cls, number, **record_info):
         """
         完成出账单通过出账编号
         """
         output_record = cls.get_output_record_bynumber(number)
         output_record.update(
-            status=TransactionStatus.ACCOUNT_FAIL
+            status=TransactionStatus.ACCOUNT_FAIL,
+            **record_info
         )
         return output_record

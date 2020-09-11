@@ -213,7 +213,8 @@ class OrderServer(BaseManager):
         订单进行支付完成后的成功回调
         """
         output_record = TransactionServer.finished_output_record_bynumber(
-            output_record_number
+            output_record_number,
+            order_number="123456"
         )
         payment_record = PaymentRecord.get_byoutputrecord(
             output_record_id=output_record.id

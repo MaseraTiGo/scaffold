@@ -20,6 +20,11 @@ class BaseTransaction(BaseModel):
     number = CharField(verbose_name="交易编号", max_length=48)
     amount = IntegerField(verbose_name="金额，有正负之分, 单位：分")
     remark = TextField(verbose_name="记录备注", default="")
+    order_number = CharField(
+        verbose_name="第三方交易编号",
+        max_length=256,
+        default=""
+    )
 
     pay_type = CharField(
         verbose_name="支付方式",
@@ -120,8 +125,10 @@ class TransactionInputRecord(BaseTransaction):
 
     def update(self, **output_infos):
         self = super(TransactionInputRecord, self).update(**output_infos)
-        if self.status == TransactionStatus.ACCOUNT_FINISH \
-           and self.transaction is None:
+        if self.status in (
+            TransactionStatus.PAY_FINISH,
+            TransactionStatus.ACCOUNT_FINISH,
+        ) and self.transaction is None:
             transacation_record = TransactionRecord.create(
                 amount=self.amount,
                 pay_type=self.pay_type,
@@ -133,8 +140,14 @@ class TransactionInputRecord(BaseTransaction):
                 own_id=self.own_id,
                 trader_type=self.trader_type,
                 trader_id=self.trader_id,
+                order_number=self.order_number,
                 create_time=self.create_time,
             )
+            self.update(
+                transaction=transacation_record,
+            )
+        if self.status == TransactionStatus.ACCOUNT_FINISH \
+           and self.related_transaction is None:
             related_transacation_record = TransactionRecord.create(
                 amount=0-self.amount,
                 pay_type=self.pay_type,
@@ -146,10 +159,10 @@ class TransactionInputRecord(BaseTransaction):
                 trader_id=self.own_id,
                 own_type=self.trader_type,
                 own_id=self.trader_id,
+                order_number=self.order_number,
                 create_time=self.create_time,
             )
             self.update(
-                transaction=transacation_record,
                 related_transaction=related_transacation_record
             )
         return self
@@ -217,23 +230,35 @@ class TransactionOutputRecord(BaseTransaction):
                 own_id=output_record.own_id,
                 trader_type=output_record.trader_type,
                 trader_id=output_record.trader_id,
-                create_time=output_record.create_time,
-            )
-            related_transacation_record = TransactionRecord.create(
-                amount=0-output_record.amount,
-                pay_type=output_record.pay_type,
-                remark=output_record.remark,
-                output_record_id=output_record.id,
-                business_type=output_record.business_type,
-                business_id=output_record.business_id,
-                trader_type=output_record.own_type,
-                trader_id=output_record.own_id,
-                own_type=output_record.trader_type,
-                own_id=output_record.trader_id,
+                order_number=output_record.order_number,
                 create_time=output_record.create_time,
             )
             output_record.update(
                 transaction=transacation_record,
-                related_transaction=related_transacation_record
             )
         return output_record
+
+    def update(self, **output_infos):
+        self = super(TransactionOutputRecord, self).update(**output_infos)
+        if self.status in (
+            TransactionStatus.PAY_FINISH,
+            TransactionStatus.ACCOUNT_FINISH,
+        ) and self.related_transaction is None:
+            related_transacation_record = TransactionRecord.create(
+                amount=0-self.amount,
+                pay_type=self.pay_type,
+                remark=self.remark,
+                output_record_id=self.id,
+                business_type=self.business_type,
+                business_id=self.business_id,
+                trader_type=self.own_type,
+                trader_id=self.own_id,
+                own_type=self.trader_type,
+                own_id=self.trader_id,
+                order_number=self.order_number,
+                create_time=self.create_time,
+            )
+            self.update(
+                related_transaction=related_transacation_record
+            )
+        return self
