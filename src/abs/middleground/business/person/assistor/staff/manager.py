@@ -5,6 +5,7 @@ from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
+from abs.middleground.technology.permission.manager import PermissionServer
 from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.person.manager import PersonServer
 
@@ -16,11 +17,16 @@ class AbstractStaffServer(BaseManager):
     @classmethod
     def create(cls, phone, **staff_info):
         is_person_exsited, person = PersonServer.is_exsited(phone)
-        if is_person_exsited:
-            raise BusinessError('客户已存在，不能创建')
-
-        person = PersonServer.create(phone=phone, **staff_info)
+        if not is_person_exsited:
+            person = PersonServer.create(phone=phone, **staff_info)
         company = EnterpriseServer.get_main_company()
+
+        if cls.STAFF_MODEL.search(
+            person_id=person.id,
+            company_id=company.id
+        ).count() > 0:
+            raise BusinessError('员工已存在，不能创建')
+
         staff = cls.STAFF_MODEL.create(
             person_id=person.id,
             company_id=company.id,
@@ -31,8 +37,25 @@ class AbstractStaffServer(BaseManager):
 
     @classmethod
     def _hung_permission(cls, staff_list):
+        permission_id_list = [
+            staff.permission_id
+            for staff in staff_list
+        ]
+
+        position_permission_mapping = {
+            pp.id: pp
+            for pp in PermissionServer.get_position_permission_byids(
+                permission_id_list
+            )
+        }
+
         for staff in staff_list:
-            staff.department_role_list = []
+            pp = position_permission_mapping.get(
+                staff.permission_id
+            )
+            staff.position = pp.position if pp else None
+            staff.organization = pp.organization if pp else None
+
         return staff_list
 
     @classmethod

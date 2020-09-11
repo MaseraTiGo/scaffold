@@ -39,6 +39,8 @@ class Add(StaffAuthorizedApi):
             'position_id': IntField(desc="身份ID"),
             'birthday': DateField(desc="生日", is_required=False),
             'email': CharField(desc="邮箱", is_required=False),
+            'qq': CharField(desc="qq", is_required=False),
+            'wechat': CharField(desc="微信", is_required=False),
             'gender': CharField(
                 desc="性别",
                 is_required=False,
@@ -60,20 +62,30 @@ class Add(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        organization_id = reqeuset.staff_info.pop('organization_id')
-        position_id = reqeuset.staff_info.pop('position_id')
-    
+        organization_id = request.staff_info.pop('organization_id')
+        position_id = request.staff_info.pop('position_id')
 
         staff = StaffServer.create(
             **request.staff_info
         )
+        phone = request.staff_info.phone
         password = hashlib.md5(
-            staff.phone[-6:]
+            str(phone[-6:]).encode("utf8")
         ).hexdigest()
         StaffAccountServer.create(
             staff.id,
-            staff.phone,
+            phone,
             password
+        )
+        permission = PermissionServer.bind_position(
+            request.appkey,
+            organization_id,
+            position_id,
+            staff.id
+        )
+        StaffServer.update(
+            staff.id,
+            permission_id=permission.id,
         )
         return staff
 
@@ -122,6 +134,20 @@ class Search(StaffAuthorizedApi):
                 'email': CharField(desc="邮箱"),
                 'work_number': CharField(desc="员工工号"),
                 'is_admin': BooleanField(desc="是否是管理员"),
+                'organization': DictField(
+                    desc="组织信息",
+                    conf={
+                        'id': IntField(desc="部门Id"),
+                        'name': CharField(desc="部门名称"),
+                    }
+                ),
+                'position': DictField(
+                    desc="职位信息",
+                    conf={
+                        'id': IntField(desc="职位Id"),
+                        'name': CharField(desc="职位名称"),
+                    }
+                ),
                 'create_time': DatetimeField(desc="创建时间"),
                 'update_time': DatetimeField(desc="更新时间"),
             }
@@ -157,6 +183,20 @@ class Search(StaffAuthorizedApi):
             'phone': staff.person.phone,
             'email': staff.person.email,
             'is_admin': staff.is_admin,
+            'organization': {
+                'id': staff.organization.id,
+                'name': staff.organization.name,
+            } if staff.organization else {
+                'id': -1,
+                'name': "",
+            },
+            'position': {
+                'id': staff.position.id,
+                'name': staff.position.name,
+            } if staff.position else {
+                'id': -1,
+                "name": "",
+            },
             'create_time': staff.create_time,
             'update_time': staff.update_time,
         } for staff in staff_spliter.data]
@@ -190,6 +230,20 @@ class Get(StaffAuthorizedApi):
             'is_admin': BooleanField(desc="是否是管理员"),
             'update_time': DatetimeField(desc="更新时间"),
             'create_time': DatetimeField(desc="创建时间"),
+            'organization': DictField(
+                desc="组织信息",
+                conf={
+                    'id': IntField(desc="部门Id"),
+                    'name': CharField(desc="部门名称"),
+                }
+            ),
+            'position': DictField(
+                desc="职位信息",
+                conf={
+                    'id': IntField(desc="职位Id"),
+                    'name': CharField(desc="职位名称"),
+                }
+            ),
             'account_info': DictField(
                 desc="账号信息",
                 conf={
@@ -247,6 +301,20 @@ class Get(StaffAuthorizedApi):
             'phone': staff.person.phone,
             'email': staff.person.email,
             'is_admin': staff.is_admin,
+            'organization': {
+                'id': staff.organization.id,
+                'name': staff.organization.name,
+            } if staff.organization else {
+                'id': -1,
+                'name': "",
+            },
+            'position': {
+                'id': staff.position.id,
+                'name': staff.position.name,
+            } if staff.position else {
+                'id': -1,
+                "name": "",
+            },
             'update_time': staff.update_time,
             'create_time': staff.create_time,
             'account_info': {
@@ -276,7 +344,7 @@ class Update(StaffAuthorizedApi):
     """
     request = with_metaclass(RequestFieldSet)
     request.staff_id = RequestField(IntField, desc="员工id")
-    request.updatef_info = RequestField(
+    request.update_info = RequestField(
         DictField,
         desc="员工修改详情",
         conf={
@@ -289,6 +357,8 @@ class Update(StaffAuthorizedApi):
             'birthday': CharField(desc="生日", is_required=False),
             'phone': MobileField(desc="电话", is_required=False),
             'email': CharField(desc="邮箱", is_required=False),
+            'qq': CharField(desc="qq", is_required=False),
+            'wechat': CharField(desc="微信", is_required=False),
             'work_number': CharField(desc="员工工号", is_required=False),
             'is_admin': BooleanField(desc="是否是管理员", is_required=False),
         }
@@ -305,7 +375,35 @@ class Update(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        StaffServer.update(request.staff_id, **request.staff_info)
+        StaffServer.update(request.staff_id, **request.update_info)
+
+    def fill(self, response):
+        return response
+
+
+class Bind(StaffAuthorizedApi):
+    """
+    绑定员工信息到部门及岗位
+    """
+    request = with_metaclass(RequestFieldSet)
+    request.appkey = RequestField(CharField, desc="appkey")
+    request.staff_id = RequestField(IntField, desc="员工id")
+    request.organization_id = RequestField(IntField, desc="组织id")
+    request.position_id = RequestField(IntField, desc="岗位id")
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self, request):
+        PermissionServer.bind_position(
+            request.appkey,
+            request.organization_id,
+            request.position_id,
+            request.staff_id,
+        )
 
     def fill(self, response):
         return response

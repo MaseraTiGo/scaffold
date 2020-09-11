@@ -63,9 +63,9 @@ class PaymentRecord(BaseModel):
     status = CharField(
         verbose_name="交易状态",
         max_length=64,
-        choices=TransactionStatus.CHOICES,
         null=True,
-        default=None,
+        choices=TransactionStatus.CHOICES,
+        default=TransactionStatus.PAY_REQUEST,
     )
 
     payment = ForeignKey(Payment, on_delete=CASCADE)

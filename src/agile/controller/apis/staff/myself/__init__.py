@@ -41,6 +41,20 @@ class Get(StaffAuthorizedApi):
             'email': CharField(desc="邮箱"),
             'work_number': CharField(desc="员工工号"),
             'is_admin': BooleanField(desc="是否是管理员"),
+            'organization': DictField(
+                desc="组织信息",
+                conf={
+                    'id': IntField(desc="部门Id"),
+                    'name': CharField(desc="部门名称"),
+                }
+            ),
+            'position': DictField(
+                desc="职位信息",
+                conf={
+                    'id': IntField(desc="职位Id"),
+                    'name': CharField(desc="职位名称"),
+                }
+            ),
             'account_info': DictField(
                 desc="账号信息",
                 conf={
@@ -98,6 +112,20 @@ class Get(StaffAuthorizedApi):
             'phone': staff.person.phone,
             'email': staff.person.email,
             'is_admin': staff.is_admin,
+            'organization': {
+                'id': staff.organization.id,
+                'name': staff.organization.name,
+            } if staff.organization else {
+                'id': -1,
+                'name': "",
+            },
+            'position': {
+                'id': staff.position.id,
+                'name': staff.position.name,
+            } if staff.position else {
+                'id': -1,
+                "name": "",
+            },
             'account_info': {
                 'nick': staff.account.nick,
                 'username': staff.account.username,
