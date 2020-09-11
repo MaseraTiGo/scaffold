@@ -116,3 +116,9 @@ crm_pc_service.add(Search, Add, Update, SearchAll)
 
 from agile.crm.apis.adsense.advertisement import Search, Add, Update, Remove
 crm_pc_service.add(Search, Add, Update, Remove)
+
+from agile.crm.apis.contract.param import Search, Add, Update, Remove
+crm_pc_service.add(Search, Add, Update, Remove)
+
+from agile.crm.apis.contract.template import Search, Get, Examine
+crm_pc_service.add(Search, Get, Examine)

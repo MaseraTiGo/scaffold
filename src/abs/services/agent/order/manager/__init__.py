@@ -14,6 +14,7 @@ from abs.services.agent.order.store import Order, OrderItem, Contract, Plan
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleware.pay import pay_middleware
 from abs.middleground.business.order.utils.constant import OrderStatus
+from abs.middleware.contract import contract_middleware
 from abs.middleware.image import image_middleware
 from abs.middleware.email import email_middleware
 from abs.middleware.config import config_middleware
@@ -232,18 +233,47 @@ class OrderItemServer(BaseManager):
 class ContractServer(BaseManager):
 
     @classmethod
-    def create(cls, order_item, agent, contacts):
+    def create(cls, order_item, agent, template, contract_info_list):
+        mg_order = mg_OrderServer.get(order_item.order.mg_order_id)
+        contract_info_mapping = {}
+        for contract_info in contract_info_list:
+            contract_info_mapping[contract_info["template_param_id"]] = \
+                                        contract_info["value"]
+        param_list = []
+        for template_param in template.param_list:
+            if template_param.id in contract_info_mapping:
+                template_param.value = contract_info_mapping[template_param.id]
+                param_list.append(template_param)
+        contract_img_url = contract_middleware.generate_order_contract_img(mg_order, agent, template, param_list)
+
+        create_info = {
+            'name': mg_order.invoice.name,
+            'phone': mg_order.invoice.phone,
+            'identification': mg_order.invoice.identification,
+            'email': '',
+            'agent_customer_id': order_item.order.agent_customer_id,
+            'person_id': order_item.order.person_id,
+            'order_id':order_item.order.id,
+            'company_id': order_item.order.company_id,
+            'order_item_id': order_item.id,
+            'agent_id': agent.id,
+            'img_url': json.dumps(contract_img_url)
+        }
+        contract = Contract.create(**create_info)
+        return contract
+
+    @classmethod
+    def create_beifen(cls, order_item, agent):
         number = 'Sn_200' + str(int(time.time())) + str(random.randint(10000, 99999))
         mg_order = mg_OrderServer.get(order_item.order.mg_order_id)
         mg_OrderServer.hung_snapshoot([order_item])
         contract_img_url = image_middleware.get_contract(
             number,
             agent.name,
-            contacts.contacts,
-            contacts.phone,
             agent.official_seal,
             mg_order.invoice.name,
             mg_order.invoice.identification,
+            mg_order.invoice.phone,
             order_item.snapshoot.brand_name,
             order_item.snapshoot.production_name,
             order_item.school_name,
@@ -271,8 +301,6 @@ class ContractServer(BaseManager):
     @classmethod
     def autograph(cls, contract, autograph_img, email):
         autograph_url, contract_url, contract_img_url = image_middleware.autograph(
-            contract.name,
-            contract.phone,
             autograph_img,
             json.loads(contract.img_url)
         )

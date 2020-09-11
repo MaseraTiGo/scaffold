@@ -14,7 +14,8 @@ from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.agent.order.manager import OrderItemServer, ContractServer
 from abs.services.agent.staff.manager import AgentStaffServer
 from abs.services.agent.event.manager import StaffOrderEventServer
-from abs.services.crm.agent.manager import AgentServer
+from abs.services.agent.contract.manager import TemplateServer, \
+     TemplateParamServer
 
 
 class Search(AgentStaffAuthorizedApi):
@@ -136,6 +137,18 @@ class Send(AgentStaffAuthorizedApi):
 class Add(AgentStaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.order_item_id = RequestField(IntField, desc = "订单详情id")
+    request.template_id = RequestField(IntField, desc = "合同模板id")
+    request.contract_info_list = RequestField(
+        ListField,
+        desc = "合同内容列表",
+        fmt = DictField(
+            desc = "合同内容详情",
+            conf = {
+                'template_param_id': IntField(desc = "id"),
+                'value': CharField(desc = "参数")
+            }
+        )
+    )
 
     response = with_metaclass(ResponseFieldSet)
     response.contract_info = ResponseField(
@@ -156,32 +169,23 @@ class Add(AgentStaffAuthorizedApi):
 
     @classmethod
     def get_author(cls):
-        return "xyc"
+        return "Fsy"
 
     def execute(self, request):
+        template = TemplateServer.get(request.template_id)
+        TemplateParamServer.huang_for_template([template])
         order_item = OrderItemServer.get(
             request.order_item_id
         )
-        '''
-        if order_item.order.person_id != self.auth_user.person_id:
-            raise BusinessError('订单异常')
-        '''
         if order_item.order.status != OrderStatus.PAYMENT_FINISHED:
             raise BusinessError('订单状态异常')
         agent = self.auth_agent
-
-        contacts = AgentServer.search_all_contacts(agent = agent).first()
-        if not contacts:
-            raise BusinessError('代理商联系人不存在，请联系客服')
-        contract = ContractServer.search_all(
-            order_item_id = order_item.id
-        ).first()
-        if not contract:
-            contract = ContractServer.create(
-                order_item,
-                agent,
-                contacts
-            )
+        contract = ContractServer.create(
+            order_item,
+            agent,
+            template,
+            request.contract_info_list
+        )
         return contract
 
     def fill(self, response, contract):

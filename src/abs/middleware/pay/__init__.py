@@ -64,7 +64,7 @@ class PayMiddleware(object):
             number,
             amount,
             notify_path,
-            body = '充值',
+            body = '订单支付',
             trade_type = trade_type
         )
         return prepay_id

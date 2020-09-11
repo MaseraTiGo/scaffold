@@ -8,7 +8,6 @@ from abs.services.crm.university.models import School, Major, Relations
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.models import School, Major, Relations, Years
-from abs.services.agent.goods.models import Goods
 
 
 class UniversityServer(BaseManager):

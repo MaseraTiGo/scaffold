@@ -28,11 +28,10 @@ class ImageMiddleware(object):
             self,
             number,
             company_name,
-            contacts_name,
-            contacts_phone,
             official_seal,
             name,
             identification,
+            phone,
             brand_name,
             production_name,
             school_name,
@@ -139,26 +138,34 @@ class ImageMiddleware(object):
                         'color_tup': (0, 0, 0),
                         'word': convert_rmb_util.cwchange(price)
                     },
-                    # {
-                    #     'font_file': font_file,
-                    #     'font_size': 50,
-                    #     'width': 562,
-                    #     'height': 2660,
-                    #     'color_tup': (0, 0, 0),
-                    #     'word': contacts_name
-                    # },
-                    # {
-                    #     'font_file': font_file,
-                    #     'font_size': 50,
-                    #     'width': 712,
-                    #     'height': 2805,
-                    #     'color_tup': (0, 0, 0),
-                    #     'word': contacts_phone
-                    # },
                     {
                         'font_file': font_file,
                         'font_size': 50,
                         'width': 517,
+                        'height': 2957,
+                        'color_tup': (0, 0, 0),
+                        'word': datetime.date.today().strftime('%Y.%m.%d')
+                    },
+                    {
+                        'font_file': font_file,
+                        'font_size': 50,
+                        'width': 1770,
+                        'height': 2657,
+                        'color_tup': (0, 0, 0),
+                        'word': name
+                    },
+                    {
+                        'font_file': font_file,
+                        'font_size': 50,
+                        'width': 1820,
+                        'height': 2800,
+                        'color_tup': (0, 0, 0),
+                        'word': phone
+                    },
+                    {
+                        'font_file': font_file,
+                        'font_size': 50,
+                        'width': 1690,
                         'height': 2957,
                         'color_tup': (0, 0, 0),
                         'word': datetime.date.today().strftime('%Y.%m.%d')
@@ -178,7 +185,7 @@ class ImageMiddleware(object):
         )
         return contract_back_url_list
 
-    def autograph(self, name, phone, autograph_base64_image, contract_img_url_list):
+    def autograph(self, autograph_base64_image, contract_img_url_list):
         path = os.path.dirname(os.path.realpath(__file__))
         font_file = os.path.join(path, 'simsun.ttc')
 
@@ -206,22 +213,22 @@ class ImageMiddleware(object):
             )
         config_list[-1].update({
             'word_config': [
-                {
-                    'font_file': font_file,
-                    'font_size': 50,
-                    'width': 1770,
-                    'height': 2657,
-                    'color_tup': (0, 0, 0),
-                    'word': name
-                },
-                {
-                    'font_file': font_file,
-                    'font_size': 50,
-                    'width': 1820,
-                    'height': 2800,
-                    'color_tup': (0, 0, 0),
-                    'word': phone
-                },
+                # {
+                #    'font_file': font_file,
+                #    'font_size': 50,
+                #    'width': 1770,
+                #    'height': 2657,
+                #    'color_tup': (0, 0, 0),
+                #    'word': name
+                # },
+                # {
+                #    'font_file': font_file,
+                #    'font_size': 50,
+                #    'width': 1820,
+                #    'height': 2800,
+                #    'color_tup': (0, 0, 0),
+                #    'word': phone
+                # },
                 {
                     'font_file': font_file,
                     'font_size': 50,

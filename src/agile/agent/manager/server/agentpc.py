@@ -88,3 +88,11 @@ agent_pc_service.add(Add)
 
 from agile.agent.apis.event.track import Search, Add
 agent_pc_service.add(Search, Add)
+
+from agile.agent.apis.contract.template import Add, Search, Get, Update, Remove, \
+     Submit
+agent_pc_service.add(Add, Search, Get, Update, Remove, Submit)
+
+from agile.agent.apis.contract.template.param import SearchAll
+agent_pc_service.add(SearchAll)
+
