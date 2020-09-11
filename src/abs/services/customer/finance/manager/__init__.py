@@ -31,27 +31,26 @@ class CustomerFinanceServer(BaseManager):
         expense_amount = 0 - amount
         # 1. 创建余额凭证
         balance_record = CustomerBalanceRecord.create(
-            amount = expense_amount,
-            remark = remark,
-            pay_type = pay_type,
-            customer_id = customer_id,
+            amount=expense_amount,
+            remark=remark,
+            pay_type=pay_type,
+            customer_id=customer_id,
         )
 
         # 2. 生成出账单
         output_record = TransactionServer.generate_p2c_outputrecord(
-            person_id = customer.person_id,
-            company_id = EnterpriseServer.get_main_company().id,
-            amount = balance_record.amount,
-            pay_type = balance_record.pay_type,
-            remark = balance_record.remark,
-            business_type = BusinessTypes.BALANCE,
-            business_id = balance_record.id,
-            status = TransactionStatus.TRANSACTION_DEALING
+            person_id=customer.person_id,
+            company_id=EnterpriseServer.get_main_company().id,
+            amount=balance_record.amount,
+            pay_type=balance_record.pay_type,
+            remark=balance_record.remark,
+            business_type=BusinessTypes.BALANCE,
+            business_id=balance_record.id,
         )
 
         # 3. 绑定出账单到余额凭证中
         balance_record.update(
-            output_record_id = output_record.id,
+            output_record_id=output_record.id,
         )
         flag = False
         if pay_type == PayTypes.BANK:
@@ -64,11 +63,9 @@ class CustomerFinanceServer(BaseManager):
                 )
 
         if not flag:
-            TransactionServer.update_outputrecord(
-                output_record_id = output_record.id,
-                status = TransactionStatus.ACCOUNT_FAIL
+            TransactionServer.failure_output_record_bynumber(
+                output_record.number
             )
-
         return balance_record
 
     @classmethod
@@ -77,28 +74,28 @@ class CustomerFinanceServer(BaseManager):
 
         # 1. 生成入账单
         input_record = TransactionServer.generate_p2c_inputrecord(
-            person_id = customer.person_id,
-            company_id = EnterpriseServer.get_main_company().id,
-            amount = amount,
-            pay_type = pay_type,
-            remark = remark,
-            business_type = BusinessTypes.BALANCE,
+            person_id=customer.person_id,
+            company_id=EnterpriseServer.get_main_company().id,
+            amount=amount,
+            pay_type=pay_type,
+            remark=remark,
+            business_type=BusinessTypes.BALANCE,
         )
 
         # 2. 创建余额凭证
         balance_record = CustomerBalanceRecord.create(
-            amount = input_record.amount,
-            remark = input_record.remark,
-            pay_type = input_record.pay_type,
-            customer_id = customer.id,
-            input_record_id = input_record.id,
+            amount=input_record.amount,
+            remark=input_record.remark,
+            pay_type=input_record.pay_type,
+            customer_id=customer.id,
+            input_record_id=input_record.id,
         )
 
         # 3. 绑定余额凭证到入账单
         TransactionServer.update_inputrecord(
-            input_record_id = input_record.id,
-            business_id = balance_record.id,
-            status = TransactionStatus.TRANSACTION_DEALING
+            input_record_id=input_record.id,
+            business_id=balance_record.id,
+            status=TransactionStatus.TRANSACTION_DEALING
         )
 
         prepay_id = pay_middleware.top_up(
@@ -109,8 +106,8 @@ class CustomerFinanceServer(BaseManager):
 
         if not prepay_id:
             TransactionServer.update_inputrecord(
-                input_record_id = input_record.id,
-                status = TransactionStatus.ACCOUNT_FAIL,
+                input_record_id=input_record.id,
+                status=TransactionStatus.ACCOUNT_FAIL,
             )
             raise BusinessError('调用支付失败')
 
@@ -126,8 +123,8 @@ class CustomerFinanceServer(BaseManager):
         if input_record:
             # 支付到账
             TransactionServer.update_inputrecord(
-                input_record_id = input_record.id,
-                status = TransactionStatus.ACCOUNT_FINISH,
+                input_record_id=input_record.id,
+                status=TransactionStatus.ACCOUNT_FINISH,
             )
             return True
         raise BusinessError('单号不存在')
@@ -136,19 +133,27 @@ class CustomerFinanceServer(BaseManager):
     def withdraw_success_notify(cls, record_number):
         record = TransactionServer.get_output_record_bynumber(record_number)
         if record:
-            record.update(status = TransactionStatus.ACCOUNT_FINISH)
+            record.update(
+                status=TransactionStatus.ACCOUNT_FINISH
+            )
 
     @classmethod
     def withdraw_wait_notify(cls, record_number):
         # todo 待打款暂停处理逻辑
-        record = TransactionServer.get_output_record_bynumber(record_number)
-        pass
+        record = TransactionServer.get_output_record_bynumber(
+            record_number
+        )
+        return record
 
     @classmethod
     def withdraw_fail_notify(cls, record_number):
-        record = TransactionServer.get_output_record_bynumber(record_number)
+        record = TransactionServer.get_output_record_bynumber(
+            record_number
+        )
         if record:
-            record.update(status = TransactionStatus.ACCOUNT_FAIL)
+            record.update(
+                status=TransactionStatus.ACCOUNT_FAIL
+            )
 
     @classmethod
     def check_withdraw(cls, customer, amount, pay_type, bankcard_id):

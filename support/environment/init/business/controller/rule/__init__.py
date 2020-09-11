@@ -5,7 +5,7 @@ import json
 from support.common.maker import BaseLoader
 
 
-class RoleLoader(BaseLoader):
+class RuleLoader(BaseLoader):
 
     def generate(self):
         return [

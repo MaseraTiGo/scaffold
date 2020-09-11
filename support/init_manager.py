@@ -11,8 +11,8 @@ class InitManager(Single):
 
     def run(self):
         # ControllerInitializeMaker().run()
-        CrmInitializeMaker().run()
-        # CustomerInitializeMaker().run()
+        # CrmInitializeMaker().run()
+        CustomerInitializeMaker().run()
 
 
 if __name__ == "__main__":

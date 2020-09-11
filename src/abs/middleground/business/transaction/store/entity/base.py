@@ -86,10 +86,21 @@ class TransactionInputRecord(BaseTransaction):
         verbose_name="交易状态",
         max_length=24,
         choices=TransactionStatus.CHOICES,
-        default=TransactionStatus.PAY_FINISH
+        default=TransactionStatus.PAY_REQUEST
     )
 
-    transaction = ForeignKey(TransactionRecord, null=True, on_delete=CASCADE)
+    transaction = ForeignKey(
+        TransactionRecord,
+        null=True,
+        on_delete=CASCADE,
+        related_name='input_transaction'
+    )
+    related_transaction = ForeignKey(
+        TransactionRecord,
+        null=True,
+        on_delete=CASCADE,
+        related_name='input_related_transaction'
+    )
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)
 
@@ -124,7 +135,23 @@ class TransactionInputRecord(BaseTransaction):
                 trader_id=self.trader_id,
                 create_time=self.create_time,
             )
-            self.update(transaction=transacation_record)
+            related_transacation_record = TransactionRecord.create(
+                amount=0-self.amount,
+                pay_type=self.pay_type,
+                remark=self.remark,
+                input_record_id=self.id,
+                business_type=self.business_type,
+                business_id=self.business_id,
+                trader_type=self.own_type,
+                trader_id=self.own_id,
+                own_type=self.trader_type,
+                own_id=self.trader_id,
+                create_time=self.create_time,
+            )
+            self.update(
+                transaction=transacation_record,
+                related_transaction=related_transacation_record
+            )
         return self
 
     @classmethod
@@ -141,10 +168,21 @@ class TransactionOutputRecord(BaseTransaction):
         verbose_name="交易状态",
         max_length=24,
         choices=TransactionStatus.CHOICES,
-        default=TransactionStatus.PAY_FINISH
+        default=TransactionStatus.PAY_REQUEST
     )
 
-    transaction = ForeignKey(TransactionRecord, null=True, on_delete=CASCADE)
+    transaction = ForeignKey(
+        TransactionRecord,
+        null=True,
+        on_delete=CASCADE,
+        related_name='output_transaction'
+    )
+    related_transaction = ForeignKey(
+        TransactionRecord,
+        null=True,
+        on_delete=CASCADE,
+        related_name='output_related_transaction'
+    )
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)
 
@@ -181,5 +219,21 @@ class TransactionOutputRecord(BaseTransaction):
                 trader_id=output_record.trader_id,
                 create_time=output_record.create_time,
             )
-            output_record.update(transaction=transacation_record)
+            related_transacation_record = TransactionRecord.create(
+                amount=0-output_record.amount,
+                pay_type=output_record.pay_type,
+                remark=output_record.remark,
+                output_record_id=output_record.id,
+                business_type=output_record.business_type,
+                business_id=output_record.business_id,
+                trader_type=output_record.own_type,
+                trader_id=output_record.own_id,
+                own_type=output_record.trader_type,
+                own_id=output_record.trader_id,
+                create_time=output_record.create_time,
+            )
+            output_record.update(
+                transaction=transacation_record,
+                related_transaction=related_transacation_record
+            )
         return output_record
