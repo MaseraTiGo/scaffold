@@ -492,6 +492,7 @@ class Search(WechatAuthorizedApi):
                     fmt = DictField(
                         desc = "商品",
                         conf = {
+                            'order_item_id': IntField(desc = "订单详情id"),
                             'agent_name': CharField(desc = "代理商名称"),
                             'sale_price': IntField(desc = "单价"),
                             'total_price': IntField(desc = "总价"),
@@ -565,6 +566,7 @@ class Search(WechatAuthorizedApi):
             'last_payment_number': '',
             'despatch_type': order.orderitem_list[0].snapshoot.despatch_type,
             'order_item_list': [{
+                'order_item_id': order_item.id,
                 'agent_name': order.agent.name,
                 'sale_price': order_item.snapshoot.sale_price,
                 'total_price': order_item.snapshoot.total_price,

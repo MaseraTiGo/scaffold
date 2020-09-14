@@ -313,7 +313,6 @@ class Get(AgentStaffAuthorizedApi):
         return contract
 
     def fill(self, response, contract):
-        print("===>>>>aa", json.loads(contract.content))
         response.contract_info = {
             "id":contract.id,
             "contract_list":json.loads(contract.url),

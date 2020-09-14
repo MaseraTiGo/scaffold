@@ -74,7 +74,7 @@ class ContractMiddleware(object):
                             'font_file': self.get_font_file(),
                             'font_size': self.get_font_size(),
                             'width': int(template_param.coordinate_x),
-                            'height':  int(template_param.coordinate_y),
+                            'height':  int(template_param.coordinate_y) + self.get_font_size(),
                             'color_tup': (0, 0, 0),
                             'word': template_param.value
                         },
