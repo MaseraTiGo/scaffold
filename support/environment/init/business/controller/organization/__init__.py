@@ -3,7 +3,7 @@
 from support.environment.init.base import BaseLoader
 
 
-class DepartmentLoader(BaseLoader):
+class OrganizationLoader(BaseLoader):
 
     def generate(self):
         return [

@@ -1,5 +1,6 @@
 # coding=UTF-8
 
+
 from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
@@ -17,6 +18,9 @@ class OrderServer(BaseManager):
 
     @classmethod
     def _hung_requirement(cls, order_list):
+        """
+        挂载需求单信息
+        """
         requirement_mapping = {}
         for order in order_list:
             requirement_mapping.update({
@@ -32,6 +36,9 @@ class OrderServer(BaseManager):
 
     @classmethod
     def _hung_payment(cls, order_list):
+        """
+        挂载支付单信息
+        """
         payment_mapping = {}
         for order in order_list:
             payment_mapping.update({
@@ -47,6 +54,9 @@ class OrderServer(BaseManager):
 
     @classmethod
     def _hung_delivery_record(cls, order_list):
+        """
+        挂载发货单信息
+        """
         invoice_mapping = {}
         for order in order_list:
             invoice_mapping.update({
@@ -62,6 +72,9 @@ class OrderServer(BaseManager):
 
     @classmethod
     def get(cls, order_id, is_hung=False):
+        """
+        获取订单信息
+        """
         order = Order.get_byid(order_id)
         if order is None:
             raise BusinessError("订单不存在")
@@ -73,6 +86,9 @@ class OrderServer(BaseManager):
 
     @classmethod
     def search(cls, current_page, is_hung=False, **search_info):
+        """
+        搜索订单信息
+        """
         order_qs = Order.query().filter(
             **search_info
         )
@@ -85,33 +101,36 @@ class OrderServer(BaseManager):
 
     @classmethod
     def _generate_requirement(cls, specification_list):
+        """
+        生成需求单
+        """
         sale_price = 0
         requirement = Requirement.create(
-            sale_price = sale_price
+            sale_price=sale_price
         )
         snapshoot_list = []
         for specification in specification_list:
             sale_price += specification.total_price
             snapshoot_list.append(MerchandiseSnapShoot(
-               production_id = specification.merchandise.production_id,
-               merchandise_id = specification.merchandise.id,
-               despatch_type = specification.merchandise.despatch_type,
-               specification_id = specification.id,
-               title = specification.merchandise.title,
-               show_image = specification.show_image,
-               sale_price = specification.sale_price,
-               production_name = specification.production.name,
-               brand_name = specification.production.brand.name,
-               count = specification.order_count,
-               total_price = specification.total_price,
-               requirement = requirement,
-               unique_number = MerchandiseSnapShoot.generate_unique_number(),
-               remark = ','.join([
+               production_id=specification.merchandise.production_id,
+               merchandise_id=specification.merchandise.id,
+               despatch_type=specification.merchandise.despatch_type,
+               specification_id=specification.id,
+               title=specification.merchandise.title,
+               show_image=specification.show_image,
+               sale_price=specification.sale_price,
+               production_name=specification.production.name,
+               brand_name=specification.production.brand.name,
+               count=specification.order_count,
+               total_price=specification.total_price,
+               requirement=requirement,
+               unique_number=MerchandiseSnapShoot.generate_unique_number(),
+               remark=','.join([
                    (sv.category + '|' + sv.attribute)
                    for sv in specification.specification_value_list
                ]),
             ))
-        requirement.update(sale_price = sale_price)
+        requirement.update(sale_price=sale_price)
         MerchandiseSnapShoot.objects.bulk_create(snapshoot_list)
         return requirement
 
@@ -134,10 +153,8 @@ class OrderServer(BaseManager):
         """
         requirement = cls._generate_requirement(
             specification_list,
-            #strike_price
         )
         payment = Payment.create(
-            #actual_amount=requirement.sale_price
             actual_amount=0
         )
         invoice = Invoice.create(
@@ -159,6 +176,9 @@ class OrderServer(BaseManager):
 
     @classmethod
     def pay(cls, order_id, amount, pay_type, remark):
+        """
+        订单进行调取支付接口
+        """
         order = cls.get(order_id)
         expense_amount = 0 - amount
         # 1. 生成支付账单
@@ -189,8 +209,12 @@ class OrderServer(BaseManager):
 
     @classmethod
     def pay_success_callback(cls, output_record_number):
+        """
+        订单进行支付完成后的成功回调
+        """
         output_record = TransactionServer.finished_output_record_bynumber(
-            output_record_number
+            output_record_number,
+            order_number="123456"
         )
         payment_record = PaymentRecord.get_byoutputrecord(
             output_record_id=output_record.id
@@ -200,7 +224,6 @@ class OrderServer(BaseManager):
         payment_record.update(
             status=output_record.status
         )
-
         payment = payment_record.payment
         amount = 0 - payment_record.amount
         payment.update(
@@ -209,17 +232,19 @@ class OrderServer(BaseManager):
             last_payment_type=payment_record.pay_type,
             last_payment_time=payment_record.create_time,
         )
-
         order = Order.get_bypayment(payment.id)
         if order is None:
             raise BusinessError("订单信息不存在")
         order.update(
             status=OrderStatus.PAYMENT_FINISHED
         )
-        return order
+        return payment_record
 
     @classmethod
     def pay_fail_callback(cls, output_record_number):
+        """
+        订单进行支付完成后的失败回调
+        """
         output_record = TransactionServer.failure_output_record_bynumber(
             output_record_number
         )
@@ -231,6 +256,7 @@ class OrderServer(BaseManager):
         payment_record.update(
             status=output_record.status
         )
+        return payment_record
 
     @classmethod
     def delivery(
@@ -243,10 +269,13 @@ class OrderServer(BaseManager):
         **invoice_baseinfos
     ):
         """
-        snapshoot_mapping={
-            key: 快照id，
-            value: 发货数量，
-        }
+        订单发货
+
+        快照格式:
+            snapshoot_mapping={
+                key: 快照id，
+                value: 发货数量，
+            }
         """
         order = cls.get(order_id)
         order.invoice.update(
@@ -279,18 +308,27 @@ class OrderServer(BaseManager):
 
     @classmethod
     def finish(cls, order_id):
+        """
+        订单完成
+        """
         order = cls.get(order_id)
         order.update(
             status=OrderStatus.ORDER_FINISHED
         )
+        return order
 
     @classmethod
     def close(cls, order_id):
+        """
+        订单关闭
+        """
         order = cls.get(order_id)
         order.update(
             status=OrderStatus.ORDER_CLOSED
         )
+        return order
 
+    # =================================>>>>>>>>>>>> todo: need clear
     @classmethod
     def hung_order(cls, obj_list):
         mg_order_mapping = {}

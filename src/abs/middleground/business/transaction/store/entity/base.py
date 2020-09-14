@@ -20,6 +20,11 @@ class BaseTransaction(BaseModel):
     number = CharField(verbose_name="交易编号", max_length=48)
     amount = IntegerField(verbose_name="金额，有正负之分, 单位：分")
     remark = TextField(verbose_name="记录备注", default="")
+    order_number = CharField(
+        verbose_name="第三方交易编号",
+        max_length=256,
+        default=""
+    )
 
     pay_type = CharField(
         verbose_name="支付方式",
@@ -86,10 +91,21 @@ class TransactionInputRecord(BaseTransaction):
         verbose_name="交易状态",
         max_length=24,
         choices=TransactionStatus.CHOICES,
-        default=TransactionStatus.PAY_FINISH
+        default=TransactionStatus.PAY_REQUEST
     )
 
-    transaction = ForeignKey(TransactionRecord, null=True, on_delete=CASCADE)
+    transaction = ForeignKey(
+        TransactionRecord,
+        null=True,
+        on_delete=CASCADE,
+        related_name='input_transaction'
+    )
+    related_transaction = ForeignKey(
+        TransactionRecord,
+        null=True,
+        on_delete=CASCADE,
+        related_name='input_related_transaction'
+    )
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)
 
@@ -109,8 +125,10 @@ class TransactionInputRecord(BaseTransaction):
 
     def update(self, **output_infos):
         self = super(TransactionInputRecord, self).update(**output_infos)
-        if self.status == TransactionStatus.ACCOUNT_FINISH \
-           and self.transaction is None:
+        if self.status in (
+            TransactionStatus.PAY_FINISH,
+            TransactionStatus.ACCOUNT_FINISH,
+        ) and self.transaction is None:
             transacation_record = TransactionRecord.create(
                 amount=self.amount,
                 pay_type=self.pay_type,
@@ -122,9 +140,31 @@ class TransactionInputRecord(BaseTransaction):
                 own_id=self.own_id,
                 trader_type=self.trader_type,
                 trader_id=self.trader_id,
+                order_number=self.order_number,
                 create_time=self.create_time,
             )
-            self.update(transaction=transacation_record)
+            self.update(
+                transaction=transacation_record,
+            )
+        if self.status == TransactionStatus.ACCOUNT_FINISH \
+           and self.related_transaction is None:
+            related_transacation_record = TransactionRecord.create(
+                amount=0-self.amount,
+                pay_type=self.pay_type,
+                remark=self.remark,
+                input_record_id=self.id,
+                business_type=self.business_type,
+                business_id=self.business_id,
+                trader_type=self.own_type,
+                trader_id=self.own_id,
+                own_type=self.trader_type,
+                own_id=self.trader_id,
+                order_number=self.order_number,
+                create_time=self.create_time,
+            )
+            self.update(
+                related_transaction=related_transacation_record
+            )
         return self
 
     @classmethod
@@ -141,10 +181,21 @@ class TransactionOutputRecord(BaseTransaction):
         verbose_name="交易状态",
         max_length=24,
         choices=TransactionStatus.CHOICES,
-        default=TransactionStatus.PAY_FINISH
+        default=TransactionStatus.PAY_REQUEST
     )
 
-    transaction = ForeignKey(TransactionRecord, null=True, on_delete=CASCADE)
+    transaction = ForeignKey(
+        TransactionRecord,
+        null=True,
+        on_delete=CASCADE,
+        related_name='output_transaction'
+    )
+    related_transaction = ForeignKey(
+        TransactionRecord,
+        null=True,
+        on_delete=CASCADE,
+        related_name='output_related_transaction'
+    )
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
     create_time = DateTimeField(verbose_name="创建时间", default=timezone.now)
 
@@ -179,7 +230,35 @@ class TransactionOutputRecord(BaseTransaction):
                 own_id=output_record.own_id,
                 trader_type=output_record.trader_type,
                 trader_id=output_record.trader_id,
+                order_number=output_record.order_number,
                 create_time=output_record.create_time,
             )
-            output_record.update(transaction=transacation_record)
+            output_record.update(
+                transaction=transacation_record,
+            )
         return output_record
+
+    def update(self, **output_infos):
+        self = super(TransactionOutputRecord, self).update(**output_infos)
+        if self.status in (
+            TransactionStatus.PAY_FINISH,
+            TransactionStatus.ACCOUNT_FINISH,
+        ) and self.related_transaction is None:
+            related_transacation_record = TransactionRecord.create(
+                amount=0-self.amount,
+                pay_type=self.pay_type,
+                remark=self.remark,
+                output_record_id=self.id,
+                business_type=self.business_type,
+                business_id=self.business_id,
+                trader_type=self.own_type,
+                trader_id=self.own_id,
+                own_type=self.trader_type,
+                own_id=self.trader_id,
+                order_number=self.order_number,
+                create_time=self.create_time,
+            )
+            self.update(
+                related_transaction=related_transacation_record
+            )
+        return self

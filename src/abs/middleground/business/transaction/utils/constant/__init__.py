@@ -42,15 +42,18 @@ class BusinessTypes(object):
 
 
 class TransactionStatus(object):
+    """
+    1. 发起方请求
+    2. 发起方支付完成
+    3. 收款方收款完成
+    """
     PAY_REQUEST = "pay_request"
     PAY_FINISH = "pay_finish"
-    TRANSACTION_DEALING = "transaction_dealing"
     ACCOUNT_FINISH = "account_finish"
     ACCOUNT_FAIL = 'account_fail'
     CHOICES = (
         (PAY_REQUEST, '付款请求'),
         (PAY_FINISH, '付款成功'),
-        (TRANSACTION_DEALING, "交易处理中"),
         (ACCOUNT_FINISH, "到账成功"),
         (ACCOUNT_FAIL, "交易失败")
     )
