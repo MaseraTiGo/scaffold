@@ -2,7 +2,7 @@
 
 from support.common.maker import BaseMaker
 from support.common.generator.helper import EnterpriseGenerator, \
-        StaffGenerator, StaffAccountGenerator, SpaceGenerator
+        StaffGenerator, StaffAccountGenerator, SpaceGenerator, ParamGenerator
 from support.environment.common.middleground.person import PersonMaker
 from support.environment.common.middleground.production import ProductionMaker
 from support.environment.common.middleground.permission import PermissionMaker
@@ -13,6 +13,7 @@ from support.environment.init.business.crm.school import SchoolLoader
 from support.environment.init.business.crm.major import MajorLoader
 from support.environment.init.business.crm.relations import RelationsLoader
 from support.environment.init.business.crm.space import SpaceLoader
+from support.environment.init.business.crm.param import ParamLoader
 
 
 class CrmInitializeMaker(BaseMaker):
@@ -40,6 +41,8 @@ class CrmInitializeMaker(BaseMaker):
             RelationsLoader().generate()
         ).generate_relate().generate()
         self._space = SpaceGenerator(SpaceLoader().generate())
+        self._param = ParamGenerator(ParamLoader().generate()).generate()
+
 
     def generate_relate(self):
         self._person.add_outputs(self._permission)

@@ -194,12 +194,12 @@ class SearchAll(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         agent = self.auth_agent
-        request.search_info.update({
+        search_info = {
             "agent_id":agent.id,
             "status":TemplateStatus.ADOPT
-        })
+        }
         template_list = TemplateServer.search_all(
-             **request.search_info
+             **search_info
         )
         return template_list
 

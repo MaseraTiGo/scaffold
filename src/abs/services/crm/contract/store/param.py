@@ -3,7 +3,7 @@
 from abs.common.model import BaseModel, BooleanField, \
         IntegerField, CharField, TextField, DateTimeField, timezone
 from abs.services.crm.contract.settings import DB_PREFIX
-from abs.services.crm.contract.utils.contact import ValueSource, KeyType
+from abs.services.crm.contract.utils.constant import ValueSource, KeyType
 
 
 class Param(BaseModel):
@@ -20,10 +20,10 @@ class Param(BaseModel):
         verbose_name = "实际值来源对象",
         max_length = 64,
         choices = ValueSource.CHOICES,
-        default = ValueSource.OTHER
+        default = ValueSource.COMPANY
     )
-    actual_value_key = CharField(verbose_name = "实际值来源对象参数", max_length = 64)
-    # is_allowed = BooleanField(verbose_name = "是否允许修改", default = True)
+
+    is_allowed = BooleanField(verbose_name = "是否允许修改", default = True)
 
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)

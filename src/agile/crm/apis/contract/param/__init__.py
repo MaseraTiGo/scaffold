@@ -8,7 +8,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 
 from agile.crm.manager.api import StaffAuthorizedApi
-from abs.services.crm.contract.utils.contact import ValueSource, KeyType
+from abs.services.crm.contract.utils.constant import ValueSource, KeyType
 from abs.services.crm.contract.manager import ParamServer
 from abs.services.agent.contract.manager import TemplateParamServer
 
@@ -43,10 +43,10 @@ class Search(StaffAuthorizedApi):
                 ),
                 'default_value': CharField(desc = "参数默认值"),
                 'actual_value_source': CharField(
-                    desc = "实际来源对象",
+                    desc = "实际来源方式",
                     choices = ValueSource.CHOICES
                 ),
-                'actual_value_key': CharField(desc = "实际来源对象参数"),
+                'is_allowed':BooleanField(desc = "是否允许编辑"),
                 'create_time': DatetimeField(desc = "创建时间"),
             }
         )
@@ -75,7 +75,7 @@ class Search(StaffAuthorizedApi):
                 'key_type': param.key_type,
                 'default_value': param.default_value,
                 'actual_value_source':param.actual_value_source,
-                'actual_value_key':param.actual_value_key,
+                'is_allowed':param.is_allowed,
                 'create_time': param.create_time,
               }  for param in param_spliter.data]
         response.data_list = data_list
@@ -98,13 +98,8 @@ class Add(StaffAuthorizedApi):
                 ),
                 'default_value': CharField(desc = "参数默认值"),
                 'actual_value_source': CharField(
-                    desc = "实际来源对象",
-                    choices = ValueSource.CHOICES,
-                    is_required = False
-                ),
-                'actual_value_key': CharField(
-                    desc = "实际来源对象参数",
-                    is_required = False
+                    desc = "实际来源方式",
+                    choices = ValueSource.CHOICES
                 ),
         }
     )
@@ -145,12 +140,7 @@ class Update(StaffAuthorizedApi):
                 'default_value': CharField(desc = "参数默认值"),
                 'actual_value_source': CharField(
                     desc = "实际来源对象",
-                    choices = ValueSource.CHOICES,
-                    is_required = False
-                ),
-                'actual_value_key': CharField(
-                    desc = "实际来源对象参数",
-                    is_required = False
+                    choices = ValueSource.CHOICES
                 ),
         }
     )

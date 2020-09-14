@@ -2,14 +2,14 @@
 
 class ValueSource(object):
 
-    INVOICE = "invoice"
-    AGENT = "agent"
-    OTHER = "other"
+    COMPANY = "company"
+    CUSTOMER = "customer"
+    SYSTEM = "system"
 
     CHOICES = (
-        (INVOICE, "发货单"),
-        (AGENT, "代理商"),
-        (OTHER, "其它"),
+        (COMPANY, "企业填写"),
+        (CUSTOMER, "客户填写"),
+        (SYSTEM, "系统生成"),
     )
 
 class KeyType(object):

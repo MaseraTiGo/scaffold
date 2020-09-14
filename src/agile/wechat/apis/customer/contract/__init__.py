@@ -14,6 +14,8 @@ from abs.services.agent.order.manager import ContractServer
 from abs.services.crm.agent.manager import AgentServer
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.agent.order.utils.constant import ContractStatus
+from abs.services.agent.contract.manager import TemplateServer, \
+     TemplateParamServer
 
 
 class Get(WechatAuthorizedApi):
@@ -105,8 +107,11 @@ class Autograph(WechatAuthorizedApi):
         autograph = parse.unquote(
             request.contract_info.pop('autograph')
         )
+        template = TemplateServer.get(contract.template_id)
+        TemplateParamServer.huang_for_template([template])
         ContractServer.autograph(
             contract,
+            template,
             autograph,
             request.contract_info['email']
         )

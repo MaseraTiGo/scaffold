@@ -77,7 +77,6 @@ class TemplateParamServer(BaseManager):
                         "key_type": obj_dic.param.key_type,
                         "default_value": obj_dic.param.default_value,
                         "actual_value_source": obj_dic.param.actual_value_source,
-                        "actual_value_key": obj_dic.param.actual_value_key,
                     })
                 ))
         cls.search_all(template = template).delete()

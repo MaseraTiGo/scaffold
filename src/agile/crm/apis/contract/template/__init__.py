@@ -66,7 +66,9 @@ class Search(StaffAuthorizedApi):
 
     def execute(self, request):
         request.search_info.update({
-            "status":TemplateStatus.WAIT
+            "status__in":(TemplateStatus.WAIT, \
+                          TemplateStatus.ADOPT, \
+                          TemplateStatus.REFUSE)
         })
         template_spliter = TemplateServer.search(
              request.current_page,

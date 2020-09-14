@@ -49,6 +49,8 @@ class ParamServer(BaseManager):
     @classmethod
     def update(cls, param_id, **update_info):
         param = cls.get(param_id)
+        if not param.is_allowed:
+            raise BusinessError("系统生成参数不允许修改")
         if cls.is_exsited(update_info["name_key"], param):
             raise BusinessError("存在重复参数")
         param.update(**update_info)
@@ -56,6 +58,8 @@ class ParamServer(BaseManager):
 
     @classmethod
     def remove(cls, param):
+        if not param.is_allowed:
+            raise BusinessError("系统生成参数不允许删除")
         param.delete()
         return True
 
