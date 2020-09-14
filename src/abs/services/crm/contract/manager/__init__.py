@@ -12,7 +12,7 @@ class ParamServer(BaseManager):
     @classmethod
     def create(cls, **search_info):
         if cls.is_exsited(search_info["name_key"]):
-            raise BusinessError("存在重复参数")
+            raise BusinessError("参数key值重复")
         param = Param.create(**search_info)
         if param is None:
             raise BusinessError("合同参数添加失败")
@@ -52,7 +52,7 @@ class ParamServer(BaseManager):
         if not param.is_allowed:
             raise BusinessError("系统生成参数不允许修改")
         if cls.is_exsited(update_info["name_key"], param):
-            raise BusinessError("存在重复参数")
+            raise BusinessError("参数key值重复")
         param.update(**update_info)
         return param
 

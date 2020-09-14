@@ -163,7 +163,7 @@ class OrderServer(BaseManager):
 
     @classmethod
     def pay_success_callback(cls, output_record_number):
-        mg_order = mg_OrderServer.pay_success_callback(
+        mg_order, payment_record = mg_OrderServer.pay_success_callback(
             output_record_number
         )
         order = cls.search_all(mg_order_id = mg_order.id).first()

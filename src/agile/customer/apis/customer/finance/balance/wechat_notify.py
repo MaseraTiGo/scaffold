@@ -16,25 +16,24 @@ def wechat_top_up_notify(request):
         if data['return_code'] != 'SUCCESS':
             raise BusinessError(
                 '支付回调失败，{return_msg}'.format(
-                    return_msg=data['return_msg']
+                    return_msg = data['return_msg']
                 )
             )
         if data['result_code'] != 'SUCCESS':
             raise BusinessError(
                 '支付回调失败，订单号（{out_trade_no}），错误代码：{err_code}，错误描述：{err_code_des}'.format(
-                    out_trade_no=data['out_trade_no'],
-                    err_code=data['err_code'],
-                    err_code_des=data['err_code_des']
+                    out_trade_no = data['out_trade_no'],
+                    err_code = data['err_code'],
+                    err_code_des = data['err_code_des']
                 )
             )
         if not pay_middleware.wechant_check_sign(data):
             raise BusinessError('支付回调签名错误，订单号（{out_trade_no}）'.format(
-                out_trade_no=data['out_trade_no']
+                out_trade_no = data['out_trade_no']
             ))
 
         pay_time = datetime.datetime.strptime(data['time_end'], '%Y%m%d%H%M%S')
         order_sn = data['out_trade_no']
-
         CustomerFinanceServer.top_up_notify(
             order_sn,
             pay_time,
@@ -54,20 +53,20 @@ def wechat_order_pay_notify(request):
         if data['return_code'] != 'SUCCESS':
             raise BusinessError(
                 '支付回调失败，{return_msg}'.format(
-                    return_msg=data['return_msg']
+                    return_msg = data['return_msg']
                 )
             )
         if data['result_code'] != 'SUCCESS':
             raise BusinessError(
                 '支付回调失败，订单号（{out_trade_no}），错误代码：{err_code}，错误描述：{err_code_des}'.format(
-                    out_trade_no=data['out_trade_no'],
-                    err_code=data['err_code'],
-                    err_code_des=data['err_code_des']
+                    out_trade_no = data['out_trade_no'],
+                    err_code = data['err_code'],
+                    err_code_des = data['err_code_des']
                 )
             )
         if not pay_middleware.wechant_check_sign(data):
             raise BusinessError('支付回调签名错误，订单号（{out_trade_no}）'.format(
-                out_trade_no=data['out_trade_no']
+                out_trade_no = data['out_trade_no']
             ))
 
         pay_time = datetime.datetime.strptime(data['time_end'], '%Y%m%d%H%M%S')
