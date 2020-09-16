@@ -238,7 +238,7 @@ class OrderServer(BaseManager):
         order.update(
             status=OrderStatus.PAYMENT_FINISHED
         )
-        return payment_record
+        return order,payment_record
 
     @classmethod
     def pay_fail_callback(cls, output_record_number):

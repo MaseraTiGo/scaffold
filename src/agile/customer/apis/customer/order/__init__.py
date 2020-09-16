@@ -333,7 +333,7 @@ class Get(CustomerAuthorizedApi):
             fmt = DictField(
                 desc = "商品",
                 conf = {
-                    'id': IntField(desc = "订单商品详情id"),
+                    'order_item_id': IntField(desc = "订单商品详情id"),
                     'agent_name': CharField(desc = "代理商"),
                     'sale_price': IntField(desc = "单价"),
                     'total_price': IntField(desc = "总价"),
@@ -416,7 +416,7 @@ class Get(CustomerAuthorizedApi):
             'pay_services':order.get_pay_services_display(),
             'payment_id':order.mg_order.payment.id,
             'order_item_list': [{
-                'id': order_item.id,
+                'order_item_id': order_item.id,
                 'agent_name': order.agent.name,
                 'sale_price': order_item.snapshoot.sale_price,
                 'total_price': order_item.snapshoot.total_price,
@@ -489,6 +489,7 @@ class Search(CustomerAuthorizedApi):
                     fmt = DictField(
                         desc = "商品",
                         conf = {
+                            'order_item_id': IntField(desc = "订单详情id"),
                             'agent_name': CharField(desc = "代理商名称"),
                             'sale_price': IntField(desc = "单价"),
                             'total_price': IntField(desc = "总价"),
@@ -563,6 +564,7 @@ class Search(CustomerAuthorizedApi):
             'last_payment_number': '',
             'despatch_type': order.orderitem_list[0].snapshoot.despatch_type,
             'order_item_list': [{
+                'order_item_id': order_item.id,
                 'agent_name': order.agent.name,
                 'sale_price': order_item.snapshoot.sale_price,
                 'total_price': order_item.snapshoot.total_price,

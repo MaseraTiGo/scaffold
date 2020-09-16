@@ -14,6 +14,7 @@ class Contract(BaseModel):
     company_id = IntegerField(verbose_name = "公司id", default = 0)
     order_item_id = IntegerField(verbose_name = "订单商品详情id", default = 0)
     order_id = IntegerField(verbose_name = "订单id", default = 0)
+    template_id = IntegerField(verbose_name = "合同模板id", default = 0)
     name = CharField(verbose_name = "名称", max_length = 32)
     phone = CharField(verbose_name = "联系电话", max_length = 16, default = "")
     email = CharField(verbose_name = "emali", max_length = 128, default = "")
@@ -28,6 +29,7 @@ class Contract(BaseModel):
         default = ContractStatus.WAIT_SEND
     )
     send_email_number = IntegerField(verbose_name = "发送邮件次数", default = 0)
+    content = TextField(verbose_name = "合同参数", default = '[]')
 
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)

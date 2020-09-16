@@ -14,12 +14,14 @@ from abs.services.agent.order.store import Order, OrderItem, Contract, Plan
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleware.pay import pay_middleware
 from abs.middleground.business.order.utils.constant import OrderStatus
+from abs.middleware.contract import contract_middleware
 from abs.middleware.image import image_middleware
 from abs.middleware.email import email_middleware
 from abs.middleware.config import config_middleware
 from abs.middleground.business.merchandise.utils.constant import \
      DespatchService
 from abs.services.agent.order.utils.constant import ContractStatus, PlanStatus
+from abs.services.crm.contract.utils.constant import ValueSource
 
 
 class OrderServer(BaseManager):
@@ -134,7 +136,8 @@ class OrderServer(BaseManager):
                 school_city = specification.merchandise.goods.school.city,
                 major_name = specification.merchandise.goods.major.name,
                 duration = specification.merchandise.goods.years.duration,
-                category = specification.merchandise.goods.years.category
+                category = specification.merchandise.goods.years.category,
+                template_id = specification.merchandise.goods.template_id,
             )
             specification.update(
                 stock = specification.stock - specification.order_count
@@ -160,7 +163,7 @@ class OrderServer(BaseManager):
 
     @classmethod
     def pay_success_callback(cls, output_record_number):
-        mg_order = mg_OrderServer.pay_success_callback(
+        mg_order, payment_record = mg_OrderServer.pay_success_callback(
             output_record_number
         )
         order = cls.search_all(mg_order_id = mg_order.id).first()
@@ -231,19 +234,19 @@ class OrderItemServer(BaseManager):
 
 class ContractServer(BaseManager):
 
+    '''
     @classmethod
-    def create(cls, order_item, agent, contacts):
+    def create_beifen(cls, order_item, agent):
         number = 'Sn_200' + str(int(time.time())) + str(random.randint(10000, 99999))
         mg_order = mg_OrderServer.get(order_item.order.mg_order_id)
         mg_OrderServer.hung_snapshoot([order_item])
         contract_img_url = image_middleware.get_contract(
             number,
             agent.name,
-            contacts.contacts,
-            contacts.phone,
             agent.official_seal,
             mg_order.invoice.name,
             mg_order.invoice.identification,
+            mg_order.invoice.phone,
             order_item.snapshoot.brand_name,
             order_item.snapshoot.production_name,
             order_item.school_name,
@@ -267,18 +270,98 @@ class ContractServer(BaseManager):
         contract = Contract.create(**create_info)
 
         return contract
+    '''
 
     @classmethod
-    def autograph(cls, contract, autograph_img, email):
-        autograph_url, contract_url, contract_img_url = image_middleware.autograph(
-            contract.name,
-            contract.phone,
-            autograph_img,
-            json.loads(contract.img_url)
-        )
+    def create(cls, order_item, agent, template, contract_info_list):
+        contract_qs = cls.search_all(order_item_id = order_item.id)
+        if contract_qs.count() > 0:
+            raise BusinessError("请不要重复生成订单")
+        mg_order = mg_OrderServer.get(order_item.order.mg_order_id)
+        contract_info_mapping = {}
+        for contract_info in contract_info_list:
+            contract_info_mapping[contract_info["template_param_id"]] = \
+                                        contract_info["value"]
+        param_list = []
+        content_param_list = []
+        for template_param in template.param_list:
+            template_param.param = json.loads(template_param.content)
+            if template_param.id in contract_info_mapping:
+                template_param.value = contract_info_mapping[template_param.id]
+                param_list.append(template_param)
+                content_param_list.append({
+                    "template_param_id":template_param.id,
+                    "name":template_param.param["name"],
+                    "key_type":template_param.param["key_type"],
+                    "value":template_param.value
+                })
+            elif "system" in template_param.param["name_key"]:
+                template_param.value = ""
+                param_list.append(template_param)
+        contract_img_url = contract_middleware.generate_order_contract_img(template, param_list)
+
+        create_info = {
+            'name': mg_order.invoice.name,
+            'phone': mg_order.invoice.phone,
+            'identification': mg_order.invoice.identification,
+            'email': '',
+            'agent_customer_id': order_item.order.agent_customer_id,
+            'person_id': order_item.order.person_id,
+            'order_id':order_item.order.id,
+            'company_id': order_item.order.company_id,
+            'order_item_id': order_item.id,
+            'agent_id': agent.id,
+            'img_url': json.dumps(contract_img_url),
+            'template_id':template.id,
+            'content':json.dumps(content_param_list)
+        }
+        contract = Contract.create(**create_info)
+        return contract
+
+    @classmethod
+    def update(cls, contract, template, contract_info_list):
+        contract_info_mapping = {}
+        for contract_info in contract_info_list:
+            contract_info_mapping[contract_info["template_param_id"]] = \
+                                        contract_info["value"]
+        param_list = []
+        content_param_list = []
+        for template_param in template.param_list:
+            template_param.param = json.loads(template_param.content)
+            if template_param.id in contract_info_mapping:
+                template_param.value = contract_info_mapping[template_param.id]
+                param_list.append(template_param)
+                content_param_list.append({
+                    "template_param_id":template_param.id,
+                    "name":template_param.param["name"],
+                    "key_type":template_param.param["key_type"],
+                    "value":template_param.value
+                })
+            elif "system" in template_param.param["name_key"]:
+                template_param.value = ""
+                param_list.append(template_param)
+        contract_img_url = contract_middleware.generate_order_contract_img(template, param_list)
+
+        update_info = {
+            'img_url': json.dumps(contract_img_url),
+            'content':json.dumps(content_param_list)
+        }
+        contract.update(**update_info)
+        return contract
+
+    @classmethod
+    def autograph(cls, contract, template, autograph_img, email):
+        param_list = []
+        for template_param in template.param_list:
+            template_param.param = json.loads(template_param.content)
+            if template_param.param["actual_value_source"] == ValueSource.CUSTOMER:
+                if template_param.param["name_key"] == "autograph":
+                    template_param.value = autograph_img
+                    param_list.append(template_param)
+        contract_url, contract_img_url = contract_middleware.autograph(contract, param_list)
         contract.update(**{
             'email': email,
-            'autograph': autograph_url,
+            'autograph': autograph_img,
             'url': json.dumps([contract_url]),
             'img_url': json.dumps(contract_img_url)
         })
@@ -331,6 +414,18 @@ class ContractServer(BaseManager):
             raise BusinessError('发送失败')
         contract.update(send_email_number = F("send_email_number") + 1)
         return True
+
+    @classmethod
+    def hung_contract_byitem(cls, item_list):
+        item_mapping = {}
+        for item in item_list:
+            item.contract = None
+            item_mapping[item.id] = item
+        contract_qs = cls.search_all(order_item_id__in = item_mapping.keys())
+        for contract in contract_qs:
+            if contract.order_item_id in item_mapping:
+                item_mapping[contract.order_item_id].contract = contract
+        return item_list
 
 
 class OrderPlanServer(BaseManager):

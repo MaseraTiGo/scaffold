@@ -12,3 +12,4 @@ rsa==4.0
 # Elasticsearch 7.x
 elasticsearch>=7.0.0,<8.0.0
 pillow==6.0.0
+wand==0.6.2

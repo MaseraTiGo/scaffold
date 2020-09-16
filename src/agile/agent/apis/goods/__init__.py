@@ -20,6 +20,8 @@ from abs.services.crm.university.manager import UniversityServer, \
      UniversityYearsServer
 from abs.services.crm.agent.manager import AgentServer
 from abs.services.agent.order.manager import OrderItemServer
+from abs.services.agent.contract.manager import TemplateServer
+from abs.services.agent.contract.utils.constant import TemplateStatus
 
 
 class Get(AgentStaffAuthorizedApi):
@@ -56,6 +58,7 @@ class Get(AgentStaffAuthorizedApi):
             'major_name': CharField(desc = "专业名称"),
             'description': CharField(desc = "商品描述"),
             'years_id': IntField(desc = "学年ID"),
+            'template_id': IntField(desc = "合同模板ID"),
             'duration':CharField(
                 desc = "时长",
                 choices = DurationTypes.CHOICES
@@ -133,6 +136,7 @@ class Get(AgentStaffAuthorizedApi):
             'category':goods.years.category,
             'use_status': goods.merchandise.use_status,
             'remark': goods.merchandise.remark,
+            'template_id': goods.template_id,
             'specification_list':[{
                 'id': specification.id,
                 "show_image":specification.show_image,
@@ -325,6 +329,7 @@ class Add(AgentStaffAuthorizedApi):
                 choices = DespatchService.CHOICES
             ),
             'production_id': IntField(desc = "产品ID"),
+            'template_id': IntField(desc = "合同模板ID"),
             'years_id': IntField(desc = "学年id"),
             'description':CharField(desc = "商品描述"),
             'remark': CharField(desc = "备注", is_required = False),
@@ -351,6 +356,11 @@ class Add(AgentStaffAuthorizedApi):
         production = ProductionServer.get(
             request.goods_info.pop('production_id')
         )
+        template = TemplateServer.get(
+            request.goods_info.pop('template_id')
+        )
+        if template.status != TemplateStatus.ADOPT:
+            raise BusinessError("合同模板存在异常")
         merchandise_info = {
             "title":request.goods_info.pop('title'),
             "company_id":agent.company_id,
@@ -374,6 +384,7 @@ class Add(AgentStaffAuthorizedApi):
             "agent_id":agent.id,
             "relations_id":year.relations_id,
             "years_id":year.id,
+            "template_id":template.id
         }
         goods = GoodsServer.create_goods(**goods_info)
         return goods
@@ -405,6 +416,7 @@ class Update(AgentStaffAuthorizedApi):
                 desc = "发货方式",
                 choices = DespatchService.CHOICES
             ),
+            'template_id': IntField(desc = "合同模板ID"),
             'years_id': IntField(desc = "学年ID"),
             "description":CharField(desc = "商品描述"),
             'remark': CharField(desc = "备注", is_required = False),
@@ -426,6 +438,11 @@ class Update(AgentStaffAuthorizedApi):
         merchandise = MerchandiseServer.get(goods.merchandise_id)
         if merchandise.use_status == UseStatus.ENABLE:
             raise BusinessError("请先下架此商品")
+        template = TemplateServer.get(
+            request.goods_info.pop('template_id')
+        )
+        if template.status != TemplateStatus.ADOPT:
+            raise BusinessError("合同模板存在异常")
         year = UniversityYearsServer.get(
             request.goods_info.pop('years_id')
         )
@@ -434,6 +451,7 @@ class Update(AgentStaffAuthorizedApi):
             "major_id":year.relations.major_id,
             "relations_id":year.relations_id,
             "years_id":year.id,
+            "template_id":template.id
         }
         GoodsServer.update_goods(goods, **goods_update_info)
         merchandise_update_info = {

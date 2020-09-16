@@ -11,7 +11,7 @@ class OrderItem(BaseModel):
     order = ForeignKey(Order, on_delete = CASCADE)
     goods_id = IntegerField(verbose_name = "商品id")
     merchandise_snapshoot_id = IntegerField(verbose_name = "商品快照id")
-
+    template_id = IntegerField(verbose_name = "合同模板id", default = 0)
     school_name = CharField(verbose_name = "学校名称", max_length = 32, default = "")
     school_city = CharField(verbose_name = "学校城市", max_length = 32, default = '')
     major_name = CharField(verbose_name = "专业名称", max_length = 64, default = "")

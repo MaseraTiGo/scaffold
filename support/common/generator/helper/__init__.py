@@ -31,6 +31,7 @@ from support.common.generator.helper.business.crm.university.years import YearsG
 from support.common.generator.helper.business.crm.agent import AgentGenerator
 from support.common.generator.helper.business.crm.agent.contacts import ContactsGenerator
 from support.common.generator.helper.business.crm.adsense.space import SpaceGenerator
+from support.common.generator.helper.business.crm.contract.param import ParamGenerator
 
 # customer service generate
 from support.common.generator.helper.business.customer.customer import CustomerGenerator

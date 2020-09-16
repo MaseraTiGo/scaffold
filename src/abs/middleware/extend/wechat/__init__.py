@@ -14,12 +14,12 @@ class Mini(object):
 
     @property
     def appid(self):
-        return config_middleware.get_value("wechat", "appid")
+        return config_middleware.get_value("wechat_clzj_mini", "appid")
         # return 'wx22a8fc65e8d220af'
 
     @property
     def appsecret(self):
-        return config_middleware.get_value("wechat", "appsecret")
+        return config_middleware.get_value("wechat_clzj_mini", "appsecret")
 
     """小程序登录"""
     def login(self, code):
@@ -54,13 +54,8 @@ class MiniMch(object):
         self.spbill_create_ip = '114.114.114.114'
 
     @property
-    def appid(self):
-        return config_middleware.get_value("wechat", "appid")
-        # return 'wx22a8fc65e8d220af'
-
-    @property
     def mchid(self):
-        return config_middleware.get_value("wechat", "mchid")
+        return config_middleware.get_value("wechat_merchant", "mchid")
         # return '1517459321'
 
     @property
@@ -69,7 +64,7 @@ class MiniMch(object):
 
     @property
     def key(self):
-        return config_middleware.get_value("wechat", "key")
+        return config_middleware.get_value("wechat_merchant", "key")
         # return 'rongmibiquan20181026172354biquan'
 
     def get_sign(self, param):
@@ -98,8 +93,11 @@ class MiniMch(object):
     ):
         url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
         notify_url = self.notify_url + notify_path
+        appid = config_middleware.get_value("wechat_cl_app", "appid")
+        if trade_type != "APP":
+            appid = config_middleware.get_value("wechat_clzj_mini", "appid")
         param = {
-            'appid': self.appid,
+            'appid': appid,
             'mch_id': self.mchid,
             'nonce_str': utils.get_nonce_str(),
             'sign_type': 'MD5',
@@ -131,7 +129,7 @@ class MiniMch(object):
     # 获取小程序支付参数
     def get_pay_param(self, prepay_id):
         param = {
-            'appId': self.appid,
+            'appId': config_middleware.get_value("wechat_clzj_mini", "appid"),
             'timeStamp': int(time.time()),
             'nonceStr': utils.get_nonce_str(),
             'package': 'prepay_id={prepay_id}'.format(prepay_id = prepay_id),
@@ -144,7 +142,7 @@ class MiniMch(object):
     # 获取app支付参数
     def get_app_sign(self, prepay_id):
         param = {
-            'appid': self.appid,
+            'appid': config_middleware.get_value("wechat_cl_app", "appid"),
             'partnerid': self.mchid,
             'prepayid': prepay_id,
             'package': 'Sign=WXPay',

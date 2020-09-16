@@ -25,6 +25,11 @@ class ImageProcess(object):
         byte_io.write(response)
         return byte_io
 
+    def get_remote_pic_size(self, path):
+        response = requests.get(path)
+        image = Image.open(io.BytesIO(response.content), 'r')
+        return image.size
+
     def get_store_name(self, type, ext_name = '.jpeg'):
         store_name = "source/contract/{type}/{name}".format(
             type = type,

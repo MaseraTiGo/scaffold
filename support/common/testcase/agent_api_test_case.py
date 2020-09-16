@@ -21,8 +21,8 @@ class AgentAPITestCase(APITestCase):
 
     def get_auth_token(self):
         api = "staff.account.login"
-        username = "15008250001"  # "15623937796"
-        password = hashlib.md5("250001".encode('utf8')).hexdigest()
+        username = "15109080001"  # "15623937796"
+        password = hashlib.md5("080001".encode('utf8')).hexdigest()
         result = self.access_api(
             api = api,
             is_auth = False,

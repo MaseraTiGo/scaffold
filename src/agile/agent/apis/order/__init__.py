@@ -65,10 +65,12 @@ class Get(AgentStaffAuthorizedApi):
                 fmt = DictField(
                     desc = "商品详情",
                     conf = {
-                        'id': CharField(desc = "商品快照id"),
+                        'id': IntField(desc = "商品快照id"),
                         'show_image': CharField(desc = "商品图片"),
                         'title': CharField(desc = "商品标题"),
                         'brand_name': CharField(desc = "品牌名称"),
+                        'contract_id': IntField(desc = "合同id"),
+                        'contract_status': CharField(desc = "合同状态"),
                         'production_name': CharField(desc = "产品名称"),
                         'count': IntField(desc = "商品数量"),
                         'school_name': CharField(desc = "学校名称"),
@@ -100,6 +102,7 @@ class Get(AgentStaffAuthorizedApi):
         order = OrderServer.get(request.order_id)
         agent_customer = AgentCustomerServer.get(order.agent_customer_id)
         OrderItemServer.hung_order_item([order])
+        ContractServer.hung_contract_byitem(order.orderitem_list)
         return order, agent_customer
 
     def fill(self, response, order, agent_customer):
@@ -143,6 +146,10 @@ class Get(AgentStaffAuthorizedApi):
                     'show_image':orderitem.snapshoot.show_image,
                     'title': orderitem.snapshoot.title,
                     'brand_name':orderitem.snapshoot.brand_name,
+                    'contract_id': orderitem.contract.id if \
+                                   orderitem.contract else 0,
+                    'contract_status': orderitem.contract.status if \
+                                       orderitem.contract else "",
                     'production_name':orderitem.snapshoot.production_name,
                     'count': orderitem.snapshoot.count,
                     'school_name':orderitem.school_name,

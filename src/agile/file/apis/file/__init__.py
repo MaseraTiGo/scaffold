@@ -28,32 +28,18 @@ class Upload(NoAuthorizedApi):
 
     @classmethod
     def get_author(cls):
-        return "Roy"
+        return "Fsy"
 
     def execute(self, request):
-        store_type = {"school", "major", "goods", "video", \
-                      "adsense", "person", "contract", \
-                      "agent", "idimg", "other"}
-        if request.store_type not in store_type:
-            raise BusinessError("此上传分类不存在")
         path_list = []
         for name, f in request._upload_files.items():
-            suffix = name.split(".")[-1]
-            nowTime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-            store_name = "source/{type}/{time}.{suffix}".format(
-                type = request.store_type,
-                time = nowTime,
-                suffix = suffix
+            path = file_middleware.save(
+                name,
+                f,
+                request.store_type,
+                "oss"
             )
-            imgurl = OSSAPI().put_object(store_name, f, "orgdeer")
-            path_list.append(parse.unquote(imgurl))
-        '''
-        path_list = []
-        for name, f in request._upload_files.items():
-            path = file_middleware.save(name, f, request.store_type)
-            host_url = ""
-            path_list.append(host_url + path)
-        '''
+            path_list.append(parse.unquote(path))
         return path_list
 
     def fill(self, response, path_list):

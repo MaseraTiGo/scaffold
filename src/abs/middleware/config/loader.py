@@ -52,11 +52,16 @@ class LoaderHelper(object):
         self.set_key('alipay', '支付宝')
         self.set_value('alipay', 'appid', '支付宝appid', default = "2021001190655174")
 
-        self.set_key('wechat', '微信')
-        self.set_value('wechat', 'appid', '微信appid', default = "wxe9f91431bf96d1f4")
-        self.set_value('wechat', 'appsecret', '微信appsecret', default = "29bb71b60211c72bc32b6a2a42556be1")
-        self.set_value('wechat', 'mchid', '微信mchid', default = "1602241032")
-        self.set_value('wechat', 'key', '微信key', default = "chenglu20200827chenglu20200827cl")
+        self.set_key('wechat_merchant', '微信商户')
+        self.set_value('wechat_merchant', 'mchid', '微信mchid', default = "1602241032")
+        self.set_value('wechat_merchant', 'key', '微信key', default = "chenglu20200827chenglu20200827cl")
+
+        self.set_key('wechat_clzj_mini', '成录之家小程序')
+        self.set_value('wechat_clzj_mini', 'appid', '微信appid', default = "wxe9f91431bf96d1f4")
+        self.set_value('wechat_clzj_mini', 'appsecret', '微信appsecret', default = "29bb71b60211c72bc32b6a2a42556be1")
+
+        self.set_key('wechat_cl_app', '橙鹿app')
+        self.set_value('wechat_cl_app', 'appid', '微信appid', default = "wx8aa0090b4ffd643f")
 
         self.set_key('email', '邮件配置')
         self.set_value('email', 'sender', '邮件发送方email', default = "orgdeer@cljykjhbwwgc.onexmail.com")
