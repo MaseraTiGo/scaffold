@@ -36,6 +36,11 @@ class RuleEntity(Entity):
             'update_time',
         )
 
+    def get_paths_field(self):
+        return (
+            ("code", "paths"),
+        )
+
 
 class RuleHelper(Helper):
 

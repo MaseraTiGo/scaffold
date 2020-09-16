@@ -16,6 +16,10 @@ class StaffLoader(BaseLoader):
             'work_number': 'BQ10001',
             'phone': '15527703115',
             'email': '237818280@qq.com',
+            "platform": "中台",
+            'company': "橙鹿教育科技（湖北）有限公司",
+            'position': "系统管理员",
+            'organization': "数据部",
             'is_admin': True,
             'remark': '这是系统管理员'
         }]

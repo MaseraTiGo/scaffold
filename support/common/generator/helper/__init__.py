@@ -14,7 +14,8 @@ from support.common.generator.helper.middleground.merchandise import Merchandise
 from support.common.generator.helper.middleground.merchandise.specification import SpecificationGenerator
 from support.common.generator.helper.middleground.permission.platform import PlatformGenerator
 from support.common.generator.helper.middleground.permission.authorization import AuthorizationGenerator
-from support.common.generator.helper.middleground.permission.rule import RuleGroupGenerator
+from support.common.generator.helper.middleground.permission.rule import RuleGenerator
+from support.common.generator.helper.middleground.permission.rulegroup import RuleGroupGenerator
 from support.common.generator.helper.middleground.permission.position import PositionGenerator
 from support.common.generator.helper.middleground.permission.organization import OrganizationGenerator
 from support.common.generator.helper.middleground.permission.personposition import PersonPositionGenerator

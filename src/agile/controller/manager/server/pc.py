@@ -58,6 +58,9 @@ controller_pc_service.add(Add, All, Search, Tree, Get, Update, Remove)
 from agile.controller.apis.staff.permission.rulegroup import Add, All, Search, Get, Update, Remove
 controller_pc_service.add(Add, All, Search, Get, Update, Remove)
 
+from agile.controller.apis.staff.permission.rulegroup.rule import All
+controller_pc_service.add(All)
+
 from agile.controller.apis.staff.permission.position import Add, All, Search, Tree, Get, Update, Remove
 controller_pc_service.add(Add, All, Tree, Search, Get, Update, Remove)
 

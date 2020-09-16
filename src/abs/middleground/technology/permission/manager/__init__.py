@@ -177,6 +177,17 @@ class PermissionServer(BaseManager):
         return all_rule
 
     @classmethod
+    def get_all_rule_byappkey(cls, appkey):
+        authorization = cls.get_authorization_byappkey(appkey)
+        all_rule = [
+            entity.get_tree()
+            for entity in RuleHelper(
+                authorization.platform
+            ).root.get_children()
+        ]
+        return all_rule
+
+    @classmethod
     def add_rule(cls, platform_id, name, parent_id, description, remark):
         platform = cls.get_platform(platform_id)
         rule = Rule.create(
@@ -541,9 +552,7 @@ class PermissionServer(BaseManager):
 
         person_id_list.append(person_id)
         permission = DictWrapper({
-            'operation': json.loads(
-                position_permission.position.rule_group.content
-            ),
+            'operation': position_permission.position.rule_group.content,
             'data': [
                 person_id_list
             ],
@@ -578,9 +587,7 @@ class PermissionServer(BaseManager):
         if person_permission is None:
             raise BusinessError("个人权限不存在")
         permission = DictWrapper({
-            'operation': json.loads(
-                person_permission.person_group.rule_group.content
-            ),
+            'operation': person_permission.person_group.rule_group.content,
             'data': [
                 person_id
             ],
