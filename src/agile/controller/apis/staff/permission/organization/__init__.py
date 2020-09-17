@@ -13,6 +13,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.controller.manager.api import StaffAuthorizedApi
+from abs.services.controller.staff.manager import StaffServer
 from abs.middleground.technology.permission.manager import PermissionServer
 
 
@@ -21,7 +22,6 @@ class Add(StaffAuthorizedApi):
     添加组织
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="appkey")
     request.organization_info = RequestField(
         DictField,
         desc="组织详情",
@@ -45,8 +45,10 @@ class Add(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        staff_id = self.auth_user.id
+        staff = StaffServer.get(staff_id)
         organization = PermissionServer.add_organization(
-            appkey=request.appkey,
+            appkey=staff.company.permission_key,
             **request.organization_info
         )
         return organization
@@ -61,7 +63,6 @@ class All(StaffAuthorizedApi):
     所有组织
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="appkey")
 
     response = with_metaclass(ResponseFieldSet)
     response.organization_list = ResponseField(
@@ -94,8 +95,10 @@ class All(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        staff_id = self.auth_user.id
+        staff = StaffServer.get(staff_id)
         organization_list = PermissionServer.get_all_organization_byappkey(
-            request.appkey
+            staff.company.permission_key,
         )
         return organization_list
 
@@ -125,7 +128,6 @@ class Tree(StaffAuthorizedApi):
     树状组织结构图
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="appkey")
 
     response = with_metaclass(ResponseFieldSet)
     response.organization_list = ResponseField(
@@ -161,8 +163,10 @@ class Tree(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        staff_id = self.auth_user.id
+        staff = StaffServer.get(staff_id)
         organization_list = PermissionServer.get_tree_organization_byappkey(
-            request.appkey
+            staff.company.permission_key,
         )
         return organization_list
 
@@ -176,7 +180,6 @@ class Search(StaffAuthorizedApi):
     搜索组织
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="当前页码")
     request.current_page = RequestField(
         IntField,
         desc="当前页码"
@@ -221,8 +224,10 @@ class Search(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        staff_id = self.auth_user.id
+        staff = StaffServer.get(staff_id)
         spliter = PermissionServer.search_organization_byappkey(
-            request.appkey,
+            staff.company.permission_key,
             request.current_page,
             **request.search_info,
         )

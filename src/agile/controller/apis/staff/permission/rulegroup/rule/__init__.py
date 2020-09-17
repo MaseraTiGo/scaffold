@@ -13,6 +13,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.controller.manager.api import StaffAuthorizedApi
+from abs.services.controller.staff.manager import StaffServer
 from abs.middleground.technology.permission.manager import PermissionServer
 
 
@@ -21,7 +22,6 @@ class All(StaffAuthorizedApi):
     所有规则
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="appkey")
 
     response = with_metaclass(ResponseFieldSet)
     response.rule_list = ResponseField(
@@ -54,8 +54,10 @@ class All(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        staff_id = self.auth_user.id
+        staff = StaffServer.get(staff_id)
         rule_list = PermissionServer.get_all_rule_byappkey(
-            request.appkey
+            staff.company.permission_key
         )
         return rule_list
 

@@ -10,7 +10,6 @@ class AbstractStaff(BaseModel):
     is_admin = BooleanField(verbose_name="是否是管理员", default=False)
 
     person_id = IntegerField(verbose_name="用户id")
-    company_id = IntegerField(verbose_name="企业id")
     permission_id = IntegerField(verbose_name="权限id", default=None, null=True)
 
     remark = TextField(verbose_name="备注")

@@ -41,4 +41,4 @@ class PermissionMaker(BaseMaker):
         self._organization.add_inputs(
             self._position
         )
-        return self._authorization
+        return self._organization

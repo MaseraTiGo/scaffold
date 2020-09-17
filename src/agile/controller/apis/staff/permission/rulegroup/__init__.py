@@ -13,6 +13,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.controller.manager.api import StaffAuthorizedApi
+from abs.services.controller.staff.manager import StaffServer
 from abs.middleground.technology.permission.manager import PermissionServer
 
 
@@ -21,7 +22,6 @@ class Add(StaffAuthorizedApi):
     添加规则组
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="appkey")
     request.rule_group_info = RequestField(
         DictField,
         desc="规则组详情",
@@ -41,8 +41,10 @@ class Add(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        staff_id = self.auth_user.id
+        staff = StaffServer.get(staff_id)
         rule_group = PermissionServer.add_rule_group(
-            appkey=request.appkey,
+            staff.company.permission_key,
             **request.rule_group_info
         )
         return rule_group
@@ -57,7 +59,6 @@ class Search(StaffAuthorizedApi):
     搜索规则组
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="当前页码")
     request.current_page = RequestField(
         IntField,
         desc="当前页码"
@@ -95,9 +96,11 @@ class Search(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        staff_id = self.auth_user.id
+        staff = StaffServer.get(staff_id)
         spliter = PermissionServer.search_rule_group(
             request.current_page,
-            request.appkey,
+            staff.company.permission_key,
             **request.search_info
         )
         return spliter
@@ -122,7 +125,6 @@ class All(StaffAuthorizedApi):
     所有规则组
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="当前页码")
 
     response = with_metaclass(ResponseFieldSet)
     response.rule_group_list = ResponseField(
@@ -151,8 +153,10 @@ class All(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        staff_id = self.auth_user.id
+        staff = StaffServer.get(staff_id)
         rule_group_list = PermissionServer.all_rule_group(
-            request.appkey,
+            staff.company.permission_key,
         )
         return rule_group_list
 

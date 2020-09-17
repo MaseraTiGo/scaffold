@@ -6,7 +6,7 @@ from support.common.generator.helper import EnterpriseGenerator,\
         PersonGenerator, AuthorizationGenerator
 from abs.middleground.technology.permission.store import \
         Position, PositionPermission, Organization
-from abs.services.controller.staff.models import Staff
+from abs.services.controller.staff.models import Staff, Company
 
 
 class ControllerStaffGenerator(BaseGenerator):
@@ -42,7 +42,8 @@ class ControllerStaffGenerator(BaseGenerator):
             authorization = platform.company_mapping[company_name]
             enterprise = enterprise_mapping.get(company_name)
             staff_info['authorization'] = authorization
-            staff_info['company_id'] = enterprise.id
+            staff_info['permission_key'] = authorization.appkey
+            staff_info['enterprise'] = enterprise
 
         return self._staff_infos
 
@@ -64,9 +65,25 @@ class ControllerStaffGenerator(BaseGenerator):
                     authorization=authorization,
                     name=position_name
                 )
+                enterprise = staff_info.pop("enterprise")
+                permission_key = staff_info.pop('permission_key')
+                company_qs = Company.query().filter(
+                    company_id=enterprise.id
+                )
+                if company_qs.count():
+                    company = company_qs[0]
+                else:
+                    company = Company.create(
+                        company_id=enterprise.id,
+                        name=enterprise.name,
+                        license_number=enterprise.license_number,
+                        permission_key=permission_key,
+                        remark=enterprise.remark,
+                    )
                 if organization_qs.count() and position_qs.count():
                     staff = Staff.create(
                         person_id=person.id,
+                        company=company,
                         **staff_info
                     )
                     pp = PositionPermission.create(

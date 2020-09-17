@@ -15,7 +15,6 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from agile.controller.manager.api import StaffAuthorizedApi
 from abs.middleground.business.account.utils.constant import StatusTypes
 from abs.middleground.business.person.utils.constant import GenderTypes
-from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.technology.permission.manager import PermissionServer
 from abs.services.controller.staff.manager import StaffServer
 from abs.services.controller.account.manager import StaffAccountServer
@@ -26,7 +25,6 @@ class Get(StaffAuthorizedApi):
     获取个人中心详情
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="appkey")
 
     response = with_metaclass(ResponseFieldSet)
     response.staff_info = ResponseField(
@@ -102,9 +100,8 @@ class Get(StaffAuthorizedApi):
         staff_id = self.auth_user.id
         staff = StaffServer.get(staff_id)
         staff.account = StaffAccountServer.get(staff_id)
-        staff.company = EnterpriseServer.get(staff.company_id)
         staff.permission = PermissionServer.get_permission(
-            request.appkey,
+            staff.company.permission_key,
             staff.id,
             staff.is_admin
         )

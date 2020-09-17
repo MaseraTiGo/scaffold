@@ -17,7 +17,6 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from agile.controller.manager.api import StaffAuthorizedApi
 from abs.middleground.business.account.utils.constant import StatusTypes
 from abs.middleground.business.person.utils.constant import GenderTypes
-from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.technology.permission.manager import PermissionServer
 from abs.services.controller.staff.manager import StaffServer
 from abs.services.controller.account.manager import StaffAccountServer
@@ -28,7 +27,6 @@ class Add(StaffAuthorizedApi):
     添加员工
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="appkey")
     request.staff_info = RequestField(
         DictField,
         desc="员工详情",
@@ -62,10 +60,13 @@ class Add(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        staff_id = self.auth_user.id
+        staff = StaffServer.get(staff_id)
         organization_id = request.staff_info.pop('organization_id')
         position_id = request.staff_info.pop('position_id')
 
-        staff = StaffServer.create(
+        new_staff = StaffServer.create(
+            company=staff.company,
             **request.staff_info
         )
         phone = request.staff_info.phone
@@ -73,21 +74,21 @@ class Add(StaffAuthorizedApi):
             str(phone[-6:]).encode("utf8")
         ).hexdigest()
         StaffAccountServer.create(
-            staff.id,
+            new_staff.id,
             phone,
             password
         )
         permission = PermissionServer.bind_position(
-            request.appkey,
+            staff.company.permission_key,
             organization_id,
             position_id,
-            staff.id
+            new_staff.id
         )
         StaffServer.update(
-            staff.id,
+            new_staff.id,
             permission_id=permission.id,
         )
-        return staff
+        return new_staff
 
     def fill(self, response, staff):
         response.staff_id = staff.id
@@ -286,7 +287,6 @@ class Get(StaffAuthorizedApi):
         staff_id = request.staff_id
         staff = StaffServer.get(staff_id)
         staff.account = StaffAccountServer.get(staff_id)
-        staff.company = EnterpriseServer.get(staff.company_id)
         return staff
 
     def fill(self, response, staff):
@@ -386,7 +386,6 @@ class Bind(StaffAuthorizedApi):
     绑定员工信息到部门及岗位
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="appkey")
     request.staff_id = RequestField(IntField, desc="员工id")
     request.organization_id = RequestField(IntField, desc="组织id")
     request.position_id = RequestField(IntField, desc="岗位id")
@@ -398,8 +397,10 @@ class Bind(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        staff_id = self.auth_user.id
+        staff = StaffServer.get(staff_id)
         PermissionServer.bind_position(
-            request.appkey,
+            staff.company.permission_key,
             request.organization_id,
             request.position_id,
             request.staff_id,

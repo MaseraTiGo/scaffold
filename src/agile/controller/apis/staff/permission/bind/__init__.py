@@ -13,6 +13,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseFieldSet
 
 from agile.controller.manager.api import StaffAuthorizedApi
+from abs.services.controller.staff.manager import StaffServer
 from abs.middleground.technology.permission.manager import PermissionServer
 
 
@@ -21,7 +22,6 @@ class Position(StaffAuthorizedApi):
     绑定身份
     """
     request = with_metaclass(RequestFieldSet)
-    request.appkey = RequestField(CharField, desc="appkey")
     request.bind_info = RequestField(
         DictField,
         desc="绑定信息",
@@ -43,8 +43,10 @@ class Position(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        staff_id = self.auth_user.id
+        staff = StaffServer.get(staff_id)
         rule = PermissionServer.bind_position(
-            request.appkey,
+            staff.company.permission_key,
             **request.bind_info
         )
         return rule
