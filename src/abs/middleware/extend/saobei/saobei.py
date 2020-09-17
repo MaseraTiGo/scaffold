@@ -16,7 +16,7 @@ class SaobeiExtend(object):
         self._head = {"Content-Type": "application/json"}
 
     def get_notify_url(self):
-        return  "http://gk7s82.natappfree.cc"  # 回调地址
+        return config_middleware.get_value("common", "domain")  # 回调地址
 
     def get_merchant_no(self):  # 商户号
         return config_middleware.get_value("saobei", "merchant_no")  #
@@ -81,9 +81,11 @@ class SaobeiExtend(object):
 
     def get_qrpay_url(self, number, price, notify_url, body = None):
         """获取聚合码支付二维码url"""
-        notify_url = self.get_notify_url() + '/interface/saobei_notify'
+        notify_url = "{a}{b}".format(
+            a = self.get_notify_url(),
+            b = notify_url
+        )
         url = "/pay/110/qrpay"
-
         test_data = {"pay_ver":"130", "pay_type":"000", "service_id":"016", \
                      "merchant_no":self.get_merchant_no(), "terminal_id":self.get_terminal_id(), \
                      "terminal_trace": number, "total_fee": price, \

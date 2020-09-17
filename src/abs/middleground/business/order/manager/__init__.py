@@ -205,7 +205,7 @@ class OrderServer(BaseManager):
         payment_record.update(
             output_record_id=output_record.id,
         )
-        return output_record.number
+        return output_record.number,payment_record
 
     @classmethod
     def pay_success_callback(cls, output_record_number):

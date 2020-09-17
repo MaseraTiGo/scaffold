@@ -76,7 +76,7 @@ class PayMiddleware(object):
         elif pay_type == 'alipay':
             notify_path = '/interface/alipay_order_pay_notify'
         elif  pay_type == 'saobei':
-            notify_path = ''
+            notify_path = '/interface/saobei_order_pay_notify'
 
         prepay_id = self.get_prepay_id(
             pay_type,

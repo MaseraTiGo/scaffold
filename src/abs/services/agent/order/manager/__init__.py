@@ -145,17 +145,39 @@ class OrderServer(BaseManager):
         return order
 
     @classmethod
-    def pay(cls, order, pay_type, trade_type = 'APP', openid = '', pay_money = 0):
-        number = mg_OrderServer.pay(
+    def paycode(cls, plan , order):
+        number, payment_record = mg_OrderServer.pay(
             order.mg_order_id,
-            pay_money if pay_money > 0 else order.deposit,
+            plan.plan_amount,
+            "saobei",
+            ''
+        )
+        plan.update(payment_record_id = payment_record.id)
+        url = pay_middleware.pay_order(
+            "saobei",
+            number,
+            plan.plan_amount,
+            'PC',
+            ''
+        )
+        if url:
+            plan.update(status = PlanStatus.PAYING)
+        else:
+            raise BusinessError('获取付款码失败')
+        return url
+
+    @classmethod
+    def pay(cls, order, pay_type, trade_type = 'APP', openid = ''):
+        number, payment_record = mg_OrderServer.pay(
+            order.mg_order_id,
+            order.deposit,
             pay_type,
             ''
         )
         prepay_id = pay_middleware.pay_order(
             pay_type,
             number,
-            pay_money if pay_money > 0 else order.deposit,
+            order.deposit,
             trade_type = trade_type,
             openid = openid
         )
@@ -171,6 +193,12 @@ class OrderServer(BaseManager):
             status = mg_order.status,
             last_payment_time = mg_order.payment.last_payment_time
         )
+        plan_qs = OrderPlanServer.search_all(
+            payment_record_id = payment_record.id
+        )
+        if plan_qs.count() > 0:
+            plan = plan_qs[0]
+            plan.update(status = PlanStatus.PAID)
 
     @classmethod
     def pay_fail_callback(cls, output_record_number):

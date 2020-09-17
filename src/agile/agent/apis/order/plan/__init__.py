@@ -11,6 +11,7 @@ from agile.agent.manager.api import AgentStaffAuthorizedApi
 from infrastructure.core.exception.business_error import BusinessError
 from abs.services.agent.order.utils.constant import PlanStatus
 from abs.middleground.business.transaction.utils.constant import PayService
+from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.agent.order.manager import OrderServer, OrderPlanServer
 from abs.services.agent.staff.manager import AgentStaffServer
 
@@ -210,11 +211,7 @@ class paycode(AgentStaffAuthorizedApi):
         if plan.status == PlanStatus.PAID:
             raise BusinessError('已回款订单无法查看二维码')
         else:
-            url = OrderServer.pay(plan.order, "saobei", 'PC', '', plan.plan_amount)
-            if url:
-                plan.update(status = PlanStatus.PAYING)
-            else:
-                raise BusinessError('获取付款码失败')
+            url = OrderServer.paycode(plan, order)
         return url
 
 

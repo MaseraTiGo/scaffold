@@ -23,6 +23,7 @@ from agile.customer.apis.customer.finance.balance.wechat_notify import wechat_to
     wechat_order_pay_notify
 from agile.customer.apis.customer.finance.balance.yunaccount_notify import yunaccount_transfer_notify
 from agile.customer.apis.customer.finance.balance.alipay_notify import alipay_top_up_notify, alipay_order_pay_notify
+from agile.customer.apis.customer.finance.balance.saobei_notify import saobei_order_pay_notify
 
 urlpatterns = [
     url(r'app_api_doc', app_api_doc),
@@ -35,6 +36,7 @@ urlpatterns = [
     url(r'yunaccount_transfer_notify', yunaccount_transfer_notify),
     url(r'wechat_order_pay_notify', wechat_order_pay_notify),
     url(r'alipay_order_pay_notify', alipay_order_pay_notify),
+    url(r'saobei_order_pay_notify', saobei_order_pay_notify),
     url(r'app_router', app_router),
 
 ]
