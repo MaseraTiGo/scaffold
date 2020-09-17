@@ -105,7 +105,8 @@ class Get(StaffAuthorizedApi):
         staff.company = EnterpriseServer.get(staff.company_id)
         staff.permission = PermissionServer.get_permission(
             request.appkey,
-            staff_id
+            staff.id,
+            staff.is_admin
         )
         return staff
 
