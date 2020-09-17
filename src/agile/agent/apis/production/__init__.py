@@ -8,11 +8,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 from agile.agent.manager.api import AgentStaffAuthorizedApi
-from abs.middleground.business.production.manager import ProductionServer
-from abs.middleground.business.enterprise.manager import EnterpriseServer
-from abs.services.agent.goods.manager import GoodsServer
-from abs.middleground.business.merchandise.manager import MerchandiseServer
-from abs.services.crm.university.manager import UniversityServer
+from abs.services.crm.production.manager import ProductionServer
 
 
 class SearchAll(AgentStaffAuthorizedApi):
@@ -59,11 +55,7 @@ class SearchAll(AgentStaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        company = EnterpriseServer.get_crm__company()
-        production_qs = ProductionServer.search_all(
-            company_id = company.id,
-            **{}
-        )
+        production_qs = ProductionServer.search_all()
         return production_qs
 
     def fill(self, response, production_qs):

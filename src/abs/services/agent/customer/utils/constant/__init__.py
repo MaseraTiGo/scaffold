@@ -25,3 +25,14 @@ class EducationTypes(object):
                (HIGH, '高中'), (UNSERGRADUATE, '本科'),
                (MASTER, '硕士'), (DOCTOR, '博士'),
                (OTHER, '其他'))
+
+
+class IntentionTypes(object):
+    NO = 'no'
+    LOW = 'low'
+    MIDDLE = 'middle'
+    HIGH = 'high'
+    UNKNOWN = 'unknown'
+    CHOICES = ((NO, '无意向'), (LOW, '低意向'),
+               (MIDDLE, '中意向'), (HIGH, '高意向'),
+               (UNKNOWN, '未知'))

@@ -1,15 +1,16 @@
 # coding=UTF-8
 import json
+import copy
 from infrastructure.core.field.base import CharField, DictField, \
         IntField, ListField, DatetimeField, BooleanField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
-
 from agile.agent.manager.api import AgentStaffAuthorizedApi
-
+from abs.services.agent.event.utils.constant import OperationTypes
 from abs.services.agent.customer.manager import AgentCustomerServer
+from abs.services.agent.event.manager import OperationEventServer
 
 
 class Search(AgentStaffAuthorizedApi):
@@ -98,11 +99,16 @@ class Update(AgentStaffAuthorizedApi):
     request.agent_customer_id = RequestField(IntField, desc = "代理商客户id")
     request.update_info = RequestField(
         DictField,
-        desc = "需要更新的产品信息",
+        desc = "需要更新的客户信息",
         conf = {
             'name': CharField(desc = "客户姓名", is_required = False),
-            'city': CharField(desc = "客户地址", is_required = False),
-            'education': CharField(desc = "客户学历", is_required = False),
+            'phone': CharField(desc = "客户电话", is_required = False),
+            'gender': CharField(desc = "客户性别", is_required = False),
+            'city': CharField(desc = "省市区", is_required = False),
+            'source': CharField(desc = "客户来源", is_required = False),
+            'wechat': CharField(desc = "微信", is_required = False),
+            'qq': CharField(desc = "QQ号码", is_required = False),
+            'education': CharField(desc = "学历", is_required = False),
         }
     )
 
@@ -117,10 +123,38 @@ class Update(AgentStaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
+        agent_customer = AgentCustomerServer.get(request.agent_customer_id)
+        o_agent_customer = copy.copy(agent_customer)
         agent_customer = AgentCustomerServer.update(
-            request.agent_customer_id,
+            agent_customer,
             **request.update_info
         )
+        if len(request.update_info) > 0:
+            describe = ""
+            mapping = {"name":"客户姓名", "phone":"客户电话", \
+                     "gender":"客户性别", "city":"客户地址", \
+                     "source":"客户来源", "wechat":"客户微信", \
+                     "qq":"客户QQ", "education":"客户学历"}
+
+            for k, v in request.update_info.items():
+                if getattr(o_agent_customer, k) != getattr(agent_customer, k):
+                   describe = "{d}{v}由{o}变更为{n};".format(
+                        d = describe,
+                        v = mapping[k],
+                        o = getattr(o_agent_customer, k),
+                        n = getattr(agent_customer, k)
+                    )
+            if describe:
+                auth = self.auth_user
+                OperationEventServer.create(**{
+                    "staff_id":auth.id,
+                    "organization_id":0,
+                    "agent_customer_id":agent_customer.id,
+                    "agent_id":auth.agent_id,
+                    "type":OperationTypes.CUSTOMER,
+                    "describe":describe
+                })
+
 
 
     def fill(self, response, address_list):

@@ -108,8 +108,7 @@ class AgentCustomerServer(BaseManager):
         return obj_list
 
     @classmethod
-    def update(cls, agent_customer_id, **update_info):
-        agent_customer = cls.get(agent_customer_id)
+    def update(cls, agent_customer, **update_info):
         agent_customer.update(**update_info)
         return agent_customer
 
@@ -173,4 +172,17 @@ class SaleChanceServer(BaseManager):
         )
         if sale_chance is None:
             raise BusinessError("此客户机会不存在")
+        return sale_chance
+
+    @classmethod
+    def end(cls, sale_chance_id):
+        sale_chance = cls.get(sale_chance_id)
+        today = datetime.date.today()
+        if sale_chance.end_time <= today:
+            raise BusinessError("请不要重复结束机会")
+        sale_chance.update(end_time = today)
+
+    @classmethod
+    def update(cls, sale_chance, **update_info):
+        sale_chance.update(**update_info)
         return sale_chance

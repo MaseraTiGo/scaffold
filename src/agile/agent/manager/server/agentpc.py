@@ -62,8 +62,8 @@ agent_pc_service.add(Add, All, Update, Remove, paycode)
 from agile.agent.apis.customer import Search, Update
 agent_pc_service.add(Search, Update)
 
-from agile.agent.apis.customer.salechance import Search, Add
-agent_pc_service.add(Search, Add)
+from agile.agent.apis.customer.salechance import Search, Add, Get, End, Update
+agent_pc_service.add(Search, Add, Get, End, Update)
 
 from agile.agent.apis.customer.order import Search
 agent_pc_service.add(Search)
@@ -86,7 +86,7 @@ agent_pc_service.add(All)
 from agile.agent.apis.goods.poster import Add
 agent_pc_service.add(Add)
 
-from agile.agent.apis.event.track import Search, Add
+from agile.agent.apis.event.operation import Search, Add
 agent_pc_service.add(Search, Add)
 
 from agile.agent.apis.contract.template import Add, Search, SearchAll, Get, \

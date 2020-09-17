@@ -11,6 +11,7 @@ from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.agent.contract.utils.constant import TemplateStatus
 from abs.services.agent.contract.manager import TemplateServer, \
      TemplateParamServer
+from abs.services.crm.agent.manager import AgentServer
 
 
 class Search(StaffAuthorizedApi):
@@ -51,6 +52,8 @@ class Search(StaffAuthorizedApi):
                     desc = "状态",
                     choices = TemplateStatus.CHOICES
                 ),
+               'agent_id': IntField(desc = "代理商id"),
+               'agent_name': CharField(desc = "代理商名称"),
                'create_time': DatetimeField(desc = "创建时间"),
             }
         )
@@ -74,6 +77,7 @@ class Search(StaffAuthorizedApi):
              request.current_page,
              **request.search_info
         )
+        AgentServer.hung_agent(template_spliter.data)
         return template_spliter
 
     def fill(self, response, template_spliter):
@@ -87,6 +91,8 @@ class Search(StaffAuthorizedApi):
                     'height':obj['height'],
                 } for obj in json.loads(template.background_img_url)],
                'status':template.status,
+               'agent_id':template.agent.id,
+               'agent_name':template.agent.name,
                'create_time': template.create_time,
           }  for template in template_spliter.data]
         response.data_list = data_list

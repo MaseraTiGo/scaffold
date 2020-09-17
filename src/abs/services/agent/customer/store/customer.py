@@ -5,6 +5,7 @@ from abs.common.model import BaseModel, BooleanField, \
 from abs.services.agent.customer.settings import DB_PREFIX
 from abs.services.agent.customer.utils.constant import SourceTypes, \
      EducationTypes
+from abs.middleground.business.person.utils.constant import GenderTypes
 
 
 class AgentCustomer(BaseModel):
@@ -17,6 +18,15 @@ class AgentCustomer(BaseModel):
     education = CharField(verbose_name = "学历", max_length = 32, \
                           choices = EducationTypes.CHOICES, \
                           default = EducationTypes.OTHER)
+    gender = CharField(
+        verbose_name = "性别",
+        max_length = 24,
+        choices = GenderTypes.CHOICES,
+        default = GenderTypes.UNKNOWN
+    )
+    source = CharField(verbose_name = "客户来源", max_length = 64, default = '')
+    wechat = CharField(verbose_name = "客户微信", max_length = 64, default = '')
+    qq = CharField(verbose_name = "客户qq", max_length = 32, default = '')
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)
 

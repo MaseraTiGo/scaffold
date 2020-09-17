@@ -27,6 +27,10 @@ class StaffServer(BaseManager):
 
     @classmethod
     def search(cls, current_page, **search_info):
+        company = EnterpriseServer.get_main_company()
+        search_info.update({
+            "company_id":company.id
+        })
         if "name" in search_info:
             name = search_info.pop("name")
             search_info.update({"name__contains":name})

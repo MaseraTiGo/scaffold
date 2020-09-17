@@ -1,11 +1,10 @@
 # coding=UTF-8
 
 
-class TrackTypes(object):
-    PHONE = "phone"
-    WECHAT = "wechat"
-    MESSAGE = 'message'
-    EMAIL = 'email'
+class OperationTypes(object):
+    VISIT = "visit"
+    INTENTION = "intention"
+    CUSTOMER = 'customer'
     OTHER = "other"
-    CHOICES = ((PHONE, '电话'), (WECHAT, "微信"), (MESSAGE, "短信"), \
-               (EMAIL, "邮件"), (OTHER, "其它"))
+    CHOICES = ((VISIT, '添加访问记录'), (INTENTION, "意向修改"), \
+               (CUSTOMER, "客户信息修改"), (OTHER, "其它"))

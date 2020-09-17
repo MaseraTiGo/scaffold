@@ -4,7 +4,7 @@ from abs.common.model import BaseModel, BooleanField, \
         IntegerField, CharField, TextField, DateTimeField, timezone, \
         DateField, ForeignKey, CASCADE
 from abs.services.agent.customer.settings import DB_PREFIX
-from abs.services.agent.customer.utils.constant import SourceTypes
+from abs.services.agent.customer.utils.constant import SourceTypes, IntentionTypes
 from abs.services.agent.customer.store import AgentCustomer
 
 
@@ -23,6 +23,9 @@ class AgentCustomerSaleChance(BaseModel):
                        default = SourceTypes.CREATE)
     is_end = BooleanField(verbose_name = "机会是否手动结束", default = False)
     remark = TextField(verbose_name = "备注", default = "")
+    intention = CharField(verbose_name = "意向", max_length = 128, \
+                          choices = IntentionTypes.CHOICES, \
+                          default = IntentionTypes.UNKNOWN)
     update_time = DateTimeField(verbose_name = "更新时间", auto_now = True)
     create_time = DateTimeField(verbose_name = "创建时间", default = timezone.now)
 

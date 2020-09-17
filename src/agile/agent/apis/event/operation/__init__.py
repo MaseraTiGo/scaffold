@@ -8,10 +8,10 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 
 from agile.agent.manager.api import AgentStaffAuthorizedApi
-from abs.services.agent.event.utils.constant import TrackTypes
+from abs.services.agent.event.utils.constant import OperationTypes
 from abs.services.agent.customer.manager import AgentCustomerServer, \
      SaleChanceServer
-from abs.services.agent.event.manager import TrackEventServer
+from abs.services.agent.event.manager import OperationEventServer
 from abs.services.agent.staff.manager import AgentStaffServer
 
 
@@ -33,12 +33,11 @@ class Search(AgentStaffAuthorizedApi):
                 'id': IntField(desc = "记录id"),
                 'staff_name': CharField(desc = "客服姓名"),
                 'organization_name': CharField(desc = "部门名称"),
-                'track_type': CharField(
-                    desc = "拜访方式",
-                    choices = TrackTypes.CHOICES
+                'operation_type': CharField(
+                    desc = "操作类型",
+                    choices = OperationTypes.CHOICES
                 ),
-                'describe': CharField(desc = "拜访结果"),
-                'remark': CharField(desc = "备注"),
+                'describe': CharField(desc = "操作结果"),
                 'create_time': DatetimeField(desc = "创建时间"),
             }
         )
@@ -59,7 +58,7 @@ class Search(AgentStaffAuthorizedApi):
             'create_time__gte': sale_chance.create_time,
             'create_time__lte': sale_chance.end_time,
         }
-        spliter = TrackEventServer.search(
+        spliter = OperationEventServer.search(
             request.current_page,
             **search_info
         )
@@ -68,14 +67,14 @@ class Search(AgentStaffAuthorizedApi):
 
     def fill(self, response, spliter):
         data_list = [{
-                'id': track.id,
-                'staff_name': track.staff.name,
+                'id': operation.id,
+                'staff_name': operation.staff.name,
                 'organization_name': '公司',
-                'track_type': track.track_type,
-                'describe': track.describe,
-                'remark': track.remark,
-                'create_time': track.create_time,
-              } for track in spliter.data]
+                'operation_type': operation.type,
+                'describe': operation.describe,
+                'remark': operation.remark,
+                'create_time': operation.create_time,
+              } for operation in spliter.data]
         response.data_list = data_list
         response.total = spliter.total
         response.total_page = spliter.total_page
@@ -85,25 +84,22 @@ class Search(AgentStaffAuthorizedApi):
 class Add(AgentStaffAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.agent_customer_id = RequestField(IntField, desc = "客户id")
-    request.track_info = RequestField(
+    request.operation_info = RequestField(
         DictField,
-        desc = "跟踪信息",
+        desc = "回访信息",
         conf = {
-            'track_type': CharField(
-                desc = "拜访方式",
-                choices = TrackTypes.CHOICES
-            ),
-            'describe': CharField(desc = "拜访结果"),
+            'visit_time':DatetimeField(desc = "回访时间"),
+            'describe': CharField(desc = "回访结果"),
             'remark': CharField(desc = "备注", is_required = False),
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
-    response.track_id = ResponseField(IntField, desc = "跟踪记录id")
+    response.operation_id = ResponseField(IntField, desc = "记录id")
 
     @classmethod
     def get_desc(cls):
-        return "添加跟踪记录接口"
+        return "添加回访记录接口"
 
     @classmethod
     def get_author(cls):
@@ -114,19 +110,25 @@ class Add(AgentStaffAuthorizedApi):
         agent_customer = AgentCustomerServer.get(
             request.agent_customer_id
         )
-        request.track_info.update({
+        visit_time = request.operation_info.pop("visit_time")
+        request.operation_info.update({
             "staff_id":auth.id,
             "organization_id":0,
             "agent_customer_id":agent_customer.id,
             "agent_id":auth.agent_id,
+            "type":OperationTypes.VISIT,
+            "describe":"回访时间：{t},回访记录：{r}".format(
+                t = visit_time,
+                r = request.operation_info.pop("describe")
+            )
         })
-        track = TrackEventServer.create(
-            **request.track_info
+        operation = OperationEventServer.create(
+            **request.operation_info
         )
-        return track
+        return operation
 
-    def fill(self, response, track):
-        response.track_id = track.id
+    def fill(self, response, operation):
+        response.operation_id = operation.id
         return response
 
 

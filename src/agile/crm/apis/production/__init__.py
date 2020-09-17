@@ -8,9 +8,8 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 from agile.crm.manager.api import StaffAuthorizedApi
-from abs.middleground.business.production.manager import ProductionServer
-from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
+from abs.services.crm.production.manager import ProductionServer
 
 
 class Get(StaffAuthorizedApi):
@@ -163,10 +162,8 @@ class Search(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        company = EnterpriseServer.get_crm__company()
         spliter = ProductionServer.search(
             request.current_page,
-            company.id,
             **request.search_info
         )
         return spliter
@@ -243,12 +240,10 @@ class Add(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        company = EnterpriseServer.get_crm__company()
         add_info = request.production_info
         add_info.attribute_list = json.dumps(add_info.attribute_list)
         add_info.workflow_list = json.dumps(add_info.workflow_list)
-        production = ProductionServer.generate(
-            company_id = company.id,
+        production = ProductionServer.add(
             brand_id = request.brand_id,
             **add_info
         )
@@ -412,11 +407,7 @@ class SearchAll(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        company = EnterpriseServer.get_crm__company()
-        production_qs = ProductionServer.search_all(
-            company_id = company.id,
-            **{}
-        )
+        production_qs = ProductionServer.search_all()
         return production_qs
 
     def fill(self, response, production_qs):
