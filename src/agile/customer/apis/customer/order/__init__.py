@@ -24,6 +24,7 @@ from abs.middleware.extend.yunaccount import yunaccount_extend
 from abs.services.agent.goods.manager import PosterServer
 from abs.services.agent.event.manager import StaffOrderEventServer
 from abs.services.agent.order.utils.constant import OrderSource
+from abs.middleground.business.merchandise.utils.constant import UseStatus
 from abs.middleground.business.transaction.utils.constant import PayService
 
 
@@ -94,7 +95,7 @@ class Add(CustomerAuthorizedApi):
             specification = MerchandiseServer.get_specification(goods_info['specification_id'])
             if specification.stock < goods_info['quantity']:
                 raise BusinessError('库存不足')
-            if specification.merchandise.use_status != 'enable':
+            if specification.merchandise.use_status != UseStatus.ENABLE:
                 raise BusinessError('商品已下架')
             specification.order_count = goods_info['quantity']
             specification.total_price = goods_info['quantity'] * specification.sale_price
@@ -232,7 +233,7 @@ class PosterAdd(CustomerAuthorizedApi):
             specification = MerchandiseServer.get_specification(goods_info['specification_id'])
             if specification.stock < goods_info['quantity']:
                 raise BusinessError('库存不足')
-            if specification.merchandise.use_status != 'enable':
+            if specification.merchandise.use_status != UseStatus.ENABLE:
                 raise BusinessError('商品已下架')
             specification.sale_price = poster_specification_mapping[specification.id].original_price
             specification.order_count = goods_info['quantity']

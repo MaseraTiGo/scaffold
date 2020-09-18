@@ -7,7 +7,9 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.base.api import NoAuthorizedApi
+from infrastructure.core.exception.business_error import BusinessError
 from abs.services.agent.goods.manager import GoodsServer
+from abs.middleground.business.merchandise.utils.constant import UseStatus
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
@@ -300,9 +302,11 @@ class Get(NoAuthorizedApi):
 
     def execute(self, request):
         goods = GoodsServer.get_goods(request.goods_id)
+        MerchandiseServer.hung_merchandise([goods])
+        if goods.merchandise.use_status != UseStatus.ENABLE:
+            raise BusinessError('商品已下架')
         UniversityServer.hung_major([goods])
         UniversityServer.hung_school([goods])
-        MerchandiseServer.hung_merchandise([goods])
         ProductionServer.hung_production([goods.merchandise])
         UniversityYearsServer.hung_years([goods])
         AgentServer.hung_agent([goods])

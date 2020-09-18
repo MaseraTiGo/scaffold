@@ -28,6 +28,7 @@ from abs.services.customer.account.utils.constant import CategoryTypes
 from abs.middleground.business.transaction.utils.constant import PayService
 from abs.middleground.business.transaction.utils.constant import PayTypes
 from abs.services.agent.order.utils.constant import OrderSource
+from abs.middleground.business.merchandise.utils.constant import UseStatus
 
 
 class Add(WechatAuthorizedApi):
@@ -97,7 +98,7 @@ class Add(WechatAuthorizedApi):
             specification = MerchandiseServer.get_specification(goods_info['specification_id'])
             if specification.stock < goods_info['quantity']:
                 raise BusinessError('库存不足')
-            if specification.merchandise.use_status != 'enable':
+            if specification.merchandise.use_status != UseStatus.ENABLE:
                 raise BusinessError('商品已下架')
             specification.order_count = goods_info['quantity']
             specification.total_price = goods_info['quantity'] * specification.sale_price
@@ -235,7 +236,7 @@ class PosterAdd(WechatAuthorizedApi):
             specification = MerchandiseServer.get_specification(goods_info['specification_id'])
             if specification.stock < goods_info['quantity']:
                 raise BusinessError('库存不足')
-            if specification.merchandise.use_status != 'enable':
+            if specification.merchandise.use_status != UseStatus.ENABLE:
                 raise BusinessError('商品已下架')
             specification.sale_price = poster_specification_mapping[specification.id].original_price
             specification.order_count = goods_info['quantity']

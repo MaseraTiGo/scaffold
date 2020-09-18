@@ -138,12 +138,21 @@ class Update(AgentStaffAuthorizedApi):
 
             for k, v in request.update_info.items():
                 if getattr(o_agent_customer, k) != getattr(agent_customer, k):
-                   describe = "{d}{v}由{o}变更为{n};".format(
-                        d = describe,
-                        v = mapping[k],
-                        o = getattr(o_agent_customer, k),
-                        n = getattr(agent_customer, k)
-                    )
+                    if k == "education":
+                       o_value = o_agent_customer.get_education_display()
+                       n_value = agent_customer.get_education_display()
+                    elif k == "gender":
+                       o_value = o_agent_customer.get_gender_display()
+                       n_value = agent_customer.get_gender_display()
+                    else:
+                       o_value = getattr(o_agent_customer, k)
+                       n_value = getattr(agent_customer, k)
+                    describe = "{d}{v}由{o}变更为{n};".format(
+                         d = describe,
+                         v = mapping[k],
+                         o = o_value,
+                         n = n_value
+                     )
             if describe:
                 auth = self.auth_user
                 OperationEventServer.create(**{

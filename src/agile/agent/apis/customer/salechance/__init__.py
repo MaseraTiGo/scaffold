@@ -162,16 +162,17 @@ class Add(AgentStaffAuthorizedApi):
         )
         remark = request.sale_chance_info.pop("remark") if \
                "remark" in request.sale_chance_info else ""
+        customer_info = request.sale_chance_info
+        customer_info.update({
+            "agent_id":agent.id,
+            "person_id":0,
+        })
         if customer is None:
-            customer_info = request.sale_chance_info
-            customer_info.update({
-                "agent_id":agent.id,
-                "person_id":0,
-            })
             customer = AgentCustomerServer.create(
                 **customer_info
             )
         else:
+            customer.update(**customer_info)
             if SaleChanceServer.is_exist(customer):
                 raise BusinessError("此客户机会已存在")
         sale_chance_info = {
