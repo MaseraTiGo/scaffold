@@ -15,7 +15,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from agile.controller.manager.api import StaffAuthorizedApi
 from abs.middleground.business.account.utils.constant import StatusTypes
 from abs.middleground.business.person.utils.constant import GenderTypes
-from abs.middleground.business.enterprise.manager import EnterpriseServer
+from abs.middleground.technology.permission.manager import PermissionServer
 from abs.services.controller.staff.manager import StaffServer
 from abs.services.controller.account.manager import StaffAccountServer
 
@@ -54,6 +54,9 @@ class Get(StaffAuthorizedApi):
                     'id': IntField(desc="职位Id"),
                     'name': CharField(desc="职位名称"),
                 }
+            ),
+            'permission': CharField(
+                desc="功能权限",
             ),
             'account_info': DictField(
                 desc="账号信息",
@@ -97,7 +100,11 @@ class Get(StaffAuthorizedApi):
         staff_id = self.auth_user.id
         staff = StaffServer.get(staff_id)
         staff.account = StaffAccountServer.get(staff_id)
-        staff.company = EnterpriseServer.get(staff.company_id)
+        staff.permission = PermissionServer.get_permission(
+            staff.company.permission_key,
+            staff.id,
+            staff.is_admin
+        )
         return staff
 
     def fill(self, response, staff):
@@ -126,6 +133,7 @@ class Get(StaffAuthorizedApi):
                 'id': -1,
                 "name": "",
             },
+            'permission': staff.permission['operation'],
             'account_info': {
                 'nick': staff.account.nick,
                 'username': staff.account.username,

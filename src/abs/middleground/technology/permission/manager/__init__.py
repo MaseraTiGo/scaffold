@@ -177,6 +177,34 @@ class PermissionServer(BaseManager):
         return all_rule
 
     @classmethod
+    def get_all_rule_byappkey(cls, appkey):
+        authorization = cls.get_authorization_byappkey(appkey)
+        all_rule = [
+            entity.get_tree()
+            for entity in RuleHelper(
+                authorization.platform
+            ).root.get_children()
+        ]
+        return all_rule
+
+    @classmethod
+    def get_all_rule_path_byappkey(cls, appkey):
+        authorization = cls.get_authorization_byappkey(appkey)
+        all_rule = []
+        for entity in RuleHelper(
+            authorization.platform
+        ).root.get_all_children():
+            path_list = [entity.model.code]
+            path_list.extend([
+                parent_entity.model.code
+                for parent_entity in entity.get_parents()
+                if parent_entity.model.code != ""
+            ])
+            path_list.reverse()
+            all_rule.append('-'.join(path_list))
+        return all_rule
+
+    @classmethod
     def add_rule(cls, platform_id, name, parent_id, description, remark):
         platform = cls.get_platform(platform_id)
         rule = Rule.create(
@@ -516,7 +544,7 @@ class PermissionServer(BaseManager):
         return permission
 
     @classmethod
-    def get_position_permission(cls, appkey, person_id):
+    def get_position_permission(cls, appkey, person_id, is_admin):
         authorization = cls.get_authorization_byappkey(appkey)
         position_permission = PositionPermission.get_byposition(
             authorization=authorization,
@@ -540,10 +568,12 @@ class PermissionServer(BaseManager):
         ]
 
         person_id_list.append(person_id)
+        permission_str = position_permission.position.rule_group.content
+        if is_admin:
+            permission_str = json.dumps(cls.get_all_rule_path_byappkey(appkey))
+
         permission = DictWrapper({
-            'operation': json.loads(
-                position_permission.position.rule_group.content
-            ),
+            'operation': permission_str,
             'data': [
                 person_id_list
             ],
@@ -578,9 +608,7 @@ class PermissionServer(BaseManager):
         if person_permission is None:
             raise BusinessError("个人权限不存在")
         permission = DictWrapper({
-            'operation': json.loads(
-                person_permission.person_group.rule_group.content
-            ),
+            'operation': person_permission.person_group.rule_group.content,
             'data': [
                 person_id
             ],
@@ -588,7 +616,7 @@ class PermissionServer(BaseManager):
         return permission
 
     @classmethod
-    def get_permission(cls, appkey, person_id):
+    def get_permission(cls, appkey, person_id, is_admin=False):
         """
         return :
             {
@@ -616,7 +644,7 @@ class PermissionServer(BaseManager):
         """
         authorization = cls.get_authorization_byappkey(appkey)
         if authorization.platform.app_type == PermissionTypes.POSITION:
-            return cls.get_position_permission(appkey, person_id)
+            return cls.get_position_permission(appkey, person_id, is_admin)
         if authorization.platform.app_type == PermissionTypes.PERSON:
             return cls.get_person_permission(appkey, person_id)
         raise BusinessError("权限类型不支持")

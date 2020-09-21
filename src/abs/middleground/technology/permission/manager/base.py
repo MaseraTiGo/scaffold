@@ -106,6 +106,17 @@ class Entity(object):
                                 field=attr
                             )
                         )
+            paths = entity.get_parents()
+            path_fields = self.get_paths_field()
+            for field, alais in path_fields:
+                attr_list = []
+                attr_list.append(getattr(entity.model, field))
+                for path in paths:
+                    value = getattr(path.model, field)
+                    if value:
+                        attr_list.append(value)
+                attr_list.reverse()
+                result[alais] = '-'.join(attr_list)
             return result
 
         def _get_child_list(parent_entity, parent):

@@ -75,6 +75,7 @@ class All(StaffAuthorizedApi):
                 'platform_id': IntField(desc="平台id"),
                 'name': CharField(desc="名称I"),
                 'code': CharField(desc="编码"),
+                'paths': CharField(desc="全编码编码"),
                 'parent_id': IntField(desc="父级ID"),
                 'remark': CharField(desc="备注"),
                 'description': CharField(desc="描述"),

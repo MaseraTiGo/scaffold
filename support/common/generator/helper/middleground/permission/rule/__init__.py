@@ -2,37 +2,55 @@
 
 from infrastructure.utils.common.dictwrapper import DictWrapper
 from support.common.generator.base import BaseGenerator
-from support.common.generator.helper import AuthorizationGenerator
-from abs.middleground.technology.permission.store import RuleGroup
+from support.common.generator.helper import PlatformGenerator
+from abs.middleground.technology.permission.store import Rule
 
 
-class RuleGroupGenerator(BaseGenerator):
+class RuleGenerator(BaseGenerator):
 
-    def __init__(self, rule_group_infos):
-        super(RuleGroupGenerator, self).__init__()
-        self._rule_group_infos = self.init(rule_group_infos)
+    def __init__(self, rule_infos):
+        super(RuleGenerator, self).__init__()
+        self._rule_infos = self.init(rule_infos)
 
     def get_create_list(self, result_mapping):
-        authorization_list = result_mapping.get(AuthorizationGenerator.get_key())
-        rule_group_list = []
-        for authorization in authorization_list:
-            for rule_group_info in self._rule_group_infos:
-                rule_group = rule_group_info.copy()
-                rule_group.update({
-                    "authorization":authorization
-                })
-                rule_group_list.append(DictWrapper(rule_group))
-        return rule_group_list
-
-    def create(self, rule_group_info, result_mapping):
-        rule_group_qs = RuleGroup.query().filter(
-            name = rule_group_info.name,
-            authorization = rule_group_info.authorization,
+        platform_list = result_mapping.get(
+            PlatformGenerator.get_key()
         )
-        if rule_group_qs.count():
-            rule_group = rule_group_qs[0]
-        else:
-            rule_group = RuleGroup.create(**rule_group_info)
+        platform_mapping = {
+            platform.name: platform
+            for platform in platform_list
+        }
+        rule_list = []
+        for rule_info in self._rule_infos:
+            platform = platform_mapping.get(
+                rule_info['platform_name']
+            )
+            if platform:
+                rule_info.update({
+                    "platform": platform
+                })
+                rule_list.append(DictWrapper(rule_info))
+        return rule_list
+
+    def create(self, rule_info, result_mapping):
+        rule_qs = Rule.query().filter(
+            platform=rule_info.platform,
+        )
+        if rule_qs.count() <= len(self._rule_infos):
+            parent_id = 0
+            if rule_info['parent']:
+                rule_qs = Rule.query().filter(
+                    name=rule_info["parent"],
+                    platform=rule_info.platform,
+                )
+                if rule_qs.count() > 0:
+                    parent_id = rule_qs[0].id
+            rule_info.update({
+                'parent_id': parent_id
+            })
+            rule_group = Rule.create(
+                **rule_info
+            )
         return rule_group
 
     def delete(self):

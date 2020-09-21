@@ -2,67 +2,43 @@
 
 
 from support.common.maker import BaseMaker
-# from support.common.generator.helper import BrandGenerator, \
-#         ProductionGenerator
-
 from support.common.generator.helper import PlatformGenerator, \
-     OrganizationGenerator, PositionGenerator, RuleGroupGenerator, \
-     PersonPositionGenerator, AuthorizationGenerator
+    OrganizationGenerator, PositionGenerator, RuleGenerator, \
+    RuleGroupGenerator, AuthorizationGenerator
 
-from support.environment.common.middleground.permission.organization import\
-        OrganizationLoader
-from support.environment.common.middleground.permission.position import\
-        PositionLoader
-from support.environment.common.middleground.permission.rulegroup import\
-        RuleGroupLoader
-from support.environment.common.middleground.permission.platform import\
-     PlatformLoader
-from support.environment.common.middleground.permission.authorization import\
-     AuthorzationLoader
 
 class PermissionMaker(BaseMaker):
     """
      权限信息初始化
     """
+    def __init__(
+        self,
+        platform_info,
+        authorization_info,
+        rule_info,
+        rule_group_info,
+        position_info,
+        organization_info
+    ):
+        self._platform = PlatformGenerator(platform_info)
+        self._authorization = AuthorizationGenerator(authorization_info)
+        self._rule = RuleGenerator(rule_info)
+        self._rule_group = RuleGroupGenerator(rule_group_info)
+        self._position = PositionGenerator(position_info)
+        self._organization = OrganizationGenerator(organization_info)
 
-    def __init__(self):
-        self._platform = PlatformGenerator(
-            PlatformLoader().generate()
-        )
-        self._organization = OrganizationGenerator(
-            OrganizationLoader().generate()
-        )
-        self._position = PositionGenerator(
-            PositionLoader().generate()
-        )
-        self._rule_group = RuleGroupGenerator(
-            RuleGroupLoader().generate()
-        )
-        self._authorization = AuthorizationGenerator(
-            AuthorzationLoader().generate()
-        )
-        self._authorization = AuthorizationGenerator(
-            AuthorzationLoader().generate()
-        )
-        self._person_position = PersonPositionGenerator()
     def generate_relate(self):
+        self._authorization.add_inputs(
+            self._platform
+        )
+        self._rule_group.add_inputs(
+            self._rule,
+            self._authorization
+        )
         self._position.add_inputs(
             self._rule_group
         )
         self._organization.add_inputs(
             self._position
         )
-        self._authorization.add_outputs(
-            self._organization,
-            self._position,
-            self._rule_group
-        )
-        self._authorization.add_inputs(
-            self._platform
-        )
-        self._person_position.add_inputs(
-            self._authorization,
-            self._organization,
-            self._position,
-        )
-        return self._authorization
+        return self._organization

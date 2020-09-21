@@ -37,6 +37,10 @@ class OrganizationEntity(Entity):
             'update_time',
         )
 
+    def get_paths_field(self):
+        return (
+        )
+
 
 class OrganizationHelper(Helper):
 

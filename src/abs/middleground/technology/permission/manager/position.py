@@ -35,6 +35,10 @@ class PositionEntity(Entity):
             'update_time'
         )
 
+    def get_paths_field(self):
+        return (
+        )
+
 
 class PositionHelper(Helper):
 
