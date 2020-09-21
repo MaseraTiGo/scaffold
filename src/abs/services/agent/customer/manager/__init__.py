@@ -109,6 +109,15 @@ class AgentCustomerServer(BaseManager):
 
     @classmethod
     def update(cls, agent_customer, **update_info):
+        if "phone" in update_info and update_info["phone"] != agent_customer.phone:
+            if agent_customer.person_id > 0:
+                raise BusinessError("此客户已下单无法修改手机号")
+            check_qs = cls.search_all(
+                phone = update_info["phone"],
+                agent_id = agent_customer.agent_id
+            )
+            if check_qs.count() > 0:
+                raise BusinessError("存在此手机号的客户")
         agent_customer.update(**update_info)
         return agent_customer
 

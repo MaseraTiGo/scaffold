@@ -204,14 +204,13 @@ class paycode(AgentStaffAuthorizedApi):
         order = OrderServer.get(plan.order.id)
         if plan.order.status in (OrderStatus.ORDER_LAUNCHED, OrderStatus.ORDER_CLOSED):
             raise BusinessError('此订单状态异常')
+        if plan.status == PlanStatus.PAID:
+            raise BusinessError('已回款订单无法查看二维码')
         surplus_money = order.mg_order.strike_price - \
                         order.mg_order.payment.actual_amount
         if plan.plan_amount > surplus_money:
             raise BusinessError("回款计划金额大于实际待付款金额,请删除后重新添加")
-        if plan.status == PlanStatus.PAID:
-            raise BusinessError('已回款订单无法查看二维码')
-        else:
-            url = OrderServer.paycode(plan, order)
+        url = OrderServer.paycode(plan, order)
         return url
 
 

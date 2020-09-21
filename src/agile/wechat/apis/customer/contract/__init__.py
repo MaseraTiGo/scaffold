@@ -39,6 +39,8 @@ class Get(WechatAuthorizedApi):
             'name': CharField(desc = "签署人姓名"),
             'phone': CharField(desc = "签署人手机号"),
             'identification': CharField(desc = "签署人身份证号"),
+            'status': CharField(desc = "合同状态"),
+            'status_name': CharField(desc = "合同状态名称"),
         }
     )
 
@@ -72,6 +74,8 @@ class Get(WechatAuthorizedApi):
             "name":contract.name,
             "phone":contract.phone,
             "identification":contract.identification,
+            'status': contract.status,
+            'status_name': contract.get_status_display(),
         }
         return response
 

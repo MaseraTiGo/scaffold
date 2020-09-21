@@ -200,6 +200,7 @@ class Search(AgentStaffAuthorizedApi):
                 'id': IntField(desc = "订单id"),
                 'number': CharField(desc = "订单编号"),
                 'last_payment_time': DatetimeField(desc = "最后支付时间"),
+                'last_payment_type': CharField(desc = "最后支付方式"),
                 'source':CharField(
                             desc = "订单来源类型",
                             choices = OrderSource.CHOICES
@@ -215,7 +216,7 @@ class Search(AgentStaffAuthorizedApi):
 
                 'nick': CharField(desc = "客户昵称"),
                 'phone': CharField(desc = "客户手机号"),
-
+                'pay_services_name': CharField(desc = "订单支付类型"),
                 'snapshoot_list': ListField(
                     desc = '商品列表',
                     fmt = DictField(
@@ -236,6 +237,9 @@ class Search(AgentStaffAuthorizedApi):
                             ),
                             'total_price': IntField(desc = "总价"),
                             'remark': CharField(desc = "属性"),
+                            'template_id': IntField(desc = "合同模板id"),
+                            'contract_id': IntField(desc = "合同id"),
+                            'contract_status': CharField(desc = "合同状态"),
                         }
                     )
                 ),
@@ -275,6 +279,10 @@ class Search(AgentStaffAuthorizedApi):
             **request.search_info
         )
         OrderItemServer.hung_order_item(order_spliter.get_list())
+        order_itme_list = []
+        for order in order_spliter.get_list():
+            order_itme_list.extend(order.orderitem_list)
+        ContractServer.hung_contract_byitem(order_itme_list)
         AgentCustomerServer.hung_agent_customer(order_spliter.get_list())
         return order_spliter
 
@@ -284,6 +292,7 @@ class Search(AgentStaffAuthorizedApi):
             'number': order.mg_order.number,
             'last_payment_time': order.mg_order.payment.last_payment_time if \
                                  order.mg_order.payment else None,
+            'last_payment_type':order.mg_order.payment.get_last_payment_type_display(),
             'source': order.source,
             'create_time': order.create_time,
 
@@ -294,6 +303,7 @@ class Search(AgentStaffAuthorizedApi):
 
             'nick':  order.agent_customer.name,
             'phone': order.agent_customer.phone,
+            'pay_services_name':order.get_pay_services_display(),
 
             'snapshoot_list': [
                 {
@@ -309,6 +319,9 @@ class Search(AgentStaffAuthorizedApi):
                     'duration':orderitem.duration,
                     'total_price': orderitem.snapshoot.total_price,
                     'remark': orderitem.snapshoot.remark,
+                    'template_id': orderitem.template_id,
+                    'contract_id':orderitem.contract.id if orderitem.contract else 0,
+                    'contract_status': orderitem.contract.status if orderitem.contract else "",
                 }
                 for orderitem in order.orderitem_list
             ],

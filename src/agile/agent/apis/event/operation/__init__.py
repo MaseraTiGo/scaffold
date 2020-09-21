@@ -32,11 +32,12 @@ class Search(AgentStaffAuthorizedApi):
             conf = {
                 'id': IntField(desc = "记录id"),
                 'staff_name': CharField(desc = "客服姓名"),
-                'organization_name': CharField(desc = "部门名称"),
+                'work_number': CharField(desc = "员工工号"),
                 'operation_type': CharField(
                     desc = "操作类型",
                     choices = OperationTypes.CHOICES
                 ),
+                'operation_type_name': CharField(desc = "操作类型名称"),
                 'describe': CharField(desc = "操作结果"),
                 'create_time': DatetimeField(desc = "创建时间"),
             }
@@ -69,8 +70,9 @@ class Search(AgentStaffAuthorizedApi):
         data_list = [{
                 'id': operation.id,
                 'staff_name': operation.staff.name,
-                'organization_name': '公司',
+                'work_number': operation.staff.work_number,
                 'operation_type': operation.type,
+                'operation_type_name': operation.get_type_display(),
                 'describe': operation.describe,
                 'remark': operation.remark,
                 'create_time': operation.create_time,
