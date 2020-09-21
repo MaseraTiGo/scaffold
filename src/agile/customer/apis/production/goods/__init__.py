@@ -8,6 +8,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.base.api import NoAuthorizedApi
 from infrastructure.core.exception.business_error import BusinessError
+from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.services.agent.goods.manager import GoodsServer
 from abs.middleground.business.merchandise.utils.constant import UseStatus
 from abs.middleground.business.production.manager import ProductionServer
@@ -15,6 +16,7 @@ from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
 from abs.services.crm.university.utils.constant import CategoryTypes
 from abs.services.crm.agent.manager import AgentServer
+from abs.services.customer.personal.manager import CollectionRecordServer
 
 
 class Search(NoAuthorizedApi):

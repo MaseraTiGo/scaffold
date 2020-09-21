@@ -120,7 +120,6 @@ class GoodsServer(BaseManager):
             mapping.update({
                 years.id: years
             })
-        goods_list = Goods.search(years_id__in = mapping.keys())
         goods_list = cls.search_all_goods(
             years_id__in = mapping.keys(),
             use_status = UseStatus.ENABLE
@@ -129,6 +128,22 @@ class GoodsServer(BaseManager):
             years = mapping.get(goods.years_id)
             years.goods_list.append(goods)
 
+    @classmethod
+    def hung_goods_byids(cls, obj_list):
+        mapping = {}
+        for obj in obj_list:
+            obj.goods = None
+            if obj.goods_id not in mapping:
+                mapping[obj.goods_id] = []
+            mapping[obj.goods_id].append(obj)
+        goods_list = cls.search_all_goods(
+            id__in = mapping.keys(),
+        )
+        for goods in goods_list:
+            if goods.id in mapping:
+                for obj in mapping[goods.id]:
+                    obj.goods = goods
+        return obj_list
 
 class PosterServer(BaseManager):
 

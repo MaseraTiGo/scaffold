@@ -6,7 +6,8 @@ from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
 from abs.middleground.business.person.manager import PersonServer
-from abs.services.customer.personal.models import Customer
+from abs.services.customer.personal.models import Customer, CollectionRecord, \
+     Feedback
 from infrastructure.utils.common.filterstr import filter_emoji
 
 
@@ -39,22 +40,22 @@ class CustomerServer(BaseManager):
     def create(cls, phone, **customer_info):
         is_person_exsited, person = PersonServer.is_exsited(phone)
         if not is_person_exsited:
-            person = PersonServer.create(phone=phone, **customer_info)
+            person = PersonServer.create(phone = phone, **customer_info)
 
-        if Customer.search(person_id=person.id).count() > 0:
+        if Customer.search(person_id = person.id).count() > 0:
             raise BusinessError('客户已存在，不能创建')
 
         if 'nick' not in customer_info:
             nick = '用户CL_{random_num}'.format(
-                random_num=str(random.randint(10000, 99999))
+                random_num = str(random.randint(10000, 99999))
             )
             customer_info.update({
                 'nick': nick
             })
 
         customer = Customer.create(
-            person_id=person.id,
-            phone=phone,
+            person_id = person.id,
+            phone = phone,
             **customer_info
         )
         return customer
@@ -91,10 +92,52 @@ class CustomerServer(BaseManager):
             if obj.customer_id not in customer_mapping:
                 customer_mapping[obj.customer_id] = []
             customer_mapping[obj.customer_id].append(obj)
-        customer_list = list(Customer.search(id__in=customer_mapping.keys()))
+        customer_list = list(Customer.search(id__in = customer_mapping.keys()))
         PersonServer.hung_persons(customer_list)
         for customer in customer_list:
             if customer.id in customer_mapping:
                 for obj in customer_mapping[customer.id]:
                     obj.customer = customer
         return obj_list
+
+
+class CollectionRecordServer(BaseManager):
+
+    @classmethod
+    def create(cls, **info):
+        collection_record = CollectionRecord.create(**info)
+        return collection_record
+
+    @classmethod
+    def search_all(cls, **search_info):
+        collection_record_qs = CollectionRecord.search(**search_info)
+        return collection_record_qs
+
+    @classmethod
+    def search(cls, current_page, **search_info):
+        collection_record_qs = cls.search_all(**search_info).\
+                               order_by("-create_time")
+        splitor = Splitor(current_page, collection_record_qs)
+        return splitor
+
+    @classmethod
+    def collection(cls, customer, goods):
+        search_info = {
+            "customer":customer,
+            "goods_id":goods.id,
+            "is_delete":False,
+        }
+        record_qs = cls.search_all(**search_info)
+        if record_qs.count() > 0:
+            record = record_qs[0]
+            record.update(is_delete = True)
+        else:
+            cls.create(**search_info)
+
+
+class FeedbackServer(BaseManager):
+
+    @classmethod
+    def create(cls, **info):
+        feedback = Feedback.create(**info)
+        return feedback

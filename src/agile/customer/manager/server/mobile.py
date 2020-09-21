@@ -78,3 +78,9 @@ customer_mobile_service.add(Get)
 
 from agile.customer.apis.edition import Get
 customer_mobile_service.add(Get)
+
+from agile.customer.apis.customer.collection import Search, Collection
+customer_mobile_service.add(Search, Collection)
+
+from agile.customer.apis.customer.feedback import Add
+customer_mobile_service.add(Add)
