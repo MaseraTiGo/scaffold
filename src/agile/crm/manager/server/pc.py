@@ -19,8 +19,8 @@ class CrmPcService(BaseAPIService):
 
 
 crm_pc_service = CrmPcService()
-from agile.crm.apis.staff import Add, Get, Update, Search
-crm_pc_service.add(Add, Get, Update, Search)
+from agile.crm.apis.staff import Add, Get, Update, Search, Bind
+crm_pc_service.add(Add, Get, Update, Search, Bind)
 
 from agile.crm.apis.staff.myself import Get, Update
 crm_pc_service.add(Get, Update)
