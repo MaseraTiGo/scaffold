@@ -253,6 +253,7 @@ class Get(NoAuthorizedApi):
 
     response = with_metaclass(ResponseFieldSet)
     response.goods_info = ResponseField(DictField, desc = "商品信息", conf = {
+        'id':IntField(desc = "商品id"),
         'slideshow': ListField(desc = "轮播图", fmt = CharField(desc = "url")),
         'video_display': CharField(desc = "展示视频"),
         'detail': ListField(desc = "商品详情", fmt = CharField(desc = "url")),
@@ -316,6 +317,7 @@ class Get(NoAuthorizedApi):
 
     def fill(self, response, goods):
         response.goods_info = {
+            'id': goods.id,
             'slideshow': json.loads(goods.merchandise.slideshow),
             'video_display': goods.merchandise.video_display,
             'detail': json.loads(goods.merchandise.detail),
