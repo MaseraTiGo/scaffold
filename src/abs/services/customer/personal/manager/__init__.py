@@ -141,3 +141,17 @@ class FeedbackServer(BaseManager):
     def create(cls, **info):
         feedback = Feedback.create(**info)
         return feedback
+
+    @classmethod
+    def search_all(cls, current_page, **search_info):
+        feedback_qs = Feedback.search(**search_info)
+        splitor = Splitor(current_page, feedback_qs)
+        cls.hung_person_id(splitor.get_list())
+        PersonServer.hung_persons(splitor.get_list())
+        return splitor
+
+    @classmethod
+    def hung_person_id(cls, obj_list):
+        for obj in obj_list:
+            obj.person_id = obj.customer.person_id
+        return obj_list

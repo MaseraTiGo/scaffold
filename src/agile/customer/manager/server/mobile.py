@@ -84,3 +84,10 @@ customer_mobile_service.add(Search, Collection)
 
 from agile.customer.apis.customer.feedback import Add
 customer_mobile_service.add(Add)
+
+from agile.customer.apis.notice import Search
+customer_mobile_service.add(Search)
+
+from agile.customer.apis.message import Search, ChangeStatus
+customer_mobile_service.add(Search, ChangeStatus)
+

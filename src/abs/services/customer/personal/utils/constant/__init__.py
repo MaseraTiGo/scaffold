@@ -14,6 +14,7 @@ class FeedType(object):
         (OTHER, "其它反馈")
     )
 
+
 class FeedStatus(object):
 
     WAIT_SOLVE = "wait_solve"
@@ -25,3 +26,10 @@ class FeedStatus(object):
         (RESOLVED, "已解决"),
         (CLOSED, "已关闭"),
     )
+
+
+class MessageStatus(object):
+    READ = 'read'
+    UNREAD = 'unread'
+    CHOICES = ((READ, "已读"), (UNREAD, "未读"))
+

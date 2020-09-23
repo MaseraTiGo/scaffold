@@ -96,3 +96,5 @@ agent_pc_service.add(Add, Search, SearchAll, Get, Update, Remove, Submit)
 from agile.agent.apis.contract.template.param import SearchAll, Get
 agent_pc_service.add(SearchAll, Get)
 
+from agile.agent.apis.notice import Search
+agent_pc_service.add(Search)

@@ -72,6 +72,7 @@ class AccountServer(BaseManager):
         """
         登录接口
         """
+        print(f'{username}, {password}')
         is_exsited, account = cls.APPLY_CLS.is_exsited(username, password)
         if is_exsited:
             if account.status == StatusTypes.ENABLE:

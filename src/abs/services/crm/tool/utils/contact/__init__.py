@@ -24,3 +24,26 @@ class SceneTypes(object):
     CHOICES=((REGISTER,'注册验证码'),(FORGET,'找回密码验证码'),
              (BINDCARD,'绑定银行卡'),(LOGIN, '登陆'),
              (WECHAT_REGISTER, '微信注册验证码'))
+
+
+class NoticeStatus(object):
+    DISABLE = 'disable'
+    ENABLE = 'enable'
+
+    CHOICES = ((DISABLE, "禁用"), (ENABLE, "启用"))
+
+
+class NoticeClassify(object):
+    NOTIFY = 'notify'
+    ANNOUNCEMENT = 'announcement'
+
+    CHOICES = ((NOTIFY, "通知"), (ANNOUNCEMENT, "公告"))
+
+
+class NoticePlatform(object):
+    CRM = 'crm'
+    CRM_APP = 'crm_app'
+    AGENT = 'agent'
+    WECHAT = 'customer_wechat'
+    APP = 'customer'
+    CHOICES = ((CRM, 'crm'), (CRM_APP, "crm小程序"), (AGENT, '代理商'), (WECHAT, '微信小程序'), (APP, "客户端"))
