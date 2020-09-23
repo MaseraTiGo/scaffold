@@ -14,7 +14,7 @@ from infrastructure.core.field.base import CharField, IntField, DictField
 from agile.base.api import NoAuthorizedApi
 from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.agent.account.manager import AgentStaffAccountServer
-from abs.services.agent.staff.manager import AgentStaffServer
+from abs.services.agent.agent.manager import AgentStaffServer
 
 
 class Login(NoAuthorizedApi):

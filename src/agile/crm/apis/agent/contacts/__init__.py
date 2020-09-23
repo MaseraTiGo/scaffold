@@ -9,8 +9,8 @@ from infrastructure.core.exception.business_error import BusinessError
 from abs.middleground.business.person.utils.constant import GenderTypes
 from abs.middleground.business.account.utils.constant import StatusTypes
 from agile.crm.manager.api import StaffAuthorizedApi
-from abs.services.crm.agent.manager import AgentServer
-from abs.services.agent.staff.manager import AgentStaffServer
+from abs.services.agent.agent.manager import AgentServer
+from abs.services.agent.agent.manager import AgentStaffServer
 from abs.services.agent.account.manager import AgentStaffAccountServer
 from abs.middleground.technology.permission.manager import PermissionServer
 
@@ -180,19 +180,39 @@ class AddAccount(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
+        staff = self.auth_user
         contacts = AgentServer.get_contacts(request.contacts_id)
         if contacts.account:
             raise BusinessError("请不要重复生成账号")
+        if AgentStaffServer.check_phone(contacts.phone):
+            raise BusinessError("存在重复账号")
         add_staff_info = {
             "name":contacts.contacts,
             "email":contacts.email,
             "gender":contacts.gender,
             "is_admin":True,
+            "work_number":AgentStaffServer.generate_work_number(contacts.agent)
         }
         agent_staff = AgentStaffServer.create(
             contacts.phone,
             contacts.agent,
             **add_staff_info
+        )
+        organization_id = PermissionServer.get_tree_organization_byappkey(
+            contacts.agent.permission_key,
+        )[0]["id"]
+        position_id = PermissionServer.get_tree_position_byappkey(
+            contacts.agent.permission_key,
+        )[0]["id"]
+        permission = PermissionServer.bind_position(
+            contacts.agent.permission_key,
+            organization_id,
+            position_id,
+            agent_staff.id
+        )
+        AgentStaffServer.update(
+            agent_staff.id,
+            permission_id = permission.id,
         )
         add_account_info = {
             "username":request.contacts_info["account"],
@@ -200,18 +220,6 @@ class AddAccount(StaffAuthorizedApi):
             "role_id":agent_staff.id
         }
         AgentStaffAccountServer.create(**add_account_info)
-        organization_id = PermissionServer.get_tree_organization_byappkey(
-            contacts.agent.appkey,
-        )[0]["id"]
-        position_id = PermissionServer.get_tree_position_byappkey(
-            contacts.agent.appkey,
-        )[0]["id"]
-        PermissionServer.bind_position(
-            contacts.agent.appkey,
-            organization_id,
-            position_id,
-            agent_staff.person_id
-        )
         contacts.update(
             account = request.contacts_info["account"],
         )

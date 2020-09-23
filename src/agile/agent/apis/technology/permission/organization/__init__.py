@@ -50,9 +50,9 @@ class Add(AgentStaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        agent = self.auth_agent
+        agent = self.auth_user.company
         organization = PermissionServer.add_organization(
-            appkey = agent.appkey,
+            appkey = agent.permission_key,
             **request.organization_info
         )
         return organization
@@ -104,9 +104,9 @@ class All(AgentStaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        agent = self.auth_agent
+        agent = self.auth_user.company
         organization_list = PermissionServer.get_all_organization_byappkey(
-            agent.appkey
+            agent.permission_key
         )
         return organization_list
 
@@ -171,9 +171,9 @@ class Tree(AgentStaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        agent = self.auth_agent
+        agent = self.auth_user.company
         organization_list = PermissionServer.get_tree_organization_byappkey(
-            agent.appkey
+            agent.permission_key
         )
         return organization_list
 

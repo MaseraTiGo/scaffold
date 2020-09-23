@@ -11,7 +11,6 @@ from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.services.agent.order.manager import OrderItemServer, OrderServer
 from infrastructure.core.exception.business_error import BusinessError
 from abs.services.agent.order.manager import ContractServer
-from abs.services.crm.agent.manager import AgentServer
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.agent.order.utils.constant import ContractStatus
 from abs.services.agent.contract.manager import TemplateServer, \

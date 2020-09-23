@@ -12,7 +12,7 @@ from abs.services.agent.event.utils.constant import OperationTypes
 from abs.services.agent.customer.manager import AgentCustomerServer, \
      SaleChanceServer
 from abs.services.agent.event.manager import OperationEventServer
-from abs.services.agent.staff.manager import AgentStaffServer
+from abs.services.agent.agent.manager import AgentStaffServer
 
 
 class Search(AgentStaffAuthorizedApi):

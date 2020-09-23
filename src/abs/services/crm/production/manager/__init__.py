@@ -4,7 +4,6 @@ from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
-from abs.middleground.business.enterprise.manager import EnterpriseServer
 from abs.middleground.business.production.manager import ProductionServer \
      as mg_ProductionServer
 
@@ -12,10 +11,9 @@ from abs.middleground.business.production.manager import ProductionServer \
 class ProductionServer(BaseManager):
 
     @classmethod
-    def add(cls, brand_id, **add_info):
-        company = EnterpriseServer.get_crm__company()
+    def add(cls, company_id, brand_id, **add_info):
         production = mg_ProductionServer.generate(
-            company_id = company.id,
+            company_id = company_id,
             brand_id = brand_id,
             **add_info
         )
@@ -29,20 +27,18 @@ class ProductionServer(BaseManager):
         return production
 
     @classmethod
-    def search(cls, current_page, **search_info):
-        company = EnterpriseServer.get_crm__company()
+    def search(cls, company_id, current_page, **search_info):
         spliter = mg_ProductionServer.search(
             current_page,
-            company.id,
+            company_id,
             **search_info
         )
         return spliter
 
     @classmethod
-    def search_all(cls, **search_info):
-        company = EnterpriseServer.get_crm__company()
+    def search_all(cls, company_id, **search_info):
         production_qs = mg_ProductionServer.search_all(
-            company_id = company.id,
+            company_id = company_id,
             **search_info
         )
         return production_qs
@@ -67,10 +63,9 @@ class ProductionServer(BaseManager):
 class BrandServer(BaseManager):
 
     @classmethod
-    def add(cls, **brand_info):
-        company = EnterpriseServer.get_crm__company()
+    def add(cls, company_id, **brand_info):
         brand = mg_ProductionServer.generate_brand(
-            company_id = company.id,
+            company_id = company_id,
             **brand_info
         )
         return brand
@@ -83,20 +78,18 @@ class BrandServer(BaseManager):
         return brand
 
     @classmethod
-    def search(cls, current_page, **search_info):
-        company = EnterpriseServer.get_crm__company()
+    def search(cls, company_id, current_page, **search_info):
         spliter = mg_ProductionServer.search_brand(
             current_page,
-            company.id,
+            company_id,
             **search_info
         )
         return spliter
 
     @classmethod
-    def search_all(cls, **search_info):
-        company = EnterpriseServer.get_crm__company()
+    def search_all(cls, company_id, **search_info):
         production_qs = mg_ProductionServer.search_all_brand(
-            company.id,
+            company_id,
             **search_info
         )
         return production_qs

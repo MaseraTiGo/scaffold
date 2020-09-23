@@ -6,7 +6,7 @@ from support.common.generator.base import BaseGenerator
 from support.common.generator.helper import EnterpriseGenerator, \
         PersonGenerator, AgentGenerator
 from abs.middleground.business.person.models import Person
-from abs.services.agent.staff.models import Staff
+from abs.services.agent.agent.models import Staff
 
 
 class AgentStaffGenerator(BaseGenerator):

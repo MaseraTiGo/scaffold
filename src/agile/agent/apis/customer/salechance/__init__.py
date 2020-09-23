@@ -14,8 +14,7 @@ from abs.services.agent.customer.utils.constant import SourceTypes
 from abs.services.agent.event.utils.constant import OperationTypes
 from abs.services.agent.customer.manager import AgentCustomerServer, \
      SaleChanceServer
-from abs.services.crm.agent.manager import AgentServer
-from abs.services.agent.staff.manager import AgentStaffServer
+from abs.services.agent.agent.manager import AgentStaffServer
 from abs.services.crm.production.manager import ProductionServer
 from abs.services.agent.event.manager import OperationEventServer
 
@@ -73,13 +72,12 @@ class Search(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         auth = self.auth_user
-        agent = self.auth_agent
         if not auth.is_admin:
             permission = AgentStaffServer.get_permission(
-                auth, agent
+                auth
             )
             request.search_info.update({
-                "staff_id__in":permission.staff_ids
+                "staff_id__in":permission.data
             })
         request.search_info.update({
             "agent_id":auth.agent_id
@@ -153,7 +151,7 @@ class Add(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         auth = self.auth_user
-        agent = self.auth_agent
+        agent = auth.company
         production_id = request.sale_chance_info.pop("production_id")
         production = ProductionServer.get(production_id)
         customer = AgentCustomerServer.check_byphone(

@@ -9,7 +9,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.services.agent.order.manager import ContractServer
-from abs.services.crm.agent.manager import AgentServer
+from abs.services.agent.agent.manager import AgentServer
 
 
 class Search(AgentStaffAuthorizedApi):

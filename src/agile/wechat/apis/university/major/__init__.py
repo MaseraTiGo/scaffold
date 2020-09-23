@@ -11,7 +11,7 @@ from abs.services.crm.university.manager import UniversityServer
 from abs.services.crm.university.utils.constant import DurationTypes
 from abs.services.crm.university.manager import UniversityRelationsServer
 from abs.services.agent.goods.manager import GoodsServer
-from abs.services.crm.agent.manager import AgentServer
+from abs.services.agent.agent.manager import AgentServer
 
 
 class Get(NoAuthorizedApi):

@@ -18,18 +18,18 @@ class AbstractStaffServer(BaseManager):
     def create(cls, phone, company, **staff_info):
         is_person_exsited, person = PersonServer.is_exsited(phone)
         if not is_person_exsited:
-            person = PersonServer.create(phone=phone, **staff_info)
+            person = PersonServer.create(phone = phone, **staff_info)
 
         if cls.STAFF_MODEL.search(
-            person_id=person.id,
-            company=company
+            person_id = person.id,
+            company = company
         ).count() > 0:
             raise BusinessError('员工已存在，不能创建')
 
         staff = cls.STAFF_MODEL.create(
-            person_id=person.id,
-            company=company,
-            phone=phone,
+            person_id = person.id,
+            company = company,
+            phone = phone,
             **staff_info
         )
         return staff
@@ -60,7 +60,7 @@ class AbstractStaffServer(BaseManager):
     @classmethod
     def get(cls, staff_id):
         """
-        获取员工详情
+                获取员工详情
         """
         staff = cls.STAFF_MODEL.get_byid(staff_id)
         PersonServer.hung_persons([staff])

@@ -7,7 +7,7 @@ from support.common.generator.base import BaseGenerator
 from support.common.generator.helper.middleground.enterprise import \
      EnterpriseGenerator
 
-from abs.services.crm.agent.models import Agent
+from abs.services.agent.agent.models import Agent
 
 
 class AgentGenerator(BaseGenerator):

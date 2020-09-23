@@ -9,47 +9,47 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from agile.base.api import NoAuthorizedApi
 from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
 from abs.services.agent.goods.manager import GoodsServer
-from abs.services.crm.agent.manager import AgentServer
+from abs.services.agent.agent.manager import AgentServer
 
 
 class SearchMajor(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.current_page = RequestField(IntField, desc="当前页码")
+    request.current_page = RequestField(IntField, desc = "当前页码")
     request.search_info = RequestField(
         DictField,
-        desc="搜索专业",
-        conf={
-            'school_id': IntField(desc="学校id"),
-            'category': CharField(desc="类别")
+        desc = "搜索专业",
+        conf = {
+            'school_id': IntField(desc = "学校id"),
+            'category': CharField(desc = "类别")
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="专业列表",
-        fmt=DictField(
-            desc="专业信息",
-            conf={
-                'id': IntField(desc="id"),
-                'name': CharField(desc="专业名称"),
-                'content': CharField(desc="专业描述"),
-                'icons': CharField(desc="专业图片"),
+        desc = "专业列表",
+        fmt = DictField(
+            desc = "专业信息",
+            conf = {
+                'id': IntField(desc = "id"),
+                'name': CharField(desc = "专业名称"),
+                'content': CharField(desc = "专业描述"),
+                'icons': CharField(desc = "专业图片"),
                 'agent_list': ListField(
-                    desc="代理商列表",
-                    fmt=DictField(
-                        desc="代理商",
-                        conf={
-                            'id': IntField(desc="代理商id"),
-                            'name': CharField(desc='代理商名称'),
+                    desc = "代理商列表",
+                    fmt = DictField(
+                        desc = "代理商",
+                        conf = {
+                            'id': IntField(desc = "代理商id"),
+                            'name': CharField(desc = '代理商名称'),
                         }
                     )
                 )
             }
         )
     )
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
 
     @classmethod
     def get_desc(cls):
@@ -65,7 +65,7 @@ class SearchMajor(NoAuthorizedApi):
             **request.search_info
         )
         page_list.data = UniversityServer.search_all_major(
-            id__in=page_list.data
+            id__in = page_list.data
         ).order_by('-is_hot', 'create_time')
         mapping = {}
         for major in page_list.data:
@@ -74,7 +74,7 @@ class SearchMajor(NoAuthorizedApi):
                 major.id: major
             })
         years_list = UniversityYearsServer.search_all(
-            relations__major__in=page_list.data,
+            relations__major__in = page_list.data,
             **request.search_info
         )
         GoodsServer.hung_goods_foryears(years_list)
@@ -111,42 +111,42 @@ class SearchMajor(NoAuthorizedApi):
 
 class SearchSchool(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.current_page = RequestField(IntField, desc="当前页码")
+    request.current_page = RequestField(IntField, desc = "当前页码")
     request.search_info = RequestField(
         DictField,
-        desc="搜索学校",
-        conf={
-            'major_id': IntField(desc="专业id"),
-            'category': CharField(desc="类别")
+        desc = "搜索学校",
+        conf = {
+            'major_id': IntField(desc = "专业id"),
+            'category': CharField(desc = "类别")
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="学校列表",
-        fmt=DictField(
-            desc="学校信息",
-            conf={
-                'id': IntField(desc="学校id"),
-                'name': CharField(desc="学校名称"),
-                'content': CharField(desc="学校描述"),
-                'icons': CharField(desc="学校logo"),
+        desc = "学校列表",
+        fmt = DictField(
+            desc = "学校信息",
+            conf = {
+                'id': IntField(desc = "学校id"),
+                'name': CharField(desc = "学校名称"),
+                'content': CharField(desc = "学校描述"),
+                'icons': CharField(desc = "学校logo"),
                 'agent_list': ListField(
-                    desc="代理商列表",
-                    fmt=DictField(
-                        desc="代理商",
-                        conf={
-                            'id': IntField(desc="代理商id"),
-                            'name': CharField(desc='代理商名称'),
+                    desc = "代理商列表",
+                    fmt = DictField(
+                        desc = "代理商",
+                        conf = {
+                            'id': IntField(desc = "代理商id"),
+                            'name': CharField(desc = '代理商名称'),
                         }
                     )
                 )
             }
         )
     )
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
 
     @classmethod
     def get_desc(cls):
@@ -162,7 +162,7 @@ class SearchSchool(NoAuthorizedApi):
             **request.search_info
         )
         page_list.data = UniversityServer.search_all_school(
-            id__in=page_list.data
+            id__in = page_list.data
         ).order_by('-is_hot', 'create_time')
         mapping = {}
         for school in page_list.data:
@@ -171,7 +171,7 @@ class SearchSchool(NoAuthorizedApi):
                 school.id: school
             })
         years_list = UniversityYearsServer.search_all(
-            relations__school__in=page_list.data,
+            relations__school__in = page_list.data,
             **request.search_info
         )
         GoodsServer.hung_goods_foryears(years_list)

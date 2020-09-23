@@ -101,7 +101,9 @@ class Search(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        auth = self.auth_user
         spliter = BrandServer.search(
+            auth.company.company_id,
             request.current_page,
             **request.search_info
         )
@@ -154,7 +156,8 @@ class SearchAll(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        brand_qs = BrandServer.search_all()
+        auth = self.auth_user
+        brand_qs = BrandServer.search_all(auth.company.company_id)
         return brand_qs
 
     def fill(self, response, brand_qs):
@@ -197,7 +200,9 @@ class Add(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        auth = self.auth_user
         brand = BrandServer.add(
+            auth.company.company_id,
             **request.brand_info
         )
         return brand

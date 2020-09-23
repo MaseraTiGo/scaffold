@@ -11,7 +11,7 @@ from agile.crm.manager.api import StaffAuthorizedApi
 from abs.services.agent.contract.utils.constant import TemplateStatus
 from abs.services.agent.contract.manager import TemplateServer, \
      TemplateParamServer
-from abs.services.crm.agent.manager import AgentServer
+from abs.services.agent.agent.manager import AgentServer
 
 
 class Search(StaffAuthorizedApi):

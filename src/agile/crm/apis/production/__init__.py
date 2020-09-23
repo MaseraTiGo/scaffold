@@ -162,7 +162,9 @@ class Search(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        auth = self.auth_user
         spliter = ProductionServer.search(
+            auth.company.company_id,
             request.current_page,
             **request.search_info
         )
@@ -240,10 +242,12 @@ class Add(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        auth = self.auth_user
         add_info = request.production_info
         add_info.attribute_list = json.dumps(add_info.attribute_list)
         add_info.workflow_list = json.dumps(add_info.workflow_list)
         production = ProductionServer.add(
+            auth.company.company_id,
             brand_id = request.brand_id,
             **add_info
         )
@@ -407,7 +411,8 @@ class SearchAll(StaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        production_qs = ProductionServer.search_all()
+        auth = self.auth_user
+        production_qs = ProductionServer.search_all(auth.company.company_id)
         return production_qs
 
     def fill(self, response, production_qs):

@@ -69,7 +69,7 @@ class Add(AgentStaffAuthorizedApi):
         if request.template_info["status"] not in \
         (TemplateStatus.DRAFT, TemplateStatus.WAIT):
             raise BusinessError("合同状态异常，禁止添加")
-        agent = self.auth_agent
+        agent = self.auth_user.company
         request.template_info["background_img_url"] = \
             json.dumps(request.template_info["background_img_url"])
         request.template_info.update({"agent_id":agent.id})
@@ -139,7 +139,7 @@ class Search(AgentStaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        agent = self.auth_agent
+        agent = self.auth_user.company
         request.search_info.update({
             "agent_id":agent.id
         })
@@ -193,7 +193,7 @@ class SearchAll(AgentStaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        agent = self.auth_agent
+        agent = self.auth_user.company
         search_info = {
             "agent_id":agent.id,
             "status":TemplateStatus.ADOPT

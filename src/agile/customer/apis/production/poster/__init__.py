@@ -14,7 +14,7 @@ from abs.services.agent.goods.manager import GoodsServer, PosterServer
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
-from abs.services.crm.agent.manager import AgentServer
+from abs.services.agent.agent.manager import AgentServer
 from abs.middleground.business.person.manager import PersonServer
 
 

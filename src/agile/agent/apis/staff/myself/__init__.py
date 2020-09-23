@@ -13,7 +13,7 @@ from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 
 from agile.agent.manager.api import AgentStaffAuthorizedApi
-from abs.services.agent.staff.manager import AgentStaffServer
+from abs.services.agent.agent.manager import AgentStaffServer
 
 
 class Get(AgentStaffAuthorizedApi):

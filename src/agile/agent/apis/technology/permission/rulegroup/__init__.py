@@ -44,9 +44,9 @@ class Add(AgentStaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        agent = self.auth_agent
+        agent = self.auth_user.company
         rule_group = PermissionServer.add_rule_group(
-            appkey = agent.appkey,
+            appkey = agent.permission_key,
             **request.rule_group_info
         )
         return rule_group
@@ -102,10 +102,10 @@ class Search(AgentStaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        agent = self.auth_agent
+        agent = self.auth_user.company
         spliter = PermissionServer.search_rule_group(
             request.current_page,
-            agent.appkey,
+            agent.permission_key,
             **request.search_info
         )
         return spliter
@@ -158,9 +158,9 @@ class All(AgentStaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        agent = self.auth_agent
+        agent = self.auth_user.company
         rule_group_list = PermissionServer.all_rule_group(
-            agent.appkey
+            agent.permission_key
         )
         return rule_group_list
 

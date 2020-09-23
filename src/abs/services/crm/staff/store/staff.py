@@ -10,7 +10,7 @@ from abs.services.crm.staff.store import Company
 
 
 class Staff(AbstractStaff):
-    company = ForeignKey(Company, on_delete = CASCADE, null = True)
+    company = ForeignKey(Company, on_delete = CASCADE)
     name = CharField(verbose_name = "姓名", max_length = 32, default = "")
     phone = CharField(verbose_name = "手机号", max_length = 20, default = "")
 

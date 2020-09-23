@@ -13,7 +13,7 @@ from abs.services.agent.order.utils.constant import PlanStatus
 from abs.middleground.business.transaction.utils.constant import PayService
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.agent.order.manager import OrderServer, OrderPlanServer
-from abs.services.agent.staff.manager import AgentStaffServer
+from abs.services.agent.agent.manager import AgentStaffServer
 
 
 class Add(AgentStaffAuthorizedApi):

@@ -31,9 +31,11 @@ class PermissionMaker(BaseMaker):
         self._authorization.add_inputs(
             self._platform
         )
-        self._rule_group.add_inputs(
-            self._rule,
-            self._authorization
+        self._rule.add_inputs(
+            self._platform
+        )
+        self._authorization.add_outputs(
+            self._rule_group
         )
         self._position.add_inputs(
             self._rule_group
@@ -41,4 +43,4 @@ class PermissionMaker(BaseMaker):
         self._organization.add_inputs(
             self._position
         )
-        return self._organization
+        return self._authorization

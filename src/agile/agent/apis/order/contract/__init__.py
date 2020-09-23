@@ -13,7 +13,7 @@ from abs.middleware.email import email_middleware
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.agent.order.utils.constant import ContractStatus
 from abs.services.agent.order.manager import OrderItemServer, ContractServer
-from abs.services.agent.staff.manager import AgentStaffServer
+from abs.services.agent.agent.manager import AgentStaffServer
 from abs.services.agent.event.manager import StaffOrderEventServer
 from abs.services.agent.contract.manager import TemplateServer, \
      TemplateParamServer
@@ -74,13 +74,12 @@ class Search(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         auth = self.auth_user
-        agent = self.auth_agent
         if not auth.is_admin:
             permission = AgentStaffServer.get_permission(
-                auth, agent
+                auth
             )
             order_ids = StaffOrderEventServer.get_order_ids(
-                staff_id__in = permission.staff_ids
+                staff_id__in = permission.data
             )
             request.search_info.update({
                 "order_id__in":order_ids
@@ -181,7 +180,7 @@ class Add(AgentStaffAuthorizedApi):
             raise BusinessError('商品类型错误')
         template = TemplateServer.get(order_item.template_id)
         TemplateParamServer.huang_for_template([template])
-        agent = self.auth_agent
+        agent = self.auth_user.company
         contract = ContractServer.create(
             order_item,
             agent,

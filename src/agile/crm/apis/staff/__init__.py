@@ -61,7 +61,11 @@ class Add(StaffAuthorizedApi):
         staff = self.auth_user
         organization_id = request.staff_info.pop('organization_id')
         position_id = request.staff_info.pop('position_id')
+        request.staff_info.update({
+            "work_number":StaffServer.generate_work_number(staff.company)
+        })
         new_staff = StaffServer.create(
+            request.staff_info.pop("phone"),
             company = staff.company,
             **request.staff_info
         )
@@ -69,7 +73,7 @@ class Add(StaffAuthorizedApi):
             staff.company.permission_key,
             organization_id,
             position_id,
-            new_staff.person_id
+            new_staff.id
         )
         StaffServer.update(
             new_staff.id,
@@ -365,7 +369,7 @@ class Update(StaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        StaffServer.update(request.staff_id, **request.update_info)
+        StaffServer.update(request.staff_id, **request.staff_info)
 
     def fill(self, response):
         return response

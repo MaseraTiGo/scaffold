@@ -18,7 +18,6 @@ from abs.middleground.business.production.manager import ProductionServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.services.crm.university.manager import UniversityServer, \
      UniversityYearsServer
-from abs.services.crm.agent.manager import AgentServer
 from abs.services.agent.order.manager import OrderItemServer
 from abs.services.agent.contract.manager import TemplateServer
 from abs.services.agent.contract.utils.constant import TemplateStatus
@@ -239,7 +238,7 @@ class Search(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         auth = self.auth_user
-        agent = AgentServer.get(auth.agent_id)
+        agent = auth.company
         school_info = {}
         if 'province' in request.search_info:
             province = request.search_info.pop('province')
@@ -349,7 +348,7 @@ class Add(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         auth = self.auth_user
-        agent = AgentServer.get(auth.agent_id)
+        agent = auth.company
         year = UniversityYearsServer.get(
             request.goods_info.pop('years_id')
         )

@@ -52,9 +52,9 @@ class All(AgentStaffAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
-        agent = self.auth_agent
+        agent = self.auth_user.company
         authorization = PermissionServer.get_authorization_byappkey(
-            agent.appkey
+            agent.permission_key
         )
         rule_list = PermissionServer.get_all_rule_byplatform(
             authorization.platform.id

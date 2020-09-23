@@ -7,7 +7,7 @@ from support.common.generator.base import BaseGenerator
 from support.common.generator.helper.business.crm.agent import \
      AgentGenerator
 
-from abs.services.crm.agent.models import Contacts
+from abs.services.agent.agent.models import Contacts
 
 
 class ContactsGenerator(BaseGenerator):
@@ -28,8 +28,8 @@ class ContactsGenerator(BaseGenerator):
 
     def create(self, contacts_info, result_mapping):
         contacts_qs = Contacts.query(
-            phone=contacts_info.phone,
-            agent=contacts_info.agent,
+            phone = contacts_info.phone,
+            agent = contacts_info.agent,
         )
         if contacts_qs.count():
             contacts = contacts_qs[0]

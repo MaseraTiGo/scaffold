@@ -13,9 +13,13 @@ class StaffLoader(BaseLoader):
             'nick': 'admin',
             'gender': GenderConstant().generate(),
             'birthday': datetime.datetime(2018, 6, 1),
-            'work_number': 'BQ10001',
+            'work_number': 'BQ10000001',
             'phone': '15527703115',
             'email': '237818280@qq.com',
+            "platform": "橙鹿教育CRM总控平台",
+            'company': "橙鹿教育科技（湖北）有限公司",
+            'position': "系统管理员",
+            'organization': "数据部",
             'is_admin': True,
             'remark': '这是系统管理员'
         }]

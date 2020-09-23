@@ -18,7 +18,7 @@ from abs.services.crm.university.manager import UniversityServer, UniversityYear
 from abs.middleground.business.production.manager import ProductionServer
 from abs.middleware.pay import pay_middleware
 from abs.services.agent.customer.manager import AgentCustomerServer, SaleChanceServer
-from abs.services.crm.agent.manager import AgentServer
+from abs.services.agent.agent.manager import AgentServer
 from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.middleware.extend.yunaccount import yunaccount_extend
 from abs.services.agent.goods.manager import PosterServer

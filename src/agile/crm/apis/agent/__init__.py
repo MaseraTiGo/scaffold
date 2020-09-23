@@ -8,7 +8,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
 from agile.crm.manager.api import StaffAuthorizedApi
 from abs.middleware.config import config_middleware
-from abs.services.crm.agent.manager import AgentServer
+from abs.services.agent.agent.manager import AgentServer
 from abs.middleground.technology.permission.manager import PermissionServer
 from abs.middleground.technology.permission.utils.constant import \
         PermissionTypes
@@ -25,8 +25,8 @@ class Add(StaffAuthorizedApi):
             'city': CharField(desc = "代理商市"),
             'area': CharField(desc = "代理商区", is_required = False),
             'address': CharField(desc = "代理商地址"),
-            'license_code': CharField(desc = "营业执照编码"),
-            'license_picture': CharField(desc = "营业执照图片"),
+            'license_number': CharField(desc = "营业执照编码"),
+            'license_url': CharField(desc = "营业执照图片"),
             'official_seal': CharField(desc = "公章"),
         }
     )
@@ -56,8 +56,8 @@ class Add(StaffAuthorizedApi):
             **authorize_info
         )
         rule_group_info = {
-            "name":"超级管理员权限",
-            "description":"超级管理员权限",
+            "name":"管理员",
+            "description":"超级角色",
             "remark":"",
             "content":"",
         }
@@ -68,8 +68,8 @@ class Add(StaffAuthorizedApi):
         position_info = {
             "rule_group_id":rule_group.id,
             "parent_id":0,
-            "name":"超级管理员",
-            "description":"超级管理员",
+            "name":"总经理",
+            "description":"总经理",
             "remark":"",
         }
         position = PermissionServer.add_position(
@@ -79,7 +79,7 @@ class Add(StaffAuthorizedApi):
         organization_info = {
             "position_id_list":[position.id],
             "parent_id":0,
-            "name":"公司",
+            "name":"总经办",
             "description":"公司",
             "remark":""
         }
@@ -89,7 +89,7 @@ class Add(StaffAuthorizedApi):
         )
 
         PermissionServer.apply(authorization.appkey)
-        agent.update(appkey = authorization.appkey)
+        agent.update(permission_key = authorization.appkey)
         return agent
 
     def fill(self, response, agent):
@@ -123,7 +123,7 @@ class Search(StaffAuthorizedApi):
                 'city': CharField(desc = "市"),
                 'area': CharField(desc = "区"),
                 'address': CharField(desc = "详细地址"),
-                'license_code': CharField(desc = "营业执照信用代码"),
+                'license_number': CharField(desc = "营业执照信用代码"),
                 'create_time': DatetimeField(desc = "入驻时间"),
             }
         )
@@ -152,8 +152,7 @@ class Search(StaffAuthorizedApi):
                 "city":agent.city,
                 "area":agent.area,
                 "address":agent.address,
-                "license_code":agent.enterprise.license_number \
-                               if agent.enterprise else "",
+                "license_number":agent.license_number,
                 "create_time":agent.create_time,
               } for agent in spliter.data]
         response.data_list = data_list
@@ -177,8 +176,8 @@ class Get(StaffAuthorizedApi):
             'city': CharField(desc = "代理商市"),
             'area': CharField(desc = "代理商区", is_required = False),
             'address': CharField(desc = "代理商地址"),
-            'license_code': CharField(desc = "营业执照编码"),
-            'license_picture': CharField(desc = "营业执照图片"),
+            'license_number': CharField(desc = "营业执照编码"),
+            'license_url': CharField(desc = "营业执照图片"),
             'official_seal': CharField(desc = "公章"),
             'create_time': DatetimeField(desc = "入驻时间"),
         }
@@ -204,8 +203,8 @@ class Get(StaffAuthorizedApi):
                 "city":agent.city,
                 "area":agent.area,
                 "address":agent.address,
-                "license_code":agent.enterprise.license_number,
-                "license_picture":agent.enterprise.license_url,
+                "license_number":agent.license_number,
+                "license_url":agent.enterprise.license_url,
                 "official_seal":agent.official_seal,
                 "create_time":agent.create_time,
           }
@@ -225,8 +224,8 @@ class Update(StaffAuthorizedApi):
             'city': CharField(desc = "代理商市"),
             'area': CharField(desc = "代理商区", is_required = False),
             'address': CharField(desc = "代理商地址"),
-            'license_code': CharField(desc = "营业执照编码"),
-            'license_picture': CharField(desc = "营业执照图片"),
+            'license_number': CharField(desc = "营业执照编码"),
+            'license_url': CharField(desc = "营业执照图片"),
             'official_seal': CharField(desc = "公章"),
         }
     )

@@ -97,7 +97,7 @@ class Get(AgentStaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        agent = self.auth_agent
+        agent = self.auth_user.company
         order_item = OrderItemServer.get(request.order_item_id)
         template = TemplateServer.get(order_item.template_id)
         if template.status != TemplateStatus.ADOPT:

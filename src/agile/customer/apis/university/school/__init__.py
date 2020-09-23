@@ -9,32 +9,32 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from agile.base.api import NoAuthorizedApi
 from abs.services.crm.university.manager import UniversityServer
 from abs.services.agent.goods.manager import GoodsServer
-from abs.services.crm.agent.manager import AgentServer
+from abs.services.agent.agent.manager import AgentServer
 
 
 class HotSearch(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.search_info = RequestField(
         DictField,
-        desc="搜索学校",
-        conf={
-            'name': CharField(desc="学校名称", is_required=False),
-            'province': CharField(desc="学校所在省", is_required=False),
-            'city': CharField(desc="学校所在市", is_required=False)
+        desc = "搜索学校",
+        conf = {
+            'name': CharField(desc = "学校名称", is_required = False),
+            'province': CharField(desc = "学校所在省", is_required = False),
+            'city': CharField(desc = "学校所在市", is_required = False)
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="学校列表",
-        fmt=DictField(
-            desc="学校信息",
-            conf={
-                'id': IntField(desc="学校id"),
-                'icons': CharField(desc="学校logo"),
-                'name': CharField(desc="名称"),
-                'content': CharField(desc="描述")
+        desc = "学校列表",
+        fmt = DictField(
+            desc = "学校信息",
+            conf = {
+                'id': IntField(desc = "学校id"),
+                'icons': CharField(desc = "学校logo"),
+                'name': CharField(desc = "名称"),
+                'content': CharField(desc = "描述")
             }
         )
     )
@@ -66,43 +66,43 @@ class HotSearch(NoAuthorizedApi):
 
 class Search(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.current_page = RequestField(IntField, desc="当前页码")
+    request.current_page = RequestField(IntField, desc = "当前页码")
     request.search_info = RequestField(
         DictField,
-        desc="搜索学校",
-        conf={
-            'name': CharField(desc="名称", is_required=False),
-            'province': CharField(desc="学校所在省", is_required=False),
-            'city': CharField(desc="学校所在市", is_required=False)
+        desc = "搜索学校",
+        conf = {
+            'name': CharField(desc = "名称", is_required = False),
+            'province': CharField(desc = "学校所在省", is_required = False),
+            'city': CharField(desc = "学校所在市", is_required = False)
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="学校列表",
-        fmt=DictField(
-            desc="学校信息",
-            conf={
-                'id': IntField(desc="学校id"),
-                'icons': CharField(desc="学校logo"),
-                'name': CharField(desc="名称"),
-                'content': CharField(desc="描述"),
+        desc = "学校列表",
+        fmt = DictField(
+            desc = "学校信息",
+            conf = {
+                'id': IntField(desc = "学校id"),
+                'icons': CharField(desc = "学校logo"),
+                'name': CharField(desc = "名称"),
+                'content': CharField(desc = "描述"),
                 'agent_list': ListField(
-                    desc="代理商列表",
-                    fmt=DictField(
-                        desc="代理商",
-                        conf={
-                            'id': IntField(desc="代理商id"),
-                            'name': CharField(desc='代理商名称'),
+                    desc = "代理商列表",
+                    fmt = DictField(
+                        desc = "代理商",
+                        conf = {
+                            'id': IntField(desc = "代理商id"),
+                            'name': CharField(desc = '代理商名称'),
                         }
                     )
                 )
             }
         )
     )
-    response.total = ResponseField(IntField, desc="数据总数")
-    response.total_page = ResponseField(IntField, desc="总页码数")
+    response.total = ResponseField(IntField, desc = "数据总数")
+    response.total_page = ResponseField(IntField, desc = "总页码数")
 
     @classmethod
     def get_desc(cls):
@@ -152,22 +152,22 @@ class All(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.search_info = RequestField(
         DictField,
-        desc="搜索学校",
-        conf={
-            'province': CharField(desc="学校所在省", is_required=False),
-            'city': CharField(desc="学校所在市", is_required=False)
+        desc = "搜索学校",
+        conf = {
+            'province': CharField(desc = "学校所在省", is_required = False),
+            'city': CharField(desc = "学校所在市", is_required = False)
         }
     )
 
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="学校列表",
-        fmt=DictField(
-            desc="学校信息",
-            conf={
-                'id': IntField(desc="学校id"),
-                'name': CharField(desc="名称")
+        desc = "学校列表",
+        fmt = DictField(
+            desc = "学校信息",
+            conf = {
+                'id': IntField(desc = "学校id"),
+                'name': CharField(desc = "名称")
             }
         )
     )
@@ -195,17 +195,17 @@ class All(NoAuthorizedApi):
 
 class Get(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.school_id = RequestField(IntField, desc="学校id")
+    request.school_id = RequestField(IntField, desc = "学校id")
 
     response = with_metaclass(ResponseFieldSet)
     response.school_info = ResponseField(
         DictField,
-        desc="学校",
-        conf={
-            'id': IntField(desc="学校id"),
-            'icons': CharField(desc="学校logo"),
-            'name': CharField(desc="名称"),
-            'content': CharField(desc="描述")
+        desc = "学校",
+        conf = {
+            'id': IntField(desc = "学校id"),
+            'icons': CharField(desc = "学校logo"),
+            'name': CharField(desc = "名称"),
+            'content': CharField(desc = "描述")
         }
 
     )
@@ -238,18 +238,18 @@ class Location(NoAuthorizedApi):
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(
         ListField,
-        desc="热门城市列表",
-        fmt=DictField(
-            desc="省",
-            conf={
-                'name': CharField(desc="省名"),
+        desc = "热门城市列表",
+        fmt = DictField(
+            desc = "省",
+            conf = {
+                'name': CharField(desc = "省名"),
                 'city_list': ListField(
-                    desc="城市列表",
-                    fmt=DictField(
-                        desc="城市",
-                        conf={
-                            'name': CharField(desc="城市名"),
-                            'initials': CharField(desc="首字母")
+                    desc = "城市列表",
+                    fmt = DictField(
+                        desc = "城市",
+                        conf = {
+                            'name': CharField(desc = "城市名"),
+                            'initials': CharField(desc = "首字母")
                         }
                     )
                 )

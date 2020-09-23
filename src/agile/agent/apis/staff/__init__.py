@@ -16,8 +16,8 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.middleground.business.person.utils.constant import\
      GenderTypes, EducationTypes
-
-from abs.services.agent.staff.manager import AgentStaffServer
+from abs.middleground.business.account.utils.constant import StatusTypes
+from abs.services.agent.agent.manager import AgentStaffServer
 from abs.services.agent.account.manager import AgentStaffAccountServer
 from abs.middleground.technology.permission.manager import PermissionServer
 
@@ -32,32 +32,19 @@ class Add(AgentStaffAuthorizedApi):
         desc = "员工详情",
         conf = {
             'name': CharField(desc = "姓名"),
-            'identification': CharField(desc = "身份证号", is_required = False),
             'phone': CharField(desc = "手机"),
             'organization_id': IntField(desc = "组织id"),
             'position_id': IntField(desc = "身份id"),
-            'entry_time':DateField(desc = "入职时间", is_required = False),
-            'address': CharField(desc = "家庭住址", is_required = False),
-            'emergency_contact': CharField(desc = "紧急联系人", is_required = False),
-            'emergency_phone': CharField(desc = "紧急联系人电话", is_required = False),
-            'education': CharField(
-                desc = "学历",
-                choices = EducationTypes.CHOICES,
-                is_required = False
-            ),
-            'bank_number': CharField(desc = "银行卡号", is_required = False),
-            'contract': CharField(desc = "合同编号", is_required = False),
             'email': CharField(desc = "邮箱", is_required = False),
+            'birthday': DateField(desc = "生日", is_required = False),
+            'qq': CharField(desc = "qq", is_required = False),
+            'wechat': CharField(desc = "微信", is_required = False),
             'gender': CharField(
                 desc = "性别",
                 choices = GenderTypes.CHOICES,
                 is_required = False
             ),
-            'diploma_img':ListField(
-                desc = '毕业证书',
-                fmt = CharField(desc = "毕业证书"),
-                is_required = False
-            ),
+            'remark': CharField(desc = "备注", is_required = False),
         }
     )
 
@@ -73,24 +60,29 @@ class Add(AgentStaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        agent = self.auth_agent
-        if "diploma_img" in request.staff_info:
-            diploma_img = request.staff_info.pop("diploma_img")
-            request.staff_info.update({
-                "diploma_img":json.dumps(diploma_img)
-            })
+        phone = request.staff_info.pop("phone")
+        if AgentStaffServer.check_phone(phone):
+            raise BusinessError("存在重复账号")
+        agent = self.auth_user.company
         organization_id = request.staff_info.pop("organization_id")
         position_id = request.staff_info.pop("position_id")
+        request.staff_info.update({
+            "work_number":AgentStaffServer.generate_work_number(agent)
+        })
         agent_staff = AgentStaffServer.create(
-            request.staff_info.pop("phone"), \
-            agent, \
+            phone,
+            agent,
             **request.staff_info
         )
-        PermissionServer.bind_position(
-            agent.appkey,
+        permission = PermissionServer.bind_position(
+            agent.permission_key,
             organization_id,
             position_id,
-            agent_staff.person_id
+            agent_staff.id
+        )
+        AgentStaffServer.update(
+            agent_staff.id,
+            permission_id = permission.id,
         )
         return agent_staff
 
@@ -127,11 +119,11 @@ class Search(AgentStaffAuthorizedApi):
             desc = "用户详情",
             conf = {
                 'id': IntField(desc = "员工编号"),
-                'nick': CharField(desc = "昵称"),
-                'head_url': CharField(desc = "头像"),
                 'name': CharField(desc = "姓名"),
                 'gender': CharField(desc = "性别"),
                 'birthday': CharField(desc = "生日"),
+                'wechat': CharField(desc = "微信"),
+                'qq': CharField(desc = "QQ"),
                 'phone': CharField(desc = "电话"),
                 'email': CharField(desc = "邮箱"),
                 'work_number': CharField(desc = "员工工号"),
@@ -139,19 +131,22 @@ class Search(AgentStaffAuthorizedApi):
                 'username': CharField(desc = "账号"),
                 'status': CharField(desc = "账号状态"),
                 'last_login_time':DatetimeField(desc = "最后登陆时间"),
-                'department_role_list': ListField(
-                    desc = '所属部门',
-                    fmt = DictField(
-                        desc = "部门ID",
-                        conf = {
-                            'department_role_id': IntField(desc = "部门角色id"),
-                            'department_id': IntField(desc = "部门id"),
-                            'department_name': CharField(desc = "部门名称"),
-                            'role_id': IntField(desc = "角色id"),
-                            'role_name': CharField(desc = "角色名称"),
-                        }
-                    )
-                )
+                'remark': CharField(desc = "备注"),
+                'organization': DictField(
+                    desc = "组织信息",
+                    conf = {
+                        'id': IntField(desc = "部门Id"),
+                        'name': CharField(desc = "部门名称"),
+                    }
+                ),
+                'position': DictField(
+                    desc = "职位信息",
+                    conf = {
+                        'id': IntField(desc = "职位Id"),
+                        'name': CharField(desc = "职位名称"),
+                    }
+                ),
+                'create_time': DatetimeField(desc = "创建时间"),
             }
         )
     )
@@ -168,17 +163,16 @@ class Search(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         auth = self.auth_user
-        agent = self.auth_agent
+        request.search_info.update({
+            "company":auth.company
+        })
         if not auth.is_admin:
             permission = AgentStaffServer.get_permission(
-                auth, agent
+                auth
             )
             request.search_info.update({
-                "id__in":permission.staff_ids
+                "id__in":permission.data
             })
-        request.search_info.update({
-            "agent_id":agent.id
-        })
         staff_spliter = AgentStaffServer.search(
             request.current_page,
             **request.search_info
@@ -189,28 +183,37 @@ class Search(AgentStaffAuthorizedApi):
     def fill(self, response, staff_spliter):
         data_list = [{
             'id': staff.id,
-            'nick': staff.nick,
-            'head_url': staff.head_url,
-            'name': staff.person.name,
+            'name': staff.name,
             'work_number': staff.work_number,
             'gender': staff.person.gender,
             'birthday': staff.person.birthday,
-            'phone': staff.person.phone,
+            'wechat': staff.person.wechat,
+            'qq': staff.person.qq,
+            'phone': staff.phone,
             'email': staff.person.email,
             'is_admin': staff.is_admin,
             'username': staff.account.username if \
-                        staff.account else "",
+                        staff.account else '',
             'status':staff.account.status if \
-                     staff.account else "",
+                     staff.account else '',
             'last_login_time':staff.account.last_login_time if \
                               staff.account else None,
-            'department_role_list': [{
-                'role_id': department_role.role.id,
-                'role_name': department_role.role.name,
-                'department_id': department_role.department.id,
-                'department_name': department_role.department.name,
-                'department_role_id': department_role.id,
-            } for department_role in staff.department_role_list]
+            'remark': staff.remark,
+            'organization': {
+                'id': staff.organization.id,
+                'name': staff.organization.name,
+            } if staff.organization else {
+                'id':-1,
+                'name': "",
+            },
+            'position': {
+                'id': staff.position.id,
+                'name': staff.position.name,
+            } if staff.position else {
+                'id':-1,
+                "name": "",
+            },
+            'create_time': staff.create_time,
         } for staff in staff_spliter.data]
         response.data_list = data_list
         response.total = staff_spliter.total
@@ -230,33 +233,59 @@ class Get(AgentStaffAuthorizedApi):
         DictField,
         desc = "用户详情",
         conf = {
-            'id':IntField(desc = "员工id"),
+            'id': IntField(desc = "员工编号"),
             'name': CharField(desc = "姓名"),
-            'identification': CharField(desc = "身份证号"),
-            'phone': CharField(desc = "手机"),
-            'organization_id': IntField(desc = "组织id"),
-            'organization_name': IntField(desc = "组织名称"),
-            'position_id': IntField(desc = "身份名称"),
-            'position_name': IntField(desc = "身份id"),
-            'entry_time':DateField(desc = "入职时间"),
-            'address': CharField(desc = "家庭住址"),
-            'emergency_contact': CharField(desc = "紧急联系人"),
-            'emergency_phone': CharField(desc = "紧急联系人电话"),
-            'education': CharField(
-                desc = "学历",
-                choices = EducationTypes.CHOICES
-            ),
-            'bank_number': CharField(desc = "银行卡号"),
-            'contract': CharField(desc = "合同编号"),
+            'gender': CharField(desc = "性别"),
+            'birthday': CharField(desc = "生日"),
+            'wechat': CharField(desc = "微信"),
+            'qq': CharField(desc = "QQ"),
+            'phone': CharField(desc = "电话"),
             'email': CharField(desc = "邮箱"),
-            'gender': CharField(
-                desc = "性别",
-                choices = GenderTypes.CHOICES
+            'work_number': CharField(desc = "员工工号"),
+            'is_admin': BooleanField(desc = "是否是管理员"),
+            'update_time': DatetimeField(desc = "更新时间"),
+            'create_time': DatetimeField(desc = "创建时间"),
+            'organization': DictField(
+                desc = "组织信息",
+                conf = {
+                    'id': IntField(desc = "部门Id"),
+                    'name': CharField(desc = "部门名称"),
+                }
             ),
-            'diploma_img':ListField(
-                desc = '毕业证书',
-                fmt = CharField(desc = "毕业证书")
+            'position': DictField(
+                desc = "职位信息",
+                conf = {
+                    'id': IntField(desc = "职位Id"),
+                    'name': CharField(desc = "职位名称"),
+                }
             ),
+            'account_info': DictField(
+                desc = "账号信息",
+                conf = {
+                    'nick': CharField(desc = "昵称"),
+                    'username': CharField(desc = "账户"),
+                    'head_url': CharField(desc = "头像"),
+                    'last_login_time': DatetimeField(desc = "最后登录时间"),
+                    'last_login_ip': CharField(desc = "最后登录ip"),
+                    'register_ip': CharField(desc = "注册ip"),
+                    'status': CharField(
+                        desc = "状态",
+                        is_required = False,
+                        choices = StatusTypes.CHOICES
+                    ),
+                    'update_time': DatetimeField(desc = "更新时间"),
+                    'create_time': DatetimeField(desc = "创建时间"),
+                }
+            ),
+            'company_info': DictField(
+                desc = "账号信息",
+                conf = {
+                    'id': IntField(desc = "id"),
+                    'name': CharField(desc = "昵称"),
+                    'license_number': CharField(desc = "营业执照"),
+                    'create_time': DatetimeField(desc = "创建时间"),
+                }
+            )
         }
     )
 
@@ -269,38 +298,56 @@ class Get(AgentStaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        agent_staff = AgentStaffServer.get(request.staff_id)
+        staff_id = request.staff_id
+        staff = AgentStaffServer.get(staff_id)
+        staff.account = AgentStaffAccountServer.get(staff_id)
         return agent_staff
 
     def fill(self, response, agent_staff):
-        '''
-        department_role_list = [{
-            'role_id': department_role.role.id,
-            'role_name': department_role.role.name,
-            'department_id': department_role.department.id,
-            'department_name': department_role.department.name,
-            'department_role_id': department_role.id,
-        } for department_role in staff.department_role_list]
-        '''
         response.staff_info = {
-            'id':agent_staff.id,
-            'name': agent_staff.name,
-            'identification': agent_staff.identification,
-            'phone': agent_staff.phone,
-            'organization_id': 1,
-            'organization_name':'公司',
-            'position_id':1,
-            'position_name':'超级管理员',
-            'entry_time':agent_staff.entry_time,
-            'address': agent_staff.address,
-            'emergency_contact': agent_staff.emergency_contact,
-            'emergency_phone':agent_staff.emergency_phone,
-            'education': agent_staff.education,
-            'bank_number': agent_staff.bank_number,
-            'contract': agent_staff.contract,
-            'email': agent_staff.person.email,
-            'gender': agent_staff.person.gender,
-            'diploma_img':json.loads(agent_staff.diploma_img),
+            'id': staff.id,
+            'name': staff.person.name,
+            'work_number': staff.work_number,
+            'gender': staff.person.gender,
+            'birthday': staff.person.birthday,
+            'wechat': staff.person.wechat,
+            'qq': staff.person.qq,
+            'phone': staff.person.phone,
+            'email': staff.person.email,
+            'is_admin': staff.is_admin,
+            'organization': {
+                'id': staff.organization.id,
+                'name': staff.organization.name,
+            } if staff.organization else {
+                'id':-1,
+                'name': "",
+            },
+            'position': {
+                'id': staff.position.id,
+                'name': staff.position.name,
+            } if staff.position else {
+                'id':-1,
+                "name": "",
+            },
+            'update_time': staff.update_time,
+            'create_time': staff.create_time,
+            'account_info': {
+                'nick': staff.account.nick,
+                'username': staff.account.username,
+                'head_url': staff.account.head_url,
+                'last_login_time': staff.account.last_login_time,
+                'last_login_ip': staff.account.last_login_ip,
+                'register_ip': staff.account.register_ip,
+                'status': staff.account.status,
+                'update_time': staff.account.update_time,
+                'create_time': staff.account.create_time,
+            },
+            'company_info': {
+                'id': staff.company.id,
+                'name': staff.company.name,
+                'license_number': staff.company.license_number,
+                'create_time': staff.company.create_time,
+            },
         }
         return response
 
@@ -315,31 +362,14 @@ class Update(AgentStaffAuthorizedApi):
         DictField,
         desc = "员工修改详情",
         conf = {
-            'name': CharField(desc = "姓名"),
-            'identification': CharField(desc = "身份证号"),
-            'phone': CharField(desc = "手机"),
-            'organization_id': IntField(desc = "组织id"),
-            'position_id': IntField(desc = "身份id"),
-            'entry_time':DateField(desc = "入职时间", is_required = False),
-            'address': CharField(desc = "家庭住址", is_required = False),
-            'emergency_contact': CharField(desc = "紧急联系人", is_required = False),
-            'emergency_phone': CharField(desc = "紧急联系人电话", is_required = False),
-            'education': CharField(
-                desc = "学历",
-                choices = EducationTypes.CHOICES
-            ),
-            'bank_number': CharField(desc = "银行卡号", is_required = False),
-            'contract': CharField(desc = "合同编号", is_required = False),
+            'name': CharField(desc = "姓名", is_required = False),
+            'gender': CharField(desc = "性别", is_required = False),
+            'birthday': CharField(desc = "生日", is_required = False),
+            # 'phone': MobileField(desc = "电话", is_required = False),
             'email': CharField(desc = "邮箱", is_required = False),
-            'gender': CharField(
-                desc = "性别",
-                choices = GenderTypes.CHOICES
-            ),
-            'diploma_img':ListField(
-                desc = '毕业证书',
-                fmt = CharField(desc = "毕业证书"),
-                is_required = False
-            ),
+            'qq': CharField(desc = "qq", is_required = False),
+            'wechat': CharField(desc = "微信", is_required = False),
+            'remark': CharField(desc = "备注", is_required = False),
         }
     )
 
@@ -354,15 +384,37 @@ class Update(AgentStaffAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        if "diploma_img" in request.staff_info:
-            diploma_img = request.staff_info.pop("diploma_img")
-            request.staff_info.update({
-                "diploma_img":json.dumps(diploma_img)
-            })
-        agent_staff = AgentStaffServer.update(
+        AgentStaffServer.update(request.staff_id, **request.staff_info)
+
+    def fill(self, response):
+        return response
+
+
+class Bind(AgentStaffAuthorizedApi):
+    """
+    绑定员工信息到部门及岗位
+    """
+    request = with_metaclass(RequestFieldSet)
+    request.staff_id = RequestField(IntField, desc = "员工id")
+    request.organization_id = RequestField(IntField, desc = "组织id")
+    request.position_id = RequestField(IntField, desc = "岗位id")
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_author(cls):
+        return "Roy"
+
+    def execute(self, request):
+        staff_id = self.auth_user.id
+        staff = AgentStaffServer.get(staff_id)
+        PermissionServer.bind_position(
+            staff.company.permission_key,
+            request.organization_id,
+            request.position_id,
             request.staff_id,
-            **request.staff_info
         )
 
     def fill(self, response):
         return response
+
