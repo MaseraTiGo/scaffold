@@ -1,7 +1,7 @@
 # coding=UTF-8
 
 import json
-
+from random import choice
 from support.common.testcase.crm_api_test_case import CrmAPITestCase
 
 
@@ -13,15 +13,10 @@ class ToolNoticeTestCase(CrmAPITestCase):
     def tearDown(self):
         pass
 
-    def assert_sms_fields(self, sms, need_id=False):
-        if need_id:
-            self.assertTrue('id' in sms)
-        self.assertTrue('phone' in sms)
-        self.assertTrue('content' in sms)
-        self.assertTrue('scene' in sms)
-        self.assertTrue('source_type' in sms)
-        self.assertTrue('status' in sms)
-        self.assertTrue('create_time' in sms)
+    def get_random_data(self, data_list, only_id=True):
+        if not data_list:
+            return None
+        return choice(data_list) if not only_id else choice(data_list)['id']
 
     def test_notice_search(self):
         api = 'tool.notice.search'
@@ -35,8 +30,9 @@ class ToolNoticeTestCase(CrmAPITestCase):
         self.assertTrue("total" in result)
         self.assertTrue("total_page" in result)
         if len(result['data_list']):
-            for sms in result['data_list']:
-                self.assert_sms_fields(sms, True)
+            for notice in result['data_list']:
+                self.assertTrue('content' in notice.keys())
+        # print(result['data_list'])
         return result['data_list']
 
     def test_notice_add(self):
@@ -56,7 +52,11 @@ class ToolNoticeTestCase(CrmAPITestCase):
 
     def test_notice_remove(self):
         api = 'tool.notice.remove'
-        notice_id = 1
+        data_list = self.test_notice_search()
+        notice_id = self.get_random_data(data_list)
+        if not notice_id:
+            print(f'no data 2 delete')
+            return
         result = self.access_api(
             api=api,
             notice_id=notice_id
@@ -65,7 +65,11 @@ class ToolNoticeTestCase(CrmAPITestCase):
 
     def test_notice_update(self):
         api = 'tool.notice.update'
-        notice_id = 2
+        data_list = self.test_notice_search()
+        notice_id = self.get_random_data(data_list)
+        if not notice_id:
+            print(f'no data 4 updating')
+            return
         update_info = {
             'content': 'this content has been modified!'
         }

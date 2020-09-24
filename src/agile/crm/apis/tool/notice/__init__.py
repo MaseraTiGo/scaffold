@@ -34,6 +34,7 @@ class Search(StaffAuthorizedApi):
         fmt=DictField(
             desc="通知（公告）内容",
             conf={
+                'id': IntField(desc="通知（公告）id"),
                 'classify': IntField(desc="类别"),
                 'content': CharField(desc="内容"),
                 'status': CharField(desc="状态"),
@@ -60,6 +61,7 @@ class Search(StaffAuthorizedApi):
 
     def fill(self, response, notice_qs_split):
         data_list = [{
+            'id': item.id,
             'classify': item.classify,
             'content': item.content,
             'status': item.status,
@@ -84,7 +86,7 @@ class Update(StaffAuthorizedApi):
         conf={
             'content': CharField(desc="内容", is_required=False),
             'classify': CharField(desc="名称", is_required=False, choices=NoticeClassify.CHOICES),
-            'platform': IntField(desc="平台", is_required=False, choices=NoticePlatform.CHOICES),
+            'platform': CharField(desc="平台", is_required=False, choices=NoticePlatform.CHOICES),
             'status': CharField(desc="状态", is_required=False, choices=NoticeStatus.CHOICES),
         }
     )
@@ -117,7 +119,7 @@ class Add(StaffAuthorizedApi):
         conf={
             'content': CharField(desc="内容", is_required=False),
             'classify': CharField(desc="名称", is_required=False, choices=NoticeClassify.CHOICES),
-            'platform': IntField(desc="平台", is_required=False, choices=NoticePlatform.CHOICES),
+            'platform': CharField(desc="平台", is_required=False, choices=NoticePlatform.CHOICES),
             'status': CharField(desc="状态", is_required=False, choices=NoticeStatus.CHOICES),
         }
     )
@@ -158,7 +160,7 @@ class Remove(StaffAuthorizedApi):
 
     def execute(self, request):
         res_flag = NoticeServer.delete(
-            request.organization_id
+            request.notice_id
         )
         if not res_flag:
             raise BusinessError("删除通知异常")
