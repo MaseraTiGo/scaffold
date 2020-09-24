@@ -1,4 +1,5 @@
 # coding=UTF-8
+import json
 from agile.crm.manager.api import StaffAuthorizedApi
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -42,6 +43,7 @@ class Search(StaffAuthorizedApi):
                 'type': CharField(desc="反馈标签"),
                 'describe': CharField(desc="反馈描述"),
                 'status': CharField(desc="处理状态"),
+                'img_url': ListField(desc="图片url列表", fmt=CharField(desc="图片url")),
                 'create_time': DatetimeField(desc="反馈时间"),
             }
         )
@@ -68,6 +70,7 @@ class Search(StaffAuthorizedApi):
             'phone': item.person.phone,
             'username': item.person.name,
             'type': item.type,
+            'img_url': json.loads(item.img_url),
             'describe': item.describe,
             'status': item.status,
             'create_time': item.create_time

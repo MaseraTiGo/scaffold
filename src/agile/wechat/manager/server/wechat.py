@@ -77,5 +77,5 @@ customer_wechat_service.add(Get, Search, Autograph)
 from agile.wechat.apis.production.poster import Get
 customer_wechat_service.add(Get)
 
-from agile.wechat.apis.notice import Search
-customer_wechat_service.add(Search)
+from agile.wechat.apis.notice import SearchAll
+customer_wechat_service.add(SearchAll)

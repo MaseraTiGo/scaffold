@@ -36,7 +36,7 @@ class Search(CustomerAuthorizedApi):
 
     def execute(self, request):
         request.search_info = {'platform': 'customer', 'status': 'enable'}
-        notice_qs_split = NoticeServer.search_all(request.current_page, **request.search_info)
+        notice_qs_split = NoticeServer.search(request.current_page, **request.search_info)
         return notice_qs_split
 
     def fill(self, response, notice_qs_split):

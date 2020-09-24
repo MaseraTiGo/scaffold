@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(choices=[('read', '已读'), ('unread', '未读')], max_length=32, verbose_name='消息状态')),
                 ('update_time', models.DateTimeField(auto_now=True, verbose_name='更新时间')),
                 ('create_time', models.DateTimeField(default=django.utils.timezone.now, verbose_name='创建时间')),
-                ('person', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='personal_messages', to='customer_personal.Customer')),
+                ('customer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='personal_messages', to='customer_personal.Customer')),
             ],
             options={
                 'db_table': 'customer_personal_message',

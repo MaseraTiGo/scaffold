@@ -144,7 +144,7 @@ class FeedbackServer(BaseManager):
 
     @classmethod
     def search_all(cls, current_page, **search_info):
-        feedback_qs = Feedback.search(**search_info)
+        feedback_qs = Feedback.search(**search_info).order_by('-create_time')
         splitor = Splitor(current_page, feedback_qs)
         cls.hung_person_id(splitor.get_list())
         PersonServer.hung_persons(splitor.get_list())

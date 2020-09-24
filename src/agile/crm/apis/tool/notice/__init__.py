@@ -35,7 +35,8 @@ class Search(StaffAuthorizedApi):
             desc="通知（公告）内容",
             conf={
                 'id': IntField(desc="通知（公告）id"),
-                'classify': IntField(desc="类别"),
+                'title': CharField(desc="标题"),
+                'classify': CharField(desc="类别"),
                 'content': CharField(desc="内容"),
                 'status': CharField(desc="状态"),
                 'platform': CharField(desc="平台"),
@@ -53,7 +54,7 @@ class Search(StaffAuthorizedApi):
         return "djd"
 
     def execute(self, request):
-        notice_qs_split = NoticeServer.search_all(
+        notice_qs_split = NoticeServer.search(
             request.current_page,
             **request.search_info
         )
@@ -62,6 +63,7 @@ class Search(StaffAuthorizedApi):
     def fill(self, response, notice_qs_split):
         data_list = [{
             'id': item.id,
+            'title': item.title,
             'classify': item.classify,
             'content': item.content,
             'status': item.status,
@@ -71,6 +73,55 @@ class Search(StaffAuthorizedApi):
         response.data_list = data_list
         response.total = notice_qs_split.total
         response.total_page = notice_qs_split.total_page
+        return response
+
+
+class SearchAll(StaffAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    response = with_metaclass(ResponseFieldSet)
+    response.data_list = ResponseField(
+        ListField,
+        desc="通知（公告）列表",
+        fmt=DictField(
+            desc="通知（公告）内容",
+            conf={
+                'id': IntField(desc="通知（公告）id"),
+                'title': CharField(desc="标题"),
+                'classify': CharField(desc="类别"),
+                'content': CharField(desc="内容"),
+                'status': CharField(desc="状态"),
+                'platform': CharField(desc="平台"),
+                'create_time': DatetimeField(desc="创建时间"),
+            }
+        )
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "启用通知（公告）搜索接口"
+
+    @classmethod
+    def get_author(cls):
+        return "djd"
+
+    def execute(self, request):
+        search_info = {'platform': 'crm', 'status': 'enable'}
+        notice_qs_split = NoticeServer.search_all(
+            **search_info
+        )
+        return notice_qs_split
+
+    def fill(self, response, notice_qs_split):
+        data_list = [{
+            'id': item.id,
+            'classify': item.classify,
+            'title': item.title,
+            'content': item.content,
+            'status': item.status,
+            'platform': item.platform,
+            'create_time': item.create_time
+        } for item in notice_qs_split]
+        response.data_list = data_list
         return response
 
 
@@ -84,6 +135,7 @@ class Update(StaffAuthorizedApi):
         DictField,
         desc="通知（公告）修改详情",
         conf={
+            'title': CharField(desc="标题", is_required=False),
             'content': CharField(desc="内容", is_required=False),
             'classify': CharField(desc="名称", is_required=False, choices=NoticeClassify.CHOICES),
             'platform': CharField(desc="平台", is_required=False, choices=NoticePlatform.CHOICES),
@@ -117,6 +169,7 @@ class Add(StaffAuthorizedApi):
         DictField,
         desc="增加通知（公告）",
         conf={
+            'title': CharField(desc="标题", is_required=False),
             'content': CharField(desc="内容", is_required=False),
             'classify': CharField(desc="名称", is_required=False, choices=NoticeClassify.CHOICES),
             'platform': CharField(desc="平台", is_required=False, choices=NoticePlatform.CHOICES),

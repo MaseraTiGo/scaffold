@@ -78,3 +78,14 @@ class ToolNoticeTestCase(CrmAPITestCase):
             notice_id=notice_id,
             update_info=json.dumps(update_info)
         )
+
+    def test_notice_search_all(self):
+        api = 'tool.notice.searchall'
+        result = self.access_api(
+            api=api
+        )
+        self.assertTrue("data_list" in result)
+        if len(result['data_list']):
+            for notice in result['data_list']:
+                self.assertTrue(notice.get('status') == 'enable')
+        print(result['data_list'])
