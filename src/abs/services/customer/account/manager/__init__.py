@@ -17,7 +17,7 @@ class CustomerAccountServer(AccountServer):
             for customer in customer_list
         }
         account_qs = cls.APPLY_CLS.search(
-            role_id__in=customer_mapping.keys()
+            role_id__in = customer_mapping.keys()
         )
         for account in account_qs:
             customer_mapping[account.role_id].account = None
@@ -33,12 +33,58 @@ class CustomerAccountServer(AccountServer):
         return None
 
     @classmethod
-    def account_login(cls,  account):
+    def account_login(cls, account, unique_code, phone_system):
         token = TokenManager.generate_token(
             account.role_type,
             account.role_id
         )
+        cls.update_phone_unique(
+            token.user_id,
+            unique_code,
+            phone_system
+        )
         return token
+
+    @classmethod
+    def login(cls, username, account, unique_code, phone_system):
+        token = super().login(username, account)
+        cls.update_phone_unique(
+            token.user_id,
+            unique_code,
+            phone_system
+        )
+        return token
+
+    @classmethod
+    def create(cls, role_id, username, password, unique_code, phone_system):
+        token = super().create(role_id, username, password)
+        cls.update_phone_unique(
+            role_id,
+            unique_code,
+            phone_system
+        )
+        return token
+
+    @classmethod
+    def update_phone_unique(cls, role_id, unique_code, phone_system):
+        CustomerAccount.query(last_login_phone_unique = unique_code).update(
+            last_login_phone_unique = "",
+            last_login_phone_system = "other"
+        )
+        super().update(
+            role_id,
+            **{"last_login_phone_unique":unique_code,
+               "last_login_phone_system":phone_system}
+        )
+
+    @classmethod
+    def logout(cls, role_id, auth_token):
+        super().update(
+            role_id,
+            **{"last_login_phone_unique":"",
+               "last_login_phone_system":"other"}
+        )
+        super().logout(auth_token)
 
 
 class TripartiteServer(BaseManager):
@@ -46,8 +92,8 @@ class TripartiteServer(BaseManager):
     @classmethod
     def get_byopenid(cls, openid, category):
         triprtite = Tripartite.search(
-            category=category,
-            openid=openid
+            category = category,
+            openid = openid
         ).first()
         return triprtite
 

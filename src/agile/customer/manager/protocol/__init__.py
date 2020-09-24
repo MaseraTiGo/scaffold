@@ -34,6 +34,7 @@ class AppProtocol(BaseProtocol):
     _upload_files = "_upload_files"
     _agent = "_agent"
     _ip = "_ip"
+    _clientType = "_clientType"
 
     @classmethod
     def get_name(cls):
@@ -69,7 +70,8 @@ class AppProtocol(BaseProtocol):
         base_parms = {
             self._upload_files: pro._files,
             self._ip: ip,
-            self._agent: meta.get('HTTP_USER_AGENT', "")
+            self._agent: meta.get('HTTP_USER_AGENT', ""),
+            self._clientType: all_parms["clientType"]
         }
         return base_parms, all_parms
 

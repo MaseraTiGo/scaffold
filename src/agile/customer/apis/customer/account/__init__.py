@@ -22,14 +22,14 @@ from abs.services.crm.tool.manager import SmsServer
 class Register(NoAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.phone = RequestField(CharField, desc="手机号码")
-    request.password = RequestField(CharField, desc="密码")
-    request.code = RequestField(CharField, desc="验证码")
+    request.phone = RequestField(CharField, desc = "手机号码")
+    request.password = RequestField(CharField, desc = "密码")
+    request.code = RequestField(CharField, desc = "验证码")
 
     response = with_metaclass(ResponseFieldSet)
-    response.access_token = ResponseField(CharField, desc="访问凭证")
-    response.renew_flag = ResponseField(CharField, desc="续签标识")
-    response.expire_time = ResponseField(CharField, desc="到期时间")
+    response.access_token = ResponseField(CharField, desc = "访问凭证")
+    response.renew_flag = ResponseField(CharField, desc = "续签标识")
+    response.expire_time = ResponseField(CharField, desc = "到期时间")
 
     @classmethod
     def get_desc(cls):
@@ -70,13 +70,15 @@ class Register(NoAuthorizedApi):
 class Login(NoAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
-    request.username = RequestField(CharField, desc="账号")
-    request.password = RequestField(CharField, desc="密码")
+    request.username = RequestField(CharField, desc = "账号")
+    request.password = RequestField(CharField, desc = "密码")
+    request.unique_code = RequestField(CharField, desc = "设备唯一编码")
+    request._clientType = RequestField(CharField, desc = "登陆手机系统类型")
 
     response = with_metaclass(ResponseFieldSet)
-    response.access_token = ResponseField(CharField, desc="访问凭证")
-    response.renew_flag = ResponseField(CharField, desc="续签标识")
-    response.expire_time = ResponseField(CharField, desc="到期时间")
+    response.access_token = ResponseField(CharField, desc = "访问凭证")
+    response.renew_flag = ResponseField(CharField, desc = "续签标识")
+    response.expire_time = ResponseField(CharField, desc = "到期时间")
 
     @classmethod
     def get_desc(cls):
@@ -89,7 +91,9 @@ class Login(NoAuthorizedApi):
     def execute(self, request):
         token = CustomerAccountServer.login(
             request.username,
-            request.password
+            request.password,
+            request.unique_code,
+            request._clientType
         )
         return token
 
@@ -102,14 +106,16 @@ class Login(NoAuthorizedApi):
 
 class CodeLogin(NoAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.username = RequestField(CharField, desc="账号")
-    request.verify_code = RequestField(CharField, desc="密码")
+    request.username = RequestField(CharField, desc = "账号")
+    request.verify_code = RequestField(CharField, desc = "密码")
+    request.unique_code = RequestField(CharField, desc = "设备唯一编码")
+    request._clientType = RequestField(CharField, desc = "登陆手机系统类型")
 
     response = with_metaclass(ResponseFieldSet)
-    response.access_token = ResponseField(CharField, desc="访问凭证")
-    response.renew_flag = ResponseField(CharField, desc="续签标识")
-    response.expire_time = ResponseField(CharField, desc="到期时间")
-    response.is_password = ResponseField(BooleanField, desc="是否有密码")
+    response.access_token = ResponseField(CharField, desc = "访问凭证")
+    response.renew_flag = ResponseField(CharField, desc = "续签标识")
+    response.expire_time = ResponseField(CharField, desc = "到期时间")
+    response.is_password = ResponseField(BooleanField, desc = "是否有密码")
 
     @classmethod
     def get_desc(cls):
@@ -132,7 +138,9 @@ class CodeLogin(NoAuthorizedApi):
         password = ''
         if account:
             token = CustomerAccountServer.account_login(
-                account
+                account,
+                request.unique_code,
+                request._clientType
             )
             password = account.password
         else:
@@ -143,6 +151,8 @@ class CodeLogin(NoAuthorizedApi):
                 customer.id,
                 request.username,
                 password,
+                request.unique_code,
+                request._clientType
             )
         return token, password
 
@@ -168,8 +178,11 @@ class Logout(CustomerAuthorizedApi):
         return "Roy"
 
     def execute(self, request):
+        customer = self.auth_user
         auth_token = self._token.auth_token
-        CustomerAccountServer.logout(auth_token)
+        CustomerAccountServer.logout(
+            customer.id, auth_token
+        )
 
     def fill(self, response):
         return response
