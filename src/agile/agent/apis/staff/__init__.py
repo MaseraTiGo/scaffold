@@ -12,7 +12,7 @@ from infrastructure.core.field.base import CharField, DictField, \
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
-
+from infrastructure.core.exception.business_error import BusinessError
 from agile.agent.manager.api import AgentStaffAuthorizedApi
 from abs.middleground.business.person.utils.constant import\
      GenderTypes, EducationTypes
@@ -171,7 +171,7 @@ class Search(AgentStaffAuthorizedApi):
                 auth
             )
             request.search_info.update({
-                "id__in":permission.data
+                "id__in":permission.data[0]
             })
         staff_spliter = AgentStaffServer.search(
             request.current_page,
