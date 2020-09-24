@@ -13,7 +13,7 @@ class CustomerNoticeTest(CustomerAPITestCase):
     def tearDown(self):
         ...
 
-    def test_account_register(self):
+    def test_customer_notice_search(self):
         api = 'notice.search'
         params = {'current_page': 1}
         result = self.access_api(api=api, **params)
@@ -21,4 +21,4 @@ class CustomerNoticeTest(CustomerAPITestCase):
         for item in result.get('data_list', []):
             self.assertTrue('title' in item.keys())
             self.assertTrue('content' in item.keys())
-            self.assertTrue('datetime' in item.keys())
+            self.assertTrue('create_time' in item.keys())

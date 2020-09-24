@@ -13,18 +13,23 @@ class Notice(BaseModel):
         verbose_name="类别：通知/公告",
         max_length=32,
         choices=NoticeClassify.CHOICES,
+        default=NoticeClassify.NOTIFY
     )
 
     platform = CharField(
         verbose_name="通知（公告）来源平台",
         max_length=64,
-        choices=NoticePlatform.CHOICES
+        choices=NoticePlatform.CHOICES,
+        default=NoticePlatform.CRM
+
     )
 
     status = CharField(
         verbose_name="通知（公告）状态",
         max_length=32,
-        choices=NoticeStatus.CHOICES
+        choices=NoticeStatus.CHOICES,
+        default=NoticeStatus.ENABLE
+
     )
 
     update_time = DateTimeField(verbose_name="更新时间", auto_now=True)
@@ -35,5 +40,5 @@ class Notice(BaseModel):
 
     @classmethod
     def search(cls, **attrs):
-        record_qs = cls.query().filter(**attrs)
-        return record_qs
+        notice_qs = cls.query().filter(**attrs)
+        return notice_qs

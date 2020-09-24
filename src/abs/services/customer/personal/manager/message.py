@@ -19,3 +19,6 @@ class CustomerMessageServer(BaseManager):
         message_obj.update(**update_info)
         return message_obj
 
+    @classmethod
+    def count_unread(cls, **search_info):
+        return CustomerMessage.search(**search_info).count()

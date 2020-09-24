@@ -23,7 +23,7 @@ class Search(AgentStaffAuthorizedApi):
                       conf={
                           'title': CharField(desc="标题"),
                           'content': CharField(desc="内容"),
-                          'datetime': DatetimeField(desc="通知时间")
+                          'create_time': DatetimeField(desc="通知时间")
                       }))
 
     @classmethod
@@ -44,7 +44,7 @@ class Search(AgentStaffAuthorizedApi):
             {
                 'title': item.title,
                 'content': item.content,
-                'datetime': item.datetime
+                'create_time': item.create_time
             }
             for item in notice_qs_split.data
         ]
