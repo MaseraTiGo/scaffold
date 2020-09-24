@@ -23,7 +23,7 @@ class Search(CustomerAuthorizedApi):
                       conf={
                           'title': CharField(desc="标题"),
                           'content': CharField(desc="内容"),
-                          'datetime': DatetimeField(desc="通知时间")
+                          'create_time': DatetimeField(desc="通知时间")
                       }))
 
     @classmethod
@@ -36,7 +36,7 @@ class Search(CustomerAuthorizedApi):
 
     def execute(self, request):
         request.search_info = {'platform': 'customer', 'status': 'enable'}
-        notice_qs_split = NoticeServer.search_all(request.current_page, **request.search_info)
+        notice_qs_split = NoticeServer.search(request.current_page, **request.search_info)
         return notice_qs_split
 
     def fill(self, response, notice_qs_split):
@@ -44,7 +44,7 @@ class Search(CustomerAuthorizedApi):
             {
                 'title': item.title,
                 'content': item.content,
-                'datetime': item.datetime
+                'create_time': item.create_time
             }
             for item in notice_qs_split.data
         ]

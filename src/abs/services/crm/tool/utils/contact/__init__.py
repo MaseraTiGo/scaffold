@@ -42,8 +42,8 @@ class NoticeClassify(object):
 
 class NoticePlatform(object):
     CRM = 'crm'
-    CRM_APP = 'crm_app'
+    # CRM_APP = 'crm_app'
     AGENT = 'agent'
     WECHAT = 'customer_wechat'
     APP = 'customer'
-    CHOICES = ((CRM, 'crm'), (CRM_APP, "crm小程序"), (AGENT, '代理商'), (WECHAT, '微信小程序'), (APP, "客户端"))
+    CHOICES = ((CRM, 'crm'), (AGENT, '代理商'), (WECHAT, '微信小程序'), (APP, "客户端"))

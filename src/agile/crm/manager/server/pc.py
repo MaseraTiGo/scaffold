@@ -123,8 +123,8 @@ crm_pc_service.add(Search, Add, Update, Remove)
 from agile.crm.apis.contract.template import Search, Get, Examine
 crm_pc_service.add(Search, Get, Examine)
 
-from agile.crm.apis.tool.notice import Search, Add, Update, Remove
-crm_pc_service.add(Search, Add, Update, Remove)
+from agile.crm.apis.tool.notice import Search, Add, Update, Remove, SearchAll
+crm_pc_service.add(Search, Add, Update, Remove, SearchAll)
 
-from agile.crm.apis.feedback import Search
-crm_pc_service.add(Search)
+from agile.crm.apis.feedback import Search, UpdateStatus
+crm_pc_service.add(Search, UpdateStatus)
