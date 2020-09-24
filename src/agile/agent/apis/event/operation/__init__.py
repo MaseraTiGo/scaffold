@@ -117,7 +117,7 @@ class Add(AgentStaffAuthorizedApi):
             "staff_id":auth.id,
             "organization_id":0,
             "agent_customer_id":agent_customer.id,
-            "agent_id":auth.agent_id,
+            "agent_id":auth.company_id,
             "type":OperationTypes.VISIT,
             "describe":"回访时间：{t},回访记录：{r}".format(
                 t = visit_time,

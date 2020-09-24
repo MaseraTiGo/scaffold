@@ -77,10 +77,10 @@ class Search(AgentStaffAuthorizedApi):
                 auth
             )
             request.search_info.update({
-                "staff_id__in":permission.data
+                "staff_id__in":permission.data[0]
             })
         request.search_info.update({
-            "agent_id":auth.agent_id
+            "agent_id":auth.company_id
         })
         spliter = SaleChanceServer.search(
             request.current_page,
@@ -344,7 +344,7 @@ class Update(AgentStaffAuthorizedApi):
                 "staff_id":auth.id,
                 "organization_id":0,
                 "agent_customer_id":sale_chance.agent_customer.id,
-                "agent_id":auth.agent_id,
+                "agent_id":auth.company_id,
                 "type":OperationTypes.INTENTION,
                 "describe":describe
             })

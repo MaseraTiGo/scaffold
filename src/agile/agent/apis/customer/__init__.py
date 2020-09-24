@@ -63,7 +63,7 @@ class Search(AgentStaffAuthorizedApi):
     def execute(self, request):
         auth = self.auth_user
         request.search_info.update({
-            "agent_id":auth.agent_id
+            "agent_id":auth.company_id
         })
         agent_customer_spliter = AgentCustomerServer.search(
             request.current_page,
@@ -159,7 +159,7 @@ class Update(AgentStaffAuthorizedApi):
                     "staff_id":auth.id,
                     "organization_id":0,
                     "agent_customer_id":agent_customer.id,
-                    "agent_id":auth.agent_id,
+                    "agent_id":auth.company_id,
                     "type":OperationTypes.CUSTOMER,
                     "describe":describe
                 })

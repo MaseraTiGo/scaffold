@@ -264,13 +264,13 @@ class Search(AgentStaffAuthorizedApi):
                 auth
             )
             order_ids = StaffOrderEventServer.get_order_ids(
-                staff_id__in = permission.data
+                staff_id__in = permission.data[0]
             )
             request.search_info.update({
                 "id__in":order_ids
             })
         request.search_info.update({
-            "agent_id":auth.agent_id
+            "agent_id":auth.company_id
         })
         order_spliter = OrderServer.search(
             request.current_page,

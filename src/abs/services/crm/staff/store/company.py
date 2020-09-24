@@ -9,3 +9,9 @@ class Company(AbstractCompany):
 
     class Meta:
         db_table = DB_PREFIX + "company"
+
+    @classmethod
+    def search(cls, **attrs):
+        company_qs = cls.query().filter(**attrs)
+        return company_qs
+

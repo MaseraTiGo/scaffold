@@ -605,10 +605,12 @@ class SearchAll(AgentStaffAuthorizedApi):
     def execute(self, request):
         goods_list = list(GoodsServer.search_all_goods(
             use_status = UseStatus.ENABLE,
-            agent_id = self.auth_user.agent_id
+            agent_id = self.auth_user.company_id
         ))
         MerchandiseServer.hung_merchandise(goods_list)
-        ProductionServer.hung_production([goods.merchandise for goods in goods_list])
+        ProductionServer.hung_production(
+            [goods.merchandise for goods in goods_list]
+        )
         UniversityServer.hung_school(goods_list)
         UniversityServer.hung_major(goods_list)
         return goods_list
