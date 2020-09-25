@@ -46,8 +46,8 @@ class CustomerAccountServer(AccountServer):
         return token
 
     @classmethod
-    def login(cls, username, account, unique_code, phone_system):
-        token = super().login(username, account)
+    def login(cls, username, password, unique_code, phone_system):
+        token = super().login(username, password)
         cls.update_phone_unique(
             token.user_id,
             unique_code,
@@ -67,9 +67,9 @@ class CustomerAccountServer(AccountServer):
 
     @classmethod
     def update_phone_unique(cls, role_id, unique_code, phone_system):
-        CustomerAccount.query(last_login_phone_unique = unique_code).update(
+        CustomerAccount.search(last_login_phone_unique = unique_code).update(
             last_login_phone_unique = "",
-            last_login_phone_system = "other"
+            last_login_phone_system = "other",
         )
         super().update(
             role_id,
