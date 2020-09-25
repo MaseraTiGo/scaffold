@@ -77,3 +77,8 @@ class LoaderHelper(object):
         self.set_value('saobei', 'access_token', '支付access_token', default = "fdcb0604199c48a4b3fdfc01773922e9")
         self.set_value('saobei', 'fromal_url', '请求连接', default = "http://pay.lcsw.cn/lcsw")
 
+        self.set_key('jpush', '极光推送配置')
+        self.set_value('jpush', 'app_key', '极光推送appkey', default = "f49ba8db36ec204fbaca066b")
+        self.set_value('jpush', 'master_secret', '极光推送secret', default = "7d2984b05ac1a7340f803e88")
+
+

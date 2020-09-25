@@ -12,10 +12,13 @@ from abs.middleground.business.order.utils.constant import OrderStatus
 from abs.services.agent.order.manager import OrderServer, OrderItemServer, \
      ContractServer
 from abs.services.crm.university.utils.constant import DurationTypes
+from abs.middleware.extend.jpush import jpush_extend
 from abs.middleground.business.person.manager import PersonServer
 from abs.services.agent.customer.manager import AgentCustomerServer
 from abs.services.agent.agent.manager import AgentStaffServer
 from abs.services.agent.event.manager import StaffOrderEventServer
+from abs.services.customer.personal.manager import CustomerServer
+from abs.services.customer.account.manager import CustomerAccountServer
 
 
 class Get(AgentStaffAuthorizedApi):
@@ -353,6 +356,21 @@ class Deliver(AgentStaffAuthorizedApi):
         contract = ContractServer.get(request.despatch_id)
         OrderServer.delivery(order_item, contract.id)
         contract.update(status = ContractStatus.WAIT_SIGNED)
+
+        # 缺少添加消息
+
+        customer = CustomerServer.get_by_person_id(contract.person_id)
+        if customer:
+            customer_account = CustomerAccountServer.get(customer.id)
+            if customer_account.last_login_phone_unique:
+                jpush_extend.alias_send(
+                    customer_account.last_login_phone_system,
+                    [customer_account.last_login_phone_unique],
+                    "提醒：您有一份待签署的合同",
+                    "尊敬的《橙鹿教育》用户，您好，感谢您的支持和信任，特意提醒，您有一份待签署的合同，立即前往签署>>",
+                    {"type":"contract", "id":contract.id}
+                )
+
 
     def fill(self, response):
         return response

@@ -20,6 +20,14 @@ class CustomerServer(BaseManager):
         return customer
 
     @classmethod
+    def get_by_person_id(cls, person_id):
+        customer = None
+        customer_qs = Customer.search(person_id = person_id)
+        if customer_qs.count() > 0:
+            customer = customer_qs[0]
+        return customer
+
+    @classmethod
     def search(cls, current_page, **search_info):
         if "nick" in search_info:
             nick = search_info.pop("nick")

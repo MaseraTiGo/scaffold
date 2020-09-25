@@ -25,6 +25,8 @@ class Register(NoAuthorizedApi):
     request.phone = RequestField(CharField, desc = "手机号码")
     request.password = RequestField(CharField, desc = "密码")
     request.code = RequestField(CharField, desc = "验证码")
+    request.unique_code = RequestField(CharField, desc = "设备唯一编码")
+    request._clientType = RequestField(CharField, desc = "登陆手机系统类型")
 
     response = with_metaclass(ResponseFieldSet)
     response.access_token = ResponseField(CharField, desc = "访问凭证")
@@ -57,6 +59,8 @@ class Register(NoAuthorizedApi):
             customer.id,
             request.phone,
             request.password,
+            request.unique_code,
+            request._clientType
         )
         return token
 

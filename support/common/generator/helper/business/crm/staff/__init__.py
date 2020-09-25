@@ -66,8 +66,6 @@ class StaffGenerator(BaseGenerator):
                     authorization = authorization,
                     name = position_name
                 )
-                print("==>>>>>>", organization_name, position_name, authorization.id)
-                print("==>>>>>>", organization_qs.count(), position_qs.count())
                 enterprise = staff_info.pop("enterprise")
                 permission_key = staff_info.pop('permission_key')
                 company_qs = Company.query().filter(
@@ -84,7 +82,6 @@ class StaffGenerator(BaseGenerator):
                         remark = enterprise.remark,
                     )
                 if organization_qs.count() and position_qs.count():
-                    print("===>>>>>aaaa", person.id, company.id, staff_info)
                     staff = Staff.create(
                         person_id = person.id,
                         company = company,

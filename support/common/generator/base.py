@@ -2,13 +2,14 @@
 
 from infrastructure.log.base import logger
 from infrastructure.utils.common.dictwrapper import DictWrapper
+from orderedset import OrderedSet
 
 
 class BaseGenerator(object):
 
     def __init__(self):
-        self._input_generators = set()
-        self._output_generators = set()
+        self._input_generators = OrderedSet()
+        self._output_generators = OrderedSet()
         self._result = None
 
     @classmethod

@@ -28,14 +28,14 @@ class PermissionMaker(BaseMaker):
         self._organization = OrganizationGenerator(organization_info)
 
     def generate_relate(self):
-        self._authorization.add_inputs(
-            self._platform
-        )
         self._rule.add_inputs(
             self._platform
         )
-        self._authorization.add_outputs(
-            self._rule_group
+        self._authorization.add_inputs(
+            self._rule
+        )
+        self._rule_group.add_inputs(
+            self._authorization
         )
         self._position.add_inputs(
             self._rule_group
@@ -43,4 +43,4 @@ class PermissionMaker(BaseMaker):
         self._organization.add_inputs(
             self._position
         )
-        return self._authorization
+        return self._platform

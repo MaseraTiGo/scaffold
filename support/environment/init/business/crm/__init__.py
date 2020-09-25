@@ -62,9 +62,11 @@ class CrmInitializeMaker(BaseMaker):
 
 
     def generate_relate(self):
-        self._enterprise.add_outputs(self._production, self._permission)
+        self._enterprise.add_outputs(self._production)
+        self._permission.add_inputs(self._enterprise)
         self._staff.add_outputs(self._staff_account)
         self._staff.add_inputs(self._permission, self._person)
+
         return self._staff
 
 
