@@ -111,7 +111,6 @@ class Search(StaffAuthorizedApi):
             review=True,
             **request.search_info
         )
-        print(f'goods list: {spliter.data}')
         AgentServer.hung_agent(spliter.data)
         UniversityServer.hung_major(spliter.data)
         UniversityServer.hung_school(spliter.data)

@@ -231,3 +231,11 @@ class GoodsReviewServer(BaseManager):
             gr_obj = GoodsReview.search(goods=obj)[0]
             obj.gr_status = gr_obj.status
             obj.gr_remark = gr_obj.remark
+
+    @classmethod
+    def update_specification_info(cls, specification_info_list):
+        for specification_info in specification_info_list:
+            specification_id = specification_info.pop('id')
+            s_obj = MerchandiseServer.get_specification(specification_id)
+            s_obj.update(**specification_info)
+        return True

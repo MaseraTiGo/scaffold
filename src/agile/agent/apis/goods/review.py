@@ -52,6 +52,7 @@ class Search(AgentStaffAuthorizedApi):
                     choices=ReviewStatus.CHOICES
                 ),
                 'production_id': IntField(desc="产品ID"),
+                'despatch_type': CharField(desc="发货方式"),
                 'remark': CharField(desc="审核备注"),
                 'production_name': CharField(desc="产品名称"),
                 'brand_id': IntField(desc="品牌ID"),
@@ -79,6 +80,7 @@ class Search(AgentStaffAuthorizedApi):
                         desc="规格详情",
                         conf={
                             "id": IntField(desc="规格id"),
+                            'show_image': CharField(desc="缩略图"),
                             "sale_price": IntField(desc="销售价为，单位：分"),
                             "specification_value_list": ListField(
                                 desc="属性值列表",
@@ -130,6 +132,7 @@ class Search(AgentStaffAuthorizedApi):
             'slideshow': json.loads(goods.merchandise.slideshow),
             'status': goods.gr_status,
             'remark': goods.gr_remark,
+            'despatch_type': goods.merchandise.despatch_type,
             'production_id': goods.merchandise.production.id,
             'production_name': goods.merchandise.production.name,
             'brand_id': goods.merchandise.production.brand.id,
@@ -148,6 +151,7 @@ class Search(AgentStaffAuthorizedApi):
             'specification_list': [{
                 "id": specification.id,
                 "sale_price": specification.sale_price,
+                "show_image": specification.show_image,
                 "specification_value_list": [{
                     "category": specification_value.category,
                     "attribute": specification_value.attribute
@@ -177,6 +181,44 @@ class SetStatus(AgentStaffAuthorizedApi):
     def execute(self, request):
         review_info = {'status': 'wait_review'}
         GoodsReviewServer.set_review_result(request.goods_id, **review_info)
+
+    def fill(self, response):
+        return response
+
+
+class BaseEdit(AgentStaffAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.goods_info = RequestField(DictField, desc="商品信息", conf={
+        'goods_id': IntField(desc="商品id"),
+        'template_id': IntField(desc="模板id", is_required=False),
+    })
+    request.specification_info = RequestField(
+        ListField,
+        desc="商品规格修改列表",
+        fmt=DictField(desc="商品规格修改详情", conf={
+            'id': IntField(desc="规格id"),
+            'show_image': CharField(desc="缩略图", is_required=False),
+            'sale_price': IntField(desc="销售价", is_required=False),
+            'stock': IntField(desc="库存", is_required=False),
+        }))
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_desc(cls):
+        return "商品规格信息修改接口"
+
+    @classmethod
+    def get_author(cls):
+        return "djd"
+
+    def execute(self, request):
+        goods_id = request.goods_info.pop('goods_id')
+        if 'template_id' in request.goods_info:
+            update_info = {'template_id': request.goods_info.pop('template_id')}
+            goods = GoodsServer.get_goods(goods_id=goods_id)
+            goods.update(**update_info)
+        GoodsReviewServer.update_specification_info(request.specification_info)
 
     def fill(self, response):
         return response

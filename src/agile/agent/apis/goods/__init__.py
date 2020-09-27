@@ -22,6 +22,7 @@ from abs.services.agent.order.manager import OrderItemServer
 from abs.services.agent.contract.manager import TemplateServer
 from abs.services.agent.contract.utils.constant import TemplateStatus
 from abs.services.agent.goods.manager import GoodsReviewServer
+from abs.services.agent.goods.utils.constant import ReviewStatus
 
 
 class Get(AgentStaffAuthorizedApi):
@@ -67,11 +68,16 @@ class Get(AgentStaffAuthorizedApi):
                 desc = "分类",
                 choices = CategoryTypes.CHOICES
             ),
+            "review_status": CharField(
+                desc="审核状态",
+                choices=ReviewStatus.CHOICES,
+            ),
             "use_status":CharField(
                 desc = "上下架",
                 choices = UseStatus.CHOICES,
             ),
             'remark': CharField(desc = "备注"),
+            'review_remark': CharField(desc="审核备注"),
             'specification_list': ListField(
                     desc = "规格列表",
                     fmt = DictField(
@@ -113,6 +119,8 @@ class Get(AgentStaffAuthorizedApi):
         MerchandiseServer.hung_merchandise([goods])
         ProductionServer.hung_production([goods.merchandise])
         UniversityYearsServer.hung_years([goods])
+        # 挂载商品审核状态及备注
+        GoodsReviewServer.hung_goods_review_status([goods])
         return goods
 
     def fill(self, response, goods):
@@ -135,6 +143,8 @@ class Get(AgentStaffAuthorizedApi):
             'duration':goods.years.duration,
             'category':goods.years.category,
             'use_status': goods.merchandise.use_status,
+            'review_status': goods.gr_status,
+            'review_remark': goods.gr_remark,
             'remark': goods.merchandise.remark,
             'template_id': goods.template_id,
             'specification_list':[{
@@ -388,7 +398,6 @@ class Add(AgentStaffAuthorizedApi):
         }
         goods = GoodsServer.create_goods(**goods_info)
         # 创建goods review对象
-        # todo: dong
         GoodsReviewServer.create_goods_review(goods=goods)
         return goods
 
@@ -438,6 +447,8 @@ class Update(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         goods = GoodsServer.get_goods(request.goods_id)
+        # 重置商品审核状态
+        GoodsReviewServer.set_review_result(goods_id=goods.id, **{'status': 'wait_post'})
         merchandise = MerchandiseServer.get(goods.merchandise_id)
         if merchandise.use_status == UseStatus.ENABLE:
             raise BusinessError("请先下架此商品")
@@ -525,6 +536,8 @@ class Remove(AgentStaffAuthorizedApi):
         if OrderItemServer.search_all(goods_id = goods.id).count() > 0:
             raise BusinessError("存在订单无法删除")
         MerchandiseServer.remove(merchandise.id)
+        # 删除商品审核信息
+        GoodsReviewServer.delete(goods)
         goods.delete()
 
     def fill(self, response):

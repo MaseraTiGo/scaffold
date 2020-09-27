@@ -5,7 +5,7 @@ from random import choice
 from support.common.testcase.agent_api_test_case import AgentAPITestCase
 
 
-class ToolNoticeTestCase(AgentAPITestCase):
+class GoodsReviewTestCase(AgentAPITestCase):
 
     def setUp(self):
         pass
@@ -32,7 +32,7 @@ class ToolNoticeTestCase(AgentAPITestCase):
         if len(result['data_list']):
             for notice in result['data_list']:
                 self.assertTrue('remark' in notice.keys())
-        print(result['data_list'])
+        # print(result['data_list'])
         return result['data_list']
 
     def test_goods_review_setstatus(self):
@@ -41,5 +41,20 @@ class ToolNoticeTestCase(AgentAPITestCase):
         self.access_api(
             api=api,
             goods_id=goods_id
+        )
+
+    def test_goods_review_base_edit(self):
+        api = 'goods.review.baseedit'
+        goods_info = {
+            'goods_id': 1
+        }
+        specification_info = [{
+            'id': 1,
+            'sale_price': choice([333, 666, 999])
+        }]
+        self.access_api(
+            api=api,
+            goods_info=json.dumps(goods_info),
+            specification_info=json.dumps(specification_info)
         )
 

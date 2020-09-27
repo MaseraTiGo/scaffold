@@ -19,6 +19,7 @@ from abs.services.crm.university.manager import UniversityServer, \
      UniversityYearsServer
 from abs.services.agent.agent.manager import AgentServer
 from abs.services.agent.goods.manager import GoodsReviewServer
+from abs.services.agent.goods.utils.constant import ReviewStatus
 
 
 class Get(StaffAuthorizedApi):
@@ -67,7 +68,12 @@ class Get(StaffAuthorizedApi):
                 desc = "上下架",
                 choices = UseStatus.CHOICES,
             ),
+            "review_status": CharField(
+                desc="上下架",
+                choices=ReviewStatus.CHOICES,
+            ),
             'remark': CharField(desc = "备注"),
+            'review_remark': CharField(desc="审核备注"),
             'specification_list': ListField(
                     desc = "规格列表",
                     fmt = DictField(
@@ -108,6 +114,8 @@ class Get(StaffAuthorizedApi):
         MerchandiseServer.hung_merchandise([goods])
         ProductionServer.hung_production([goods.merchandise])
         UniversityYearsServer.hung_years([goods])
+        # 挂载商品审核状态及备注
+        GoodsReviewServer.hung_goods_review_status([goods])
         return goods
 
     def fill(self, response, goods):
@@ -130,6 +138,8 @@ class Get(StaffAuthorizedApi):
             'duration':goods.years.duration,
             'category':goods.years.category,
             'use_status': goods.merchandise.use_status,
+            'review_status': goods.gr_status,
+            'review_remark': goods.gr_remark,
             'remark': goods.merchandise.remark,
             'specification_list':[{
                 'id': specification.id,

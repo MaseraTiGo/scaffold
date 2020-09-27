@@ -99,5 +99,5 @@ agent_pc_service.add(SearchAll, Get)
 from agile.agent.apis.notice import SearchAll
 agent_pc_service.add(SearchAll)
 
-from agile.agent.apis.goods.review import Search, SetStatus
-agent_pc_service.add(Search, SetStatus)
+from agile.agent.apis.goods.review import Search, SetStatus, BaseEdit
+agent_pc_service.add(Search, SetStatus, BaseEdit)
