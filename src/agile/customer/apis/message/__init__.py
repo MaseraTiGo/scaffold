@@ -5,7 +5,7 @@ from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.field.base import CharField, DictField, \
     IntField, ListField, DatetimeField
-from abs.services.customer.personal.manager.message import CustomerMessageServer
+from abs.services.agent.customer.manager.message import CustomerMessageServer
 
 
 class Search(CustomerAuthorizedApi):
@@ -38,7 +38,8 @@ class Search(CustomerAuthorizedApi):
 
     def execute(self, request):
         customer = self.auth_user
-        search_info = {'customer': customer}
+        print(f'customer info: {customer}')
+        search_info = {'person_id': customer.person_id}
         notice_qs_split = CustomerMessageServer.search(request.current_page, **search_info)
         return notice_qs_split
 
@@ -97,7 +98,7 @@ class UnreadCount(CustomerAuthorizedApi):
 
     def execute(self, request):
         customer = self.auth_user
-        search_info = {'status': 'unread', 'customer': customer}
+        search_info = {'status': 'unread', 'person_id': customer.person_id}
         unread_counts = CustomerMessageServer.count_unread(**search_info)
         return unread_counts
 

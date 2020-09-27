@@ -2,15 +2,16 @@
 
 from abs.common.model import BaseModel, \
         IntegerField, CharField, DateTimeField, timezone, ForeignKey, CASCADE
-from abs.services.customer.personal.settings import DB_PREFIX
-from abs.services.customer.personal.store import Customer
-from abs.services.customer.personal.utils.constant import MessageStatus
+from abs.services.agent.customer.settings import DB_PREFIX
+from abs.services.agent.customer.utils.constant import MessageStatus
+from abs.services.agent.customer.store.customer import AgentCustomer
 
 
 # todo: dong
 class CustomerMessage(BaseModel):
 
-    customer = ForeignKey(Customer, on_delete=CASCADE, related_name='personal_messages')
+    customer = ForeignKey(AgentCustomer, on_delete=CASCADE, related_name='personal_messages')
+    person_id = IntegerField(verbose_name="person_id", default=0)
     title = CharField(verbose_name="标题", max_length=64)
     content = CharField(verbose_name="内容", max_length=64)
 

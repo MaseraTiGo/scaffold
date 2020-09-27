@@ -5,17 +5,21 @@ from infrastructure.core.exception.business_error import BusinessError
 from infrastructure.utils.common.split_page import Splitor
 
 from abs.common.manager import BaseManager
-from abs.services.agent.goods.store.goods import Goods
+from abs.services.agent.goods.store.goods import Goods, GoodsReview
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from abs.middleground.business.merchandise.utils.constant import UseStatus
 from abs.services.agent.goods.store.poster import Poster, PosterSpecification
+from abs.services.agent.goods.utils.constant import ReviewStatus
 
 
 class GoodsServer(BaseManager):
 
     @classmethod
-    def search_goods(cls, current_page, **search_info):
+    def search_goods(cls, current_page, review=False, **search_info):
         goods_qs = cls.search_all_goods(**search_info).order_by("-create_time")
+        # todo: dong 过滤审核已通过的商品
+        if not review:
+            goods_qs = cls.filter_review_pass_goods(goods_qs)
         return Splitor(current_page, goods_qs)
 
     @classmethod
@@ -145,6 +149,16 @@ class GoodsServer(BaseManager):
                     obj.goods = goods
         return obj_list
 
+    @classmethod
+    def filter_review_pass_goods(cls, goods_qs):
+        filter_qs = []
+        for goods in goods_qs:
+            gr_obj = GoodsReview.search(goods=goods)[0]
+            if gr_obj.status == ReviewStatus.PASS:
+                filter_qs.append(goods)
+        return filter_qs
+
+
 class PosterServer(BaseManager):
 
     @classmethod
@@ -178,3 +192,42 @@ class PosterServer(BaseManager):
             MerchandiseServer.hung_specification(poster_specification_list)
             return poster
         raise BusinessError('海报不存在')
+
+
+class GoodsReviewServer(BaseManager):
+    @classmethod
+    def delete(cls, goods):
+        gr_obj = GoodsReview.search(goods=goods)[0]
+        gr_obj.delete()
+        return True
+
+    @classmethod
+    def search(cls, current_page, **search_info):
+        if 'title' in search_info:
+            title = search_info.pop('title')
+            search_info.update({'title__contains': title})
+        goods_qs = Goods.search(**search_info).order_by("-create_time")
+        return Splitor(current_page, goods_qs)
+
+    @classmethod
+    def set_review_result(cls, goods_id, **review_info):
+        goods = GoodsServer.get_goods(goods_id)
+        status = review_info.get('status')
+        merchandise = MerchandiseServer.get(goods.merchandise_id)
+        if len(merchandise.specification_list) == 0 \
+                and status == ReviewStatus.PASS:
+            raise BusinessError("该商品缺少规格审核不应予以通过！")
+        gr_obj = GoodsReview.search(goods=goods)[0]
+        gr_obj.update(**review_info)
+        return gr_obj
+
+    @classmethod
+    def create_goods_review(cls, **review_info):
+        GoodsReview.create(**review_info)
+
+    @classmethod
+    def hung_goods_review_status(cls, objs):
+        for obj in objs:
+            gr_obj = GoodsReview.search(goods=obj)[0]
+            obj.gr_status = gr_obj.status
+            obj.gr_remark = gr_obj.remark

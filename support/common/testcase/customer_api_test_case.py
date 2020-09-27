@@ -38,6 +38,7 @@ class CustomerAPITestCase(APITestCase):
             api = api,
             is_auth = False,
             username = username,
+            unique_code = '123321',
             password = password
         )
         self._auth_token = result['access_token']

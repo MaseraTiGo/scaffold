@@ -21,6 +21,7 @@ from abs.services.crm.university.manager import UniversityServer, \
 from abs.services.agent.order.manager import OrderItemServer
 from abs.services.agent.contract.manager import TemplateServer
 from abs.services.agent.contract.utils.constant import TemplateStatus
+from abs.services.agent.goods.manager import GoodsReviewServer
 
 
 class Get(AgentStaffAuthorizedApi):
@@ -315,7 +316,7 @@ class Add(AgentStaffAuthorizedApi):
             'title': CharField(desc = "标题"),
             'video_display': CharField(desc = "宣传视频", is_required = False),
             'slideshow': ListField(
-                desc = '轮播图',
+                 desc = '轮播图',
                 fmt = CharField(desc = "图片地址")
             ),
             'detail': ListField(
@@ -386,6 +387,9 @@ class Add(AgentStaffAuthorizedApi):
             "template_id":template.id
         }
         goods = GoodsServer.create_goods(**goods_info)
+        # 创建goods review对象
+        # todo: dong
+        GoodsReviewServer.create_goods_review(goods=goods)
         return goods
 
     def fill(self, response, goods):

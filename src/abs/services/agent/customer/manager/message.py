@@ -1,7 +1,7 @@
 # coding=UTF-8
 
 from abs.common.manager import BaseManager
-from abs.services.customer.personal.store.message import CustomerMessage
+from abs.services.agent.customer.store.message import CustomerMessage
 from infrastructure.utils.common.split_page import Splitor
 
 
@@ -9,8 +9,8 @@ class CustomerMessageServer(BaseManager):
 
     @classmethod
     def search(cls, current_page, **search_info):
-        customer_qs = CustomerMessage.search(**search_info).order_by('-create_time')
-        customer_qs_split = Splitor(current_page, customer_qs)
+        customer_message_qs = CustomerMessage.search(**search_info)
+        customer_qs_split = Splitor(current_page, customer_message_qs)
         return customer_qs_split
 
     @classmethod
@@ -22,3 +22,7 @@ class CustomerMessageServer(BaseManager):
     @classmethod
     def count_unread(cls, **search_info):
         return CustomerMessage.search(**search_info).count()
+
+    @classmethod
+    def add(cls, **message_info):
+        message_obj = CustomerMessage.create(**message_info)

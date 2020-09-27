@@ -18,6 +18,7 @@ from abs.services.agent.goods.manager import GoodsServer
 from abs.services.crm.university.manager import UniversityServer, \
      UniversityYearsServer
 from abs.services.agent.agent.manager import AgentServer
+from abs.services.agent.goods.manager import GoodsReviewServer
 
 
 class Get(StaffAuthorizedApi):
@@ -318,6 +319,8 @@ class Remove(StaffAuthorizedApi):
     def execute(self, request):
         goods = GoodsServer.get_goods(request.goods_id)
         MerchandiseServer.remove(goods.merchandise_id)
+        # 删除商品审核信息
+        GoodsReviewServer.delete(goods)
         goods.delete()
 
     def fill(self, response):

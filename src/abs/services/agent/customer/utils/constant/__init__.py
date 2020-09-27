@@ -36,3 +36,9 @@ class IntentionTypes(object):
     CHOICES = ((NO, '无意向'), (LOW, '低意向'),
                (MIDDLE, '中意向'), (HIGH, '高意向'),
                (UNKNOWN, '未知'))
+
+
+class MessageStatus(object):
+    READ = 'read'
+    UNREAD = 'unread'
+    CHOICES = ((READ, "已读"), (UNREAD, "未读"))

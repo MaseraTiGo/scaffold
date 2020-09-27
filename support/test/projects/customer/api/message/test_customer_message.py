@@ -20,11 +20,8 @@ class CustomerMessageTest(CustomerAPITestCase):
 
     def test_message_search(self):
         api = 'message.search'
-        params = {
-            'current_page': 1,
-        }
-        result = self.access_api(api=api, **params)
-        # print(f'get notice result: \n{result}')
+        current_page = 1,
+        result = self.access_api(api=api, current_page=current_page)
         for item in result.get('data_list', []):
             self.assertTrue('id' in item.keys())
             self.assertTrue('title' in item.keys())

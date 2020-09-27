@@ -128,3 +128,6 @@ crm_pc_service.add(Search, Add, Update, Remove, SearchAll)
 
 from agile.crm.apis.feedback import Search, UpdateStatus
 crm_pc_service.add(Search, UpdateStatus)
+
+from agile.crm.apis.production.goods.review import Search, SetStatus
+crm_pc_service.add(Search, SetStatus)

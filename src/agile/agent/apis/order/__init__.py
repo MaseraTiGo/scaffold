@@ -19,7 +19,7 @@ from abs.services.agent.agent.manager import AgentStaffServer
 from abs.services.agent.event.manager import StaffOrderEventServer
 from abs.services.customer.personal.manager import CustomerServer
 from abs.services.customer.account.manager import CustomerAccountServer
-
+from abs.services.agent.customer.manager.message import CustomerMessageServer
 
 class Get(AgentStaffAuthorizedApi):
 
@@ -357,9 +357,17 @@ class Deliver(AgentStaffAuthorizedApi):
         OrderServer.delivery(order_item, contract.id)
         contract.update(status = ContractStatus.WAIT_SIGNED)
 
-        # 缺少添加消息
+        # 添加消息
 
         customer = CustomerServer.get_by_person_id(contract.person_id)
+        message_info = {'customer': customer,
+                        'title': "提醒：您有一份待签署的合同",
+                        'person_id': contract.person_id,
+                        'content': "尊敬的《橙鹿教育》用户，您好，"
+                                   "感谢您的支持和信任，特意提醒，您有一份待签署的合同，立即前往签署>>",
+                        }
+        if customer:
+            CustomerMessageServer.add(**message_info)
         if customer:
             customer_account = CustomerAccountServer.get(customer.id)
             if customer_account.last_login_phone_unique:
