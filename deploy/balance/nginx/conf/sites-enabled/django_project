@@ -1,7 +1,7 @@
 server {
 
     listen 80;
-    server_name test-b.rong-mi.com education.bq.com;
+    server_name test-b.orgdeer.com education.bq.com;
     charset utf-8;
 
     location ^~ /interface/ {
@@ -30,7 +30,7 @@ server {
 server {
 
     listen 80;
-    server_name test-a.rong-mi.com education-a.bq.com;
+    server_name test-a.orgdeer.com education-a.bq.com;
     charset utf-8;
 
     location / {
