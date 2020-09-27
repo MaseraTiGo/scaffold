@@ -19,7 +19,7 @@ from abs.services.agent.contract.manager import TemplateServer, \
 
 class Get(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
-    request.order_item_id = RequestField(IntField, desc = "订单详情id")
+    request.contract_id = RequestField(IntField, desc = "合同id")
 
     response = with_metaclass(ResponseFieldSet)
     response.contract_info = ResponseField(
@@ -52,17 +52,9 @@ class Get(CustomerAuthorizedApi):
         return "Fsy"
 
     def execute(self, request):
-        order_item = OrderItemServer.get(
-            request.order_item_id
+        contract = ContractServer.get(
+            request.contract_id
         )
-        if order_item.order.person_id != self.auth_user.person_id:
-            raise BusinessError('订单异常')
-        contract = None
-        contract_list = ContractServer.search_all(
-            order_item_id = order_item.id
-        )
-        if contract_list.count() > 0:
-            contract = contract_list[0]
         return contract
 
     def fill(self, response, contract):

@@ -11,7 +11,8 @@ from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.middleground.business.person.manager import PersonServer
 from abs.middleground.business.merchandise.manager import MerchandiseServer
 from infrastructure.core.exception.business_error import BusinessError
-from abs.services.agent.order.manager import OrderServer, OrderItemServer, OrderPlanServer
+from abs.services.agent.order.manager import OrderServer, OrderItemServer, \
+     ContractServer, OrderPlanServer
 from abs.services.agent.goods.manager import GoodsServer
 from abs.middleground.business.order.manager import OrderServer as mg_OrderServer
 from abs.services.crm.university.manager import UniversityServer, UniversityYearsServer
@@ -350,6 +351,8 @@ class Get(CustomerAuthorizedApi):
                     'production_name': CharField(desc = "产品名"),
                     'remark': CharField(desc = "备注"),
                     'despatch_type': CharField(desc = "发货方式"),
+                    'contract_id': IntField(desc = "合同id"),
+                    'contract_status': CharField(desc = "合同状态"),
                 }
             )
         ),
@@ -392,6 +395,7 @@ class Get(CustomerAuthorizedApi):
             raise BusinessError('订单异常')
         order.order_item_list = OrderItemServer.search_all(order = order)
         mg_OrderServer.hung_snapshoot(order.order_item_list)
+        ContractServer.hung_contract_byitem(order.order_item_list)
         AgentServer.hung_agent([order])
         return order
 
@@ -433,6 +437,10 @@ class Get(CustomerAuthorizedApi):
                 'production_name': order_item.snapshoot.production_name,
                 'remark': order_item.snapshoot.remark,
                 'despatch_type': order_item.snapshoot.despatch_type,
+                'contract_id': order_item.contract.id if \
+                               order_item.contract else 0,
+                'contract_status': order_item.contract.status if \
+                                   order_item.contract else "",
             } for order_item in order.order_item_list],
             'invoice_info': {
                 'name': order.mg_order.invoice.name,
@@ -503,7 +511,9 @@ class Search(CustomerAuthorizedApi):
                             'category': CharField(desc = "类别"),
                             'school_city': CharField(desc = "学校城市"),
                             'brand_name': CharField(desc = "品牌"),
-                            'production_name': CharField(desc = "产品名")
+                            'production_name': CharField(desc = "产品名"),
+                            'contract_id': IntField(desc = "合同id"),
+                            'contract_status': CharField(desc = "合同状态"),
                         }
                     )
                 ),
@@ -541,6 +551,7 @@ class Search(CustomerAuthorizedApi):
         for order in page_list.data:
             all_order_item_list.extend(order.orderitem_list)
         mg_OrderServer.hung_snapshoot(all_order_item_list)
+        ContractServer.hung_contract_byitem(all_order_item_list)
         AgentServer.hung_agent(page_list.data)
         return page_list
 
@@ -578,7 +589,9 @@ class Search(CustomerAuthorizedApi):
                 'category': order_item.get_category_display(),
                 'school_city': order_item.school_city,
                 'brand_name': order_item.snapshoot.brand_name,
-                'production_name': order_item.snapshoot.production_name
+                'production_name': order_item.snapshoot.production_name,
+                'contract_id':order_item.contract.id if order_item.contract else 0,
+                'contract_status': order_item.contract.status if order_item.contract else "",
             } for order_item in order.orderitem_list],
             'invoice_info': {
                 'name': order.mg_order.invoice.name,
