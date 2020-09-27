@@ -59,6 +59,10 @@ class Register(NoAuthorizedApi):
             customer.id,
             request.phone,
             request.password,
+
+        )
+        CustomerAccountServer.update_phone_unique(
+            customer.id,
             request.unique_code,
             request._clientType
         )
@@ -96,6 +100,9 @@ class Login(NoAuthorizedApi):
         token = CustomerAccountServer.login(
             request.username,
             request.password,
+        )
+        CustomerAccountServer.update_phone_unique(
+            token.user_id,
             request.unique_code,
             request._clientType
         )
@@ -143,8 +150,6 @@ class CodeLogin(NoAuthorizedApi):
         if account:
             token = CustomerAccountServer.account_login(
                 account,
-                request.unique_code,
-                request._clientType
             )
             password = account.password
         else:
@@ -155,9 +160,12 @@ class CodeLogin(NoAuthorizedApi):
                 customer.id,
                 request.username,
                 password,
-                request.unique_code,
-                request._clientType
             )
+        CustomerAccountServer.update_phone_unique(
+            token.user_id,
+            request.unique_code,
+            request._clientType
+        )
         return token, password
 
     def fill(self, response, token, password):

@@ -444,12 +444,14 @@ class ContractServer(BaseManager):
         return True
 
     @classmethod
-    def hung_contract_byitem(cls, item_list):
+    def hung_contract_byitem(cls, item_list, is_send = True):
         item_mapping = {}
         for item in item_list:
             item.contract = None
             item_mapping[item.id] = item
         contract_qs = cls.search_all(order_item_id__in = item_mapping.keys())
+        if is_send:
+            contract_qs = contract_qs.exclude(status = ContractStatus.WAIT_SEND)
         for contract in contract_qs:
             if contract.order_item_id in item_mapping:
                 item_mapping[contract.order_item_id].contract = contract

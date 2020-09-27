@@ -33,36 +33,21 @@ class CustomerAccountServer(AccountServer):
         return None
 
     @classmethod
-    def account_login(cls, account, unique_code, phone_system):
+    def account_login(cls, account):
         token = TokenManager.generate_token(
             account.role_type,
             account.role_id
         )
-        cls.update_phone_unique(
-            token.user_id,
-            unique_code,
-            phone_system
-        )
         return token
 
     @classmethod
-    def login(cls, username, password, unique_code, phone_system):
+    def login(cls, username, password):
         token = super().login(username, password)
-        cls.update_phone_unique(
-            token.user_id,
-            unique_code,
-            phone_system
-        )
         return token
 
     @classmethod
-    def create(cls, role_id, username, password, unique_code, phone_system):
+    def create(cls, role_id, username, password):
         token = super().create(role_id, username, password)
-        cls.update_phone_unique(
-            role_id,
-            unique_code,
-            phone_system
-        )
         return token
 
     @classmethod
