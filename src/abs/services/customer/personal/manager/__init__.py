@@ -108,6 +108,14 @@ class CustomerServer(BaseManager):
                     obj.customer = customer
         return obj_list
 
+    @classmethod
+    def get_customer_obj(cls, phone):
+        customer = None
+        is_person_exsited, person = PersonServer.is_exsited(phone)
+        if is_person_exsited:
+            customer = cls.get_by_person_id(person.id)
+        return customer
+
 
 class CollectionRecordServer(BaseManager):
 

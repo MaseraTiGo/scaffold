@@ -333,7 +333,6 @@ class Add(AgentStaffAuthorizedApi):
                 desc = '详情页',
                 fmt = CharField(desc = "图片地址")
             ),
-            'market_price': IntField(desc = "市场价, 单位:分"),
             'despatch_type': CharField(
                 desc = "发货方式",
                 choices = DespatchService.CHOICES
@@ -377,9 +376,9 @@ class Add(AgentStaffAuthorizedApi):
             "slideshow":json.dumps(request.goods_info.pop('slideshow')),
             "video_display":request.goods_info.pop('video_display', ''),
             "detail":json.dumps(request.goods_info.pop('detail')),
-            "market_price":request.goods_info.pop('market_price'),
             "despatch_type":request.goods_info.pop('despatch_type'),
             "production_id":production.id,
+            "market_price": 3333,
             "remark":request.goods_info.pop('remark', ''),
             'description':request.goods_info.pop('description'),
             "pay_types":"[]",
@@ -423,7 +422,6 @@ class Update(AgentStaffAuthorizedApi):
                 desc = '详情页',
                 fmt = CharField(desc = "图片地址")
             ),
-            'market_price': IntField(desc = "市场价, 单位:分"),
             'despatch_type': CharField(
                 desc = "发货方式",
                 choices = DespatchService.CHOICES
@@ -447,8 +445,6 @@ class Update(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         goods = GoodsServer.get_goods(request.goods_id)
-        # 重置商品审核状态
-        GoodsReviewServer.set_review_result(goods_id=goods.id, **{'status': 'wait_post'})
         merchandise = MerchandiseServer.get(goods.merchandise_id)
         if merchandise.use_status == UseStatus.ENABLE:
             raise BusinessError("请先下架此商品")
@@ -467,13 +463,14 @@ class Update(AgentStaffAuthorizedApi):
             "years_id":year.id,
             "template_id":template.id
         }
+        # 重置商品审核状态
+        GoodsReviewServer.set_review_result(goods_id=goods.id, **{'status': 'wait_post'})
         GoodsServer.update_goods(goods, **goods_update_info)
         merchandise_update_info = {
             "title":request.goods_info.pop('title'),
             "slideshow":json.dumps(request.goods_info.pop('slideshow')),
             "video_display":request.goods_info.pop('video_display', ''),
             "detail":json.dumps(request.goods_info.pop('detail')),
-            "market_price":request.goods_info.pop('market_price'),
             "despatch_type":request.goods_info.pop('despatch_type'),
             "remark":request.goods_info.pop('remark', ''),
             "description":request.goods_info.pop('description'),
@@ -502,11 +499,14 @@ class Setuse(AgentStaffAuthorizedApi):
     def execute(self, request):
         goods = GoodsServer.get_goods(request.goods_id)
         merchandise = MerchandiseServer.get(goods.merchandise_id)
-        use_status = UseStatus.ENABLE
+        # 审核通过才能上下架
+        GoodsReviewServer.hung_goods_review_status([goods])
+        if goods.gr_status != 'pass':
+            raise BusinessError("未审核通过商品不能上下架")
         if merchandise.use_status == UseStatus.ENABLE:
             use_status = UseStatus.FORBIDDENT
         else:
-            raise BusinessError("暂无权限上架商品")
+            use_status = UseStatus.ENABLE
         merchandise.update(use_status = use_status)
 
     def fill(self, response):

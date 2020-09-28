@@ -358,16 +358,18 @@ class Deliver(AgentStaffAuthorizedApi):
         contract.update(status = ContractStatus.WAIT_SIGNED)
 
         # 添加消息
-
         customer = CustomerServer.get_by_person_id(contract.person_id)
-        message_info = {'customer': customer,
-                        'title': "提醒：您有一份待签署的合同",
-                        'person_id': contract.person_id,
-                        'content': "尊敬的《橙鹿教育》用户，您好，"
-                                   "感谢您的支持和信任，特意提醒，您有一份待签署的合同，立即前往签署>>",
-                        }
+
         if customer:
+            agent_customer = AgentCustomerServer.search_all(**{'person_id': contract.person_id})[0]
+            message_info = {'customer': agent_customer,
+                            'title': "提醒：您有一份待签署的合同",
+                            'person_id': contract.person_id,
+                            'content': "尊敬的《橙鹿教育》用户，您好，"
+                                       "感谢您的支持和信任，特意提醒，您有一份待签署的合同，立即前往签署>>",
+                            }
             CustomerMessageServer.add(**message_info)
+
         if customer:
             customer_account = CustomerAccountServer.get(customer.id)
             if customer_account.last_login_phone_unique:

@@ -55,7 +55,6 @@ class ToolNoticeTestCase(CrmAPITestCase):
         data_list = self.test_notice_search()
         notice_id = self.get_random_data(data_list)
         if not notice_id:
-            print(f'no data 2 delete')
             return
         result = self.access_api(
             api=api,
@@ -68,7 +67,6 @@ class ToolNoticeTestCase(CrmAPITestCase):
         data_list = self.test_notice_search()
         notice_id = self.get_random_data(data_list)
         if not notice_id:
-            print(f'no data 4 updating')
             return
         update_info = {
             'content': 'this content has been modified!'

@@ -10,13 +10,14 @@ from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
 from infrastructure.core.exception.business_error import BusinessError
-from infrastructure.core.field.base import CharField, BooleanField
+from infrastructure.core.field.base import CharField, BooleanField, ListField, IntField
 
 from agile.base.api import NoAuthorizedApi
 from agile.customer.manager.api import CustomerAuthorizedApi
 from abs.services.customer.account.manager import CustomerAccountServer
 from abs.services.customer.personal.manager import CustomerServer
 from abs.services.crm.tool.manager import SmsServer
+from abs.services.customer.personal.manager import CollectionRecordServer
 
 
 class Register(NoAuthorizedApi):
@@ -87,6 +88,9 @@ class Login(NoAuthorizedApi):
     response.access_token = ResponseField(CharField, desc = "访问凭证")
     response.renew_flag = ResponseField(CharField, desc = "续签标识")
     response.expire_time = ResponseField(CharField, desc = "到期时间")
+    response.goods_ids = ResponseField(ListField,
+                                    desc="收藏商品id列表",
+                                    fmt=IntField(desc="商品id"))
 
     @classmethod
     def get_desc(cls):
@@ -106,12 +110,20 @@ class Login(NoAuthorizedApi):
             request.unique_code,
             request._clientType
         )
-        return token
+        # 查询用户收藏商品id
+        goods_ids = []
+        customer = CustomerServer.get(token.user_id)
+        if customer:
+            cr_qs = CollectionRecordServer.search_all(**{'customer': customer, 'is_delete': False})
+            goods_ids = [collection.goods_id for collection in cr_qs]
+            goods_ids = list(set(goods_ids))
+        return token, goods_ids
 
-    def fill(self, response, token):
+    def fill(self, response, token, goods_ids):
         response.access_token = token.auth_token
         response.renew_flag = token.renew_flag
         response.expire_time = token.expire_time
+        response.goods_ids = goods_ids
         return response
 
 
@@ -127,6 +139,9 @@ class CodeLogin(NoAuthorizedApi):
     response.renew_flag = ResponseField(CharField, desc = "续签标识")
     response.expire_time = ResponseField(CharField, desc = "到期时间")
     response.is_password = ResponseField(BooleanField, desc = "是否有密码")
+    response.goods_ids = ResponseField(ListField,
+                                       desc="收藏商品id列表",
+                                       fmt=IntField(desc="商品id"))
 
     @classmethod
     def get_desc(cls):
@@ -166,13 +181,22 @@ class CodeLogin(NoAuthorizedApi):
             request.unique_code,
             request._clientType
         )
-        return token, password
 
-    def fill(self, response, token, password):
+        # 查询用户收藏商品id
+        goods_ids = []
+        customer = CustomerServer.get_customer_obj(request.username)
+        if customer:
+            cr_qs = CollectionRecordServer.search_all(**{'customer': customer, 'is_delete': False})
+            goods_ids = [collection.goods_id for collection in cr_qs]
+            goods_ids = list(set(goods_ids))
+        return token, password, goods_ids
+
+    def fill(self, response, token, password, goods_ids):
         response.is_password = True if password else False
         response.access_token = token.auth_token
         response.renew_flag = token.renew_flag
         response.expire_time = token.expire_time
+        response.goods_ids = goods_ids
         return response
 
 

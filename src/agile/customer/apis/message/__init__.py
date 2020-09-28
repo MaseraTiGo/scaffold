@@ -38,7 +38,6 @@ class Search(CustomerAuthorizedApi):
 
     def execute(self, request):
         customer = self.auth_user
-        print(f'customer info: {customer}')
         search_info = {'person_id': customer.person_id}
         notice_qs_split = CustomerMessageServer.search(request.current_page, **search_info)
         return notice_qs_split

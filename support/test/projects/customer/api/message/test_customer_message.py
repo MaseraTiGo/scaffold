@@ -36,11 +36,9 @@ class CustomerMessageTest(CustomerAPITestCase):
         if not message_id:
             print('no data 4 changing status')
             return
-        print(f'current message id is===>{message_id}')
         result = self.access_api(api=api, message_id=message_id)
 
     def test_message_unread_count(self):
         api = 'message.unreadcount'
         result = self.access_api(api=api)
-        print(f'unread message count: {result}')
         self.assertTrue(isinstance(result.get('unread_count'), int))

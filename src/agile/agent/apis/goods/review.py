@@ -109,6 +109,10 @@ class Search(AgentStaffAuthorizedApi):
 
     def execute(self, request):
         agent = self.auth_user
+        gr_status = None
+        if 'status' in request.search_info:
+            gr_status = request.search_info.pop('status')
+
         request.search_info.update({'agent_id': agent.company_id})
         spliter = GoodsServer.search_goods(
             request.current_page,
@@ -123,6 +127,8 @@ class Search(AgentStaffAuthorizedApi):
         ProductionServer.hung_production(merchandise_list)
         UniversityYearsServer.hung_years(spliter.data)
         GoodsReviewServer.hung_goods_review_status(spliter.data)
+        if gr_status:
+            spliter.data = [item for item in spliter.data if item.gr_status == gr_status]
         return spliter
 
     def fill(self, response, spliter):

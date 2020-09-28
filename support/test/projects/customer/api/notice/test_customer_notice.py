@@ -17,7 +17,6 @@ class CustomerNoticeTest(CustomerAPITestCase):
         api = 'notice.search'
         params = {'current_page': 1}
         result = self.access_api(api=api, **params)
-        print(f'get notice result: \n{result}')
         for item in result.get('data_list', []):
             self.assertTrue('title' in item.keys())
             self.assertTrue('content' in item.keys())
