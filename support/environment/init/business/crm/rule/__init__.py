@@ -41,10 +41,10 @@ class RuleLoader(BaseLoader):
                 "code": "dOnG"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "权限组管理",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "AjUn"
             },
@@ -81,10 +81,10 @@ class RuleLoader(BaseLoader):
                 "code": "RpsV"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "职位管理",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "UWQT"
             },
@@ -121,10 +121,10 @@ class RuleLoader(BaseLoader):
                 "code": "HXDP"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "部门管理",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "Mnqf"
             },
@@ -161,10 +161,10 @@ class RuleLoader(BaseLoader):
                 "code": "yFsB"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "员工列表",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "aNcN"
             },
@@ -178,19 +178,19 @@ class RuleLoader(BaseLoader):
             },
 
             {
-                "name": "修改账号",
+                "name": "编辑账号",
                 "parent": "员工列表",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改账号",
+                "description": "编辑账号",
                 "remark": "",
                 "code": "aNCN"
             },
 
             {
-                "name": "修改部门",
+                "name": "编辑部门",
                 "parent": "员工列表",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改部门",
+                "description": "编辑部门",
                 "remark": "",
                 "code": "ANcN"
             },
@@ -252,10 +252,10 @@ class RuleLoader(BaseLoader):
                 "code": "dtuC"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "品牌列表",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "YbRk"
             },
@@ -292,10 +292,10 @@ class RuleLoader(BaseLoader):
                 "code": "stli"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "产品列表",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "HClb"
             },
@@ -348,6 +348,14 @@ class RuleLoader(BaseLoader):
                 "code": "EJNV"
             },
             {
+                "name": "置顶",
+                "parent": "商品列表",
+                "platform_name": "橙鹿教育CRM总控平台",
+                "description": "置顶",
+                "remark": "",
+                "code": "EJnv"
+            },
+            {
                 "name": "商品审核",
                 "parent": "商品管理",
                 "platform_name": "橙鹿教育CRM总控平台",
@@ -396,10 +404,10 @@ class RuleLoader(BaseLoader):
                 "code": "oAAT"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "学校列表",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "PJUS"
             },
@@ -444,10 +452,10 @@ class RuleLoader(BaseLoader):
                 "code": "Iyvr"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "专业列表",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "Qwcg"
             },
@@ -500,10 +508,10 @@ class RuleLoader(BaseLoader):
                 "code": "JLsd"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "合同参数管理",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "meQR"
             },
@@ -546,6 +554,14 @@ class RuleLoader(BaseLoader):
                 "description": "预览",
                 "remark": "",
                 "code": "tifA"
+            },
+            {
+                "name": "审核",
+                "parent": "合同模板",
+                "platform_name": "橙鹿教育CRM总控平台",
+                "description": "审核",
+                "remark": "",
+                "code": "tIfA"
             },
             {
                 "name": "短信列表",
@@ -652,10 +668,10 @@ class RuleLoader(BaseLoader):
                 "code": "DsCD"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "代理商列表",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "GbAh"
             },
@@ -692,10 +708,10 @@ class RuleLoader(BaseLoader):
                 "code": "JQpq"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "广告位管理",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "ORGX"
             },
@@ -706,6 +722,14 @@ class RuleLoader(BaseLoader):
                 "description": "添加",
                 "remark": "",
                 "code": "rscG"
+            },
+            {
+                "name": "状态",
+                "parent": "广告位管理",
+                "platform_name": "橙鹿教育CRM总控平台",
+                "description": "状态",
+                "remark": "",
+                "code": "SRcG"
             },
             {
                 "name": "广告管理子项",
@@ -724,10 +748,10 @@ class RuleLoader(BaseLoader):
                 "code": "xfbN"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "广告管理子项",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "blbP"
             },
@@ -746,6 +770,14 @@ class RuleLoader(BaseLoader):
                 "description": "删除",
                 "remark": "",
                 "code": "KUlF"
+            },
+            {
+                "name": "状态",
+                "parent": "广告管理子项",
+                "platform_name": "橙鹿教育CRM总控平台",
+                "description": "状态",
+                "remark": "",
+                "code": "KIIF"
             },
             {
                 "name": "公告消息",
@@ -772,10 +804,10 @@ class RuleLoader(BaseLoader):
                 "code": "ehHH"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "公告消息子项",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "LydD"
             },
@@ -820,12 +852,20 @@ class RuleLoader(BaseLoader):
                 "code": "TQcR"
             },
             {
-                "name": "修改",
+                "name": "立即处理",
                 "parent": "意见反馈子项",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "立即处理",
                 "remark": "",
                 "code": "Mroo"
+            },
+            {
+                "name": "查询结果",
+                "parent": "意见反馈子项",
+                "platform_name": "橙鹿教育CRM总控平台",
+                "description": "查询结果",
+                "remark": "",
+                "code": "MroO"
             },
             {
                 "name": "系统设置",
@@ -852,10 +892,10 @@ class RuleLoader(BaseLoader):
                 "code": "tfry"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "系统设置子项",
                 "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "YubN"
             }

@@ -232,19 +232,23 @@ class WeChatLogin(NoAuthorizedApi):
     request.code = RequestField(CharField, desc='code')
 
     response = with_metaclass(ResponseFieldSet)
-    response.access_token = ResponseField(CharField, desc = "用户访问令牌")
-    response.renew_flag = ResponseField(CharField, desc = "续签访问令牌标识")
+    response.access_token = ResponseField(CharField, desc="用户访问令牌")
+    response.renew_flag = ResponseField(CharField, desc="续签访问令牌标识")
+    response.goods_ids = ResponseField(ListField,
+                                       desc="收藏商品id列表",
+                                       fmt=IntField(desc="商品id"))
 
     @classmethod
     def get_desc(cls):
-        return "微信第三方登录接口"
+        return "第三方微信登录接口"
 
     @classmethod
     def get_author(cls):
         return "djd"
 
     def execute(self, request):
-        openid, access_token = login_app_middleware.wechat_login(request.code)
+        openid, _ = login_app_middleware.wechat_login(request.code)
+
         tripartite = TripartiteServer.get_byopenid(openid, CategoryTypes.WECHAT_APP)
         if tripartite:
             token = CustomerAccountServer.account_login(
@@ -255,9 +259,89 @@ class WeChatLogin(NoAuthorizedApi):
         else:
             auth_token = ''
             renew_flag = ''
-        return auth_token, renew_flag
 
-    def fill(self, response, auth_token, renew_flag):
+        # 查询用户收藏商品id
+        goods_ids = []
+        customer = CustomerServer.get(tripartite.customer_account.role_id)
+        if customer:
+            cr_qs = CollectionRecordServer.search_all(**{'customer': customer, 'is_delete': False})
+            goods_ids = [collection.goods_id for collection in cr_qs]
+            goods_ids = list(set(goods_ids))
+        return auth_token, renew_flag, goods_ids
+
+    def fill(self, response, auth_token, renew_flag, goods_ids):
         response.access_token = auth_token
         response.renew_flag = renew_flag
+        response.goods_ids = goods_ids
+        return response
+
+
+class WechatRegister(NoAuthorizedApi):
+
+    request = with_metaclass(RequestFieldSet)
+    request.phone = RequestField(CharField, desc="手机号码")
+    request.code = RequestField(CharField, desc="wechat code")
+    request.unique_code = RequestField(CharField, desc="设备唯一编码")
+    request.client_type = RequestField(CharField, desc="登陆手机系统类型")
+
+    response = with_metaclass(ResponseFieldSet)
+    response.access_token = ResponseField(CharField, desc="访问凭证")
+    response.renew_flag = ResponseField(CharField, desc="续签标识")
+    response.expire_time = ResponseField(CharField, desc="到期时间")
+
+    @classmethod
+    def get_desc(cls):
+        return "wechat绑定手机号"
+
+    @classmethod
+    def get_author(cls):
+        return "djd"
+
+    def execute(self, request):
+        if CustomerAccountServer.is_exsited(request.phone):
+            raise BusinessError('该手机号已被绑定')
+        open_id, access_token = login_app_middleware.wechat_login(request.code)
+        user_wechat_info = login_app_middleware.user_info(access_token, open_id)
+        # todo: temporary test use
+        # open_id = 'zheshiyigezijisuibianbiandeid'
+        # user_wechat_info = {
+        #     'headimgurl': 'www.fucking-test.com',
+        #     'nickname': 'maserati'
+        # }
+
+        base_info = {}
+        if user_wechat_info:
+            base_info.update({'head_url': user_wechat_info.get('headimgurl', ''),
+                             'nick': user_wechat_info.get('nickname', ''),
+                              })
+        customer = CustomerServer.create(
+            request.phone,
+            **base_info
+        )
+
+        token = CustomerAccountServer.create(
+            customer.id,
+            request.phone,
+            '',
+
+        )
+        CustomerAccountServer.update_phone_unique(
+            customer.id,
+            request.unique_code,
+            request.client_type
+        )
+        # add head_url, nick to customer_account table
+        customer_account_obj = CustomerAccountServer.get_customer_account_by_id(customer.id)
+        customer_account_obj.update(**base_info)
+        TripartiteServer.create(**{
+            'customer_account': customer_account_obj,
+            'openid': open_id,
+            'category': CategoryTypes.WECHAT_APP,
+        })
+        return token
+
+    def fill(self, response, token):
+        response.access_token = token.auth_token
+        response.renew_flag = token.renew_flag
+        response.expire_time = token.expire_time
         return response

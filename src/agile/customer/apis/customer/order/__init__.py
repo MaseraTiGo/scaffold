@@ -764,7 +764,7 @@ class GetEvaluation(CustomerAuthorizedApi):
 
     def execute(self, request):
         search_info = {'order_item_id': request.order_item_id}
-        order_evaluation = OrderItemEvaluationServer.get(request.current_page, **search_info)
+        order_evaluation = OrderItemEvaluationServer.get(**search_info)
         return order_evaluation
 
     def fill(self, response, order_evaluation):
@@ -784,6 +784,7 @@ class GetEvaluation(CustomerAuthorizedApi):
 class AllEvaluations(CustomerAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
     request.goods_id = RequestField(IntField, desc="订单物品id")
+    request.current_page = RequestField(IntField, desc="当前页码")
 
     response = with_metaclass(ResponseFieldSet)
     response.data_list = ResponseField(

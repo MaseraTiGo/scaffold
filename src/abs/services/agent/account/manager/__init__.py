@@ -41,3 +41,7 @@ class AgentStaffAccountServer(AccountServer):
                 code_list.extend(codes.split('-'))
             return list(set(code_list))
         return json.loads(content)
+
+    @classmethod
+    def is_admin(cls, user_id):
+        return True if Staff.search(id=user_id).first().is_admin else False

@@ -61,7 +61,9 @@ class LoaderHelper(object):
         self.set_value('wechat_clzj_mini', 'appsecret', '微信appsecret', default = "29bb71b60211c72bc32b6a2a42556be1")
 
         self.set_key('wechat_cl_app', '橙鹿app')
-        self.set_value('wechat_cl_app', 'appid', '微信appid', default = "wx8aa0090b4ffd643f")
+        self.set_value('wechat_cl_app', 'appid', '微信APPappid', default = "wx8aa0090b4ffd643f")
+        # todo: just a placeholder
+        self.set_value('wechat_cl_app', 'appsecret', '微信APPappsecret', default = "placeholder")
 
         self.set_key('email', '邮件配置')
         self.set_value('email', 'sender', '邮件发送方email', default = "orgdeer@cljykjhbwwgc.onexmail.com")

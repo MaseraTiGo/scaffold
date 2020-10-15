@@ -263,7 +263,7 @@ class OrderItemServer(BaseManager):
         raise BusinessError('订单详情不存在')
 
     @classmethod
-    def update(cls, order_item, update_info):
+    def update(cls, order_item, **update_info):
         order_item.update(**update_info)
 
 
@@ -542,8 +542,8 @@ class OrderItemEvaluationServer(BaseManager):
 
     @classmethod
     def create(cls, **evaluation_info):
-        order = evaluation_info.get('order')
-        goods_id = OrderItemServer.search_all(**{'order': order})[0].goods_id
+        order_item = evaluation_info.get('order_item')
+        goods_id = order_item.goods_id
         evaluation_info.update({'goods_id': goods_id})
         oe_obj = OrderItemEvaluation.create(**evaluation_info)
         return oe_obj

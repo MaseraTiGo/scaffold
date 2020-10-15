@@ -41,10 +41,10 @@ class RuleLoader(BaseLoader):
                 "code": "dONG"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "权限组管理",
                 "platform_name": "尚德教育",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "AjUN"
             },
@@ -81,10 +81,10 @@ class RuleLoader(BaseLoader):
                 "code": "erBf"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "职位管理",
                 "platform_name": "尚德教育",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "jkDt"
             },
@@ -121,10 +121,10 @@ class RuleLoader(BaseLoader):
                 "code": "njeo"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "部门管理",
                 "platform_name": "尚德教育",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "gCay"
             },
@@ -161,28 +161,28 @@ class RuleLoader(BaseLoader):
                 "code": "FNuv"
             },
             {
-                "name": "修改",
+                "name": "编辑",
                 "parent": "员工列表",
                 "platform_name": "尚德教育",
-                "description": "修改",
+                "description": "编辑",
                 "remark": "",
                 "code": "yFgM"
             },
 
             {
-                "name": "修改账号",
+                "name": "编辑账号",
                 "parent": "员工列表",
-                "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "platform_name": "尚德教育",
+                "description": "编辑账号",
                 "remark": "",
                 "code": "yFGM"
             },
 
             {
-                "name": "修改部门",
+                "name": "编辑部门",
                 "parent": "员工列表",
-                "platform_name": "橙鹿教育CRM总控平台",
-                "description": "修改",
+                "platform_name": "尚德教育",
+                "description": "编辑部门",
                 "remark": "",
                 "code": "YFgM"
             },
@@ -260,6 +260,30 @@ class RuleLoader(BaseLoader):
                 "code": "Srjb"
             },
             {
+                "name": "基础编辑",
+                "parent": "商品列表",
+                "platform_name": "尚德教育",
+                "description": "基础编辑",
+                "remark": "",
+                "code": "SrJB"
+            },
+            {
+                "name": "删除",
+                "parent": "商品列表",
+                "platform_name": "尚德教育",
+                "description": "删除",
+                "remark": "",
+                "code": "SRJb"
+            },
+            {
+                "name": "上下架",
+                "parent": "商品列表",
+                "platform_name": "尚德教育",
+                "description": "上下架",
+                "remark": "",
+                "code": "SRBJ"
+            },
+            {
                 "name": "商品审核",
                 "parent": "商品管理",
                 "platform_name": "尚德教育",
@@ -282,6 +306,22 @@ class RuleLoader(BaseLoader):
                 "description": "详情",
                 "remark": "",
                 "code": "EkTQ"
+            },
+            {
+                "name": "添加商品",
+                "parent": "商品审核",
+                "platform_name": "尚德教育",
+                "description": "添加商品",
+                "remark": "",
+                "code": "eKTQ"
+            },
+            {
+                "name": "编辑",
+                "parent": "商品审核",
+                "platform_name": "尚德教育",
+                "description": "编辑",
+                "remark": "",
+                "code": "Ekqt"
             },
             {
                 "name": "添加规格",
@@ -332,6 +372,22 @@ class RuleLoader(BaseLoader):
                 "code": "MUUK"
             },
             {
+                "name": "查看合同",
+                "parent": "订单列表",
+                "platform_name": "尚德教育",
+                "description": "查看合同",
+                "remark": "",
+                "code": "mIIK"
+            },
+            {
+                "name": "签约",
+                "parent": "订单列表",
+                "platform_name": "尚德教育",
+                "description": "签约",
+                "remark": "",
+                "code": "kuui"
+            },
+            {
                 "name": "合同列表",
                 "parent": "订单管理",
                 "platform_name": "尚德教育",
@@ -346,6 +402,14 @@ class RuleLoader(BaseLoader):
                 "description": "查询",
                 "remark": "",
                 "code": "QMok"
+            },
+            {
+                "name": "发送合同",
+                "parent": "合同列表",
+                "platform_name": "尚德教育",
+                "description": "发送合同",
+                "remark": "",
+                "code": "QMOK"
             },
             {
                 "name": "合同模板",
@@ -370,14 +434,6 @@ class RuleLoader(BaseLoader):
                 "description": "预览",
                 "remark": "",
                 "code": "PPOo"
-            },
-            {
-                "name": "修改",
-                "parent": "合同模板",
-                "platform_name": "尚德教育",
-                "description": "修改",
-                "remark": "",
-                "code": "mTWt"
             },
             {
                 "name": "添加",
@@ -420,10 +476,10 @@ class RuleLoader(BaseLoader):
                 "code": "PEdv"
             },
             {
-                "name": "修改",
+                "name": "详情",
                 "parent": "我的客户",
                 "platform_name": "尚德教育",
-                "description": "修改",
+                "description": "详情",
                 "remark": "",
                 "code": "gMPp"
             },
@@ -434,5 +490,21 @@ class RuleLoader(BaseLoader):
                 "description": "添加",
                 "remark": "",
                 "code": "ypcu"
+            },
+            {
+                "name": "编辑",
+                "parent": "我的客户",
+                "platform_name": "尚德教育",
+                "description": "编辑",
+                "remark": "",
+                "code": "ycpu"
+            },
+            {
+                "name": "生成海报",
+                "parent": "我的客户",
+                "platform_name": "尚德教育",
+                "description": "生成海报",
+                "remark": "",
+                "code": "ypCU"
             }
         ]

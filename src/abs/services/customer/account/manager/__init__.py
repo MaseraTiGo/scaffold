@@ -71,6 +71,11 @@ class CustomerAccountServer(AccountServer):
         )
         super().logout(auth_token)
 
+    @classmethod
+    def get_customer_account_by_id(cls, customer_id):
+        # todo
+        return CustomerAccount.search(role_id=customer_id).first()
+
 
 class TripartiteServer(BaseManager):
 
