@@ -25,6 +25,10 @@ from support.environment.init.business.crm.position import \
         PositionLoader
 from support.environment.init.business.crm.organization import \
         OrganizationLoader
+from support.common.generator.helper.business.crm.persongroup import PersonGroupGenerator
+from support.common.generator.helper.business.crm.personpermission import PersonPermissionGenerator
+from support.environment.init.business.crm.persongroup import PersonGroupLoader
+
 
 class CrmInitializeMaker(BaseMaker):
     """
@@ -59,14 +63,16 @@ class CrmInitializeMaker(BaseMaker):
         ).generate_relate().generate()
         self._space = SpaceGenerator(SpaceLoader().generate()).generate()
         self._param = ParamGenerator(ParamLoader().generate()).generate()
-
+        self._person_group = PersonGroupGenerator(PersonGroupLoader().generate())
+        self._person_permission = PersonPermissionGenerator(StaffLoader().generate())
 
     def generate_relate(self):
         self._enterprise.add_outputs(self._production)
         self._permission.add_inputs(self._enterprise)
         self._staff.add_outputs(self._staff_account)
         self._staff.add_inputs(self._permission, self._person)
-
+        self._person_group.add_inputs(self._staff_account)
+        self._person_permission.add_inputs(self._person_group)
         return self._staff
 
 

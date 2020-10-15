@@ -9,7 +9,7 @@ import hashlib
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
-from infrastructure.core.field.base import CharField, IntField, DictField
+from infrastructure.core.field.base import CharField, IntField, DictField, ListField
 
 from agile.base.api import NoAuthorizedApi
 from agile.agent.manager.api import AgentStaffAuthorizedApi
@@ -29,6 +29,8 @@ class Login(NoAuthorizedApi):
     response.access_token = ResponseField(CharField, desc = "访问凭证")
     response.renew_flag = ResponseField(CharField, desc = "续签标识")
     response.expire_time = ResponseField(CharField, desc = "到期时间")
+    response.rule_codes = ResponseField(ListField, desc = "rule codes",
+                                       fmt = CharField(desc="rule codes"))
 
     @classmethod
     def get_desc(cls):
@@ -43,12 +45,15 @@ class Login(NoAuthorizedApi):
             request.username,
             request.password
         )
-        return token
+        user_id = token.user_id
+        codes = AgentStaffAccountServer.hung_rule_codes(user_id=user_id)
+        return token, codes
 
-    def fill(self, response, token):
+    def fill(self, response, token, codes):
         response.access_token = token.auth_token
         response.renew_flag = token.renew_flag
         response.expire_time = token.expire_time
+        response.rule_codes = codes
         return response
 
 

@@ -18,6 +18,9 @@ from abs.services.customer.account.manager import CustomerAccountServer
 from abs.services.customer.personal.manager import CustomerServer
 from abs.services.crm.tool.manager import SmsServer
 from abs.services.customer.personal.manager import CollectionRecordServer
+from abs.middleware.login import login_app_middleware
+from abs.services.customer.account.manager import TripartiteServer
+from abs.services.customer.account.utils.constant import CategoryTypes
 
 
 class Register(NoAuthorizedApi):
@@ -221,4 +224,40 @@ class Logout(CustomerAuthorizedApi):
         )
 
     def fill(self, response):
+        return response
+
+
+class WeChatLogin(NoAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.code = RequestField(CharField, desc='code')
+
+    response = with_metaclass(ResponseFieldSet)
+    response.access_token = ResponseField(CharField, desc = "用户访问令牌")
+    response.renew_flag = ResponseField(CharField, desc = "续签访问令牌标识")
+
+    @classmethod
+    def get_desc(cls):
+        return "微信第三方登录接口"
+
+    @classmethod
+    def get_author(cls):
+        return "djd"
+
+    def execute(self, request):
+        openid, access_token = login_app_middleware.wechat_login(request.code)
+        tripartite = TripartiteServer.get_byopenid(openid, CategoryTypes.WECHAT_APP)
+        if tripartite:
+            token = CustomerAccountServer.account_login(
+                tripartite.customer_account
+            )
+            auth_token = token.auth_token
+            renew_flag = token.renew_flag
+        else:
+            auth_token = ''
+            renew_flag = ''
+        return auth_token, renew_flag
+
+    def fill(self, response, auth_token, renew_flag):
+        response.access_token = auth_token
+        response.renew_flag = renew_flag
         return response

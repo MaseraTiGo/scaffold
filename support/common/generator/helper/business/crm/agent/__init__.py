@@ -8,6 +8,7 @@ from support.common.generator.helper.middleground.enterprise import \
      EnterpriseGenerator
 
 from abs.services.agent.agent.models import Agent
+from abs.middleground.technology.permission.store import Authorization
 
 
 class AgentGenerator(BaseGenerator):
@@ -26,8 +27,10 @@ class AgentGenerator(BaseGenerator):
             ))
         if enterprise_fiter:
             enterprise = enterprise_fiter[0]
+            app_key = Authorization.search(company_id=enterprise.id)[0].appkey
             agent_infos.update({
                 'company_id': enterprise.id,
+                'permission_key': app_key,
             })
             agent_list.append(agent_infos)
         return agent_list

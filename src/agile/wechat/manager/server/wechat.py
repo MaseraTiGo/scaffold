@@ -79,3 +79,9 @@ customer_wechat_service.add(Get)
 
 from agile.wechat.apis.notice import SearchAll
 customer_wechat_service.add(SearchAll)
+
+from agile.wechat.apis.customer.order import AddEvaluation, AllEvaluations, MyEvaluations, GetEvaluation
+customer_wechat_service.add(AddEvaluation, GetEvaluation, AllEvaluations, MyEvaluations)
+
+from agile.wechat.apis.customer.collection import Search, Collection, GetAllCollectionsIds
+customer_wechat_service.add(Search, Collection, GetAllCollectionsIds)

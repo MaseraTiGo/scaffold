@@ -22,6 +22,9 @@ from abs.middleground.business.merchandise.utils.constant import \
      DespatchService
 from abs.services.agent.order.utils.constant import ContractStatus, PlanStatus
 from abs.services.crm.contract.utils.constant import ValueSource
+from abs.services.agent.order.store import OrderItemEvaluation
+from abs.middleground.business.order.models import MerchandiseSnapShoot
+from abs.services.customer.personal.store import Customer
 
 
 class OrderServer(BaseManager):
@@ -258,6 +261,10 @@ class OrderItemServer(BaseManager):
         if order_item:
             return order_item
         raise BusinessError('订单详情不存在')
+
+    @classmethod
+    def update(cls, order_item, update_info):
+        order_item.update(**update_info)
 
 
 class ContractServer(BaseManager):
@@ -529,3 +536,53 @@ class OrderPlanServer(BaseManager):
     def update(cls, plan, **update_info):
         plan.update(**update_info)
         return plan
+
+
+class OrderItemEvaluationServer(BaseManager):
+
+    @classmethod
+    def create(cls, **evaluation_info):
+        order = evaluation_info.get('order')
+        goods_id = OrderItemServer.search_all(**{'order': order})[0].goods_id
+        evaluation_info.update({'goods_id': goods_id})
+        oe_obj = OrderItemEvaluation.create(**evaluation_info)
+        return oe_obj
+
+    @classmethod
+    def search(cls, current_page, **search_info):
+        oe_qs = OrderItemEvaluation.search(**search_info)
+        splitor = Splitor(current_page, oe_qs)
+        cls.hung_user_info(splitor.data)
+        return splitor
+
+    @classmethod
+    def get(cls, **search_info):
+        oe_qs = OrderItemEvaluation.search(**search_info)
+        cls.hung_user_info(oe_qs)
+        return oe_qs[0]
+
+    @classmethod
+    def hung_user_info(cls, oe_qs):
+        person_ids = [oe.person_id for oe in oe_qs]
+        customer_objs = Customer.search(**{'person_id__in': person_ids})
+        customer_mapping = {customer.person_id: customer for customer in customer_objs}
+        for oe in oe_qs:
+            customer = customer_mapping.get(oe.person_id)
+            oe.nick_name = customer.nick if customer else '佚名'
+            oe.hear_url = customer.head_url if customer else ''
+
+    @classmethod
+    def search_my_evaluation(cls, current_page, **search_info):
+        oe_qs = OrderItemEvaluation.search(**search_info)
+        splitor = Splitor(current_page, oe_qs)
+        splitor.data = cls.hung_merchandise_snapshoot(splitor.data)
+        return splitor
+
+    @classmethod
+    def hung_merchandise_snapshoot(cls, oe_qs):
+        ms_ids = [oe.order_item.merchandise_snapshoot_id for oe in oe_qs]
+        ms_objs = MerchandiseSnapShoot.search(**{'id__in': ms_ids})
+        ms_mapping = {ms.id: ms for ms in ms_objs}
+        for oe in oe_qs:
+            oe.ms_obj = ms_mapping.get(oe.order_item.merchandise_snapshoot_id)
+        return oe_qs

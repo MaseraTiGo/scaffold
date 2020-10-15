@@ -27,6 +27,8 @@ from abs.services.agent.event.manager import StaffOrderEventServer
 from abs.services.agent.order.utils.constant import OrderSource
 from abs.middleground.business.merchandise.utils.constant import UseStatus
 from abs.middleground.business.transaction.utils.constant import PayService
+from abs.services.agent.order.manager import OrderItemEvaluationServer
+from abs.services.agent.order.utils.constant import EvaluationTypes
 
 
 class Add(CustomerAuthorizedApi):
@@ -336,6 +338,9 @@ class Get(CustomerAuthorizedApi):
                 desc = "商品",
                 conf = {
                     'order_item_id': IntField(desc = "订单商品详情id"),
+                    'goods_id': IntField(desc = "订单商品id"),
+                    'evaluation': CharField(desc = "评价状态",
+                                            choices=EvaluationTypes.CHOICES),
                     'agent_name': CharField(desc = "代理商"),
                     'sale_price': IntField(desc = "单价"),
                     'total_price': IntField(desc = "总价"),
@@ -422,6 +427,8 @@ class Get(CustomerAuthorizedApi):
             'payment_id':order.mg_order.payment.id,
             'order_item_list': [{
                 'order_item_id': order_item.id,
+                'goods_id': order_item.goods_id,
+                'evaluation': order_item.evaluation,
                 'agent_name': order.agent.name,
                 'sale_price': order_item.snapshoot.sale_price,
                 'total_price': order_item.snapshoot.total_price,
@@ -499,6 +506,9 @@ class Search(CustomerAuthorizedApi):
                         desc = "商品",
                         conf = {
                             'order_item_id': IntField(desc = "订单详情id"),
+                            'goods_id': IntField(desc = "订单商品id"),
+                            'evaluation': CharField(desc = "评价状态",
+                                                    choices=EvaluationTypes.CHOICES),
                             'agent_name': CharField(desc = "代理商名称"),
                             'sale_price': IntField(desc = "单价"),
                             'total_price': IntField(desc = "总价"),
@@ -561,7 +571,7 @@ class Search(CustomerAuthorizedApi):
             'number': order.mg_order.number,
             'status': order.mg_order.status,
             'status_name': order.mg_order.get_status_display(),
-            'strike_price': order.mg_order.strike_price,
+            # 'strike_price': order.mg_order.strike_price,
             'sale_price': order.mg_order.requirement.sale_price,
             'strike_price':order.mg_order.strike_price,
             'discount': order.mg_order.requirement.sale_price - \
@@ -577,6 +587,8 @@ class Search(CustomerAuthorizedApi):
             'despatch_type': order.orderitem_list[0].snapshoot.despatch_type,
             'order_item_list': [{
                 'order_item_id': order_item.id,
+                'goods_id': order_item.goods_id,
+                'evaluation': order_item.evaluation,
                 'agent_name': order.agent.name,
                 'sale_price': order_item.snapshoot.sale_price,
                 'total_price': order_item.snapshoot.total_price,
@@ -671,4 +683,221 @@ class Cancel(CustomerAuthorizedApi):
         OrderServer.cancel(order)
 
     def fill(self, response):
+        return response
+
+
+class AddEvaluation(CustomerAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.order_item_id = RequestField(IntField, desc="订单物品id")
+    request.evaluation_info = RequestField(
+            DictField,
+            desc="评价信息",
+            conf={
+                'tags': CharField(desc="评价标签:[tag1, tag2, ...]", is_required=False),
+                'content': CharField(desc="评价内容", is_required=True),
+                'pics': CharField(desc="图片链接:[pic1, pic2, ...]", is_required=False),
+                'videos': CharField(desc="视频链接:[video1, video2, ...]", is_required=False),
+                'server_attitude': IntField(desc="服务态度（1-5）", is_required=True),
+                'course_quality': IntField(desc="课程质量（1-5）", is_required=True),
+                'major': IntField(desc="院校专业（1-5）", is_required=True),
+            }
+    )
+
+    response = with_metaclass(ResponseFieldSet)
+
+    @classmethod
+    def get_desc(cls):
+        return "添加评论"
+
+    @classmethod
+    def get_author(cls):
+        return "djd"
+
+    def execute(self, request):
+        order_item = OrderItemServer.get(request.order_item_id)
+        if order_item.order.status != OrderStatus.ORDER_FINISHED:
+            raise BusinessError("订单未完成， 不能评价。")
+        if order_item.order.person_id != self.auth_user.person_id:
+            raise BusinessError('非本人订单不能评价')
+        request.evaluation_info.update({'order_item': order_item,
+                                        'goods_id': order_item.goods_id,
+                                        'person_id': order_item.order.person_id})
+        OrderItemEvaluationServer.create(**request.evaluation_info)
+        OrderItemServer.update(order_item, **{'evaluation': 'evaluated'})
+
+    def fill(self, response):
+        return response
+
+
+class GetEvaluation(CustomerAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.order_item_id = RequestField(IntField, desc="订单物品id")
+
+    response = with_metaclass(ResponseFieldSet)
+    response.data = ResponseField(
+        DictField,
+        desc="评价信息",
+        conf={
+            'id': IntField(desc='评价id'),
+            'content': CharField(desc="评价内容"),
+            'tags': ListField(desc="评价标签列表",
+                              fmt=CharField(desc="评价标签")),
+            'pics': ListField(desc="评价图片列表",
+                              fmt=CharField(desc="评价图片 ")),
+            'videos': ListField(desc="评价视频列表",
+                                fmt=CharField(desc="评价视频")),
+            'hear_url': CharField(desc="用户头像"),
+            'nickname': CharField(desc="用户昵称"),
+            'create_time': DatetimeField(desc="创建时间")
+
+        }
+
+    )
+
+    @classmethod
+    def get_desc(cls):
+        return "获取评价"
+
+    @classmethod
+    def get_author(cls):
+        return "djd"
+
+    def execute(self, request):
+        search_info = {'order_item_id': request.order_item_id}
+        order_evaluation = OrderItemEvaluationServer.get(request.current_page, **search_info)
+        return order_evaluation
+
+    def fill(self, response, order_evaluation):
+        response.data = {
+            'id': order_evaluation.id,
+            'content': order_evaluation.content,
+            'tags': json.loads(order_evaluation.tags),
+            'pics': json.loads(order_evaluation.pics),
+            'videos': json.loads(order_evaluation.videos),
+            'hear_url': order_evaluation.hear_url,
+            'nickname': order_evaluation.nick_name,
+            'create_time': order_evaluation.create_time,
+        }
+        return response
+
+
+class AllEvaluations(CustomerAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.goods_id = RequestField(IntField, desc="订单物品id")
+
+    response = with_metaclass(ResponseFieldSet)
+    response.data_list = ResponseField(
+        ListField,
+        desc="评价列表",
+        fmt=DictField(
+            desc="评价信息",
+            conf={
+                'id': IntField(desc='评价id'),
+                'content': CharField(desc="评价内容"),
+                'tags': ListField(desc="评价标签列表",
+                                  fmt=CharField(desc="评价标签")),
+                'pics': ListField(desc="评价图片列表",
+                                  fmt=CharField(desc="评价图片 ")),
+                'videos': ListField(desc="评价视频列表",
+                                    fmt=CharField(desc="评价视频")),
+                'hear_url': CharField(desc="用户头像"),
+                'nickname': CharField(desc="用户昵称"),
+                'create_time': DatetimeField(desc="创建时间")
+
+            }
+        )
+    )
+    response.total = ResponseField(IntField, desc="数据总数")
+    response.total_page = ResponseField(IntField, desc="总页码数")
+
+    @classmethod
+    def get_desc(cls):
+        return "全部评价"
+
+    @classmethod
+    def get_author(cls):
+        return "djd"
+
+    def execute(self, request):
+        search_info = {'goods_id': request.goods_id}
+        splitor =OrderItemEvaluationServer.search(request.current_page, **search_info)
+        return splitor
+
+    def fill(self, response, splitor):
+        response.data_list = [{
+            'id': order_evaluation.id,
+            'content': order_evaluation.content,
+            'tags': json.loads(order_evaluation.tags),
+            'pics': json.loads(order_evaluation.pics),
+            'videos': json.loads(order_evaluation.videos),
+            'hear_url': order_evaluation.hear_url,
+            'nickname': order_evaluation.nick_name,
+            'create_time': order_evaluation.create_time,
+        } for order_evaluation in splitor.data]
+        response.total = splitor.total
+        response.total_page = splitor.total_page
+        return response
+
+
+class MyEvaluations(CustomerAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.current_page = RequestField(IntField, desc="当前页码")
+
+    response = with_metaclass(ResponseFieldSet)
+    response.data_list = ResponseField(
+        ListField,
+        desc="评价列表",
+        fmt=DictField(
+            desc="订单信息",
+            conf={
+                'id': IntField(desc='评价id'),
+                'content': CharField(desc="评价内容"),
+                'tags': ListField(desc="评价标签列表",
+                                  fmt=CharField(desc="评价标签")),
+                'pics': ListField(desc="评价图片列表",
+                                  fmt=CharField(desc="评价图片 ")),
+                'videos': ListField(desc="评价视频列表",
+                                    fmt=CharField(desc="评价视频")),
+                'title': CharField(desc="商品标题"),
+                'show_image': CharField(desc="商品图"),
+                'school': CharField(desc="学校"),
+                'major': CharField(desc="专业"),
+                'create_time': DatetimeField(desc="创建时间")
+
+            }
+        )
+    )
+    response.total = ResponseField(IntField, desc="数据总数")
+    response.total_page = ResponseField(IntField, desc="总页码数")
+
+    @classmethod
+    def get_desc(cls):
+        return "我的评价列表"
+
+    @classmethod
+    def get_author(cls):
+        return "djd"
+
+    def execute(self, request):
+        # search_info = {}
+        # if not self.auth_user.is_admin:
+        search_info = {'person_id': self.auth_user.person_id}
+        splitor = OrderItemEvaluationServer.search_my_evaluation(request.current_page, **search_info)
+        return splitor
+
+    def fill(self, response, splitor):
+        response.data_list = [{
+            'id': order_evaluation.id,
+            'content': order_evaluation.content,
+            'tags': json.loads(order_evaluation.tags),
+            'pics': json.loads(order_evaluation.pics),
+            'videos': json.loads(order_evaluation.videos),
+            'title': order_evaluation.ms_obj.title,
+            'show_image': order_evaluation.ms_obj.show_image,
+            'school': order_evaluation.order_item.school_name,
+            'major': order_evaluation.order_item.major_name,
+            'create_time': order_evaluation.create_time,
+        } for order_evaluation in splitor.data]
+        response.total = splitor.total
+        response.total_page = splitor.total_page
         return response

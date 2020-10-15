@@ -2,11 +2,9 @@
 
 import random
 
-from support.common.generator.base import BaseGenerator
-from support.common.generator.helper import EnterpriseGenerator, \
-        PersonGenerator, AgentGenerator
-from abs.middleground.business.person.models import Person
 from abs.services.agent.agent.models import Staff
+from support.common.generator.base import BaseGenerator
+from support.common.generator.helper import PersonGenerator, AgentGenerator
 
 
 class AgentStaffGenerator(BaseGenerator):
@@ -17,29 +15,28 @@ class AgentStaffGenerator(BaseGenerator):
 
     def get_create_list(self, result_mapping):
         staff_list = []
-        agent_list = result_mapping.get(AgentGenerator.get_key())
         for staff_info in self._staff_infos:
             staff_info.update({
-                "agent_id":random.choice(agent_list).id
             })
             staff_list.append(staff_info)
         return staff_list
 
     def create(self, staff_info, result_mapping):
         staff_qs = Staff.query().filter(
-            work_number = staff_info.work_number,
-            agent_id = staff_info.agent_id
+            work_number=staff_info.work_number,
         )
         if staff_qs.count():
             staff = staff_qs[0]
         else:
             person_list = result_mapping.get(PersonGenerator.get_key())
-            enterprise_list = result_mapping.get(EnterpriseGenerator.get_key())
+            agent_list = result_mapping.get(AgentGenerator.get_key())
             for person in person_list:
-                for enterprise in enterprise_list:
+                if person.phone == staff_info.get('phone'):
+                    staff_info.update({
+                        'company': random.choice(agent_list),
+                        'person_id': person.id,
+                    })
                     staff = Staff.create(
-                        company_id = enterprise.id,
-                        person_id = person.id,
                         **staff_info
                     )
         return staff

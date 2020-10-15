@@ -14,6 +14,7 @@ class MerchandiseGenerator(BaseGenerator):
         super(MerchandiseGenerator, self).__init__()
         self._merchandise_infos = self.init(merchandise_infos)
 
+
     def get_create_list(self, result_mapping):
         production_list = result_mapping.get(ProductionGenerator.get_key())
         merchandise_list = []

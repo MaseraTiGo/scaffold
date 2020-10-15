@@ -73,7 +73,8 @@ class Add(StaffAuthorizedApi):
             staff.company.permission_key,
             organization_id,
             position_id,
-            new_staff.id
+            # new_staff.id
+            new_staff.person_id
         )
         StaffServer.update(
             new_staff.id,

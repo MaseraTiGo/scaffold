@@ -90,3 +90,6 @@ customer_mobile_service.add(Search)
 
 from agile.customer.apis.message import Search, ChangeStatus, UnreadCount
 customer_mobile_service.add(Search, ChangeStatus, UnreadCount)
+
+from agile.customer.apis.customer.order import AddEvaluation, GetEvaluation, AllEvaluations, MyEvaluations
+customer_mobile_service.add(AddEvaluation, GetEvaluation, AllEvaluations, MyEvaluations)

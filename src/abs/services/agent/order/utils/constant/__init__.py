@@ -40,3 +40,10 @@ class PlanStatus(object):
         (PAYING, "回款中"),
         (PAID, '已回款'),
     )
+
+
+class EvaluationTypes(object):
+    WAIT_EVALUATION = 'wait_evaluation'
+    EVALUATED = 'evaluated'
+
+    CHOICES = ((WAIT_EVALUATION, "待评价"), (EVALUATED, "已评价"))

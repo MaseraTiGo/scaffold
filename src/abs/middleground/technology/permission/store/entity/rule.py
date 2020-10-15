@@ -41,7 +41,9 @@ class Rule(BaseModel):
 
     @classmethod
     def create(cls, **rule_info):
-        rule_info.update({'code': cls.generate_code()})
+        # if code not in rule info then it should be generated. --- modified by djd
+        if 'code' not in rule_info:
+            rule_info.update({'code': cls.generate_code()})
         return super(Rule, cls).create(
             **rule_info
         )
