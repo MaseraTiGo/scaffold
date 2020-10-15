@@ -29,6 +29,7 @@ class Phone(NoAuthorizedApi):
             ('register','注册'),
             ('forget',"忘记密码"),
             ('bindcard',"绑定银行卡"),
+            ('bindwechat',"绑定微信"),
         )
     )
 
@@ -46,6 +47,8 @@ class Phone(NoAuthorizedApi):
         check_result=CustomerAccountServer.is_exsited(request.number)
         if request.sms_type in ["register"] and check_result:
             raise BusinessError('此账号已存在')
+        if request.sms_type in ["bindwechat"] and check_result:
+            raise BusinessError('此手机号已绑定其他账号')
         if request.sms_type in ["forget","bindcard"] and not check_result:
             raise BusinessError('此账号不存在')
         SmsServer.send_code(request.number,request.sms_type,"customer")

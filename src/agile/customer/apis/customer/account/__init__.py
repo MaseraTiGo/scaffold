@@ -249,7 +249,9 @@ class WeChatLogin(NoAuthorizedApi):
     def execute(self, request):
         openid, _ = login_app_middleware.wechat_login(request.code)
 
-        tripartite = TripartiteServer.get_byopenid(openid, CategoryTypes.WECHAT_APP)
+        tripartite = TripartiteServer.get_byopenid(openid, CategoryTypes.WECHAT)
+        # tripartite_t = TripartiteServer.get_byopenid(openid, CategoryTypes.WECHAT_APP)
+        # tripartite = tripartite_o or tripartite_t
         if tripartite:
             token = CustomerAccountServer.account_login(
                 tripartite.customer_account
@@ -280,6 +282,7 @@ class WechatRegister(NoAuthorizedApi):
 
     request = with_metaclass(RequestFieldSet)
     request.phone = RequestField(CharField, desc="手机号码")
+    request.verify_code = RequestField(CharField, desc='手机验证码')
     request.code = RequestField(CharField, desc="wechat code")
     request.unique_code = RequestField(CharField, desc="设备唯一编码")
     request.client_type = RequestField(CharField, desc="登陆手机系统类型")
@@ -300,6 +303,12 @@ class WechatRegister(NoAuthorizedApi):
     def execute(self, request):
         if CustomerAccountServer.is_exsited(request.phone):
             raise BusinessError('该手机号已被绑定')
+        if not SmsServer.check_code(
+            request.phone,
+            "bindwechat",
+            request.verify_code
+        ):
+            raise BusinessError('验证码错误')
         open_id, access_token = login_app_middleware.wechat_login(request.code)
         user_wechat_info = login_app_middleware.user_info(access_token, open_id)
         # todo: temporary test use
@@ -336,7 +345,7 @@ class WechatRegister(NoAuthorizedApi):
         TripartiteServer.create(**{
             'customer_account': customer_account_obj,
             'openid': open_id,
-            'category': CategoryTypes.WECHAT_APP,
+            'category': CategoryTypes.WECHAT,
         })
         return token
 
