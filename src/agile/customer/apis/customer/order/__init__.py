@@ -28,7 +28,7 @@ from abs.services.agent.order.utils.constant import OrderSource
 from abs.middleground.business.merchandise.utils.constant import UseStatus
 from abs.middleground.business.transaction.utils.constant import PayService
 from abs.services.agent.order.manager import OrderItemEvaluationServer
-from abs.services.agent.order.utils.constant import EvaluationTypes
+from abs.services.agent.order.utils.constant import EvaluationTypes, EvaluationTags
 
 
 class Add(CustomerAuthorizedApi):
@@ -693,7 +693,9 @@ class AddEvaluation(CustomerAuthorizedApi):
             DictField,
             desc="评价信息",
             conf={
-                'tags': CharField(desc="评价标签:[tag1, tag2, ...]", is_required=False),
+                'tags': CharField(desc="评价标签:[tag1, tag2, ...]",
+                                  choices=EvaluationTags.CHOICES,
+                                  is_required=False),
                 'content': CharField(desc="评价内容", is_required=True),
                 'pics': CharField(desc="图片链接:[pic1, pic2, ...]", is_required=False),
                 'videos': CharField(desc="视频链接:[video1, video2, ...]", is_required=False),
@@ -787,6 +789,15 @@ class AllEvaluations(CustomerAuthorizedApi):
     request.current_page = RequestField(IntField, desc="当前页码")
 
     response = with_metaclass(ResponseFieldSet)
+    response.statistics = ResponseField(
+        DictField, desc="统计数据",
+        conf={
+            'pic_numbers': IntField(desc="有图"),
+            'video_numbers': IntField(desc="有视频"),
+            'sale_guarantee_numbers': IntField(desc="售后保障"),
+            'good_service_numbers': IntField(desc="服务周到"),
+            'course_all_numbers': IntField(desc="课程齐全"),
+        })
     response.data_list = ResponseField(
         ListField,
         desc="评价列表",
@@ -822,9 +833,10 @@ class AllEvaluations(CustomerAuthorizedApi):
     def execute(self, request):
         search_info = {'goods_id': request.goods_id}
         splitor =OrderItemEvaluationServer.search(request.current_page, **search_info)
-        return splitor
+        statistics = OrderItemEvaluationServer.hung_statistics_data(request.goods_id)
+        return splitor, statistics
 
-    def fill(self, response, splitor):
+    def fill(self, response, splitor, statistics):
         response.data_list = [{
             'id': order_evaluation.id,
             'content': order_evaluation.content,
@@ -837,6 +849,7 @@ class AllEvaluations(CustomerAuthorizedApi):
         } for order_evaluation in splitor.data]
         response.total = splitor.total
         response.total_page = splitor.total_page
+        response.statistics = statistics
         return response
 
 

@@ -310,8 +310,8 @@ class ContractServer(BaseManager):
     @classmethod
     def create(cls, order_item, agent, template, contract_info_list):
         contract_qs = cls.search_all(order_item_id = order_item.id)
-        if contract_qs.count() > 0:
-            raise BusinessError("请不要重复生成订单")
+        # if contract_qs.count() > 0:
+        #     raise BusinessError("请不要重复生成订单")
         mg_order = mg_OrderServer.get(order_item.order.mg_order_id)
         contract_info_mapping = {}
         for contract_info in contract_info_list:
@@ -350,7 +350,11 @@ class ContractServer(BaseManager):
             'template_id':template.id,
             'content':json.dumps(content_param_list)
         }
-        contract = Contract.create(**create_info)
+        if contract_qs.count() > 0:
+            contract = contract_qs.first()
+            contract.update(**create_info)
+        else:
+            contract = Contract.create(**create_info)
         return contract
 
     @classmethod
@@ -586,3 +590,28 @@ class OrderItemEvaluationServer(BaseManager):
         for oe in oe_qs:
             oe.ms_obj = ms_mapping.get(oe.order_item.merchandise_snapshoot_id)
         return oe_qs
+
+    @classmethod
+    def hung_statistics_data(cls, goods_id):
+        oe_qs = OrderItemEvaluation.search(goods_id=goods_id)
+        statistics = {
+            'pic_numbers': 0,
+            'video_numbers': 0,
+            'sale_guarantee_numbers': 0,
+            'good_service_numbers': 0,
+            'course_all_numbers': 0,
+        }
+        for oe in oe_qs:
+            tags = json.loads(oe.tags)
+            if json.loads(oe.pics):
+                statistics['pic_numbers'] += 1
+            if json.loads(oe.videos):
+                statistics['video_numbers'] += 1
+            if 'sale_guarantee' in tags:
+                statistics['sale_guarantee_numbers'] += 1
+            if 'good_service' in tags:
+                statistics['good_service_numbers'] += 1
+            if 'course_all' in tags:
+                statistics['course_all_numbers'] += 1
+
+        return statistics

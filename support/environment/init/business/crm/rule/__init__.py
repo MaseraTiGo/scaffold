@@ -340,6 +340,14 @@ class RuleLoader(BaseLoader):
                 "code": "EJnV"
             },
             {
+                "name": "上下架",
+                "parent": "商品列表",
+                "platform_name": "橙鹿教育CRM总控平台",
+                "description": "上下架",
+                "remark": "",
+                "code": "EJvN"
+            },
+            {
                 "name": "详情",
                 "parent": "商品列表",
                 "platform_name": "橙鹿教育CRM总控平台",
@@ -826,6 +834,14 @@ class RuleLoader(BaseLoader):
                 "description": "删除",
                 "remark": "",
                 "code": "BXVC"
+            },
+            {
+                "name": "状态",
+                "parent": "公告消息子项",
+                "platform_name": "橙鹿教育CRM总控平台",
+                "description": "状态",
+                "remark": "",
+                "code": "bxvc"
             },
             {
                 "name": "意见反馈",

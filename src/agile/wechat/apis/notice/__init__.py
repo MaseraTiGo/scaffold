@@ -8,9 +8,15 @@ from infrastructure.core.field.base import CharField, DictField, \
     IntField, ListField, DatetimeField
 
 
-class SearchAll(WechatAuthorizedApi):
+class Search(WechatAuthorizedApi):
     request = with_metaclass(RequestFieldSet)
+    request.current_page = RequestField(
+        IntField,
+        desc="当前页码"
+    )
     response = with_metaclass(ResponseFieldSet)
+    response.total = ResponseField(IntField, desc="数据总数")
+    response.total_page = ResponseField(IntField, desc="总页码数")
     response.data_list = ResponseField(
         ListField, desc="通知（公告）列表",
         fmt=DictField(desc="通知（公告）详情",
@@ -30,7 +36,7 @@ class SearchAll(WechatAuthorizedApi):
 
     def execute(self, request):
         request.search_info = {'platform': 'customer_wechat', 'status': 'enable'}
-        notice_qs_split = NoticeServer.search_all(**request.search_info)
+        notice_qs_split = NoticeServer.search(request.current_page, **request.search_info)
         return notice_qs_split
 
     def fill(self, response, notice_qs_split):
@@ -40,6 +46,8 @@ class SearchAll(WechatAuthorizedApi):
                 'content': item.content,
                 'create_time': item.create_time
             }
-            for item in notice_qs_split
+            for item in notice_qs_split.data
         ]
+        response.total = notice_qs_split.total
+        response.total_page = notice_qs_split.total_page
         return response

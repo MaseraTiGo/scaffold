@@ -23,7 +23,7 @@ class CustomerOrderLoader(BaseLoader):
             # 'person_id': agent_customer.person_id,
             # 'company_id': agent_customer.agent.company_id,
             'source': random.choice(self.source_list),
-            'number': 'OD-' + str(time.time_ns()),
+            'number': 'OD-' + str(time.time()).replace('.', ''),
             'status': random.choice(self.status_list),
             # 'name': invoice_info.get('name'),
             # 'phone': invoice_info.get('phone'),

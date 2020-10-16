@@ -47,3 +47,12 @@ class EvaluationTypes(object):
     EVALUATED = 'evaluated'
 
     CHOICES = ((WAIT_EVALUATION, "待评价"), (EVALUATED, "已评价"))
+
+
+class EvaluationTags(object):
+    GOOD_SERVICE = 'good_service'
+    COURSE_ALL = 'course_all'
+    SALE_GUARANTEE = 'sale_guarantee'
+
+    CHOICES = ((GOOD_SERVICE, "服务周到"), (COURSE_ALL, "课程齐全"),
+              (SALE_GUARANTEE, "售后保障"))

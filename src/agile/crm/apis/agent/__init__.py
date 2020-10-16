@@ -1,5 +1,6 @@
 # coding=UTF-8
 
+import json
 from infrastructure.core.field.base import CharField, DictField, \
         IntField, ListField, DatetimeField, BooleanField
 from infrastructure.core.api.utils import with_metaclass
@@ -55,11 +56,20 @@ class Add(StaffAuthorizedApi):
         authorization = PermissionServer.authorize(
             **authorize_info
         )
+
+        admin_rules = ["KPtC", "sbHL", "uPlM", "JunA", "HyFV",
+                       "DRQs", "FyPY", "RpsV", "EJNV", "yFsB",
+                       "FKJq", "PxRg", "DRQS", "EJnV", "GJuN",
+                       "dOnG", "MGLV", "CsUW", "Dong", "MGLv",
+                       "ANAc", "EmdV", "Ypxy", "Rahh", "YoiA",
+                       "AiYo", "rVxD", "UYEY", "hwFG", "vESs"
+                       "fGVe", "UYeY", "HXDP", "FsdC"
+                       ]
         rule_group_info = {
             "name":"管理员",
             "description":"超级角色",
             "remark":"",
-            "content":"",
+            "content": json.dumps(admin_rules),
         }
         rule_group = PermissionServer.add_rule_group(
             appkey = authorization.appkey,
