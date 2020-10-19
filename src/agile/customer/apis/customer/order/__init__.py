@@ -748,7 +748,7 @@ class GetEvaluation(CustomerAuthorizedApi):
                               fmt=CharField(desc="评价图片 ")),
             'videos': ListField(desc="评价视频列表",
                                 fmt=CharField(desc="评价视频")),
-            'hear_url': CharField(desc="用户头像"),
+            'head_url': CharField(desc="用户头像"),
             'nickname': CharField(desc="用户昵称"),
             'create_time': DatetimeField(desc="创建时间")
 
@@ -766,7 +766,8 @@ class GetEvaluation(CustomerAuthorizedApi):
 
     def execute(self, request):
         search_info = {'order_item_id': request.order_item_id}
-        order_evaluation = OrderItemEvaluationServer.get(**search_info)
+        order_evaluation = OrderItemEvaluationServer.get_and_hung_base_info(
+            **search_info)
         return order_evaluation
 
     def fill(self, response, order_evaluation):
@@ -776,7 +777,7 @@ class GetEvaluation(CustomerAuthorizedApi):
             'tags': json.loads(order_evaluation.tags),
             'pics': json.loads(order_evaluation.pics),
             'videos': json.loads(order_evaluation.videos),
-            'hear_url': order_evaluation.hear_url,
+            'head_url': order_evaluation.head_url,
             'nickname': order_evaluation.nick_name,
             'create_time': order_evaluation.create_time,
         }
@@ -812,7 +813,7 @@ class AllEvaluations(CustomerAuthorizedApi):
                                   fmt=CharField(desc="评价图片 ")),
                 'videos': ListField(desc="评价视频列表",
                                     fmt=CharField(desc="评价视频")),
-                'hear_url': CharField(desc="用户头像"),
+                'head_url': CharField(desc="用户头像"),
                 'nickname': CharField(desc="用户昵称"),
                 'create_time': DatetimeField(desc="创建时间")
 
@@ -832,8 +833,10 @@ class AllEvaluations(CustomerAuthorizedApi):
 
     def execute(self, request):
         search_info = {'goods_id': request.goods_id}
-        splitor =OrderItemEvaluationServer.search(request.current_page, **search_info)
-        statistics = OrderItemEvaluationServer.hung_statistics_data(request.goods_id)
+        splitor = OrderItemEvaluationServer.search_and_hung_base_info(
+            request.current_page, **search_info)
+        statistics = OrderItemEvaluationServer.hung_statistics_data(
+            request.goods_id)
         return splitor, statistics
 
     def fill(self, response, splitor, statistics):
@@ -843,7 +846,7 @@ class AllEvaluations(CustomerAuthorizedApi):
             'tags': json.loads(order_evaluation.tags),
             'pics': json.loads(order_evaluation.pics),
             'videos': json.loads(order_evaluation.videos),
-            'hear_url': order_evaluation.hear_url,
+            'head_url': order_evaluation.head_url,
             'nickname': order_evaluation.nick_name,
             'create_time': order_evaluation.create_time,
         } for order_evaluation in splitor.data]
@@ -881,6 +884,11 @@ class MyEvaluations(CustomerAuthorizedApi):
             }
         )
     )
+
+    response.user_info = ResponseField(DictField, desc="数据总数", conf={
+        'head_url': CharField(desc="用户头像"),
+        'nick_name': CharField(desc="用户昵称"),
+    })
     response.total = ResponseField(IntField, desc="数据总数")
     response.total_page = ResponseField(IntField, desc="总页码数")
 
@@ -893,13 +901,14 @@ class MyEvaluations(CustomerAuthorizedApi):
         return "djd"
 
     def execute(self, request):
-        # search_info = {}
-        # if not self.auth_user.is_admin:
         search_info = {'person_id': self.auth_user.person_id}
-        splitor = OrderItemEvaluationServer.search_my_evaluation(request.current_page, **search_info)
-        return splitor
+        splitor = OrderItemEvaluationServer.search_my_evaluation(
+            request.current_page, **search_info)
+        user_info = OrderItemEvaluationServer.get_customer_base_info_by_person_id(
+            self.auth_user.person_id)
+        return splitor, user_info
 
-    def fill(self, response, splitor):
+    def fill(self, response, splitor, user_info):
         response.data_list = [{
             'id': order_evaluation.id,
             'content': order_evaluation.content,
@@ -912,6 +921,7 @@ class MyEvaluations(CustomerAuthorizedApi):
             'major': order_evaluation.order_item.major_name,
             'create_time': order_evaluation.create_time,
         } for order_evaluation in splitor.data]
+        response.user_info = user_info
         response.total = splitor.total
         response.total_page = splitor.total_page
         return response

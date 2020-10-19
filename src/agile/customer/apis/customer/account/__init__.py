@@ -251,7 +251,7 @@ class WeChatLogin(NoAuthorizedApi):
         print('=====================customer wechat login=========================')
         # openid, _ = login_app_middleware.wechat_login(request.code)
         openid = request.open_id
-        tripartite = TripartiteServer.get_byopenid(openid, CategoryTypes.WECHAT)
+        tripartite = TripartiteServer.get_byopenid(openid, CategoryTypes.WECHAT_APP)
         if tripartite:
             token = CustomerAccountServer.account_login(
                 tripartite.customer_account
@@ -287,7 +287,6 @@ class WechatRegister(NoAuthorizedApi):
     request.open_id = RequestField(CharField, desc="用户openid")
     request.access_token = RequestField(CharField, desc="access_token")
     request.unique_code = RequestField(CharField, desc="设备唯一编码")
-    # request.client_type = RequestField(CharField, desc="登陆手机系统类型")
     request._clientType = RequestField(CharField, desc="登陆手机系统类型")
 
     response = with_metaclass(ResponseFieldSet)
@@ -305,23 +304,34 @@ class WechatRegister(NoAuthorizedApi):
 
     def execute(self, request):
         print('=====================customer wechat register=========================')
-        if CustomerAccountServer.is_exsited(request.phone):
-            raise BusinessError('该手机号已被绑定')
+        # if CustomerAccountServer.is_exsited(request.phone):
+        #     raise BusinessError('该手机号已被绑定')
         if not SmsServer.check_code(
             request.phone,
             "bindwechat",
             request.verify_code
         ):
             raise BusinessError('验证码错误')
-        # open_id, access_token = login_app_middleware.wechat_login(request.code)
-        open_id, access_token = request.open_id, request.access_token
-        user_wechat_info = login_app_middleware.user_info(access_token, open_id)
-        # todo: temporary test use
-        # open_id = 'zheshiyigezijisuibianbiandeid'
-        # user_wechat_info = {
-        #     'headimgurl': 'www.fucking-test.com',
-        #     'nickname': 'maserati'
-        # }
+        customer_account = CustomerAccountServer.get_customer_account_byusername(request.phone)
+        if customer_account:
+            tripartite_qs = TripartiteServer.search_all(
+                customer_account=customer_account,
+                category=CategoryTypes.WECHAT_APP
+            )
+            if tripartite_qs.count() > 0:
+                tripartite = tripartite_qs[0]
+                if tripartite.openid != request.open_id:
+                    raise BusinessError('该手机号账号已绑定其他微信')
+            else:
+                TripartiteServer.create(**{
+                    'customer_account': customer_account,
+                    'openid': request.open_id,
+                    'category': CategoryTypes.WECHAT_APP,
+                })
+                token = CustomerAccountServer.account_login(customer_account)
+                return token
+
+        user_wechat_info = login_app_middleware.user_info(request.access_token, request.open_id)
 
         base_info = {}
         if user_wechat_info:
@@ -345,12 +355,12 @@ class WechatRegister(NoAuthorizedApi):
             request._clientType
         )
         # add head_url, nick to customer_account table
-        customer_account_obj = CustomerAccountServer.get_customer_account_by_id(customer.id)
-        customer_account_obj.update(**base_info)
+        customer_account = CustomerAccountServer.get_customer_account_by_id(customer.id)
+        customer_account.update(**base_info)
         TripartiteServer.create(**{
-            'customer_account': customer_account_obj,
-            'openid': open_id,
-            'category': CategoryTypes.WECHAT,
+            'customer_account': customer_account,
+            'openid': request.open_id,
+            'category': CategoryTypes.WECHAT_APP,
         })
         return token
 
@@ -374,18 +384,17 @@ class QQLogin(NoAuthorizedApi):
 
     @classmethod
     def get_desc(cls):
-        return "第三方微信登录接口"
+        return "第三方QQ登录接口"
 
     @classmethod
     def get_author(cls):
         return "djd"
 
     def execute(self, request):
+        # todo: not implement
         openid, _ = login_app_middleware.wechat_login(request.code)
 
-        tripartite = TripartiteServer.get_byopenid(openid, CategoryTypes.WECHAT)
-        # tripartite_t = TripartiteServer.get_byopenid(openid, CategoryTypes.WECHAT_APP)
-        # tripartite = tripartite_o or tripartite_t
+        tripartite = TripartiteServer.get_byopenid(openid, CategoryTypes.QQ)
         if tripartite:
             token = CustomerAccountServer.account_login(
                 tripartite.customer_account

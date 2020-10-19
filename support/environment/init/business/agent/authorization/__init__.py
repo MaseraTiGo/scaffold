@@ -11,8 +11,8 @@ class AuthorizationLoader(BaseLoader):
         return [
             {
                 'use_status': UseStatus.ENABLE,
-                'company_name': '尚德教育',
-                'platform_name': "尚德教育",
-                'remark': "橙鹿CRM总控授权",
+                'company_name': '橙鹿教育科技（湖北）有限公司',
+                'platform_name': "橙鹿教育代理商平台",
+                'remark': "橙鹿教育代理商平台",
             },
         ]

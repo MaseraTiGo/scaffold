@@ -15,10 +15,10 @@ class PlatformLoader(BaseLoader):
                 'company_name': '橙鹿教育科技（湖北）有限公司',
                 'remark': "橙鹿教育CRM总控平台",
             },
-            {
-                'name': '橙鹿教育代理商平台',
-                'app_type': PermissionTypes.POSITION,
-                'company_name': '橙鹿教育科技（湖北）有限公司',
-                'remark': "橙鹿教育代理商平台",
-            },
+            # {
+            #     'name': '橙鹿教育代理商平台',
+            #     'app_type': PermissionTypes.POSITION,
+            #     'company_name': '橙鹿教育科技（湖北）有限公司',
+            #     'remark': "橙鹿教育代理商平台",
+            # },
         ]

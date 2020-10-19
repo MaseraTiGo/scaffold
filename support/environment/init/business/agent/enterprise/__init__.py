@@ -8,7 +8,7 @@ class AgentLoader(BaseLoader):
     def generate(self):
         return [
             {
-                'name': '尚德教育',
+                'name': '橙鹿教育科技（湖北）有限公司',
                 'license_number': "FaNZhengNiGe250YekanbuDong",
                 'remark': '这是最叼的代理的公司',
                 'province': '湖北省',

@@ -12,8 +12,8 @@ class OrganizationLoader(BaseLoader):
                 'parent': "",
                 'describe': "公司",
                 'remark': "",
-                "platform": "尚德教育",
-                'company': "尚德教育",
+                "platform": "橙鹿教育代理商平台",
+                'company': "橙鹿教育科技（湖北）有限公司",
                 'position_list': ["总经理"]
             },
             {
@@ -21,8 +21,8 @@ class OrganizationLoader(BaseLoader):
                 'parent': "总经办",
                 'describe': "公司",
                 'remark': "",
-                "platform": "尚德教育",
-                'company': "尚德教育",
+                "platform": "橙鹿教育代理商平台",
+                'company': "橙鹿教育科技（湖北）有限公司",
                 'position_list': ["人事总监"]
             },
             {
@@ -30,8 +30,8 @@ class OrganizationLoader(BaseLoader):
                 'parent': "总经办",
                 'describe': "公司",
                 'remark': "",
-                "platform": "尚德教育",
-                'company': "尚德教育",
+                "platform": "橙鹿教育代理商平台",
+                'company': "橙鹿教育科技（湖北）有限公司",
                 'position_list': ["系统管理员"]
             },
         ]

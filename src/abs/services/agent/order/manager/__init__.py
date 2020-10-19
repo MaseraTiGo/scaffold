@@ -553,14 +553,14 @@ class OrderItemEvaluationServer(BaseManager):
         return oe_obj
 
     @classmethod
-    def search(cls, current_page, **search_info):
+    def search_and_hung_base_info(cls, current_page, **search_info):
         oe_qs = OrderItemEvaluation.search(**search_info)
         splitor = Splitor(current_page, oe_qs)
         cls.hung_user_info(splitor.data)
         return splitor
 
     @classmethod
-    def get(cls, **search_info):
+    def get_and_hung_base_info(cls, **search_info):
         oe_qs = OrderItemEvaluation.search(**search_info)
         cls.hung_user_info(oe_qs)
         return oe_qs[0]
@@ -573,7 +573,7 @@ class OrderItemEvaluationServer(BaseManager):
         for oe in oe_qs:
             customer = customer_mapping.get(oe.person_id)
             oe.nick_name = customer.nick if customer else '佚名'
-            oe.hear_url = customer.head_url if customer else ''
+            oe.head_url = customer.head_url if customer else ''
 
     @classmethod
     def search_my_evaluation(cls, current_page, **search_info):
@@ -592,7 +592,7 @@ class OrderItemEvaluationServer(BaseManager):
         return oe_qs
 
     @classmethod
-    def hung_statistics_data(cls, goods_id):
+    def hung_statistics_data(cls, goods_id, need_total=False):
         oe_qs = OrderItemEvaluation.search(goods_id=goods_id)
         statistics = {
             'pic_numbers': 0,
@@ -613,5 +613,23 @@ class OrderItemEvaluationServer(BaseManager):
                 statistics['good_service_numbers'] += 1
             if 'course_all' in tags:
                 statistics['course_all_numbers'] += 1
-
+        if need_total:
+            statistics.update({'total_nums': len(oe_qs)})
         return statistics
+
+    @classmethod
+    def get_customer_base_info_by_person_id(cls, person_id):
+        customer = Customer.search(**{'person_id': person_id}).first()
+        return {'head_url': customer.head_url,
+                'nick_name': customer.nick
+                }
+
+    @classmethod
+    def get_latest_evaluation_by_goods_id(cls, goods_id):
+        oe = OrderItemEvaluation.search(**{'goods_id': goods_id}).first()
+        customer = Customer.search(**{'person_id': oe.person_id}).first()
+        return {
+            'head_url': customer.head_url,
+            'nick_name': customer.nick,
+            'content': oe.content
+        }

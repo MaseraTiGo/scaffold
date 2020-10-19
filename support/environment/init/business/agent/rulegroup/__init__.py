@@ -13,8 +13,8 @@ class RuleGroupLoader(BaseLoader):
                 'name': '管理员',
                 'describe': "超级角色",
                 'organization': "公司",
-                "platform": "尚德教育",
-                'company': "尚德教育",
+                "platform": "橙鹿教育代理商平台",
+                'company': "橙鹿教育科技（湖北）有限公司",
                 'content': json.dumps([
                     '所有权限-组织结构-权限组管理-查询',
                     '所有权限-组织结构-权限组管理-添加',
@@ -63,8 +63,8 @@ class RuleGroupLoader(BaseLoader):
                 'name': '人事管理员',
                 'describe': "超级角色",
                 'organization': "公司",
-                "platform": "尚德教育",
-                'company': "尚德教育",
+                "platform": "橙鹿教育代理商平台",
+                'company': "橙鹿教育科技（湖北）有限公司",
                 'content': json.dumps([
                     '所有权限-组织结构-权限组管理-查询',
                     '所有权限-组织结构-权限组管理-添加',

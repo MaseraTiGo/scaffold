@@ -10,9 +10,9 @@ class PlatformLoader(BaseLoader):
     def generate(self):
         return [
             {
-                'name': '尚德教育',
+                'name': '橙鹿教育代理商平台',
                 'app_type': PermissionTypes.POSITION,
-                'company_name': '尚德教育',
-                'remark': "尚德教育代理商平台",
+                'company_name': '橙鹿教育科技（湖北）有限公司',
+                'remark': "橙鹿教育代理商平台",
             },
         ]

@@ -14,8 +14,8 @@ class PositionLoader(BaseLoader):
                 'describe': "总经理",
                 'rule_group': "管理员",
                 'remark': "",
-                "platform": "尚德教育",
-                'company': "尚德教育",
+                "platform": "橙鹿教育代理商平台",
+                'company': "橙鹿教育科技（湖北）有限公司",
             },
             {
                 'name': '人事总监',
@@ -23,8 +23,8 @@ class PositionLoader(BaseLoader):
                 'describe': "人事总监",
                 'rule_group': "人事管理员",
                 'remark': "",
-                "platform": "尚德教育",
-                'company': "尚德教育",
+                "platform": "橙鹿教育代理商平台",
+                'company': "橙鹿教育科技（湖北）有限公司",
             },
             {
                 'name': '系统管理员',
@@ -32,7 +32,7 @@ class PositionLoader(BaseLoader):
                 'describe': "系统管理员",
                 'rule_group': "管理员",
                 'remark': "",
-                "platform": "尚德教育",
-                'company': "尚德教育",
+                "platform": "橙鹿教育代理商平台",
+                'company': "橙鹿教育科技（湖北）有限公司",
             }
         ]

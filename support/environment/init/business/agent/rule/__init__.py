@@ -11,7 +11,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "所有权限",
                 "parent": "",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "所有权限",
                 "remark": "",
                 "code": "QxJt"
@@ -19,7 +19,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "组织结构",
                 "parent": "所有权限",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "组织结构",
                 "remark": "",
                 "code": "DoNg"
@@ -27,7 +27,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "权限组管理",
                 "parent": "组织结构",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "权限组管理",
                 "remark": "",
                 "code": "JCCC"
@@ -35,7 +35,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "查询",
                 "parent": "权限组管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "查询",
                 "remark": "",
                 "code": "dONG"
@@ -43,7 +43,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "编辑",
                 "parent": "权限组管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "编辑",
                 "remark": "",
                 "code": "AjUN"
@@ -51,7 +51,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "添加",
                 "parent": "权限组管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "添加",
                 "remark": "",
                 "code": "GJNN"
@@ -59,7 +59,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "删除",
                 "parent": "权限组管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "删除",
                 "remark": "",
                 "code": "AiYN"
@@ -67,7 +67,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "职位管理",
                 "parent": "组织结构",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "职位管理",
                 "remark": "",
                 "code": "YoNA"
@@ -75,7 +75,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "查询",
                 "parent": "职位管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "查询",
                 "remark": "",
                 "code": "erBf"
@@ -83,7 +83,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "编辑",
                 "parent": "职位管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "编辑",
                 "remark": "",
                 "code": "jkDt"
@@ -91,7 +91,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "添加",
                 "parent": "职位管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "添加",
                 "remark": "",
                 "code": "YTfY"
@@ -99,7 +99,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "删除",
                 "parent": "职位管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "删除",
                 "remark": "",
                 "code": "xBPv"
@@ -107,7 +107,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "部门管理",
                 "parent": "组织结构",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "部门管理",
                 "remark": "",
                 "code": "cdTK"
@@ -115,7 +115,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "查询",
                 "parent": "部门管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "查询",
                 "remark": "",
                 "code": "njeo"
@@ -123,7 +123,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "编辑",
                 "parent": "部门管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "编辑",
                 "remark": "",
                 "code": "gCay"
@@ -131,7 +131,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "添加",
                 "parent": "部门管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "添加",
                 "remark": "",
                 "code": "NKfo"
@@ -139,7 +139,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "删除",
                 "parent": "部门管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "删除",
                 "remark": "",
                 "code": "imVu"
@@ -147,7 +147,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "员工列表",
                 "parent": "组织结构",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "员工列表",
                 "remark": "",
                 "code": "IQFJ"
@@ -155,7 +155,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "查询",
                 "parent": "员工列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "查询",
                 "remark": "",
                 "code": "FNuv"
@@ -163,7 +163,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "编辑",
                 "parent": "员工列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "编辑",
                 "remark": "",
                 "code": "yFgM"
@@ -172,7 +172,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "编辑账号",
                 "parent": "员工列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "编辑账号",
                 "remark": "",
                 "code": "yFGM"
@@ -181,7 +181,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "编辑部门",
                 "parent": "员工列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "编辑部门",
                 "remark": "",
                 "code": "YFgM"
@@ -190,7 +190,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "添加",
                 "parent": "员工列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "添加",
                 "remark": "",
                 "code": "BunJ"
@@ -198,7 +198,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "客户管理",
                 "parent": "所有权限",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "客户管理",
                 "remark": "",
                 "code": "bScr"
@@ -206,7 +206,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "客户列表",
                 "parent": "客户管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "客户列表",
                 "remark": "",
                 "code": "vXtw"
@@ -214,7 +214,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "查询",
                 "parent": "客户列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "查询",
                 "remark": "",
                 "code": "Qnic"
@@ -222,7 +222,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "详情",
                 "parent": "客户列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "详情",
                 "remark": "",
                 "code": "QnIc"
@@ -230,7 +230,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "商品管理",
                 "parent": "所有权限",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "商品管理",
                 "remark": "",
                 "code": "byfD"
@@ -238,7 +238,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "商品列表",
                 "parent": "商品管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "商品列表",
                 "remark": "",
                 "code": "rENW"
@@ -246,7 +246,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "查询",
                 "parent": "商品列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "查询",
                 "remark": "",
                 "code": "SrjB"
@@ -254,7 +254,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "详情",
                 "parent": "商品列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "详情",
                 "remark": "",
                 "code": "Srjb"
@@ -262,7 +262,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "基础编辑",
                 "parent": "商品列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "基础编辑",
                 "remark": "",
                 "code": "SrJB"
@@ -270,7 +270,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "删除",
                 "parent": "商品列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "删除",
                 "remark": "",
                 "code": "SRJb"
@@ -278,7 +278,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "上下架",
                 "parent": "商品列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "上下架",
                 "remark": "",
                 "code": "SRBJ"
@@ -286,7 +286,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "商品审核",
                 "parent": "商品管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "商品审核",
                 "remark": "",
                 "code": "BfMq"
@@ -294,7 +294,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "查询",
                 "parent": "商品审核",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "查询",
                 "remark": "",
                 "code": "ekTQ"
@@ -302,7 +302,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "详情",
                 "parent": "商品审核",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "详情",
                 "remark": "",
                 "code": "EkTQ"
@@ -310,7 +310,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "添加商品",
                 "parent": "商品审核",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "添加商品",
                 "remark": "",
                 "code": "eKTQ"
@@ -318,7 +318,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "编辑",
                 "parent": "商品审核",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "编辑",
                 "remark": "",
                 "code": "Ekqt"
@@ -326,7 +326,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "添加规格",
                 "parent": "商品审核",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "添加规格",
                 "remark": "",
                 "code": "EkiQ"
@@ -334,7 +334,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "提交审核",
                 "parent": "商品审核",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "提交审核",
                 "remark": "",
                 "code": "EkiM"
@@ -342,7 +342,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "订单管理",
                 "parent": "所有权限",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "订单管理",
                 "remark": "",
                 "code": "EVku"
@@ -350,7 +350,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "订单列表",
                 "parent": "订单管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "订单列表",
                 "remark": "",
                 "code": "cjYa"
@@ -358,7 +358,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "查询",
                 "parent": "订单列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "查询",
                 "remark": "",
                 "code": "mUUK"
@@ -366,7 +366,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "详情",
                 "parent": "订单列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "详情",
                 "remark": "",
                 "code": "MUUK"
@@ -374,7 +374,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "查看合同",
                 "parent": "订单列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "查看合同",
                 "remark": "",
                 "code": "mIIK"
@@ -382,7 +382,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "签约",
                 "parent": "订单列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "签约",
                 "remark": "",
                 "code": "kuui"
@@ -390,7 +390,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "合同列表",
                 "parent": "订单管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "合同列表",
                 "remark": "",
                 "code": "HNxB"
@@ -398,7 +398,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "查询",
                 "parent": "合同列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "查询",
                 "remark": "",
                 "code": "QMok"
@@ -406,7 +406,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "发送合同",
                 "parent": "合同列表",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "发送合同",
                 "remark": "",
                 "code": "QMOK"
@@ -414,7 +414,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "合同模板",
                 "parent": "订单管理",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "合同模板",
                 "remark": "",
                 "code": "IoYX"
@@ -422,7 +422,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "查询",
                 "parent": "合同模板",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "查询",
                 "remark": "",
                 "code": "PuOo"
@@ -430,7 +430,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "预览",
                 "parent": "合同模板",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "预览",
                 "remark": "",
                 "code": "PPOo"
@@ -438,7 +438,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "添加",
                 "parent": "合同模板",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "添加",
                 "remark": "",
                 "code": "QENO"
@@ -446,7 +446,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "删除",
                 "parent": "合同模板",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "删除",
                 "remark": "",
                 "code": "OrkA"
@@ -454,7 +454,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "工作台",
                 "parent": "所有权限",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "工作台",
                 "remark": "",
                 "code": "sNiE"
@@ -462,7 +462,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "我的客户",
                 "parent": "工作台",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "我的客户",
                 "remark": "",
                 "code": "tEmk"
@@ -470,7 +470,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "查询",
                 "parent": "我的客户",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "查询",
                 "remark": "",
                 "code": "PEdv"
@@ -478,7 +478,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "详情",
                 "parent": "我的客户",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "详情",
                 "remark": "",
                 "code": "gMPp"
@@ -486,7 +486,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "添加",
                 "parent": "我的客户",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "添加",
                 "remark": "",
                 "code": "ypcu"
@@ -494,7 +494,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "编辑",
                 "parent": "我的客户",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "编辑",
                 "remark": "",
                 "code": "ycpu"
@@ -502,7 +502,7 @@ class RuleLoader(BaseLoader):
             {
                 "name": "生成海报",
                 "parent": "我的客户",
-                "platform_name": "尚德教育",
+                "platform_name": "橙鹿教育代理商平台",
                 "description": "生成海报",
                 "remark": "",
                 "code": "ypCU"

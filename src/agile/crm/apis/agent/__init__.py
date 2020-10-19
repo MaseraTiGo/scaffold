@@ -57,14 +57,17 @@ class Add(StaffAuthorizedApi):
             **authorize_info
         )
 
-        admin_rules = ["KPtC", "sbHL", "uPlM", "JunA", "HyFV",
-                       "DRQs", "FyPY", "RpsV", "EJNV", "yFsB",
-                       "FKJq", "PxRg", "DRQS", "EJnV", "GJuN",
-                       "dOnG", "MGLV", "CsUW", "Dong", "MGLv",
-                       "ANAc", "EmdV", "Ypxy", "Rahh", "YoiA",
-                       "AiYo", "rVxD", "UYEY", "hwFG", "vESs"
-                       "fGVe", "UYeY", "HXDP", "FsdC"
-                       ]
+        admin_rules = ["IQFJ", "byfD", "PPOo", "DoNg", "ycpu", "gCay",
+                       "SrjB", "kuui", "Qnic", "FNuv", "QMok", "QnIc",
+                       "jkDt", "GJNN", "sNiE", "IoYX", "EkiM", "AjUN",
+                       "NKfo", "OrkA", "QENO", "imVu", "ypcu", "erBf",
+                       "tEmk", "BunJ", "xBPv", "rENW", "SRJb", "HNxB",
+                       "PEdv", "YFgM", "bScr", "QMOK", "SRBJ", "mUUK",
+                       "SrJB", "YTfY", "vXtw", "AiYN", "EVku", "YoNA",
+                       "MUUK", "njeo", "yFGM", "cdTK", "yFgM", "QxJt",
+                       "Srjb", "ypCU", "dONG", "PuOo", "EkiQ", "EkTQ",
+                       "mIIK", "gMPp", "eKTQ", "JCCC", "cjYa", "ekTQ",
+                       "BfMq", "Ekqt"]
         rule_group_info = {
             "name":"管理员",
             "description":"超级角色",

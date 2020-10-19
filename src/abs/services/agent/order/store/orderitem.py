@@ -70,4 +70,4 @@ class OrderItemEvaluation(BaseModel):
     @classmethod
     def search(cls, **attrs):
         evaluation_qs = cls.query().filter(**attrs)
-        return evaluation_qs
+        return evaluation_qs.order_by('-create_time')

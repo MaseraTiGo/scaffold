@@ -4,7 +4,8 @@
 class CategoryTypes(object):
     WECHAT = 'wechat'
     WECHAT_APP = 'wechat_app'
-    CHOICES = ((WECHAT, '微信小程序'), (WECHAT_APP, "微信app"))
+    QQ = 'QQ'
+    CHOICES = ((WECHAT, '微信小程序'), (WECHAT_APP, "微信app"), (QQ, 'QQ'))
 
 
 class LoginSystem(object):

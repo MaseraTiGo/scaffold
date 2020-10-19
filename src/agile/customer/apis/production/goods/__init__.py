@@ -17,6 +17,7 @@ from abs.services.crm.university.manager import UniversityServer, UniversityYear
 from abs.services.crm.university.utils.constant import CategoryTypes
 from abs.services.agent.agent.manager import AgentServer
 from abs.services.customer.personal.manager import CollectionRecordServer
+from abs.services.agent.order.manager import OrderItemEvaluationServer
 
 
 class Search(NoAuthorizedApi):
@@ -294,6 +295,27 @@ class Get(NoAuthorizedApi):
             )
         )
     })
+    response.statistics = ResponseField(
+        DictField, desc="统计数据",
+        conf={
+            'total_nums': IntField(desc="评论总数"),
+            'pic_numbers': IntField(desc="有图"),
+            'video_numbers': IntField(desc="有视频"),
+            'sale_guarantee_numbers': IntField(desc="售后保障"),
+            'good_service_numbers': IntField(desc="服务周到"),
+            'course_all_numbers': IntField(desc="课程齐全"),
+        })
+
+    response.latest_evaluation = ResponseField(
+        DictField,
+        desc="最近一条评价",
+        conf={
+            'head_url': CharField(desc="用户头像"),
+            'nick_name': CharField(desc="用户昵称"),
+            'content': CharField(desc="用户评价")
+
+        }
+    )
 
     @classmethod
     def get_desc(cls):
@@ -313,9 +335,13 @@ class Get(NoAuthorizedApi):
         ProductionServer.hung_production([goods.merchandise])
         UniversityYearsServer.hung_years([goods])
         AgentServer.hung_agent([goods])
-        return goods
+        statistics = OrderItemEvaluationServer.hung_statistics_data(
+            request.goods_id, need_total=True)
+        latest_evaluation = OrderItemEvaluationServer.get_latest_evaluation_by_goods_id(
+            request.goods_id)
+        return goods, statistics, latest_evaluation
 
-    def fill(self, response, goods):
+    def fill(self, response, goods, statistics, l_evaluation):
         response.goods_info = {
             'id': goods.id,
             'slideshow': json.loads(goods.merchandise.slideshow),
@@ -349,4 +375,6 @@ class Get(NoAuthorizedApi):
                 } for value in specification.specification_value_list]
             } for specification in goods.merchandise.specification_list]
         }
+        response.statistics = statistics
+        response.latest_evaluation = l_evaluation
         return response

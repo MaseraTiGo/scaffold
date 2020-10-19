@@ -13,6 +13,6 @@ class PersonGroupLoader(BaseLoader):
                 'name': '超级管理员',
                 'describe': "超级角色",
                 'remark': 'nothing',
-                'company_name': '尚德教育'
+                'company_name': '橙鹿教育科技（湖北）有限公司'
             },
         ]

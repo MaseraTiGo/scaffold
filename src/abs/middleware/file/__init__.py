@@ -39,7 +39,7 @@ class FileMiddleware(Single):
         return ["school", "major", "goods", "video", \
                 "adsense", "person", "contract", \
                 "agent", "idimg", "other", "contract/template", \
-                "feedback"]
+                "feedback", "evaluation"]
 
     def pdf_to_img(self):
         with Image(filename = 'https://orgdeer.oss-cn-hangzhou.aliyuncs.com/source/contract/contract/1004_1599479368.pdf') as img:
