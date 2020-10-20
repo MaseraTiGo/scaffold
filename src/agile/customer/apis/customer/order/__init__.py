@@ -2,7 +2,7 @@
 import datetime
 import json
 from infrastructure.core.field.base import CharField, DictField, ListField, \
-    IntField, DatetimeField
+    IntField, DatetimeField, BooleanField
 from infrastructure.core.api.utils import with_metaclass
 from infrastructure.core.api.request import RequestField, RequestFieldSet
 from infrastructure.core.api.response import ResponseField, ResponseFieldSet
@@ -922,6 +922,78 @@ class MyEvaluations(CustomerAuthorizedApi):
             'create_time': order_evaluation.create_time,
         } for order_evaluation in splitor.data]
         response.user_info = user_info
+        response.total = splitor.total
+        response.total_page = splitor.total_page
+        return response
+
+
+class SearchEvaluations(CustomerAuthorizedApi):
+    request = with_metaclass(RequestFieldSet)
+    request.goods_id = RequestField(IntField, desc="订单物品id")
+    request.current_page = RequestField(IntField, desc="当前页码")
+    request.search_info = RequestField(
+        DictField, desc="搜索条件",
+        conf={
+            'has_pics': BooleanField(desc="是否有图", is_required=False),
+            'has_videos': BooleanField(desc="是否有视频", is_required=False),
+            'good_service': BooleanField(desc="服务周到", is_required=False),
+            'course_all': BooleanField(desc="课程齐全", is_required=False),
+            'sale_guarantee': BooleanField(desc="售后保障", is_required=False)
+        }
+                                     )
+
+    response = with_metaclass(ResponseFieldSet)
+    response.data_list = ResponseField(
+        ListField,
+        desc="评价列表",
+        fmt=DictField(
+            desc="评价信息",
+            conf={
+                'id': IntField(desc='评价id'),
+                'content': CharField(desc="评价内容"),
+                'tags': ListField(desc="评价标签列表",
+                                  fmt=CharField(desc="评价标签")),
+                'pics': ListField(desc="评价图片列表",
+                                  fmt=CharField(desc="评价图片 ")),
+                'videos': ListField(desc="评价视频列表",
+                                    fmt=CharField(desc="评价视频")),
+                'head_url': CharField(desc="用户头像"),
+                'nickname': CharField(desc="用户昵称"),
+                'create_time': DatetimeField(desc="创建时间")
+
+            }
+        )
+    )
+    response.total = ResponseField(IntField, desc="数据总数")
+    response.total_page = ResponseField(IntField, desc="总页码数")
+
+    @classmethod
+    def get_desc(cls):
+        return "评价搜索"
+
+    @classmethod
+    def get_author(cls):
+        return "djd"
+
+    def execute(self, request):
+        search_info = {'goods_id': request.goods_id}
+        request.search_info.update(search_info)
+
+        splitor = OrderItemEvaluationServer.search_by_tags(
+            request.current_page, **request.search_info)
+        return splitor
+
+    def fill(self, response, splitor):
+        response.data_list = [{
+            'id': order_evaluation.id,
+            'content': order_evaluation.content,
+            'tags': json.loads(order_evaluation.tags),
+            'pics': json.loads(order_evaluation.pics),
+            'videos': json.loads(order_evaluation.videos),
+            'head_url': order_evaluation.head_url,
+            'nickname': order_evaluation.nick_name,
+            'create_time': order_evaluation.create_time,
+        } for order_evaluation in splitor.data]
         response.total = splitor.total
         response.total_page = splitor.total_page
         return response

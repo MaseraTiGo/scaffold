@@ -627,9 +627,44 @@ class OrderItemEvaluationServer(BaseManager):
     @classmethod
     def get_latest_evaluation_by_goods_id(cls, goods_id):
         oe = OrderItemEvaluation.search(**{'goods_id': goods_id}).first()
+        if not oe:
+            return {
+                'head_url': '',
+                'nick_name': '',
+                'content': ''
+                 }
         customer = Customer.search(**{'person_id': oe.person_id}).first()
         return {
             'head_url': customer.head_url,
             'nick_name': customer.nick,
             'content': oe.content
         }
+
+    @classmethod
+    def search_by_tags(cls, current_page, **search_info):
+        has_pics = has_videos = None
+        sale_guarantee = good_service = course_all = None
+        if 'has_pics' in search_info:
+            has_pics = search_info.pop('has_pics')
+        if 'has_videos' in search_info:
+            has_videos = search_info.pop('has_videos')
+        if 'good_service' in search_info:
+            good_service = search_info.pop('good_service')
+        if 'course_all' in search_info:
+            course_all = search_info.pop('course_all')
+        if 'sale_guarantee' in search_info:
+            sale_guarantee = search_info.pop('sale_guarantee')
+        oe_qs = OrderItemEvaluation.search(**search_info)
+        if has_pics:
+            oe_qs = oe_qs.exclude(pics='[]')
+        if has_videos:
+            oe_qs = oe_qs.exclude(videos='[]')
+        if good_service:
+            oe_qs = oe_qs.filter(tags__contains='good_service')
+        if course_all:
+            oe_qs = oe_qs.filter(tags__contains='course_all')
+        if sale_guarantee:
+            oe_qs = oe_qs.filter(tags__contains='sale_guarantee')
+        splitor = Splitor(current_page, oe_qs)
+        cls.hung_user_info(splitor.data)
+        return splitor

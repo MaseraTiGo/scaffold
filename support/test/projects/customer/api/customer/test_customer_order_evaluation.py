@@ -43,3 +43,15 @@ class CustomerOrderTest(CustomerAPITestCase):
         self.assertTrue('data_list' in result)
         if result.get('data_list'):
             self.assertTrue('content' in result.get('data_list')[0])
+
+    def test_search_evaluations(self):
+        api = 'customer.order.searchevaluations'
+        goods_id = 3
+        search_info = {
+            'has_videos': True,
+        }
+        result = self.access_api(api=api, current_page=1, goods_id=goods_id, search_info=json.dumps(search_info))
+        print('all evaluations==========>', result)
+        self.assertTrue('data_list' in result)
+        if result.get('data_list'):
+            self.assertTrue('content' in result.get('data_list')[0])
