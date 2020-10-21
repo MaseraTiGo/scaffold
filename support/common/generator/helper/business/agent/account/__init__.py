@@ -21,9 +21,11 @@ class AgentStaffAccountGenerator(BaseGenerator):
                 username = person.name
             else:
                 username = person.phone
+            # 初始化代理商联系人13237161434， 它的密码为电话号码后六位
+            password = '123456' if username != '13237161434' else '161434'
             account_info = DictWrapper({
                 "username": username,
-                "password": hashlib.md5("123456".encode('utf8')).hexdigest(),
+                "password": hashlib.md5(password.encode('utf8')).hexdigest(),
                 "status": StatusTypes.ENABLE,
                 "role_type": PlatformTypes.AGENT,
                 "role_id": staff.id

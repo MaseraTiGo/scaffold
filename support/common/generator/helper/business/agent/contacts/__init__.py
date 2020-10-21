@@ -1,9 +1,10 @@
 # coding=UTF-8
 import random
 
-from abs.services.agent.contract.store.template import Template
+from abs.services.agent.agent.store.contacts import Contacts
 from support.common.generator.base import BaseGenerator
 from support.common.generator.helper.business.crm.agent import AgentGenerator
+# from support.common.generator.helper.business.agent.staff import AgentStaffGenerator
 
 
 class ContactsGenerator(BaseGenerator):
@@ -14,6 +15,7 @@ class ContactsGenerator(BaseGenerator):
 
     def get_create_list(self, result_mapping):
         agent_list = result_mapping.get(AgentGenerator.get_key())
+
         contacts_list = []
         for contacts_info in self._contacts_info:
             company = random.choice(agent_list)
@@ -23,15 +25,15 @@ class ContactsGenerator(BaseGenerator):
             contacts_list.append(contacts_info)
         return contacts_list
 
-    def create(self, template_info, result_mapping):
-        template_qs = Template.search(name=template_info.name)
-        if template_qs.count() > 0:
-            return template_qs[0]
+    def create(self, contacts_info, result_mapping):
+        contacts_qs = Contacts.search(phone=contacts_info.phone)
+        if contacts_qs.count() > 0:
+            return contacts_qs[0]
         else:
-            template = Template.create(
-                **template_info
+            contacts = Contacts.create(
+                **contacts_info
             )
-            return template
+            return contacts
 
     def delete(self):
         print('===================>>> delete contacts <====================')

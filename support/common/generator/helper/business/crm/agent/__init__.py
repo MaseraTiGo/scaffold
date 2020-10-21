@@ -9,6 +9,7 @@ from support.common.generator.helper.middleground.enterprise import \
 
 from abs.services.agent.agent.models import Agent
 from abs.middleground.technology.permission.store import Authorization
+from abs.middleground.technology.permission.store import PlatForm
 
 
 class AgentGenerator(BaseGenerator):
@@ -27,7 +28,7 @@ class AgentGenerator(BaseGenerator):
             ))
         if enterprise_fiter:
             enterprise = enterprise_fiter[0]
-            app_key = Authorization.search(company_id=enterprise.id)[0].appkey
+            app_key = Authorization.search(company_id=enterprise.id)[1].appkey
             agent_infos.update({
                 'company_id': enterprise.id,
                 'permission_key': app_key,

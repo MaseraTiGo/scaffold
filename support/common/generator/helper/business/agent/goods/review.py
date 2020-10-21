@@ -22,7 +22,7 @@ class GoodsReviewGenerator(BaseGenerator):
             goods_review_info.update({
                 'staff_id': random.choice(sa_qs).id,
                 'goods': goods,
-                'status': random.choice(['pass', 'rejection', 'wait_post', 'wait_review'])
+                'status': random.choice(['wait_review'])
             })
             goods_review_list.append(goods_review_info)
         return goods_review_list

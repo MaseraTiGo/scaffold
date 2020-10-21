@@ -27,5 +27,5 @@ class CustomerOrderLoader(BaseLoader):
             'status': random.choice(self.status_list),
             # 'name': invoice_info.get('name'),
             # 'phone': invoice_info.get('phone'),
-            'pay_services':random.choice(self.pay_service_method)
+            'pay_services': random.choice(self.pay_service_method)
         }]

@@ -9,8 +9,9 @@ class ContactLoader(BaseLoader):
     def generate(self):
         return [
             {
-                'contacts': '尚先生',
-                'phone': '18888888888',
+                'contacts': 'Thanos',
+                'account': '13237161434',
+                'phone': '13237161434',
                 'email': 'superman@qq.com',
                 'gender': random.choice(['man', 'woman', 'unknown']),
             }
