@@ -14,6 +14,7 @@ from abs.middleground.business.order.models import Requirement, \
         DeliveryRecord, DeliveryRecordList, Order
 
 
+
 class OrderServer(BaseManager):
 
     @classmethod
@@ -208,13 +209,14 @@ class OrderServer(BaseManager):
         return output_record.number,payment_record
 
     @classmethod
-    def pay_success_callback(cls, output_record_number):
+    def pay_success_callback(cls, output_record_number, order_number):
         """
         订单进行支付完成后的成功回调
         """
         output_record = TransactionServer.finished_output_record_bynumber(
             output_record_number,
-            order_number="123456"
+            # order_number="123456"
+            order_number=order_number
         )
         payment_record = PaymentRecord.get_byoutputrecord(
             output_record_id=output_record.id
@@ -235,10 +237,13 @@ class OrderServer(BaseManager):
         order = Order.get_bypayment(payment.id)
         if order is None:
             raise BusinessError("订单信息不存在")
-        order.update(
-            status=OrderStatus.PAYMENT_FINISHED
-        )
-        return order,payment_record
+        # only when the order status is ORDER_LAUNCHED can be changed to
+        # PAYMENT_FINISHED.
+        if order.status == OrderStatus.ORDER_LAUNCHED:
+            order.update(
+                status=OrderStatus.PAYMENT_FINISHED
+            )
+        return order, payment_record
 
     @classmethod
     def pay_fail_callback(cls, output_record_number):

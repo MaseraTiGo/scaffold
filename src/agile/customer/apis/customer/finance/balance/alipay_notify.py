@@ -48,9 +48,10 @@ def alipay_order_pay_notify(request):
 
         pay_time = datetime.datetime.strptime(data['gmt_payment'], '%Y-%m-%d %H:%M:%S')
         order_sn = data['out_trade_no']
+        trade_no = data['trade_no']
 
         if data['trade_status'] in ['TRADE_FINISHED', 'TRADE_SUCCESS']:
-            OrderServer.pay_success_callback(order_sn)
+            OrderServer.pay_success_callback(order_sn, trade_no)
         elif data['trade_status'] == 'TRADE_CLOSED':
             # 交易关闭回调
             OrderServer.pay_fail_callback(order_sn)

@@ -394,12 +394,15 @@ class Bind(StaffAuthorizedApi):
     def execute(self, request):
         staff_id = self.auth_user.id
         staff = StaffServer.get(staff_id)
-        PermissionServer.bind_position(
+        tobe_modified_staff = StaffServer.get(request.staff_id)
+        permission = PermissionServer.bind_position(
             staff.company.permission_key,
             request.organization_id,
             request.position_id,
-            request.staff_id,
+            tobe_modified_staff.person_id,
         )
+        StaffServer.update_staff_permission_id(tobe_modified_staff, permission)
+
 
     def fill(self, response):
         return response

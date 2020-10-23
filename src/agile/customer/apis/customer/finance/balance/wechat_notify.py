@@ -71,7 +71,8 @@ def wechat_order_pay_notify(request):
 
         pay_time = datetime.datetime.strptime(data['time_end'], '%Y%m%d%H%M%S')
         order_sn = data['out_trade_no']
-        OrderServer.pay_success_callback(order_sn)
+        transaction_id = data['transaction_id']
+        OrderServer.pay_success_callback(order_sn, transaction_id)
 
         return success_response()
     except Exception as e:

@@ -48,7 +48,8 @@ def pay_notify_run(data):
         raise BusinessError('支付回调验签失败，订单号（{terminal_trace}）'.format(terminal_trace = data['terminal_trace']))
     pay_time = datetime.datetime.strptime(data['end_time'], '%Y%m%d%H%M%S')
     order_sn = data['terminal_trace']
-    OrderServer.pay_success_callback(order_sn)
+    out_trade_no = data['out_trade_no']
+    OrderServer.pay_success_callback(order_sn, out_trade_no)
 
     return True
 

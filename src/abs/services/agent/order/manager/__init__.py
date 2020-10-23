@@ -25,6 +25,8 @@ from abs.services.crm.contract.utils.constant import ValueSource
 from abs.services.agent.order.store import OrderItemEvaluation
 from abs.middleground.business.order.models import MerchandiseSnapShoot
 from abs.services.customer.personal.store import Customer
+from abs.middleground.business.transaction.models import TransactionOutputRecord
+from abs.middleground.business.order.models import PaymentRecord
 
 
 class OrderServer(BaseManager):
@@ -187,9 +189,10 @@ class OrderServer(BaseManager):
         return prepay_id
 
     @classmethod
-    def pay_success_callback(cls, output_record_number):
+    def pay_success_callback(cls, output_record_number, order_number):
         mg_order, payment_record = mg_OrderServer.pay_success_callback(
-            output_record_number
+            output_record_number,
+            order_number
         )
         order = cls.search_all(mg_order_id = mg_order.id).first()
         order.update(
@@ -231,6 +234,25 @@ class OrderServer(BaseManager):
                 status = OrderStatus.DELIVERY_FINISHED
             )
 
+    @classmethod
+    def hung_last_payment_number(cls, order):
+        last_payment_record = PaymentRecord.\
+            search(payment=order.mg_order.payment).order_by('-create_time').first()
+        if last_payment_record:
+            transaction_output_record = TransactionOutputRecord.\
+                search(id=last_payment_record.output_record_id).first()
+            order.mg_order.payment.last_payment_number = \
+                transaction_output_record.order_number
+        else:
+            order.mg_order.payment.last_payment_number = ''
+
+    @classmethod
+    def hung_tripartite_number_to_payment(cls, payment_record_list):
+        for payment_record in payment_record_list:
+            transaction_output_record = TransactionOutputRecord. \
+                search(id=payment_record.output_record_id).first()
+            payment_record.number = \
+                transaction_output_record.order_number
 
 class OrderItemServer(BaseManager):
 

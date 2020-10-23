@@ -473,7 +473,8 @@ class PermissionServer(BaseManager):
         organization_qs = Organization.query(position_id_list=str(position_id))
         if organization_qs.count() > 0:
             raise BusinessError("有部门关联身份，不能删除")
-        person_permission_qs = PersonPermission.query(position=position)
+        # person_permission_qs = PersonPermission.query(position=position)
+        person_permission_qs = PositionPermission.query(position=position)
         if person_permission_qs.count() > 0:
             raise BusinessError("有员工关联身份，不能删除")
         position.delete()

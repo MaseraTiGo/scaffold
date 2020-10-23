@@ -21,6 +21,10 @@ class StaffServer(AbstractStaffServer):
         work_number = "BQ" + str(10000000 + count_num + 1)
         return work_number
 
+    @classmethod
+    def update_staff_permission_id(cls, staff, permission):
+        staff.update(permission_id=permission.id)
+
 
 class CompanyServer(AbstractStaffServer):
 

@@ -402,6 +402,8 @@ class Get(CustomerAuthorizedApi):
         mg_OrderServer.hung_snapshoot(order.order_item_list)
         ContractServer.hung_contract_byitem(order.order_item_list)
         AgentServer.hung_agent([order])
+        OrderServer.hung_last_payment_number(order)
+        OrderServer.hung_tripartite_number_to_payment(order.mg_order.payment.payment_list)
         return order
 
     def fill(self, response, order):
@@ -421,8 +423,8 @@ class Get(CustomerAuthorizedApi):
             'create_time': order.mg_order.create_time,
             'last_payment_type': order.mg_order.payment.last_payment_type,
             'last_payment_time': order.mg_order.payment.last_payment_time,
-            'last_payment_amount':order.mg_order.payment.last_payment_amount,
-            'last_payment_number': '',
+            'last_payment_amount': order.mg_order.payment.last_payment_amount,
+            'last_payment_number': order.mg_order.payment.last_payment_number,
             'pay_services':order.get_pay_services_display(),
             'payment_id':order.mg_order.payment.id,
             'order_item_list': [{
@@ -460,7 +462,7 @@ class Get(CustomerAuthorizedApi):
                 'amount': payment_record.amount,
                 'pay_type': payment_record.get_pay_type_display(),
                 'status': payment_record.get_status_display(),
-                'number': "",
+                'number': payment_record.number,
                 'create_time': payment_record.create_time,
             } for payment_record in order.mg_order.payment.payment_list],
         }

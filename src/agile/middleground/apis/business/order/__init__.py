@@ -472,6 +472,7 @@ class PayCallback(NoAuthorizedApi):
     def execute(self, request):
         OrderServer.pay_success_callback(
             request.number,
+            request.order_number
         )
 
     def fill(self, response):
