@@ -27,6 +27,7 @@ from abs.middleground.business.order.models import MerchandiseSnapShoot
 from abs.services.customer.personal.store import Customer
 from abs.middleground.business.transaction.models import TransactionOutputRecord
 from abs.middleground.business.order.models import PaymentRecord
+from abs.middleground.business.transaction.utils.constant import TransactionStatus
 
 
 class OrderServer(BaseManager):
@@ -236,8 +237,12 @@ class OrderServer(BaseManager):
 
     @classmethod
     def hung_last_payment_number(cls, order):
+        search_info = {'payment': order.mg_order.payment,
+                       'status__in': [TransactionStatus.PAY_FINISH,
+                                      TransactionStatus.ACCOUNT_FINISH]
+                       }
         last_payment_record = PaymentRecord.\
-            search(payment=order.mg_order.payment).order_by('-create_time').first()
+            search(**search_info).order_by('-create_time').first()
         if last_payment_record:
             transaction_output_record = TransactionOutputRecord.\
                 search(id=last_payment_record.output_record_id).first()
@@ -248,11 +253,17 @@ class OrderServer(BaseManager):
 
     @classmethod
     def hung_tripartite_number_to_payment(cls, payment_record_list):
+        payment_record_mapping = {}
         for payment_record in payment_record_list:
-            transaction_output_record = TransactionOutputRecord. \
-                search(id=payment_record.output_record_id).first()
-            payment_record.number = \
+            payment_record.number = ''
+            payment_record_mapping[payment_record.output_record_id] = payment_record
+        transaction_output_record_qs = TransactionOutputRecord.search(**{
+            'id__in': payment_record_mapping.keys()
+        })
+        for transaction_output_record in transaction_output_record_qs:
+            payment_record_mapping[transaction_output_record.id].number = \
                 transaction_output_record.order_number
+
 
 class OrderItemServer(BaseManager):
 
